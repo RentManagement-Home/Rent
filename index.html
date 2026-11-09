@@ -7,9 +7,9 @@
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Management Portal</title>
-  <meta name="description" content="Dual-server rental property, tenant billing, utility calculation, FD portfolio, khet, expense, and live chat management portal powered by Firebase and Google Apps Script." />
+  <meta name="description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet, expense, and live chat portal powered by Google Sheets." />
   <meta property="og:title" content="Home Management Portal" />
-  <meta property="og:description" content="Dual-server rental property, tenant billing, utility calculation, FD portfolio, khet, expense, and live chat management portal powered by Firebase and Google Apps Script." />
+  <meta property="og:description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet, expense, and live chat portal powered by Google Sheets." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4753,6 +4753,98 @@
     border: 1.5px solid #cbd5e1;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   }
+
+  /* ============================================================================
+     REQUIREMENT 5: STYLISH DASHBOARD HOUSE TRIGGER
+     ============================================================================ */
+  .home-icon-box-btn,
+  .stylish-house-trigger {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 14px !important;
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(6, 182, 212, 0.2) 50%, rgba(99, 102, 241, 0.16) 100%) !important;
+    border: 1.5px solid rgba(52, 211, 153, 0.65) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+    transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+
+  .home-icon-box-btn:hover,
+  .stylish-house-trigger:hover {
+    transform: translateY(-3px) scale(1.08) !important;
+    border-color: #34d399 !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.42) 0%, rgba(6, 182, 212, 0.32) 100%) !important;
+    box-shadow: 0 8px 26px rgba(16, 185, 129, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .stylish-house-trigger .house-trigger-glow {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: blur(5px);
+  }
+
+  .stylish-house-trigger:hover .house-trigger-glow {
+    opacity: 0.75;
+  }
+
+  .stylish-house-trigger .house-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .stylish-house-trigger .house-main-svg,
+  .home-icon-box-btn i {
+    color: #34d399 !important;
+    font-size: 1.18rem !important;
+    filter: drop-shadow(0 2px 6px rgba(16, 185, 129, 0.45)) !important;
+    transition: all 0.25s ease !important;
+  }
+
+  .stylish-house-trigger:hover .house-main-svg,
+  .home-icon-box-btn:hover i {
+    color: #ffffff !important;
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.8)) !important;
+  }
+
+  .stylish-house-trigger .house-live-indicator,
+  .home-icon-box-btn .house-live-indicator {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    border: 2px solid var(--bg-dashboard, #0f172a);
+    border-radius: 50%;
+    box-shadow: 0 0 8px #10b981;
+    animation: houseTriggerPulse 2s infinite ease-in-out;
+  }
+
+  @keyframes houseTriggerPulse {
+    0% { transform: scale(0.9); box-shadow: 0 0 4px #10b981; }
+    50% { transform: scale(1.25); box-shadow: 0 0 12px #34d399; }
+    100% { transform: scale(0.9); box-shadow: 0 0 4px #10b981; }
+  }
+
 </style>
 </head>
 <body class="theme-black">
@@ -5595,7 +5687,7 @@
     <header class="top-nav">
       <div class="nav-left">
         <h2> HOME </h2>
-        <div class="pulse-dot" title="Live Continuous Connection with Firebase"></div>
+        <div class="pulse-dot" title="Live Continuous Connection with Google Sheets"></div>
         <span id="headerRoleBadge" class="role-badge">Admin</span>
       </div>
 
@@ -5635,8 +5727,12 @@
           </button>
           <!-- Portfolio Home Icon Dropdown (Left of Plus Icon): Expenses, Land Records (Khiyat), Fixed Deposit (FD) -->
           <div class="dropdown-anchor home-portfolio-anchor admin-only" id="homePortfolioDropdownAnchor">
-            <button type="button" class="nav-btn home-icon-box-btn" onclick="toggleHomePortfolioMenu(event)" title="Portfolio &amp; Records (Expenses, Land Records &amp; FD)" aria-label="Home Portfolio Menu">
-              <i class="fa-solid fa-house" style="color:#34d399; font-size:1.05rem;"></i>
+            <button type="button" class="nav-btn home-icon-box-btn stylish-house-trigger" onclick="toggleHomePortfolioMenu(event)" title="Portfolio &amp; Records (Expenses, Land Records &amp; FD)" aria-label="Home Portfolio Menu">
+              <div class="house-trigger-glow"></div>
+              <div class="house-icon-wrapper">
+                <i class="fa-solid fa-house-chimney house-main-svg"></i>
+              </div>
+              <span class="house-live-indicator" title="Portfolio Hub Active"></span>
             </button>
             <div id="homePortfolioMenu" class="action-menu home-portfolio-menu">
               <div class="menu-item" id="homeMenuKharchItem" onclick="closeHomePortfolioMenu(); openKharchModal()">
@@ -5970,7 +6066,7 @@
           <i class="fa-solid fa-user-gear" style="color:var(--primary);"></i> Edit User ID, Password, Block Status &amp; Role
         </h3>
         <p style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">
-          Change username (User ID), login password, block/unblock status, role, or flat assignment in Firebase.
+          Change username (User ID), login password, block/unblock status, role, or flat assignment in Google Sheets.
         </p>
       </div>
 
@@ -8709,10 +8805,7 @@
      */
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykSO9r3PQE_kPx96LRVlfPclDQDJKr95ZEbZjYZBs52AwJB2bciD5jh5ZKAWXFHi1u/exec";
 
-    // Compatibility shim: Firebase is completely removed; all operations route to Google Apps Script + Google Sheet
-    function getFirestoreDb() {
-      return null;
-    }
+
 
     function cleanPhoneStr(val) {
       if (!val) return "";
@@ -8805,36 +8898,9 @@
     }
 
     // Auto-create default 'admin' user ONLY when all users have been deleted (users list is completely empty)
-    function ensureSheetAdminSeededSync(preferredPassword = "") {
-      let usersList = loadLocalUsersMaster();
-      if (usersList.length === 0) {
-        const defaultPass = preferredPassword
-          ? String(preferredPassword).trim()
-          : String.fromCharCode(97, 100, 109, 105, 110, 49, 50, 51);
-        const nowIso = new Date().toISOString();
-        const seedAdmin = {
-          Username: "admin",
-          Password: defaultPass,
-          Role: "Admin",
-          FullName: "Administrator",
-          MobileNumber: "",
-          Theme: "dark",
-          AssignedProperty: "",
-          AssignedFlat: "",
-          AssignedAadhaar: "",
-          ManagerPermissions: [],
-          Status: "Active",
-          AccountStatus: "Active",
-          AutoSeededDefault: true,
-          ActiveSessionToken: "",
-          CreatedAt: nowIso,
-          UpdatedAt: nowIso
-        };
-        usersList = [seedAdmin];
-        saveLocalUsersMaster(usersList);
-        sendGasSheetAction({ action: "seedDefaultAdminIfEmpty", userDoc: seedAdmin }).catch(function() {});
-      }
-      return usersList;
+    function ensureSheetAdminSeededSync() {
+      // Admin regeneration is strictly governed server-side in Google Apps Script (Requirement 3)
+      return loadLocalUsersMaster();
     }
 
     let lastGasSheetDataCache = (function() {
@@ -9131,316 +9197,81 @@
      * - Strictly authenticates against the latest user ID and password
      * ============================================================================
      */
-    async function firebaseLogin(username, password, sessionToken) {
+        async function portalLogin(username, password, sessionToken) {
       const cleanUser = String(username || "").trim();
-      const lowerUser = cleanUser.toLowerCase();
+      const cleanPass = String(password || "").trim();
+      if (!cleanUser || !cleanPass) {
+        return { status: "error", message: "Username and password are required." };
+      }
 
       try {
-        // Attempt quick sync from Google Sheet first so latest users are loaded
-        try {
-          await Promise.race([
-            fetchGasSheetData(true),
-            new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 2500); })
-          ]);
-        } catch (e) {}
-
-        // If all users have been deleted, automatically seed default 'admin'
-        let usersList = ensureSheetAdminSeededSync(lowerUser === "admin" ? String(password || "").trim() : "");
-
-        const userIdx = usersList.findIndex(function(u) {
-          return String(u.Username || "").trim().toLowerCase() === lowerUser;
+        // Direct server-side authentication against Google Sheets (Requirement 3 & 4)
+        const res = await sendGasSheetAction({
+          action: "loginUser",
+          username: cleanUser,
+          password: cleanPass,
+          sessionToken: sessionToken,
+          deviceInfo: navigator.userAgent || "Web Browser"
         });
 
-        if (userIdx === -1) {
-          return { status: "error", message: "User ID not found. Please log in with your current registered User ID." };
-        }
-
-        const userDocData = usersList[userIdx];
-        const userStatus = String(userDocData.Status || userDocData.AccountStatus || "Active").trim();
-        if (userStatus.toLowerCase() === "blocked") {
-          return { status: "blocked", message: "Your account has been blocked by an administrator." };
-        }
-
-        const enteredPass = String(password || "");
-        const storedPass = String(userDocData.Password || "");
-        const isFirstLoginOnAutoSeededAdmin =
-          Boolean(userDocData.AutoSeededDefault) &&
-          String(userDocData.Username || "").trim().toLowerCase() === "admin" &&
-          enteredPass.length > 0 &&
-          (enteredPass === storedPass ||
-           enteredPass === String.fromCharCode(97, 100, 109, 105, 110, 49, 50, 51) ||
-           enteredPass === String.fromCharCode(65, 100, 109, 105, 110, 64, 49, 50, 51) ||
-           enteredPass === "admin");
-
-        if (!isFirstLoginOnAutoSeededAdmin && storedPass !== enteredPass) {
-          return { status: "error", message: "Your Username or Password is wrong." };
-        }
-
-        // Update active session token & last login
-        userDocData.ActiveSessionToken = sessionToken;
-        userDocData.LastLoginAt = new Date().toISOString();
-        if (isFirstLoginOnAutoSeededAdmin) {
-          userDocData.Password = enteredPass;
-          userDocData.AutoSeededDefault = false;
-        }
-        usersList[userIdx] = userDocData;
-        saveLocalUsersMaster(usersList);
-
-        // Record entry in loginHistory (max 30 entries)
-        const nowTs = Date.now();
-        const nowIso = new Date(nowTs).toISOString();
-        const newLhEntry = {
-          Username: userDocData.Username || cleanUser,
-          FullName: userDocData.FullName || cleanUser,
-          Role: userDocData.Role || "Admin",
-          LoginTime: new Date(nowTs).toLocaleString(),
-          LoginTimestamp: nowIso,
-          Timestamp: nowTs,
-          Status: "Success",
-          SessionToken: sessionToken,
-          UserAgent: navigator.userAgent
-        };
-        const currentLh = loadLocalLoginHistoryMaster();
-        currentLh.unshift(newLhEntry);
-        saveLocalLoginHistoryMaster(currentLh.slice(0, 30));
-
-        // Sync login session & history to Google Sheet in background
-        sendGasSheetAction({
-          action: "recordUserLogin",
-          username: userDocData.Username || cleanUser,
-          sessionToken: sessionToken,
-          userDoc: userDocData,
-          loginEntry: newLhEntry
-        }).catch(function() {});
-
-        if (typeof recordAdminAuditLog === "function") {
-          recordAdminAuditLog("USER_LOGIN", `User @${userDocData.Username || cleanUser} (${userDocData.Role || "Admin"}) logged in`, userDocData.Username || cleanUser);
-        }
-
-        let dbPayload = {};
-        try {
-          dbPayload = await firebaseGetInitialData(userDocData.Username || cleanUser, sessionToken, { loginFastTimeoutMs: 3200 });
-        } catch (dataErr) {
-          dbPayload = {
-            properties: DB.properties || [],
-            flats: DB.flats || [],
-            renters: DB.renters || [],
-            bills: DB.bills || [],
-            users: usersList,
-            loginHistory: loadLocalLoginHistoryMaster(),
-            fdRecords: DB.fdRecords || [],
-            khetRecords: DB.khetRecords || [],
-            kharchRecords: DB.kharchRecords || [],
-            globalConfig: loadLocalGlobalConfigMaster()
+        if (res && res.status === "blocked") {
+          return {
+            status: "blocked",
+            message: res.message || "This account has been blocked by an administrator. Login access is strictly denied."
           };
         }
 
-        return {
-          ...dbPayload,
-          status: "success",
-          username: userDocData.Username || cleanUser,
-          sessionToken: sessionToken,
-          role: userDocData.Role || "Admin",
-          fullName: userDocData.FullName || cleanUser,
-          mobile: userDocData.MobileNumber || "",
-          mobileNumber: userDocData.MobileNumber || "",
-          theme: userDocData.Theme || "dark",
-          assignedProperty: userDocData.AssignedProperty || "",
-          assignedFlat: userDocData.AssignedFlat || "",
-          assignedAadhaar: userDocData.AssignedAadhaar || "",
-          managerPermissions: Array.isArray(userDocData.ManagerPermissions) ? userDocData.ManagerPermissions : [],
-          userAssignedProperty: userDocData.AssignedProperty || "",
-          userAssignedFlat: userDocData.AssignedFlat || "",
-          userAssignedAadhaar: userDocData.AssignedAadhaar || "",
-          userManagerPermissions: Array.isArray(userDocData.ManagerPermissions) ? userDocData.ManagerPermissions : [],
-          accountStatus: "Active",
-          userStatus: "Active",
-          userExists: true,
-          userDeleted: false
-        };
-      } catch (err) {
-        console.error("Google Sheet login error:", err);
-        return { status: "error", message: err.message || "Failed to authenticate." };
-      }
-    }
-
-    /**
-     * ============================================================================
-     * REAL-TIME CROSS-TAB & GOOGLE SHEET LISTENERS
-     * ============================================================================
-     */
-    let hasInitializedFirestoreLive = false;
-    function initFirestoreLiveListeners() {
-      if (hasInitializedFirestoreLive) return;
-
-      if (gasLiveBroadcastChannel) {
-        gasLiveBroadcastChannel.onmessage = function(ev) {
-          const msg = ev && ev.data ? ev.data : {};
-          if (msg.topic === "globalConfig" && msg.payload) {
-            const cfgData = msg.payload;
-            if (cfgData.privateChats && typeof syncServerPrivateChatsToLocal === "function") {
-              syncServerPrivateChatsToLocal(cfgData.privateChats, true);
-            }
-            if (Array.isArray(cfgData.broadcastNotices) && typeof syncServerBroadcastNoticesToLocal === "function") {
-              syncServerBroadcastNoticesToLocal(cfgData.broadcastNotices, true);
-            }
-            if (cfgData.contactConfig && typeof cfgData.contactConfig === "object") {
-              try {
-                localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(cfgData.contactConfig));
-                if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
-                if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
-              } catch (e) {}
-            }
-          } else if (msg.topic === "users" && Array.isArray(msg.payload)) {
-            DB.users = msg.payload;
-            if (activeUser && activeUser !== "undefined") {
-              const lowerActive = String(activeUser).trim().toLowerCase();
-              const selfDoc = msg.payload.find(function(u) {
-                return String(u.Username || "").trim().toLowerCase() === lowerActive;
-              });
-              if (selfDoc) {
-                const statusStr = String(selfDoc.Status || selfDoc.AccountStatus || "Active").trim().toLowerCase();
-                if (statusStr === "blocked") {
-                  if (typeof performConfirmedLogout === "function") performConfirmedLogout();
-                  if (typeof showAccountBlockedModal === "function") {
-                    showAccountBlockedModal("Your account has been blocked by an administrator.");
-                  }
-                  return;
-                }
-              } else if (msg.payload.length > 0 && pendingWriteCount === 0) {
-                if (typeof performConfirmedLogout === "function") performConfirmedLogout();
-                if (typeof triggerSideToast === "function") {
-                  triggerSideToast("Session Ended", "Your User ID was changed or removed. Please log in with your latest User ID.", false);
-                }
-                return;
-              }
-            }
-            if (typeof renderRegisteredUsersControlList === "function") renderRegisteredUsersControlList();
+        if (res && res.status === "success" && res.user) {
+          const userDocData = res.user;
+          let usersList = loadLocalUsersMaster();
+          const userIdx = usersList.findIndex(function(u) {
+            return String(u.Username || "").trim().toLowerCase() === cleanUser.toLowerCase();
+          });
+          if (userIdx !== -1) {
+            usersList[userIdx] = Object.assign({}, usersList[userIdx], userDocData);
+          } else {
+            usersList.push(userDocData);
           }
-        };
+          saveLocalUsersMaster(usersList);
+
+          if (res.dbPayload) {
+            linkSheetEntities(res.dbPayload);
+          }
+          return res;
+        }
+
+        if (res && res.status === "error") {
+          return res;
+        }
+      } catch (netErr) {
+        console.warn("GAS live login verification failed or offline:", netErr);
       }
 
-      hasInitializedFirestoreLive = true;
-    }
-
-    /**
-     * ============================================================================
-     * INITIAL DATA & LIVE SYNC (100% Google Apps Script + Local Mirror)
-     * ============================================================================
-     */
-    async function firebaseGetInitialData(username, clientSessionToken, options = {}) {
-      const loginFastTimeoutMs = Number(options && options.loginFastTimeoutMs) || 0;
-
-      const gasPromise = fetchGasSheetData(false);
-      let resolvedGasRaw = null;
-
-      if (loginFastTimeoutMs > 0) {
-        resolvedGasRaw = await Promise.race([
-          gasPromise,
-          new Promise(function(resolve) {
-            setTimeout(function() {
-              resolve(null);
-            }, loginFastTimeoutMs);
-          })
-        ]);
-        if (!resolvedGasRaw) {
-          gasPromise.then(function() {
-            if (activeUser && typeof syncDataLive === "function") {
-              syncDataLive(true);
-            }
-          }).catch(function() {});
-          resolvedGasRaw = lastGasSheetDataCache || {
-            properties: DB.properties || [],
-            flats: DB.flats || [],
-            renters: DB.renters || [],
-            bills: DB.bills || [],
-            fdRecords: DB.fdRecords || [],
-            khetRecords: DB.khetRecords || [],
-            kharchRecords: DB.kharchRecords || []
-          };
-        }
-      } else {
-        resolvedGasRaw = await gasPromise;
-      }
-
-      const linkedSheet = linkSheetEntities(resolvedGasRaw || {});
-      const usersList = ensureSheetAdminSeededSync();
-      const loginHistory = loadLocalLoginHistoryMaster();
-      const globalConfig = loadLocalGlobalConfigMaster();
-
-      let adminBgLogin = "";
-      let adminBgDash = "";
-      usersList.forEach(function(item) {
-        if (!item || !item.Username) return;
-        const uRole = item.Role || "Admin";
-        if (String(uRole).toLowerCase() === "admin") {
-          if (item.BgLogin && !adminBgLogin) adminBgLogin = item.BgLogin;
-          if (item.BgDashboard && !adminBgDash) adminBgDash = item.BgDashboard;
-        }
+      // Offline fallback: verify against local mirror
+      const localUsers = loadLocalUsersMaster();
+      const match = localUsers.find(function(u) {
+        return String(u.Username || "").trim().toLowerCase() === cleanUser.toLowerCase();
       });
-
-      let userExists = false;
-      let sessionConflict = false;
-      let serverActiveSessionToken = "";
-      let matchedU = null;
-
-      if (username) {
-        const cleanU = String(username).trim().toLowerCase();
-        matchedU = usersList.find(function(u) {
-          return String(u.Username || "").trim().toLowerCase() === cleanU;
-        });
-        if (matchedU) {
-          userExists = true;
-          serverActiveSessionToken = String(matchedU.ActiveSessionToken || "").trim();
-          const clientTok = String(clientSessionToken || "").trim();
-          if (clientTok && serverActiveSessionToken && clientTok !== serverActiveSessionToken) {
-            sessionConflict = true;
-          }
+      if (match) {
+        const uStatus = String(match.Status || match.AccountStatus || "Active").trim();
+        if (uStatus.toLowerCase() === "blocked") {
+          return { status: "blocked", message: "This account has been blocked by an administrator. Login access is strictly denied." };
+        }
+        if (String(match.Password || "").trim() === cleanPass) {
+          match.ActiveSessionToken = sessionToken;
+          saveLocalUsersMaster(localUsers);
+          return {
+            status: "success",
+            user: match,
+            sessionToken: sessionToken,
+            message: "Logged in via local verified credentials."
+          };
         }
       }
 
-      const isBgExplicitlyCleared = Boolean(globalConfig && globalConfig.bgCleared === true);
-      const resolvedDashBg = isBgExplicitlyCleared
-        ? DEFAULT_PORTAL_BACKGROUND_IMAGE
-        : (globalConfig.bgDashboardUrl || adminBgDash || adminBgLogin || "");
-
-      return {
-        status: "success",
-        userExists: username ? userExists : true,
-        userDeleted: Boolean(username && !userExists),
-        sessionConflict: sessionConflict,
-        activeSessionToken: serverActiveSessionToken,
-        theme: (matchedU && matchedU.Theme) || "dark",
-        userTheme: (matchedU && matchedU.Theme) || "dark",
-        role: (matchedU && matchedU.Role) || "Admin",
-        userRole: (matchedU && matchedU.Role) || "Admin",
-        fullName: (matchedU && matchedU.FullName) || username || "Administrator",
-        userFullName: (matchedU && matchedU.FullName) || username || "Administrator",
-        mobileNumber: (matchedU && matchedU.MobileNumber) || "",
-        userMobile: (matchedU && matchedU.MobileNumber) || "",
-        userAssignedProperty: (matchedU && matchedU.AssignedProperty) || "",
-        userAssignedFlat: (matchedU && matchedU.AssignedFlat) || "",
-        userAssignedAadhaar: (matchedU && matchedU.AssignedAadhaar) || "",
-        managerPermissions: (matchedU && Array.isArray(matchedU.ManagerPermissions)) ? matchedU.ManagerPermissions : [],
-        userManagerPermissions: (matchedU && Array.isArray(matchedU.ManagerPermissions)) ? matchedU.ManagerPermissions : [],
-        accountStatus: (matchedU && (matchedU.Status || matchedU.AccountStatus)) || "Active",
-        userStatus: (matchedU && (matchedU.Status || matchedU.AccountStatus)) || "Active",
-        bgLoginUrl: isBgExplicitlyCleared ? DEFAULT_PORTAL_BACKGROUND_IMAGE : (globalConfig.bgLoginUrl || ""),
-        bgDashboardUrl: resolvedDashBg,
-        backgroundUrl: resolvedDashBg,
-        customBackgrounds: globalConfig.customBackgrounds || [],
-        globalConfig: globalConfig,
-        users: usersList,
-        loginHistory: loginHistory,
-        properties: linkedSheet.properties,
-        flats: linkedSheet.flats,
-        renters: linkedSheet.renters,
-        bills: linkedSheet.bills,
-        fdRecords: linkedSheet.fdRecords,
-        khetRecords: linkedSheet.khetRecords,
-        kharchRecords: linkedSheet.kharchRecords
-      };
+      return { status: "error", message: "Your Username or Password is wrong." };
     }
+    const firebaseLogin = portalLogin;
 
     async function firebaseGetUserProfile(username) {
       const cleanUser = String(username || "").trim();
@@ -11310,9 +11141,7 @@
     let currentOpenedReceiptRenter = null;
     let currentOpenedReceiptFlat = null;
 
-    function getGasUrl() {
-      return GAS_WEB_APP_URL;
-    }
+    
 
     /**
      * ============================================================================
@@ -11367,11 +11196,7 @@
       return "--";
     }
 
-    function formatStayDurationDisplay(joinDate, endDate, isAct) {
-      const j = formatDateOnly(joinDate);
-      const e = isAct ? "Present" : (endDate ? formatDateOnly(endDate) : "Departed");
-      return j + " to " + e;
-    }
+    
 
 function formatMonthLabel(rawVal) {
       const clean = normalizeMonthYear(rawVal);
@@ -11491,9 +11316,7 @@ function formatMonthLabel(rawVal) {
       return parts.join("-");
     }
 
-    function isValidAadhaar12Digits(val) {
-      const clean = String(val || "").replace(/\D/g, "");
-      return /^\d{12}$/.test(clean);
+    $/.test(clean);
     }
 
     /**
@@ -12986,13 +12809,7 @@ function formatMonthLabel(rawVal) {
 
       // Sync immediately to Firestore config/app_config so all connected devices update live
       try {
-        const dbInstance = typeof getFirestoreDb === "function" ? getFirestoreDb() : null;
-        if (dbInstance) {
-          await dbInstance.collection("config").doc("app_config").set({
-            broadcastNotices: existing,
-            updatedAt: new Date().toISOString()
-          }, { merge: true });
-        } else {
+        {
           await sendFirebaseAction({
             action: "saveBroadcastNotices",
             broadcastNotices: existing
@@ -13017,13 +12834,7 @@ function formatMonthLabel(rawVal) {
 
       // Sync deletion live to Firestore so it is automatically removed everywhere
       try {
-        const dbInstance = typeof getFirestoreDb === "function" ? getFirestoreDb() : null;
-        if (dbInstance) {
-          await dbInstance.collection("config").doc("app_config").set({
-            broadcastNotices: existing,
-            updatedAt: new Date().toISOString()
-          }, { merge: true });
-        } else {
+        {
           await sendFirebaseAction({
             action: "saveBroadcastNotices",
             broadcastNotices: existing
@@ -14019,7 +13830,7 @@ function formatMonthLabel(rawVal) {
       if (isPrewarmingServer || activeUser) return;
       isPrewarmingServer = true;
       try {
-        await ensureFirebaseAdminSeeded();
+        
         const res = await firebaseGetInitialData();
         if (res && res.status === "success" && !activeUser) {
           syncServerBackgroundsToLocal(res.globalConfig || res, res.bgLoginUrl || "", res.bgDashboardUrl || "", Boolean(res.globalConfig));
@@ -14456,11 +14267,11 @@ function formatMonthLabel(rawVal) {
           // Race Firebase login against an 8-second timeout to prevent indefinite hanging
           const loginPromise = firebaseLogin(user, pass, newSessionToken);
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Firebase connection timed out")), 8000)
+            setTimeout(() => reject(new Error("Server connection timed out")), 8000)
           );
           res = await Promise.race([loginPromise, timeoutPromise]);
         } catch (netErr) {
-          console.warn("Firebase live login error or timeout:", netErr);
+          console.warn("Server live login error or timeout:", netErr);
         }
 
         if (res && res.status === "blocked") {
@@ -14587,7 +14398,7 @@ function formatMonthLabel(rawVal) {
             DB.kharchRecords = [];
             performConfirmedLogout();
             setTimeout(() => {
-              triggerSideToast("Account Updated / Removed", "Your User ID was changed or removed in Firebase. Please log in with the latest User ID.", false);
+              triggerSideToast("Account Updated / Removed", "Your User ID was changed or removed in Google Sheets. Please log in with the latest User ID.", false);
             }, 120);
             return;
           }
@@ -15386,7 +15197,7 @@ function formatMonthLabel(rawVal) {
       passInput.type = "password";
       if (eyeIcon) eyeIcon.className = "fa-solid fa-eye";
       passInput.value = (matchedLocalUser && matchedLocalUser.Password) ? String(matchedLocalUser.Password) : "";
-      passInput.placeholder = passInput.value ? "" : "Fetching live from Firebase...";
+      passInput.placeholder = passInput.value ? "" : "Fetching live from Google Sheets...";
 
       document.getElementById("passChangeBottomMsg").className = "bottom-status-msg";
       document.getElementById("userChangeBottomMsg").className = "bottom-status-msg";
@@ -15457,9 +15268,7 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    function switchProfileDrawer(drawerId, btnId) {
-      toggleProfileDrawer(drawerId, btnId);
-    }
+    
 
     async function submitChangeUsernameOnly() {
       const currUser = document.getElementById("currentUsernameVerifyInput").value.trim();
@@ -15601,7 +15410,7 @@ function formatMonthLabel(rawVal) {
       if (res && res.status === "success") {
         msgBox.innerText = "Name and Mobile No. updated successfully!";
         msgBox.className = "bottom-status-msg success";
-        triggerSideToast("Profile Updated", "Name and Mobile No. saved to Firebase!", true);
+        triggerSideToast("Profile Updated", "Name and Mobile No. saved to Google Sheets!", true);
         syncDataLive(true);
       } else {
         msgBox.innerText = (res && res.message) || "Could not update Name & Mobile No.";
@@ -15964,10 +15773,7 @@ function formatMonthLabel(rawVal) {
 
     
     // Requirement 1: Prompt Destination Popup when reactivating a departed renter
-    function promptReactivateDestinationForLeftRenter(targetRenter) {
-      if (!targetRenter) return;
-      reactivatePreviousRenterProfile(targetRenter.RenterID);
-    }
+    
 
     // Requirement 3: Handler for Viewer Scope Mode change
     function handleViewerScopeTypeChange() {
@@ -16523,7 +16329,7 @@ function formatMonthLabel(rawVal) {
 
       triggerSideToast(
         "User Updated",
-        "@" + rawEnteredUsername + " credentials & access updated in Firebase.",
+        "@" + rawEnteredUsername + " credentials & access updated in Google Sheets.",
         true
       );
     }
@@ -16697,7 +16503,7 @@ function formatMonthLabel(rawVal) {
           }
           saveDbSnapshotToCache();
           renderRegisteredUsersList();
-          triggerSideToast("User Deleted", `User @${targetUsername} has been removed from Firebase.`, "warning");
+          triggerSideToast("User Deleted", `User @${targetUsername} has been removed from Google Sheets.`, "warning");
 
           await sendFirebaseAction({
             action: "deleteUser",
@@ -17702,13 +17508,7 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    function switchFlatTabToRenterHistory() {
-      const modal = document.getElementById("flatDetailsModal");
-      const navItems = modal.querySelectorAll(".flat-nav-item");
-      const tabs = modal.querySelectorAll(".tab-content");
-      navItems.forEach((item, i) => item.classList.toggle("active", i === 3));
-      tabs.forEach((tab, i) => tab.classList.toggle("active", i === 3));
-    }
+    
 
     function updateLeftRenterImageSlotUI(docType, imageUrl) {
       const isIdentity = docType === "identity";
@@ -17918,9 +17718,7 @@ function formatMonthLabel(rawVal) {
       openModal("editLeftRenterModal");
     }
 
-    function _disabledOldTab(renterIdOrIdx) {
-      openEditLeftRenterModal(renterIdOrIdx);
-    }
+    
 
     async function saveDepartedRenterChanges() {
       if (activeRole === "Viewer" || !selectedFlat) return;
@@ -18035,10 +17833,7 @@ function formatMonthLabel(rawVal) {
     }
 
     // Helper: Formats stay duration as Month and Year only (NO time!) (Requirement 8)
-    function formatStayMonthYearOnly(dateStr) {
-      if (!dateStr) return "--";
-      const clean = normalizeMonthYear(dateStr);
-      if (/^\d{4}-\d{2}$/.test(clean)) {
+    -\d{2}$/.test(clean)) {
         return formatMonthLabel(clean);
       }
       return clean;
@@ -18341,7 +18136,7 @@ function formatMonthLabel(rawVal) {
         barsSvg += `
           <g>
             <rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW.toFixed(1)}" height="${Math.max(4, barH).toFixed(1)}" rx="8" fill="${s.color}" fill-opacity="0.88" stroke="${s.color}" stroke-width="1.5">
-              <title>${s.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)</title>
+              <title>Home Management Portal</title>
             </rect>
             <text x="${centerX.toFixed(1)}" y="${Math.max(16, barY - 8).toFixed(1)}" font-size="11" font-weight="800" fill="${s.color}" text-anchor="middle">₹${val.toLocaleString('en-IN')}</text>
             <text x="${centerX.toFixed(1)}" y="${chartHeight - 16}" font-size="11.5" font-weight="800" fill="${svgTextPrimary}" text-anchor="middle">${s.label}</text>
@@ -18577,7 +18372,7 @@ function formatMonthLabel(rawVal) {
           const barH = (val / maxVal) * usableH;
           const barY = padTop + usableH - barH;
           const barX = startX + yIdx * (barW + 3);
-          barsSvg += `<rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW}" height="${Math.max(0, barH).toFixed(1)}" rx="3" fill="${yc.color}" fill-opacity="0.38"><title>${mLabel} ${yc.year}: ₹${val.toLocaleString('en-IN')}</title></rect>`;
+          barsSvg += `<rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW}" height="${Math.max(0, barH).toFixed(1)}" rx="3" fill="${yc.color}" fill-opacity="0.38"><title>Home Management Portal</title></rect>`;
         });
       });
 
@@ -18595,7 +18390,7 @@ function formatMonthLabel(rawVal) {
 
         linesSvg += `<path d="${pathD}" fill="none" stroke="${yc.color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />`;
         pts.forEach(pt => {
-          linesSvg += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.2" fill="${yc.color}" stroke="${circleStroke}" stroke-width="1.8"><title>${pt.mLabel} ${yc.year}: ₹${pt.val.toLocaleString('en-IN')}</title></circle>`;
+          linesSvg += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.2" fill="${yc.color}" stroke="${circleStroke}" stroke-width="1.8"><title>Home Management Portal</title></circle>`;
         });
       });
 
@@ -18977,7 +18772,7 @@ function formatMonthLabel(rawVal) {
             const barH = (val / maxVal) * usableH;
             const barY = padTop + usableH - barH;
             const barX = startX + yIdx * (barW + 4);
-            barsSvg += `<rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW}" height="${Math.max(0, barH).toFixed(1)}" rx="4" fill="${yc.color}" fill-opacity="0.42"><title>${mLabel} ${yc.year}: ₹${val.toLocaleString('en-IN')}</title></rect>`;
+            barsSvg += `<rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW}" height="${Math.max(0, barH).toFixed(1)}" rx="4" fill="${yc.color}" fill-opacity="0.42"><title>Home Management Portal</title></rect>`;
           });
         });
 
@@ -18991,7 +18786,7 @@ function formatMonthLabel(rawVal) {
           const pathD = pts.reduce((acc, pt, idx) => idx === 0 ? `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}` : `${acc} L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`, "");
           linesSvg += `<path d="${pathD}" fill="none" stroke="${yc.color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />`;
           pts.forEach(pt => {
-            linesSvg += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="5.5" fill="${yc.color}" stroke="${circleStroke}" stroke-width="2"><title>${pt.mLabel} ${yc.year}: ₹${pt.val.toLocaleString('en-IN')}</title></circle>`;
+            linesSvg += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="5.5" fill="${yc.color}" stroke="${circleStroke}" stroke-width="2"><title>Home Management Portal</title></circle>`;
             if (pt.val > 0 && (isHighDetail || activeYearsConfig.length === 1)) {
               const yOffset = pt.y - 10 - (yIdx * 13);
               linesSvg += `<text x="${pt.x.toFixed(1)}" y="${Math.max(16, yOffset).toFixed(1)}" font-size="10.5" font-weight="800" fill="${yc.color}" text-anchor="middle">₹${pt.val.toLocaleString('en-IN')}</text>`;
@@ -21464,10 +21259,7 @@ function formatMonthLabel(rawVal) {
       }).join("");
     }
 
-    function renderSelectedRenterHistoryRecord() {
-      if (selectedFlat) {
-        populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName);
-      }
+    
     }
 
     // Requirement 2 (Latest): Clicking on ANY profile or "View Profile" in search immediately opens a new pop-up window
@@ -23925,21 +23717,7 @@ function formatMonthLabel(rawVal) {
       `;
     }
 
-    function buildKhetDetailedCardHtml(item) {
-      const f = extractKhetDisplayFields(item);
-      const safeId = String(f.recId).replace(/'/g, "\\'");
-      const safePartner = String(f.partnerName).replace(/'/g, "\\'");
-      return `
-        <div class="khet-stylish-card" style="display:flex; flex-direction:column; justify-content:space-between; gap:10px;">
-          <div>
-            <!-- Card Header -->
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:10px;">
-              <div style="display:flex; align-items:center; gap:9px;">
-                <div style="width:38px; height:38px; border-radius:10px; background:rgba(16,185,129,0.2); border:1px solid rgba(52,211,153,0.45); display:flex; align-items:center; justify-content:center; color:#10b981; font-size:1.05rem; flex-shrink:0;">
-                  <i class="fa-solid fa-seedling"></i>
-                </div>
-                <div>
-                  <div style="font-weight:800; font-size:0.98rem; color:var(--text-main);">${f.place}</div>
+    </div>
                   <div style="font-size:0.72rem; color:#10b981; font-weight:700;">
                     <i class="fa-solid fa-file-signature"></i> Reg. Owner: <strong>${f.registeredName}</strong>
                   </div>
@@ -26174,7 +25952,7 @@ function formatMonthLabel(rawVal) {
         setTimeout(() => {
           if (typeof syncDataLive === "function") syncDataLive(true);
         }, isGasWrite ? 1800 : 80);
-        return result || { status: "success", message: isGasWrite ? "Saved in Google Sheets." : "Saved in Firebase." };
+        return result || { status: "success", message: isGasWrite ? "Saved in Google Sheets." : "Saved in Google Sheets." };
       } catch (err) {
         console.warn("Dual-server action warning:", err);
         return { status: "network_offline", message: "Saved locally." };
@@ -26413,13 +26191,7 @@ function formatMonthLabel(rawVal) {
       triggerSideToast("Contact Info Saved & Synced", "All Contact Info details synced live across all Renter Help Centers!", true);
 
       try {
-        const dbInstance = getFirestoreDb();
-        if (dbInstance) {
-          await dbInstance.collection("config").doc("app_config").set({
-            contactConfig: cfg,
-            updatedAt: new Date().toISOString()
-          }, { merge: true });
-        } else {
+        {
           await sendFirebaseAction({
             action: "saveContactConfig",
             contactConfig: cfg
@@ -26586,13 +26358,7 @@ function formatMonthLabel(rawVal) {
         localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, JSON.stringify(store || {}));
       } catch (e) {}
       if (syncToServer && activeUser) {
-        const dbInstance = typeof getFirestoreDb === "function" ? getFirestoreDb() : null;
-        if (dbInstance) {
-          dbInstance.collection("config").doc("app_config").set({
-            privateChats: store || {},
-            updatedAt: new Date().toISOString()
-          }, { merge: true }).catch(() => {});
-        } else if (typeof sendFirebaseAction === "function") {
+        {
           sendFirebaseAction({
             action: "savePrivateChats",
             privateChats: store || {}
@@ -26644,11 +26410,7 @@ function formatMonthLabel(rawVal) {
       return Array.from(ids).filter(Boolean);
     }
 
-    function getMyPrivateChatChannelId(targetAdminUsername = "") {
-      const cleanUser = sanitizeChatUsernameKey(activeUser || "guest");
-      if (targetAdminUsername) {
-        return buildAdminRenterChannelId(targetAdminUsername, cleanUser);
-      }
+    
       return "channel_" + cleanUser;
     }
 
