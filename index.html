@@ -11316,8 +11316,6 @@ function formatMonthLabel(rawVal) {
       return parts.join("-");
     }
 
-    $/.test(clean);
-    }
 
     /**
      * Requirement 2 & 12: Valid Indian Mobile Number starting with +91 and containing 10 digits (never #ERROR!)
@@ -17832,12 +17830,6 @@ function formatMonthLabel(rawVal) {
       closeModal("editLeftRenterModal");
     }
 
-    // Helper: Formats stay duration as Month and Year only (NO time!) (Requirement 8)
-    -\d{2}$/.test(clean)) {
-        return formatMonthLabel(clean);
-      }
-      return clean;
-    }
 
     // Requirement 6 Helpers: Clean YYYY-MM-DD formatter & Local Persistence Fallback for Utility Numbers + Join/End Dates
     function toInputDateValue(rawDate) {
@@ -21259,9 +21251,6 @@ function formatMonthLabel(rawVal) {
       }).join("");
     }
 
-    
-    }
-
     // Requirement 2 (Latest): Clicking on ANY profile or "View Profile" in search immediately opens a new pop-up window
     // right there showing their entire profile and all their details
     function openTenantFullProfilePopup(renterIdOrIdx, propName, flatName, fallbackName = "") {
@@ -23713,84 +23702,6 @@ function formatMonthLabel(rawVal) {
               </tr>
             </tfoot>
           </table>
-        </div>
-      `;
-    }
-
-    </div>
-                  <div style="font-size:0.72rem; color:#10b981; font-weight:700;">
-                    <i class="fa-solid fa-file-signature"></i> Reg. Owner: <strong>${f.registeredName}</strong>
-                  </div>
-                </div>
-              </div>
-              <div style="text-align:right;">
-                <span style="background:rgba(16,185,129,0.16); color:#10b981; border:1px solid rgba(16,185,129,0.4); padding:3px 9px; border-radius:20px; font-size:0.75rem; font-weight:800; display:inline-block;">
-                  Paid: ₹${f.amountPaid.toLocaleString('en-IN')}
-                </span>
-                ${f.adjustedAmount > 0 ? `<div style="font-size:0.68rem; color:#0284c7; font-weight:700; margin-top:2px;">Adj: ₹${f.adjustedAmount.toLocaleString('en-IN')}</div>` : ''}
-              </div>
-            </div>
-
-            <!-- Land Registry & Survey Grid -->
-            <div style="background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:9px 11px; margin-bottom:8px;">
-              <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; color:#10b981; margin-bottom:5px;">
-                <i class="fa-solid fa-compass-drafting"></i> Land Registry &amp; Survey Measurements
-              </div>
-              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:0.75rem; color:var(--text-main);">
-                <div><span style="color:var(--text-muted);">Khata No.:</span> <strong style="color:#d97706;">${f.khataNo}</strong></div>
-                <div><span style="color:var(--text-muted);">Keshra No.:</span> <strong style="color:#db2777;">${f.keshraNo}</strong></div>
-                <div><span style="color:var(--text-muted);">Decimal:</span> <strong>${f.decimalArea || '--'}</strong></div>
-                <div><span style="color:var(--text-muted);">Survey Decimal:</span> <strong style="color:#7c3aed;">${f.newDecimalSurvey || '--'}</strong></div>
-                <div><span style="color:var(--text-muted);">Katha (Khataha):</span> <strong style="color:#0284c7;">${f.bighaLabel}</strong></div>
-                <div><span style="color:var(--text-muted);">Rate / Katha:</span> <strong>${f.ratePerKatha ? '₹' + f.ratePerKatha.toLocaleString('en-IN') : '--'}</strong></div>
-                <div style="grid-column: 1 / -1; padding-top:4px; border-top:1px dashed var(--glass-border); display:flex; justify-content:space-between;">
-                  <span style="color:var(--text-muted);">Total Land Value:</span>
-                  <strong style="color:#d97706;">${f.totalLandValue ? '₹' + f.totalLandValue.toLocaleString('en-IN') : '--'}</strong>
-                </div>
-              </div>
-            </div>
-
-            <!-- Farming Partner Complete KYC Box -->
-            <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.35); border-radius:10px; padding:9px 11px; margin-bottom:8px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <span style="font-size:0.68rem; font-weight:800; text-transform:uppercase; color:#d97706;">
-                  <i class="fa-solid fa-user-check"></i> Farming Partner KYC Details
-                </span>
-                ${f.partnerName !== '--' ? `<button type="button" onclick="setKhetPartnerFilter('${safePartner}')" style="background:rgba(245,158,11,0.2); color:#d97706; border:1px solid rgba(245,158,11,0.4); border-radius:8px; padding:2px 7px; font-size:0.65rem; font-weight:800; cursor:pointer;">Filter Partner</button>` : ''}
-              </div>
-              <div style="font-size:0.75rem; display:flex; flex-direction:column; gap:3px; color:var(--text-main);">
-                <div><span style="color:var(--text-muted);">Partner Name:</span> <strong style="color:#d97706;">${f.partnerName}</strong></div>
-                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
-                  <span><span style="color:var(--text-muted);">Aadhaar:</span> <strong>${f.partnerAadhaar}</strong></span>
-                  <span><span style="color:var(--text-muted);">Mobile:</span> <strong style="color:#10b981;">${f.partnerMobile}</strong></span>
-                </div>
-                <div><span style="color:var(--text-muted);">Address:</span> <span>${f.partnerAddress}</span></div>
-              </div>
-            </div>
-
-            <!-- Financial Settlement Footer -->
-            <div style="background:rgba(14,165,233,0.06); border:1px solid rgba(14,165,233,0.28); border-radius:10px; padding:8px 11px; font-size:0.74rem; color:var(--text-main);">
-              <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
-                <span>Paid: <strong style="color:#10b981;">₹${f.amountPaid.toLocaleString('en-IN')}</strong></span>
-                <span>Adjusted: <strong style="color:#0284c7;">₹${f.adjustedAmount.toLocaleString('en-IN')}</strong></span>
-                <span>Net Settled: <strong style="color:#10b981;">₹${f.netSettled.toLocaleString('en-IN')}</strong></span>
-              </div>
-              <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:4px; padding-top:4px; border-top:1px dashed var(--glass-border);">
-                <span>Balance: <strong style="color:${f.remainingBalance > 0 ? '#ef4444' : '#7c3aed'};">₹${f.remainingBalance.toLocaleString('en-IN')}</strong></span>
-                <span>Date: <strong>${f.paymentDate}</strong></span>
-              </div>
-              ${f.notes ? `<div style="margin-top:4px; color:var(--text-muted); font-size:0.72rem;"><i class="fa-solid fa-comment-dots"></i> ${f.notes}</div>` : ''}
-            </div>
-          </div>
-
-          <div class="admin-only" style="display:flex; justify-content:flex-end; align-items:center; gap:8px; padding-top:8px; border-top:1px solid var(--glass-border);">
-            <button type="button" class="btn-ledger-action edit-btn" onclick="editKhetRecord('${safeId}', true)" title="Edit Khet Details">
-              <i class="fa-solid fa-pen-to-square"></i> Edit / Adjust
-            </button>
-            <button type="button" class="btn-ledger-action" style="color:var(--accent-red); border-color:rgba(239,68,68,0.4);" onclick="deleteKhetRecord('${safeId}')" title="Delete Khet Record">
-              <i class="fa-solid fa-trash-can"></i> Delete
-            </button>
-          </div>
         </div>
       `;
     }
@@ -26411,8 +26322,7 @@ function formatMonthLabel(rawVal) {
     }
 
     
-      return "channel_" + cleanUser;
-    }
+
 
     function getChannelUnreadCountForUser(channelObj, usernameRaw = "", isAdminView = false) {
       if (!channelObj || typeof channelObj !== "object") return 0;
