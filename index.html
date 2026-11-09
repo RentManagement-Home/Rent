@@ -9040,9 +9040,26 @@
           }
           if (json && json.status === "success") {
             let remoteUsers = Array.isArray(json.users) ? json.users.filter(function(u) { return u && u.Username; }) : null;
+            if (!remoteUsers || remoteUsers.length === 0) {
+              try {
+                const bridgeRes = await fetch("/api/gas-engine?t=" + Date.now());
+                if (bridgeRes.ok) {
+                  const bridgeJson = await bridgeRes.json();
+                  if (bridgeJson && Array.isArray(bridgeJson.users) && bridgeJson.users.length > 0) {
+                    remoteUsers = bridgeJson.users;
+                  }
+                  if (bridgeJson && Array.isArray(bridgeJson.loginHistory) && (!Array.isArray(json.loginHistory) || json.loginHistory.length === 0)) {
+                    json.loginHistory = bridgeJson.loginHistory;
+                  }
+                  if (bridgeJson && bridgeJson.globalConfig && typeof bridgeJson.globalConfig === "object") {
+                    json.globalConfig = { ...(bridgeJson.globalConfig || {}), ...(json.globalConfig || {}) };
+                  }
+                }
+              } catch (e) {}
+            }
             if (remoteUsers && remoteUsers.length > 0) {
               saveLocalUsersMaster(remoteUsers);
-            } else if (remoteUsers && remoteUsers.length === 0 && loadLocalUsersMaster().length === 0) {
+            } else if (loadLocalUsersMaster().length === 0) {
               ensureSheetAdminSeededSync();
             }
 
@@ -9101,6 +9118,20 @@
       inFlightGasFetchPromise = null;
       updateLocalGasSheetCacheFromDB();
       const bodyStr = JSON.stringify(data);
+
+      // Sync user/auth/config state with local GAS engine mirror (reads Code.gs on server)
+      let bridgeResult = null;
+      try {
+        const bRes = await fetch("/api/gas-engine", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: bodyStr
+        });
+        if (bRes.ok) {
+          bridgeResult = await bRes.json();
+        }
+      } catch (e) {}
+
       try {
         const response = await fetch(GAS_WEB_APP_URL, {
           method: "POST",
@@ -9111,7 +9142,10 @@
         const result = await response.json();
         gasCacheNeedsRefresh = true;
         lastGasFetchTimestamp = Date.now();
-        return result || { status: "success", message: "Saved to Google Sheet." };
+        if (result && result.status === "error" && /not recognized|unknown action/i.test(String(result.message || ""))) {
+          if (bridgeResult) return bridgeResult;
+        }
+        return result || bridgeResult || { status: "success", message: "Saved to Google Sheet." };
       } catch (err) {
         try {
           await fetch(GAS_WEB_APP_URL, {
@@ -9125,7 +9159,7 @@
         }
         gasCacheNeedsRefresh = true;
         lastGasFetchTimestamp = Date.now();
-        return { status: "success", message: "Saved directly to Google Sheet." };
+        return bridgeResult || { status: "success", message: "Saved directly to Google Sheet." };
       }
     }
 
@@ -9247,6 +9281,53 @@
       return { properties, flats, renters, bills, fdRecords, khetRecords, kharchRecords };
     }
 
+    async function portalGetInitialData(loggedUsername, clientSessionToken) {
+      const sheetData = await fetchGasSheetData(true);
+      const linked = linkSheetEntities(sheetData || {});
+      const usersList = Array.isArray(sheetData?.users) && sheetData.users.length > 0
+        ? sheetData.users
+        : ensureSheetAdminSeededSync();
+      const loginHistory = Array.isArray(sheetData?.loginHistory)
+        ? sheetData.loginHistory
+        : loadLocalLoginHistoryMaster();
+      const globalConfig = sheetData?.globalConfig || loadLocalGlobalConfigMaster();
+
+      const cleanU = String(loggedUsername || activeUser || "").trim().toLowerCase();
+      const matchedUser = cleanU
+        ? usersList.find(function(u) { return String(u.Username || "").trim().toLowerCase() === cleanU; })
+        : null;
+
+      return {
+        status: "success",
+        properties: linked.properties,
+        flats: linked.flats,
+        renters: linked.renters,
+        bills: linked.bills,
+        fdRecords: linked.fdRecords,
+        khetRecords: linked.khetRecords,
+        kharchRecords: linked.kharchRecords,
+        users: usersList,
+        loginHistory: loginHistory,
+        globalConfig: globalConfig,
+        bgLoginUrl: globalConfig.bgLoginUrl || matchedUser?.BgLogin || "",
+        bgDashboardUrl: globalConfig.bgDashboardUrl || matchedUser?.BgDashboard || "",
+        userExists: matchedUser ? true : (usersList.length === 0 ? true : false),
+        userDeleted: matchedUser ? false : (usersList.length > 0 && Boolean(cleanU)),
+        userStatus: matchedUser?.Status || matchedUser?.AccountStatus || "Active",
+        accountStatus: matchedUser?.AccountStatus || matchedUser?.Status || "Active",
+        activeSessionToken: matchedUser?.ActiveSessionToken || clientSessionToken || "",
+        userRole: matchedUser?.Role || activeRole || "Admin",
+        userFullName: matchedUser?.FullName || activeUserFullName || loggedUsername || "",
+        userMobile: matchedUser?.MobileNumber || activeUserMobile || "",
+        userTheme: matchedUser?.Theme || activeThemePref || "dark",
+        userAssignedProperty: matchedUser?.AssignedProperty ?? activeAssignedProperty ?? "",
+        userAssignedFlat: matchedUser?.AssignedFlat ?? activeAssignedFlat ?? "",
+        userAssignedAadhaar: matchedUser?.AssignedAadhaar ?? activeAssignedAadhaar ?? "",
+        userManagerPermissions: matchedUser?.ManagerPermissions ?? activeManagerPermissions ?? []
+      };
+    }
+    const firebaseGetInitialData = portalGetInitialData;
+
     /**
      * ============================================================================
      * GOOGLE SHEETS LOGIN AUTHENTICATOR & LOGIN HISTORY
@@ -9255,7 +9336,56 @@
      * - Strictly authenticates against the latest user ID and password
      * ============================================================================
      */
-        async function portalLogin(username, password, sessionToken) {
+    async function buildCompleteLoginSuccessPayload(userDocData, sessionToken, rawDbPayload) {
+      let usersList = loadLocalUsersMaster();
+      const cleanU = String(userDocData.Username || "").trim().toLowerCase();
+      const userIdx = usersList.findIndex(function(u) {
+        return String(u.Username || "").trim().toLowerCase() === cleanU;
+      });
+      if (userIdx !== -1) {
+        usersList[userIdx] = Object.assign({}, usersList[userIdx], userDocData, { ActiveSessionToken: sessionToken });
+      } else {
+        usersList.push(Object.assign({}, userDocData, { ActiveSessionToken: sessionToken }));
+      }
+      saveLocalUsersMaster(usersList);
+
+      const sheetData = rawDbPayload || (await fetchGasSheetData(false));
+      const linked = linkSheetEntities(sheetData || {});
+      const globalConfig = sheetData?.globalConfig || loadLocalGlobalConfigMaster();
+      const loginHistory = Array.isArray(sheetData?.loginHistory) && sheetData.loginHistory.length > 0
+        ? sheetData.loginHistory
+        : loadLocalLoginHistoryMaster();
+
+      return {
+        status: "success",
+        username: userDocData.Username,
+        fullName: userDocData.FullName || userDocData.Username,
+        mobile: userDocData.MobileNumber || "",
+        role: userDocData.Role || "Admin",
+        theme: userDocData.Theme || "dark",
+        assignedProperty: userDocData.AssignedProperty || "",
+        assignedFlat: userDocData.AssignedFlat || "",
+        assignedAadhaar: userDocData.AssignedAadhaar || "",
+        managerPermissions: userDocData.ManagerPermissions || [],
+        bgLoginUrl: globalConfig.bgLoginUrl || userDocData.BgLogin || "",
+        bgDashboardUrl: globalConfig.bgDashboardUrl || userDocData.BgDashboard || "",
+        sessionToken: sessionToken,
+        user: userDocData,
+        dbPayload: sheetData,
+        properties: linked.properties,
+        flats: linked.flats,
+        renters: linked.renters,
+        bills: linked.bills,
+        fdRecords: linked.fdRecords,
+        khetRecords: linked.khetRecords,
+        kharchRecords: linked.kharchRecords,
+        users: loadLocalUsersMaster(),
+        loginHistory: loginHistory,
+        globalConfig: globalConfig
+      };
+    }
+
+    async function portalLogin(username, password, sessionToken) {
       const cleanUser = String(username || "").trim();
       const cleanPass = String(password || "").trim();
       if (!cleanUser || !cleanPass) {
@@ -9279,26 +9409,30 @@
           };
         }
 
-        if (res && res.status === "success" && res.user) {
-          const userDocData = res.user;
-          let usersList = loadLocalUsersMaster();
-          const userIdx = usersList.findIndex(function(u) {
-            return String(u.Username || "").trim().toLowerCase() === cleanUser.toLowerCase();
-          });
-          if (userIdx !== -1) {
-            usersList[userIdx] = Object.assign({}, usersList[userIdx], userDocData);
-          } else {
-            usersList.push(userDocData);
+        if (res && res.status === "success" && (res.user || res.username)) {
+          const userDocData = res.user || {
+            Username: res.username || cleanUser,
+            FullName: res.fullName || res.username || cleanUser,
+            Role: res.role || "Admin",
+            Status: "Active",
+            MobileNumber: res.mobile || "",
+            AssignedProperty: res.assignedProperty || "",
+            AssignedFlat: res.assignedFlat || "",
+            AssignedAadhaar: res.assignedAadhaar || "",
+            ManagerPermissions: res.managerPermissions || [],
+            Theme: res.theme || "dark",
+            ActiveSessionToken: sessionToken
+          };
+          if (Array.isArray(res.users) && res.users.length > 0) {
+            saveLocalUsersMaster(res.users);
           }
-          saveLocalUsersMaster(usersList);
-
-          if (res.dbPayload) {
-            linkSheetEntities(res.dbPayload);
+          if (Array.isArray(res.loginHistory) && res.loginHistory.length > 0) {
+            saveLocalLoginHistoryMaster(res.loginHistory);
           }
-          return res;
+          return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, res.dbPayload || (res.properties ? res : null));
         }
 
-        if (res && res.status === "error") {
+        if (res && res.status === "error" && !/not recognized|unknown action/i.test(String(res.message || ""))) {
           return res;
         }
       } catch (netErr) {
@@ -9318,12 +9452,7 @@
         if (String(match.Password || "").trim() === cleanPass) {
           match.ActiveSessionToken = sessionToken;
           saveLocalUsersMaster(localUsers);
-          return {
-            status: "success",
-            user: match,
-            sessionToken: sessionToken,
-            message: "Logged in via local verified credentials."
-          };
+          return await buildCompleteLoginSuccessPayload(match, sessionToken, null);
         }
       }
 
@@ -9441,7 +9570,7 @@
             };
             usersList.push(userDoc);
             saveLocalUsersMaster(usersList);
-            sendGasSheetAction({ ...data, userDoc: userDoc, users: usersList }).catch(function() {});
+            await sendGasSheetAction({ ...data, userDoc: userDoc, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("CREATE_USER", `Created user @${uName} (${roleVal})`, activeUser || "Admin");
             }
@@ -9499,7 +9628,7 @@
               usersList.push(updateFields);
             }
             saveLocalUsersMaster(usersList);
-            sendGasSheetAction({ ...data, updatedUser: updateFields, users: usersList }).catch(function() {});
+            await sendGasSheetAction({ ...data, updatedUser: updateFields, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("UPDATE_USER", `Updated user @${rawTarget} -> @${newUsernameClean} (${roleVal}, ${nextStatus})`, activeUser || "Admin");
             }
@@ -9524,7 +9653,7 @@
               return u;
             });
             saveLocalUsersMaster(usersList);
-            sendGasSheetAction({ ...data, users: usersList }).catch(function() {});
+            await sendGasSheetAction({ ...data, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("BLOCK_TOGGLE", `Changed status of @${rawTarget} to ${newStatus}`, activeUser || "Admin");
             }
@@ -9541,7 +9670,7 @@
               return String(u.Username || "").trim().toLowerCase() !== targetU;
             });
             saveLocalUsersMaster(usersList);
-            sendGasSheetAction({ ...data, users: usersList }).catch(function() {});
+            await sendGasSheetAction({ ...data, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("DELETE_USER", `Deleted user account @${rawTarget}`, activeUser || "Admin");
             }
@@ -9569,7 +9698,7 @@
               };
             }
             saveLocalUsersMaster(usersList);
-            sendGasSheetAction({ ...data, users: usersList }).catch(function() {});
+            await sendGasSheetAction({ ...data, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("CHANGE_PASSWORD", `Password changed for @${rawUser}`, activeUser || rawUser);
             }
@@ -9615,7 +9744,7 @@
               });
             }
             saveLocalUsersMaster(usersList);
-            sendGasSheetAction({ ...data, users: usersList }).catch(function() {});
+            await sendGasSheetAction({ ...data, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("CHANGE_USERNAME", `Username changed from @${rawOld} to @${newU}`, newU);
             }
@@ -9637,7 +9766,7 @@
               return u;
             });
             saveLocalUsersMaster(usersList);
-            sendGasSheetAction({ ...data, users: usersList }).catch(function() {});
+            await sendGasSheetAction({ ...data, users: usersList });
             return { status: "success", message: "Profile details updated in Google Sheet." };
           }
 
@@ -9653,7 +9782,7 @@
                 return u;
               });
               saveLocalUsersMaster(usersList);
-              sendGasSheetAction({ ...data, users: usersList }).catch(function() {});
+              await sendGasSheetAction({ ...data, users: usersList });
             }
             return { status: "success", message: "Theme preference saved." };
           }
@@ -9699,7 +9828,7 @@
               saveLocalUsersMaster(usersList);
             }
 
-            sendGasSheetAction({ ...data, globalConfig: globalConfig }).catch(function() {});
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
             return { status: "success", message: "Backgrounds saved to Google Sheet." };
           }
 
@@ -9715,7 +9844,7 @@
               updatedAt: new Date().toISOString()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            sendGasSheetAction({ ...data, globalConfig: globalConfig }).catch(function() {});
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
             return { status: "success", url: photoUrl, message: "Background photo uploaded." };
           }
 
@@ -9727,7 +9856,7 @@
               updatedAt: new Date().toISOString()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            sendGasSheetAction({ ...data, globalConfig: globalConfig }).catch(function() {});
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
             return { status: "success", message: "Contact configuration synced to Google Sheet." };
           }
 
@@ -9739,7 +9868,7 @@
               updatedAt: new Date().toISOString()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            sendGasSheetAction({ ...data, globalConfig: globalConfig }).catch(function() {});
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
             return { status: "success", message: "Broadcast notifications synced live." };
           }
 
@@ -9751,12 +9880,12 @@
               updatedAt: new Date().toISOString()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            sendGasSheetAction({ ...data, globalConfig: globalConfig }).catch(function() {});
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
             return { status: "success", message: "Live chats synced to Google Sheet." };
           }
 
           default: {
-            sendGasSheetAction(data).catch(function() {});
+            await sendGasSheetAction(data);
             return { status: "success", message: "Processed action: " + action };
           }
         }
@@ -14032,16 +14161,19 @@ function formatMonthLabel(rawVal) {
         localStorage.removeItem(EXPLICIT_LOGOUT_FLAG_KEY);
       } catch (e) {}
 
-      activeUser = res.username;
-      activeUserFullName = res.fullName || res.username;
-      activeUserMobile = sanitizeContactPhoneDisplay(res.mobile || "");
-      activeRole = res.role || "Admin";
-      const sheetTheme = res.theme || "black";
+      const uObj = res.user || {};
+      const dbObj = res.dbPayload || res;
+      activeUser = res.username || uObj.Username || activeUser || "admin";
+      activeUserFullName = res.fullName || uObj.FullName || activeUser;
+      activeUserMobile = sanitizeContactPhoneDisplay(res.mobile || uObj.MobileNumber || "");
+      activeRole = res.role || uObj.Role || "Admin";
+      const sheetTheme = res.theme || uObj.Theme || "black";
 
       // Strictly use the live arrays from Google Sheets
-      DB.properties = Array.isArray(res.properties) ? res.properties : [];
-      DB.flats = Array.isArray(res.flats) ? res.flats : [];
-      DB.renters = (Array.isArray(res.renters) ? res.renters : []).map(r => {
+      DB.properties = Array.isArray(res.properties) ? res.properties : (Array.isArray(dbObj.properties) ? dbObj.properties : []);
+      DB.flats = Array.isArray(res.flats) ? res.flats : (Array.isArray(dbObj.flats) ? dbObj.flats : []);
+      const rawRenters = Array.isArray(res.renters) ? res.renters : (Array.isArray(dbObj.renters) ? dbObj.renters : []);
+      DB.renters = rawRenters.map(r => {
         if (r.ProfileImageURL) r.ProfileImageURL = normalizeGoogleDriveImageUrl(r.ProfileImageURL);
         if (r.IdentityImageURL) r.IdentityImageURL = normalizeGoogleDriveImageUrl(r.IdentityImageURL);
         if (r.IdentityDocNumber) r.IdentityDocNumber = formatAadhaarWithHyphens(r.IdentityDocNumber);
@@ -14049,14 +14181,16 @@ function formatMonthLabel(rawVal) {
         if (r.AltMobileNumber) r.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
         return r;
       });
-      DB.bills = sanitizeAllBillsMonths(Array.isArray(res.bills) ? res.bills : []);
-      DB.users = (Array.isArray(res.users) ? res.users : []).map(u => {
+      const rawBills = Array.isArray(res.bills) ? res.bills : (Array.isArray(dbObj.bills) ? dbObj.bills : []);
+      DB.bills = sanitizeAllBillsMonths(rawBills);
+      const rawUsers = Array.isArray(res.users) ? res.users : (Array.isArray(dbObj.users) ? dbObj.users : loadLocalUsersMaster());
+      DB.users = rawUsers.map(u => {
         if (u.MobileNumber !== undefined) u.MobileNumber = sanitizeContactPhoneDisplay(u.MobileNumber);
         return u;
       });
-      DB.fdRecords = Array.isArray(res.fdRecords) ? res.fdRecords : [];
-      DB.khetRecords = Array.isArray(res.khetRecords) ? res.khetRecords : [];
-      DB.kharchRecords = Array.isArray(res.kharchRecords) ? res.kharchRecords : [];
+      DB.fdRecords = Array.isArray(res.fdRecords) ? res.fdRecords : (Array.isArray(dbObj.fdRecords) ? dbObj.fdRecords : []);
+      DB.khetRecords = Array.isArray(res.khetRecords) ? res.khetRecords : (Array.isArray(dbObj.khetRecords) ? dbObj.khetRecords : []);
+      DB.kharchRecords = Array.isArray(res.kharchRecords) ? res.kharchRecords : (Array.isArray(dbObj.kharchRecords) ? dbObj.kharchRecords : []);
 
       const matchedU = (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase());
       activeAssignedProperty = res.assignedProperty || res.userAssignedProperty || matchedU?.AssignedProperty || "";
@@ -28031,6 +28165,15 @@ function formatMonthLabel(rawVal) {
       renderContactUsDynamicBody();
       renderAdminMaintenanceTickets();
       triggerSideToast("Maintenance Ticket Raised", `Ticket ${ticket.id} (${cat}) submitted to Admin.`, true);
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? "" : str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
     }
 
     function openCreateTicketModalForAdmin() {
