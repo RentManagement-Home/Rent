@@ -5937,6 +5937,64 @@
     </div>
   </div>
 
+  <!-- CREATE MAINTENANCE TICKET MODAL (FOR ADMIN) -->
+  <div id="adminCreateTicketModal" class="modal-overlay" style="z-index: 8950;" onclick="if(event.target===this) closeModal('adminCreateTicketModal')">
+    <div class="modal-window" style="max-width: 480px;">
+      <button class="modal-close-btn" onclick="closeModal('adminCreateTicketModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border); padding-right:32px;">
+        <div style="width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, #10b981, #06b6d4); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:1.15rem; flex-shrink:0;">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+        <div>
+          <h3 style="margin:0; font-size:1.05rem;">Log Maintenance Service Ticket</h3>
+          <p style="margin:0; font-size:0.75rem; color:var(--text-muted);">Record a maintenance request for any property &amp; flat live to Google Sheets.</p>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label style="font-size:0.75rem; font-weight:700;">Property</label>
+        <select id="adminTicketPropertySelect" class="form-control" onchange="onAdminTicketPropertyChange()"></select>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label style="font-size:0.75rem; font-weight:700;">Flat</label>
+        <select id="adminTicketFlatSelect" class="form-control" onchange="onAdminTicketFlatChange()"></select>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label style="font-size:0.75rem; font-weight:700;">Renter Name / Caller</label>
+        <input type="text" id="adminTicketRenterName" class="form-control" placeholder="Renter name or caller...">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+        <div class="form-group" style="margin:0;">
+          <label style="font-size:0.75rem; font-weight:700;">Category</label>
+          <select id="adminTicketCategory" class="form-control">
+            <option value="Plumbing">Plumbing</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Carpentry">Carpentry</option>
+            <option value="Water">Water / Pipeline</option>
+            <option value="Painting">Painting</option>
+            <option value="Appliance">Appliance / Meter</option>
+            <option value="Cleaning">Cleaning &amp; Waste</option>
+            <option value="General">General / Other</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin:0;">
+          <label style="font-size:0.75rem; font-weight:700;">Priority</label>
+          <select id="adminTicketPriority" class="form-control">
+            <option value="Normal">Normal</option>
+            <option value="High">High</option>
+            <option value="Urgent">Urgent / Emergency</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label style="font-size:0.75rem; font-weight:700;">Issue Description</label>
+        <textarea id="adminTicketDesc" class="form-control" rows="3" placeholder="Describe the maintenance issue or work required..."></textarea>
+      </div>
+      <button type="button" class="btn-primary" style="width:100%; padding:10px; background:linear-gradient(135deg, #10b981, #059669); font-weight:800;" onclick="submitAdminMaintenanceTicket()">
+        <i class="fa-solid fa-floppy-disk"></i> Save &amp; Log Ticket
+      </button>
+    </div>
+  </div>
+
   <!-- ==================== POPUP MODALS ==================== -->
 
   <!-- EDIT ANY BILL POPUP MODAL (Requirement 4: Edit Everything) -->
@@ -11777,7 +11835,7 @@ function formatMonthLabel(rawVal) {
       const savedTheme = localStorage.getItem("app_visual_theme") || "black";
       applyVisualTheme(savedTheme);
 
-      // Purge legacy local DB & credential caches so Firebase Firestore is always the single source of truth for data
+      // Purge legacy local DB & credential caches so Google Sheets is always the single source of truth for data
       try {
         localStorage.removeItem("portal_full_db_backup");
         localStorage.removeItem("portal_verified_auth_map");
@@ -11994,7 +12052,7 @@ function formatMonthLabel(rawVal) {
     let pendingWriteCount = 0;
     let lastWriteCompletedAt = 0;
 
-    // Zero-Cache Policy: Never save DB snapshots to localStorage or sessionStorage so Firebase Firestore is always the single source of truth
+    // Zero-Cache Policy: Never save DB snapshots to localStorage or sessionStorage so Google Sheets is always the single source of truth
     function saveDbSnapshotToCache() {
       try {
         sortPropertiesAlphabetically(DB.properties);
@@ -12022,7 +12080,7 @@ function formatMonthLabel(rawVal) {
       if (matchedFlat) {
         selectedFlat = matchedFlat;
       } else {
-        // Selected flat was deleted in Firebases — close modal immediately
+        // Selected flat was deleted in Google Sheets — close modal immediately
         selectedFlat = null;
         activeFlatRenterObj = null;
         closeModal("flatDetailsModal");
@@ -13822,7 +13880,7 @@ function formatMonthLabel(rawVal) {
 
     
 
-    // Pre-warm Firebase Cloud Firestore server while login screen is open so server is hot & custom backgrounds load
+    // Pre-warm Google Sheets server while login screen is open so server is hot & custom backgrounds load
     let isPrewarmingServer = false;
     async function prewarmServerInBackground() {
       if (isPrewarmingServer || activeUser) return;
@@ -13980,7 +14038,7 @@ function formatMonthLabel(rawVal) {
       activeRole = res.role || "Admin";
       const sheetTheme = res.theme || "black";
 
-      // Strictly use the live arrays from Google Sheets & Firebase
+      // Strictly use the live arrays from Google Sheets
       DB.properties = Array.isArray(res.properties) ? res.properties : [];
       DB.flats = Array.isArray(res.flats) ? res.flats : [];
       DB.renters = (Array.isArray(res.renters) ? res.renters : []).map(r => {
@@ -14227,7 +14285,7 @@ function formatMonthLabel(rawVal) {
       try { updateLoginLockoutUI(); } catch (e) {}
     }, 50);
 
-    // 1. Live Server-Verified Login Every Time + Single-Device Session Token Generation (Strictly Verified Against Firebase)
+    // 1. Live Server-Verified Login Every Time + Single-Device Session Token Generation (Strictly Verified Against Google Sheets)
     let isSubmittingLogin = false;
     async function handleLoginSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
@@ -14337,7 +14395,7 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    // 2. Continuous Live Background Sync Directly from Firebase + Google Sheets
+    // 2. Continuous Live Background Sync Directly from Google Sheets
     async function syncDataLive(forceRender = false) {
       if (!activeUser || isSyncingLive || isSessionConflictModalOpen) return;
       try {
@@ -14384,7 +14442,7 @@ function formatMonthLabel(rawVal) {
             return;
           }
 
-          // If the currently logged-in user's ID (including Admin) was deleted or renamed in Firebase, log out immediately!
+          // If the currently logged-in user's ID (including Admin) was deleted or renamed in Google Sheets, log out immediately!
           if (incomingUsers.length > 0 && (res.userDeleted === true || res.userExists === false || !activeUserStillInSheet)) {
             DB.properties = [];
             DB.flats = [];
@@ -16319,8 +16377,8 @@ function formatMonthLabel(rawVal) {
         sessionStorage.removeItem("active_session_user");
         sessionStorage.removeItem("active_session_role");
         sessionStorage.removeItem("active_session_token");
-        document.getElementById("appContainer").style.display = "none";
-        document.getElementById("loginPage").style.display = "flex";
+        document.getElementById("dashboardScreen")?.classList.remove("active");
+        document.getElementById("loginScreen")?.classList.add("active");
         openModal("accountBlockedModal");
         return;
       }
@@ -21483,7 +21541,7 @@ function formatMonthLabel(rawVal) {
       openModal("tenantFullProfileModal");
     }
 
-    // Requirement 4 (Latest): Fixed Deposit (FD) & Farmland (Khet) Auto-Save to Firebase + Full Portfolio & Partner Ledger
+    // Requirement 4 (Latest): Fixed Deposit (FD) & Farmland (Khet) Auto-Save to Google Sheets + Full Portfolio & Partner Ledger
     let editingFdRecordId = null;
     let editingKhetRecordId = null;
     let activeFdPlaceFilter = "ALL";
@@ -25720,7 +25778,7 @@ function formatMonthLabel(rawVal) {
           badgeEl.style.color = "var(--primary)";
         }
 
-        // Guaranteed <= 38,000 chars so both Aadhaar Card and Profile Photo save directly in Firebases AND Google Drive
+        // Guaranteed <= 38,000 chars so both Aadhaar Card and Profile Photo save directly in Google Sheets
         const compressedDataUrl = await compressImageFileToDataUrl(file, isIdentity ? 780 : 620, 0.78);
         const sheetSafeBase64 = compressedDataUrl.length <= 38000
           ? compressedDataUrl
@@ -26249,7 +26307,7 @@ function formatMonthLabel(rawVal) {
     }
 
     // ==========================================================================
-    // REQUIREMENT 3 & 4: REAL-TIME 1-ON-1 LIVE CHAT ACROSS ALL USERS ON FIREBASE
+    // REQUIREMENT 3 & 4: REAL-TIME 1-ON-1 LIVE CHAT ACROSS ALL USERS ON GOOGLE SHEETS
     // ==========================================================================
     let hasLoadedInitialPrivateChats = false;
 
@@ -27973,6 +28031,81 @@ function formatMonthLabel(rawVal) {
       renderContactUsDynamicBody();
       renderAdminMaintenanceTickets();
       triggerSideToast("Maintenance Ticket Raised", `Ticket ${ticket.id} (${cat}) submitted to Admin.`, true);
+    }
+
+    function openCreateTicketModalForAdmin() {
+      const propSelect = document.getElementById("adminTicketPropertySelect");
+      const flatSelect = document.getElementById("adminTicketFlatSelect");
+      const renterInput = document.getElementById("adminTicketRenterName");
+      const descInput = document.getElementById("adminTicketDesc");
+      if (descInput) descInput.value = "";
+
+      if (propSelect) {
+        const props = (DB && DB.properties) || [];
+        propSelect.innerHTML = props.length > 0
+          ? props.map(p => `<option value="${escapeHtml(p.PropertyName)}">${escapeHtml(p.PropertyName)}</option>`).join("")
+          : `<option value="">No properties found</option>`;
+        if (selectedProperty && props.some(p => p.PropertyName === selectedProperty)) {
+          propSelect.value = selectedProperty;
+        }
+      }
+      onAdminTicketPropertyChange();
+      openModal("adminCreateTicketModal");
+    }
+
+    function onAdminTicketPropertyChange() {
+      const propSelect = document.getElementById("adminTicketPropertySelect");
+      const flatSelect = document.getElementById("adminTicketFlatSelect");
+      if (!propSelect || !flatSelect) return;
+      const propName = propSelect.value;
+      const flats = ((DB && DB.flats) || []).filter(f => f.PropertyName === propName);
+      flatSelect.innerHTML = flats.length > 0
+        ? flats.map(f => `<option value="${escapeHtml(f.FlatName)}">Flat ${escapeHtml(f.FlatName)}</option>`).join("")
+        : `<option value="">General / Entire Property</option>`;
+      if (selectedFlat && flats.some(f => f.FlatName === selectedFlat)) {
+        flatSelect.value = selectedFlat;
+      }
+      onAdminTicketFlatChange();
+    }
+
+    function onAdminTicketFlatChange() {
+      const propSelect = document.getElementById("adminTicketPropertySelect");
+      const flatSelect = document.getElementById("adminTicketFlatSelect");
+      const renterInput = document.getElementById("adminTicketRenterName");
+      if (!propSelect || !flatSelect || !renterInput) return;
+      const propName = propSelect.value;
+      const flatName = flatSelect.value;
+      const renter = ((DB && DB.renters) || []).find(r => r.PropertyName === propName && r.FlatName === flatName && String(r.Status || "").toLowerCase() === "active");
+      renterInput.value = renter ? renter.RenterName : ("Admin (" + (activeUserFullName || activeUser || "Admin") + ")");
+    }
+
+    function submitAdminMaintenanceTicket() {
+      const prop = document.getElementById("adminTicketPropertySelect")?.value || selectedProperty || "General";
+      const flat = document.getElementById("adminTicketFlatSelect")?.value || selectedFlat || "General";
+      const renter = (document.getElementById("adminTicketRenterName")?.value || "").trim() || ("Admin (" + (activeUserFullName || activeUser || "Admin") + ")");
+      const cat = document.getElementById("adminTicketCategory")?.value || "General";
+      const prio = document.getElementById("adminTicketPriority")?.value || "Normal";
+      const desc = (document.getElementById("adminTicketDesc")?.value || "").trim();
+      if (!desc) {
+        return triggerSideToast("Description Required", "Please enter a description for the ticket.", false);
+      }
+      const ticket = {
+        id: "TKT-" + Date.now().toString().slice(-6),
+        propertyName: prop,
+        flatName: flat,
+        renterName: renter,
+        category: cat,
+        priority: prio,
+        description: desc,
+        status: "Open",
+        createdAt: new Date().toLocaleString("en-IN")
+      };
+      const list = getStoredMaintenanceTickets();
+      list.unshift(ticket);
+      saveStoredMaintenanceTickets(list);
+      closeModal("adminCreateTicketModal");
+      renderAdminMaintenanceTickets();
+      triggerSideToast("Ticket Created", `Ticket #${ticket.id} (${cat}) logged and synced to Google Sheets.`, true);
     }
 
     function renderAdminMaintenanceTickets() {
