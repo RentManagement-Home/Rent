@@ -5065,7 +5065,7 @@
   <!-- ==========================================================================
        COMPLETE TENANT PROFILE POP-UP WINDOW (OPENED VIA "VIEW PROFILE" OR CLICKING ANY SEARCH PROFILE)
        ========================================================================== -->
-  <div id="tenantFullProfileModal" class="modal-overlay" style="z-index: 3500;">
+  <div id="tenantFullProfileModal" class="modal-overlay" style="z-index: 10050;">
     <div class="modal-window" style="max-width: 780px;">
       <button class="modal-close-btn" onclick="closeModal('tenantFullProfileModal')"><i class="fa-solid fa-xmark"></i></button>
       <div id="tenantFullProfileModalContent">
@@ -5815,9 +5815,11 @@
         <span id="headerRoleBadge" class="role-badge">Admin</span>
       </div>
 
-      <div class="nav-center" id="searchContainer">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="globalSearch" class="search-input" style="padding-right:34px;" placeholder="Search properties, flats, active or left tenants..." oninput="handleGlobalSearch(this.value); toggleSearchClearBtn(this.value);" onfocus="if(this.value.trim()) handleGlobalSearch(this.value)">
+      <div class="nav-center" id="searchContainer" style="position:relative;">
+        <button type="button" id="btnAdminGlobalSearch" class="search-btn-trigger" onclick="handleGlobalSearch(document.getElementById('globalSearch')?.value); document.getElementById('globalSearch')?.focus();" title="Search Admin Portal" aria-label="Search" style="position:absolute; left:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--primary); cursor:pointer; z-index:5; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%;">
+          <i class="fa-solid fa-magnifying-glass search-icon" style="position:static; transform:none; pointer-events:none;"></i>
+        </button>
+        <input type="text" id="globalSearch" class="search-input" style="padding-left:42px; padding-right:34px;" placeholder="Search properties, flats, active or left tenants..." oninput="handleGlobalSearch(this.value); toggleSearchClearBtn(this.value);" onfocus="if(this.value.trim()) handleGlobalSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleGlobalSearch(this.value);}">
         <button type="button" id="btnClearSearch" onclick="clearGlobalSearch()" title="Clear search" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem; padding:4px;">
           <i class="fa-solid fa-circle-xmark"></i>
         </button>
@@ -8425,12 +8427,9 @@
           <textarea id="calcNotes" class="form-control" rows="2" placeholder="Write additional points..."></textarea>
         </div>
 
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
-          <button class="btn-primary admin-only" id="calcSubmitBtn" onclick="submitBillCalculation()">
+        <div>
+          <button class="btn-primary admin-only" id="calcSubmitBtn" style="width:100%;" onclick="submitBillCalculation()">
             <i class="fa-solid fa-calculator"></i> <span id="calcSubmitBtnText">Calculate Bill</span>
-          </button>
-          <button type="button" class="btn-primary" id="btnCalcCollectRentQr" style="background:linear-gradient(135deg, #10b981, #059669);" onclick="openRentCollectionQrModal()">
-            <i class="fa-solid fa-qrcode"></i> Generate UPI Rent QR
           </button>
         </div>
       </div>
@@ -8440,9 +8439,6 @@
         <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px;">
           <h4><i class="fa-solid fa-receipt"></i> Billed History Ledger (Newest First)</h4>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <button type="button" class="btn-ledger-action" style="padding:6px 12px; font-size:0.74rem; color:#38bdf8;" onclick="openSubmitPaymentProofModalForCurrentFlat()">
-              <i class="fa-solid fa-upload"></i> Submit Payment Proof (UTR)
-            </button>
             <input type="text" class="form-control" style="max-width:240px;" placeholder="Search tenant, month, status..." oninput="filterLedgerTable(this.value)">
           </div>
         </div>
@@ -9084,6 +9080,25 @@
                     localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(incoming));
                   } catch (e) {}
                   if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
+                }
+              } else if (data.event === "USER_SESSION_REVOKED") {
+                const targetU = String(data.payload?.username || "").trim().toLowerCase();
+                const newTok = String(data.payload?.newSessionToken || "").trim();
+                if (activeUser && String(activeUser).trim().toLowerCase() === targetU) {
+                  if (activeSessionToken && newTok && String(activeSessionToken).trim() !== newTok) {
+                    triggerSingleDeviceSessionConflict();
+                  }
+                }
+              } else if (data.event === "USER_LOCKOUT") {
+                const targetU = String(data.payload?.username || "").trim().toLowerCase();
+                const lockData = data.payload?.lockout;
+                if (targetU && lockData) {
+                  const state = getLoginLockoutState(targetU);
+                  state.lockedUntil = Number(lockData.lockedUntil || 0);
+                  state.lockedTierLabel = lockData.tierLabel || "1 minute";
+                  state.isPermanentlyBlocked = Boolean(lockData.isPermanentlyBlocked);
+                  saveLoginLockoutState(targetU, state);
+                  updateLoginLockoutUI(targetU);
                 }
               } else if (data.event === "DATA_SYNC") {
                 if (typeof syncDataLive === "function" && activeUser) {
@@ -10596,8 +10611,8 @@
       return str;
     }
 
-    // High-Definition (Full HD 2560px @ 0.95 quality) reader for background photos — NEVER shrinks to 38KB
-    function readHdBackgroundFileToDataUrl(file, maxDimension = 2560, quality = 0.95) {
+    // Ultra-High-Definition (4K / Full HD 3840px @ 0.98 quality) reader for background photos — crystal clear HD
+    function readHdBackgroundFileToDataUrl(file, maxDimension = 3840, quality = 0.98) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -10606,8 +10621,8 @@
           img.onload = () => {
             let width = img.naturalWidth || img.width;
             let height = img.naturalHeight || img.height;
-            // If image is already within Full HD bounds and reasonably sized, keep lossless original data URL
-            if (width <= maxDimension && height <= maxDimension && rawDataUrl.length <= 3200000) {
+            // If image is already within Full HD / 4K bounds and reasonably sized, keep untouched original data URL
+            if (width <= maxDimension && height <= maxDimension && rawDataUrl.length <= 6000000) {
               resolve(rawDataUrl);
               return;
             }
@@ -10858,28 +10873,21 @@
       if (!file) return;
       triggerSideToast("Uploading Full HD Background", "Processing crystal-clear Full HD background photo for the Home Page...", "warning");
       try {
-        const hdDataUrl = await readHdBackgroundFileToDataUrl(file, 2560, 0.95);
-        const driveUploadDataUrl = await readHdBackgroundFileToDataUrl(file, 1920, 0.92);
+        const hdDataUrl = await readHdBackgroundFileToDataUrl(file, 3840, 0.98);
         const sheetSafeBase64 = await compressImageFileToDataUrl(file, 460, 0.7);
 
         try {
-          localStorage.setItem("portal_custom_bg_sheet_safe", sheetSafeBase64);
           localStorage.setItem("portal_custom_bg_hd_cache", hdDataUrl);
           localStorage.setItem("portal_custom_bg_dashboard", hdDataUrl);
           localStorage.setItem("portal_custom_bg_login", hdDataUrl);
+          localStorage.setItem("portal_custom_bg_sheet_safe", sheetSafeBase64);
         } catch (storageErr) {
           try {
-            localStorage.setItem("portal_custom_bg_sheet_safe", sheetSafeBase64);
-            localStorage.setItem("portal_custom_bg_hd_cache", driveUploadDataUrl);
-            localStorage.setItem("portal_custom_bg_dashboard", driveUploadDataUrl);
-            localStorage.setItem("portal_custom_bg_login", driveUploadDataUrl);
-          } catch (e2) {
-            try {
-              localStorage.setItem("portal_custom_bg_hd_cache", sheetSafeBase64);
-              localStorage.setItem("portal_custom_bg_dashboard", sheetSafeBase64);
-              localStorage.setItem("portal_custom_bg_login", sheetSafeBase64);
-            } catch (e3) {}
-          }
+            const highResFallback = await readHdBackgroundFileToDataUrl(file, 2560, 0.92);
+            localStorage.setItem("portal_custom_bg_hd_cache", highResFallback);
+            localStorage.setItem("portal_custom_bg_dashboard", highResFallback);
+            localStorage.setItem("portal_custom_bg_login", highResFallback);
+          } catch (e2) {}
         }
         applyCustomBackgrounds();
         initCustomBgInputs();
@@ -10889,8 +10897,8 @@
           username: activeUser || "admin",
           type: "dashboard",
           fileName: file.name,
-          mimeType: "image/jpeg",
-          base64Data: driveUploadDataUrl,
+          mimeType: file.type || "image/jpeg",
+          base64Data: hdDataUrl,
           sheetSafeBase64: sheetSafeBase64
         });
         const rawImgUrl = (res && res.status === "success") ? (res.imageUrl || res.url || "") : "";
@@ -15055,6 +15063,20 @@ function formatMonthLabel(rawVal) {
           return;
         }
 
+        if (res && (res.status === "locked" || res.locked === true)) {
+          const lockedUntil = Number(res.lockedUntil || (Date.now() + (Number(res.remainingMinutes) || 1) * 60000));
+          const state = getLoginLockoutState(cleanU);
+          state.lockedUntil = lockedUntil;
+          state.lockedTierLabel = res.tierLabel || "1 minute";
+          saveLoginLockoutState(cleanU, state);
+          updateLoginLockoutUI(cleanU);
+          const remMin = res.remainingMinutes || Math.max(1, Math.ceil((lockedUntil - Date.now()) / 60000));
+          const remSec = res.remainingSeconds || Math.max(1, Math.ceil((lockedUntil - Date.now()) / 1000));
+          const msg = res.message || `Username @${cleanU} is currently locked. It remains locked for ${remMin} minute${remMin === 1 ? "" : "s"} (${remSec}s remaining). Please wait before trying again.`;
+          triggerSideToast("Account Locked", msg, false);
+          return;
+        }
+
         if (res && res.status === "success") {
           resetLoginLockoutState(cleanU);
           try {
@@ -15165,8 +15187,8 @@ function formatMonthLabel(rawVal) {
           );
           const activeUserStillInSheet = Boolean(matchedServerUser);
 
-          // Requirement 7: Check if this account (Admin, Manager, Renter, or Viewer) has logged in from a new device!
-          if (res.sessionConflict === true) {
+          // Single-Device Session Conflict: Check if this account logged in from another device
+          if (res.sessionConflict === true || (matchedServerUser && matchedServerUser.ActiveSessionToken && activeSessionToken && String(matchedServerUser.ActiveSessionToken).trim() !== String(activeSessionToken).trim())) {
             triggerSingleDeviceSessionConflict();
             return;
           }
@@ -15794,6 +15816,8 @@ function formatMonthLabel(rawVal) {
         return String(a.r.RenterName || "").localeCompare(String(b.r.RenterName || ""));
       });
 
+      window.__adminSearchResults = matchingRenters;
+
       if (dropdown) {
         if (matchingRenters.length === 0) {
           dropdown.innerHTML = `
@@ -15803,7 +15827,7 @@ function formatMonthLabel(rawVal) {
           `;
           dropdown.classList.add("active");
         } else {
-          dropdown.innerHTML = matchingRenters.map(({ r, rId }) => {
+          dropdown.innerHTML = matchingRenters.map(({ r, rId }, idx) => {
             const isAct = String(r.Status || "").trim().toLowerCase() === "active";
             const statusLabel = isAct ? "Active Tenant" : "Left / Past Tenant";
             const statusClass = isAct ? "badge-paid" : "badge-unpaid";
@@ -15815,13 +15839,8 @@ function formatMonthLabel(rawVal) {
               ? `Due: ₹${summary.netBalance.toLocaleString('en-IN')}`
               : (summary.netBalance < 0 ? `Adv: ₹${Math.abs(summary.netBalance).toLocaleString('en-IN')}` : `Settled (₹0)`);
 
-            const safeProp = String(r.PropertyName || "").replace(/'/g, "\\'");
-            const safeFlat = String(r.FlatName || "").replace(/'/g, "\\'");
-            const safeId = String(rId || "").replace(/'/g, "\\'");
-            const safeName = String(r.RenterName || "").replace(/'/g, "\\'");
-
             return `
-              <div class="search-result-person-item" onclick="event.stopPropagation(); openTenantFullProfilePopup('${safeId}', '${safeProp}', '${safeFlat}', '${safeName}')">
+              <div class="search-result-person-item" style="cursor:pointer;" onclick="event.stopPropagation(); openTenantProfileBySearchResultIndex(${idx});">
                 <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
                   <div class="renter-avatar" style="width:42px; height:42px; flex-shrink:0;">
                     <img src="${avatarSrc}" alt="${r.RenterName || 'Tenant'}">
@@ -15842,8 +15861,8 @@ function formatMonthLabel(rawVal) {
                 <button
                   type="button"
                   class="btn-primary"
-                  style="width:auto; padding:7px 12px; font-size:0.74rem; white-space:nowrap; flex-shrink:0;"
-                  onclick="event.stopPropagation(); openTenantFullProfilePopup('${safeId}', '${safeProp}', '${safeFlat}', '${safeName}')"
+                  style="width:auto; padding:7px 12px; font-size:0.74rem; white-space:nowrap; flex-shrink:0; cursor:pointer;"
+                  onclick="event.stopPropagation(); openTenantProfileBySearchResultIndex(${idx});"
                 >
                   <i class="fa-solid fa-id-card"></i> View Profile
                 </button>
@@ -22065,35 +22084,64 @@ function formatMonthLabel(rawVal) {
       }).join("");
     }
 
+    function openTenantProfileBySearchResultIndex(idx) {
+      try {
+        const item = (window.__adminSearchResults && window.__adminSearchResults[idx]) ? window.__adminSearchResults[idx] : null;
+        if (item && item.r) {
+          openTenantFullProfilePopup(item.r, item.r.PropertyName, item.r.FlatName, item.r.RenterName);
+        } else {
+          const renters = DB.renters || [];
+          if (renters[idx]) {
+            openTenantFullProfilePopup(renters[idx], renters[idx].PropertyName, renters[idx].FlatName, renters[idx].RenterName);
+          }
+        }
+      } catch (err) {
+        console.error("openTenantProfileBySearchResultIndex error:", err);
+      }
+    }
+
     // Requirement 2 (Latest): Clicking on ANY profile or "View Profile" in search immediately opens a new pop-up window
     // right there showing their entire profile and all their details
     function openTenantFullProfilePopup(renterIdOrIdx, propName, flatName, fallbackName = "") {
-      let targetRenter = null;
-      if (renterIdOrIdx && String(renterIdOrIdx).startsWith("IDX-")) {
-        const idx = parseInt(String(renterIdOrIdx).replace("IDX-", ""), 10);
-        if (!isNaN(idx) && DB.renters[idx]) {
-          targetRenter = DB.renters[idx];
+      try {
+        const globalDropdown = document.getElementById("globalSearchResultsBox");
+        if (globalDropdown) {
+          globalDropdown.classList.remove("active");
         }
-      }
-      if (!targetRenter && renterIdOrIdx) {
-        targetRenter = (DB.renters || []).find(r => String(r.RenterID || "").trim() === String(renterIdOrIdx).trim());
-      }
-      if (!targetRenter && fallbackName) {
-        targetRenter = (DB.renters || []).find(r =>
-          isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName) &&
-          String(r.RenterName || "").trim().toLowerCase() === String(fallbackName).trim().toLowerCase()
-        ) || (DB.renters || []).find(r =>
-          String(r.RenterName || "").trim().toLowerCase() === String(fallbackName).trim().toLowerCase()
-        );
-      }
-      if (!targetRenter) {
-        targetRenter = (DB.renters || []).find(r =>
-          isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName)
-        );
-      }
-      if (!targetRenter) {
-        return triggerSideToast("Not Found", "Could not locate tenant profile details.", false);
-      }
+
+        let targetRenter = null;
+        if (typeof renterIdOrIdx === "object" && renterIdOrIdx !== null) {
+          targetRenter = renterIdOrIdx;
+        } else if (renterIdOrIdx && String(renterIdOrIdx).startsWith("IDX-")) {
+          const idx = parseInt(String(renterIdOrIdx).replace("IDX-", ""), 10);
+          if (!isNaN(idx) && DB.renters && DB.renters[idx]) {
+            targetRenter = DB.renters[idx];
+          }
+        }
+        if (!targetRenter && renterIdOrIdx) {
+          targetRenter = (DB.renters || []).find(r => String(r.RenterID || "").trim() === String(renterIdOrIdx).trim());
+        }
+        if (!targetRenter && fallbackName) {
+          targetRenter = (DB.renters || []).find(r =>
+            isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName) &&
+            String(r.RenterName || "").trim().toLowerCase() === String(fallbackName).trim().toLowerCase()
+          ) || (DB.renters || []).find(r =>
+            String(r.RenterName || "").trim().toLowerCase() === String(fallbackName).trim().toLowerCase()
+          );
+        }
+        if (!targetRenter && propName && flatName) {
+          targetRenter = (DB.renters || []).find(r =>
+            isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName)
+          );
+        }
+        if (!targetRenter && renterIdOrIdx) {
+          targetRenter = (DB.renters || []).find(r =>
+            String(r.IdentityDocNumber || "").replace(/\D/g, "") === String(renterIdOrIdx).replace(/\D/g, "")
+          );
+        }
+        if (!targetRenter) {
+          return triggerSideToast("Not Found", "Could not locate tenant profile details.", false);
+        }
 
       // Requirement 6: Renter role can strictly only open their own Aadhaar-linked profile
       if (activeRole === "Renter") {
@@ -22291,10 +22339,14 @@ function formatMonthLabel(rawVal) {
         `;
       }
 
-      const globalDropdown = document.getElementById("globalSearchResultsBox");
-      if (globalDropdown) globalDropdown.classList.remove("active");
+        const globalDropdown = document.getElementById("globalSearchResultsBox");
+        if (globalDropdown) globalDropdown.classList.remove("active");
 
-      openModal("tenantFullProfileModal");
+        openModal("tenantFullProfileModal");
+      } catch (err) {
+        console.error("openTenantFullProfilePopup error:", err);
+        triggerSideToast("Profile Notice", "Unable to load full profile view at this moment.", false);
+      }
     }
 
     // Requirement 4 (Latest): Fixed Deposit (FD) & Farmland (Khet) Auto-Save to Google Sheets + Full Portfolio & Partner Ledger
