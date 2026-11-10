@@ -2965,6 +2965,7 @@
   /* REQUIREMENT 1 & 2: Unified 42px Outline-Box Buttons for Live Chat, Help Center, Home Portfolio Dropdown, Plus (+), Profile, Settings & Logout */
   .live-chat-icon-only-btn,
   .help-center-icon-only-btn,
+  .maintenance-icon-only-btn,
   .home-icon-box-btn,
   .plus-icon-box-btn,
   .profile-icon-box-btn,
@@ -2987,17 +2988,20 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12) !important;
     position: relative !important;
   }
-  /* Requirement 1: Help Center strictly visible ONLY on Renter's dashboard */
+  /* Requirement 1 & 2: Help Center & Maintenance Ticket icon strictly visible ONLY on Renter's dashboard */
   #btnRenterNavHelpCenter,
+  #btnRenterNavMaintenance,
   #fabContactUsBtn {
     display: none !important;
   }
   body.role-renter #btnRenterNavHelpCenter,
+  body.role-renter #btnRenterNavMaintenance,
   body.role-renter #fabContactUsBtn {
     display: inline-flex !important;
   }
   .live-chat-icon-only-btn:hover,
   .help-center-icon-only-btn:hover,
+  .maintenance-icon-only-btn:hover,
   .home-icon-box-btn:hover,
   .plus-icon-box-btn:hover,
   .profile-icon-box-btn:hover,
@@ -3030,6 +3034,14 @@
   .help-center-icon-only-btn:hover {
     border-color: #38bdf8 !important;
     box-shadow: 0 6px 16px rgba(56, 189, 248, 0.35) !important;
+  }
+  .maintenance-icon-only-btn {
+    border-color: rgba(245, 158, 11, 0.5) !important;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, var(--bg-input) 100%) !important;
+  }
+  .maintenance-icon-only-btn:hover {
+    border-color: #f59e0b !important;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35) !important;
   }
   .plus-icon-box-btn {
     border-color: rgba(56, 189, 248, 0.45) !important;
@@ -4122,43 +4134,83 @@
 
 
 
-  /* Renter Dashboard Top Balance (Advance / Loss / Profit) & Notification Styles */
+  /* Renter Dashboard Top Balance (Centered Text Only, No Background Box) & Notification Styles */
+  body.role-renter header.top-nav {
+    position: relative !important;
+  }
+  body.role-renter .pnl-tracker {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    z-index: 4 !important;
+    pointer-events: auto !important;
+  }
+  @media (max-width: 900px) {
+    body.role-renter .pnl-tracker {
+      position: static !important;
+      transform: none !important;
+      width: 100% !important;
+      order: -1 !important;
+      justify-content: center !important;
+      margin: 4px auto !important;
+    }
+    body.role-renter .nav-right {
+      justify-content: center !important;
+      width: 100% !important;
+    }
+  }
   .renter-pnl-balanced {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: var(--bg-input);
-    border: 1.5px solid var(--glass-border);
-    padding: 6px 12px;
-    border-radius: 14px;
-    font-size: 0.78rem;
-    font-weight: 700;
+    justify-content: center;
+    gap: 10px;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-size: 0.88rem;
+    font-weight: 800;
   }
   .renter-pnl-pill {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 3px 8px;
-    border-radius: 8px;
+    gap: 6px;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
   .renter-pnl-advance {
-    background: rgba(16, 185, 129, 0.16);
+    background: transparent !important;
     color: #10b981;
-    border: 1px solid rgba(16, 185, 129, 0.35);
+    border: none !important;
   }
   .renter-pnl-loss {
-    background: rgba(239, 68, 68, 0.16);
+    background: transparent !important;
     color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.35);
+    border: none !important;
   }
   .renter-pnl-settled {
-    background: rgba(148, 163, 184, 0.14);
-    color: #94a3b8;
-    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: transparent !important;
+    color: #10b981;
+    border: none !important;
   }
   body.theme-white .renter-pnl-balanced {
-    background: #ffffff !important;
-    border-color: #cbd5e1 !important;
+    background: transparent !important;
+    border-color: transparent !important;
   }
   .notification-icon-btn {
     position: relative;
@@ -5848,8 +5900,12 @@
             <span id="renterNavChatBadge" class="notification-badge-dot" style="display:none;">0</span>
           </button>
           <!-- Top Dashboard Help Center Button (Icon Only per Requirement 2) -->
-          <button type="button" id="btnRenterNavHelpCenter" class="nav-btn help-center-icon-only-btn" onclick="openContactUsModal()" title="24/7 Help Center & Contact Us" aria-label="24/7 Help Center & Contact Us">
+          <button type="button" id="btnRenterNavHelpCenter" class="nav-btn help-center-icon-only-btn" onclick="openContactUsModal()" title="Contact Property Admin" aria-label="Contact Property Admin">
             <i class="fa-solid fa-headset" style="color:#38bdf8; font-size:1.05rem;"></i>
+          </button>
+          <!-- Top Dashboard Maintenance Complaint & Track Ticket Button (Single Action Icon on Main Dashboard) -->
+          <button type="button" id="btnRenterNavMaintenance" class="nav-btn maintenance-icon-only-btn" onclick="openRenterMaintenanceModal()" title="Raise a Maintenance Complaint &amp; Track Ticket" aria-label="Raise a Maintenance Complaint &amp; Track Ticket">
+            <i class="fa-solid fa-screwdriver-wrench" style="color:#f59e0b; font-size:1.05rem;"></i>
           </button>
           <!-- Portfolio Home Icon Dropdown (Left of Plus Icon): Expenses, Land Records (Khiyat), Fixed Deposit (FD) -->
           <div class="dropdown-anchor home-portfolio-anchor admin-only" id="homePortfolioDropdownAnchor">
@@ -5951,14 +6007,7 @@
       <i class="fa-solid fa-arrows-left-right"></i> Switch Side
     </button>
 
-    <!-- ALL ROLES: Private Secure Live Chat Button -->
-    <button type="button" id="fabLiveChatBtn" class="fab-pill-btn fab-chat-btn" onclick="openModularLiveChatWidget()">
-      <i class="fa-solid fa-comments" style="font-size:1rem;"></i>
-      <span id="fabLiveChatBtnLabel">Live Chat</span>
-      <span id="liveChatUnreadBadge" style="display:none; background:#ef4444; color:#ffffff; font-size:0.68rem; font-weight:900; padding:1px 7px; border-radius:999px;">0</span>
-    </button>
-
-    <!-- RENTER & VIEWER ONLY: Contact Us / Help Center Button (Shown alongside Live Chat when non-Admin accesses the site) -->
+    <!-- RENTER & VIEWER ONLY: Contact Us / Help Center Button -->
     <button type="button" id="fabContactUsBtn" class="fab-pill-btn fab-contact-btn" style="display:none;" onclick="openContactUsModal()">
       <i class="fa-solid fa-headset" style="font-size:1rem;"></i>
       <span>Help Center / Contact Us</span>
@@ -6055,11 +6104,30 @@
         <div>
           <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Contact Property Admin</h3>
           <p style="margin:2px 0 0 0; font-size:0.75rem; color:var(--text-muted);">
-            Direct support, phone, WhatsApp &amp; private live chat with the Administrator
+            Direct support, phone, WhatsApp &amp; official contact details
           </p>
         </div>
       </div>
       <div id="contactUsDynamicBody" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- RENTER MAINTENANCE COMPLAINT & TRACK TICKET MODAL (Opened from Main Dashboard Action Icon) -->
+  <div id="renterMaintenanceModal" class="modal-overlay" style="z-index: 8955;" onclick="if(event.target===this) closeModal('renterMaintenanceModal')">
+    <div class="modal-window" style="max-width: 480px;">
+      <button class="modal-close-btn" onclick="closeModal('renterMaintenanceModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border); padding-right:32px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, #f59e0b, #d97706); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:1.2rem; flex-shrink:0;">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+        <div>
+          <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Raise a Maintenance Complaint &amp; Track Ticket</h3>
+          <p style="margin:2px 0 0 0; font-size:0.75rem; color:var(--text-muted);">
+            Submit a new maintenance complaint and track live status updates
+          </p>
+        </div>
+      </div>
+      <div id="renterMaintenanceDynamicBody" style="display:flex; flex-direction:column; gap:12px;"></div>
     </div>
   </div>
 
@@ -11962,21 +12030,27 @@ function formatMonthLabel(rawVal) {
     function resolveFlatUpiAndContact(propertyName, flatObj, renterObj) {
       const propObj = findPropertyObject(propertyName || flatObj?.PropertyName || renterObj?.PropertyName);
       const domProfContract = sanitizeContactPhoneDisplay(document.getElementById("profContractMobile")?.value);
-      const flatContract = sanitizeContactPhoneDisplay(flatObj?.ContractMobile || flatObj?.ContractNumber);
       const propContract = sanitizeContactPhoneDisplay(propObj?.ContractNumber || propObj?.ContractMobile);
+      const flatContract = sanitizeContactPhoneDisplay(flatObj?.ContractMobile || flatObj?.ContractNumber);
       const renterContract = sanitizeContactPhoneDisplay(renterObj?.ContractMobile);
       const anyFlatWithContract = (DB.flats || []).find(f =>
         String(f.PropertyName || "").trim().toLowerCase() === String(propertyName || flatObj?.PropertyName || "").trim().toLowerCase() &&
         sanitizeContactPhoneDisplay(f.ContractMobile || f.ContractNumber)
       );
       const fallbackFlatContract = sanitizeContactPhoneDisplay(anyFlatWithContract?.ContractMobile || anyFlatWithContract?.ContractNumber);
-      const adminUserObj = (DB.users || []).find(u => String(u.Role || "").toLowerCase() === "admin" && sanitizeContactPhoneDisplay(u.MobileNumber));
-      const adminMobileFallback = sanitizeContactPhoneDisplay(activeUserMobile) || sanitizeContactPhoneDisplay(adminUserObj?.MobileNumber);
+
+      const propUpiName = String(propObj?.UPIName || "").trim();
+      const flatUpiName = String(flatObj?.UPIName || "").trim();
+      const renterUpiName = String(renterObj?.UPIName || "").trim();
+
+      const propUpiId = String(propObj?.UPIID || "").trim();
+      const flatUpiId = String(flatObj?.UPIID || "").trim();
+      const renterUpiId = String(renterObj?.UPIID || "").trim();
 
       return {
-        upiName: flatObj?.UPIName || renterObj?.UPIName || propObj?.UPIName || "",
-        upiId: flatObj?.UPIID || renterObj?.UPIID || propObj?.UPIID || "",
-        contractMobile: flatContract || propContract || renterContract || fallbackFlatContract || domProfContract || adminMobileFallback || ""
+        upiName: propUpiName || flatUpiName || renterUpiName || "",
+        upiId: propUpiId || flatUpiId || renterUpiId || "",
+        contractMobile: propContract || flatContract || renterContract || fallbackFlatContract || domProfContract || ""
       };
     }
 
@@ -12396,9 +12470,11 @@ function formatMonthLabel(rawVal) {
         body.role-renter button[onclick="openSettingsModal()"] {
           display: none !important;
         }
-        /* Requirement 5: Automatically hide Live Chat & Website AI widgets whenever Flat Details Modal is open */
+        /* Requirement 3 & 5: Automatically hide Live Chat whenever any Modal or Profile view is open */
         body.flat-details-open #bottomRightFloatingDock,
-        body.flat-details-open #modularLiveChatWidget {
+        body.flat-details-open #modularLiveChatWidget,
+        body.modal-open-hide-chat #bottomRightFloatingDock,
+        body.modal-open-hide-chat #modularLiveChatWidget {
           display: none !important;
           visibility: hidden !important;
           pointer-events: none !important;
@@ -12947,7 +13023,7 @@ function formatMonthLabel(rawVal) {
       };
     }
 
-    // Requirement 1: Top Dashboard for Renter displays ONLY the Advance or Due status for the current active month (individual renter data only)
+    // Requirement 1: Top Dashboard for Renter displays centered Due and Advance text ONLY (no background boxes)
     function updateRenterTopDashboardBalance(currentMonthBillObj) {
       const pnlTracker = document.querySelector(".pnl-tracker");
       if (!pnlTracker) return;
@@ -12956,36 +13032,55 @@ function formatMonthLabel(rawVal) {
       const advanceAmt = metrics.advanceAmt;
       const dueAmt = metrics.dueAmt;
 
-      let statusPillHtml = "";
-      if (advanceAmt > 0) {
-        statusPillHtml = `
-          <div class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.4); padding:4px 10px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
-            <i class="fa-solid fa-arrow-up-right-dots"></i>
+      let statusTextHtml = "";
+      if (advanceAmt > 0 && dueAmt > 0) {
+        statusTextHtml = `
+          <span class="renter-pnl-pill renter-pnl-loss" style="color:#f87171; background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
+            <span>Due: <strong>₹${dueAmt.toLocaleString("en-IN")}</strong></span>
+          </span>
+          <span style="color:var(--text-muted); font-weight:600;">•</span>
+          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
             <span>Advance: <strong>₹${advanceAmt.toLocaleString("en-IN")}</strong></span>
-          </div>
+          </span>
+        `;
+      } else if (advanceAmt > 0) {
+        statusTextHtml = `
+          <span class="renter-pnl-pill renter-pnl-settled" style="color:var(--text-muted); background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
+            <span>Due: <strong>₹0</strong></span>
+          </span>
+          <span style="color:var(--text-muted); font-weight:600;">•</span>
+          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
+            <span>Advance: <strong>₹${advanceAmt.toLocaleString("en-IN")}</strong></span>
+          </span>
         `;
       } else if (dueAmt > 0) {
-        statusPillHtml = `
-          <div class="renter-pnl-pill renter-pnl-loss" style="color:#f87171; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.45); padding:4px 10px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
-            <i class="fa-solid fa-triangle-exclamation"></i>
+        statusTextHtml = `
+          <span class="renter-pnl-pill renter-pnl-loss" style="color:#f87171; background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
             <span>Due: <strong>₹${dueAmt.toLocaleString("en-IN")}</strong></span>
-          </div>
+          </span>
+          <span style="color:var(--text-muted); font-weight:600;">•</span>
+          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
+            <span>Advance: <strong>₹0</strong></span>
+          </span>
         `;
       } else {
-        statusPillHtml = `
-          <div class="renter-pnl-pill renter-pnl-settled" style="color:#34d399; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.35); padding:4px 10px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
-            <i class="fa-solid fa-circle-check"></i>
+        statusTextHtml = `
+          <span class="renter-pnl-pill renter-pnl-settled" style="color:#34d399; background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
             <span>Due: <strong>₹0</strong></span>
-          </div>
+          </span>
+          <span style="color:var(--text-muted); font-weight:600;">•</span>
+          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent !important; border:none !important; padding:0 !important; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
+            <span>Advance: <strong>₹0</strong></span>
+          </span>
         `;
       }
 
       pnlTracker.innerHTML = `
-        <div class="renter-pnl-balanced" style="display:inline-flex; align-items:center; gap:8px;" title="Current Active Month (${metrics.monthLabel}) Status">
-          <span style="font-size:0.7rem; font-weight:800; color:#38bdf8; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.35); padding:4px 9px; border-radius:8px; white-space:nowrap;">
-            <i class="fa-regular fa-calendar-check"></i> ${metrics.monthLabel}
+        <div class="renter-pnl-balanced" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important;" title="Current Active Month (${metrics.monthLabel}) Status">
+          <span style="font-size:0.82rem; font-weight:800; color:#38bdf8; background:transparent !important; border:none !important; padding:0 !important; white-space:nowrap;">
+            ${metrics.monthLabel}:
           </span>
-          ${statusPillHtml}
+          ${statusTextHtml}
         </div>
       `;
       pnlTracker.style.display = "flex";
@@ -13545,8 +13640,8 @@ function formatMonthLabel(rawVal) {
 
     function copyRenterHomeUpiId(upiIdText) {
       const cleanUpi = String(upiIdText || "").trim();
-      if (!cleanUpi || cleanUpi === "Not Configured") {
-        triggerSideToast("UPI Not Set", "Official UPI ID has not been configured by the administrator yet.", false);
+      if (!cleanUpi || cleanUpi === "Not Configured" || cleanUpi === "N/A") {
+        triggerSideToast("UPI Not Set", "Official UPI ID has not been configured for this property yet.", false);
         return;
       }
       if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
@@ -13592,11 +13687,8 @@ function formatMonthLabel(rawVal) {
                     Your Renter account ${renterAadhaar ? `(Aadhaar: <strong>${formatAadhaarWithHyphens(renterAadhaar)}</strong>)` : ""} is isolated to your personal residency record. Please ask your Property Administrator to link your 12-digit Aadhaar number or flat assignment in Settings.
                   </p>
                   <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-                    <button type="button" class="renter-action-btn primary" onclick="openModularLiveChatWidget()">
-                      <i class="fa-solid fa-comments"></i> Message Admin Support
-                    </button>
                     <button type="button" class="renter-action-btn secondary" onclick="openContactUsModal()">
-                      <i class="fa-solid fa-headset"></i> Help Center
+                      <i class="fa-solid fa-headset"></i> Contact Property Admin
                     </button>
                     <button type="button" class="renter-action-btn secondary" onclick="handleLogout(true)">
                       <i class="fa-solid fa-right-from-bracket"></i> Switch Account
@@ -13718,21 +13810,21 @@ function formatMonthLabel(rawVal) {
           const addAmt = parseFloat(currentMonthBill.AdditionalAmount) || 0;
           const addName = currentMonthBill.AdditionalName || "None";
 
+          const propObjForUpi = findPropertyObject(currentMonthBill.PropertyName || targetProp);
           const resolvedContact = resolveFlatUpiAndContact(currentMonthBill.PropertyName || targetProp, assignedFlatObj, primaryRenter);
-          const upiId = (currentMonthBill.UPIID && String(currentMonthBill.UPIID).trim()) ? String(currentMonthBill.UPIID).trim() : resolvedContact.upiId;
-          const upiName = (currentMonthBill.UPIName && String(currentMonthBill.UPIName).trim()) ? String(currentMonthBill.UPIName).trim() : resolvedContact.upiName;
+          const upiName = String(propObjForUpi?.UPIName || currentMonthBill.UPIName || resolvedContact.upiName || "").trim();
+          const upiId = String(propObjForUpi?.UPIID || currentMonthBill.UPIID || resolvedContact.upiId || "").trim();
           const safeUpiIdArg = String(upiId || "").replace(/'/g, "\\'");
           const contactPhone =
+            sanitizeContactPhoneDisplay(propObjForUpi?.ContractNumber || propObjForUpi?.ContractMobile) ||
             resolvedContact.contractMobile ||
             sanitizeContactPhoneDisplay(currentMonthBill.ContractMobile) ||
-            sanitizeContactPhoneDisplay(activeUserMobile) ||
-            sanitizeContactPhoneDisplay(primaryRenter?.MobileNumber) ||
-            "--";
+            "N/A";
 
           const payableAmt = billDue > 0 ? billDue : billTotal;
           qrRenderData = {
             upiId,
-            upiName: upiName || targetProp || "Rent Receiver",
+            upiName: upiName || "N/A",
             amount: payableAmt,
             note: `Rent ${targetProp} Flat ${targetFlat} (${billMonthName})`
           };
@@ -13934,11 +14026,11 @@ function formatMonthLabel(rawVal) {
                     <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:128px; height:128px; display:block;"></canvas>
                   </div>
                   <div style="flex:1; min-width:165px;">
-                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Payee Name</div>
-                    <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${upiName || targetProp || "Property Admin"}</div>
+                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
+                    <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${upiName || "N/A"}</div>
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
                     <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-                      <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${upiId || "Not Configured"}</span>
+                      <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${upiId || "N/A"}</span>
                       ${upiId ? `
                         <button
                           type="button"
@@ -13950,7 +14042,8 @@ function formatMonthLabel(rawVal) {
                         </button>
                       ` : ""}
                     </div>
-                    <div style="font-size:0.74rem; color:var(--text-muted);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i>Support: <strong>${contactPhone}</strong></div>
+                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Contact Number</div>
+                    <div style="font-size:0.84rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i><strong>${contactPhone || "N/A"}</strong></div>
                   </div>
                 </div>
 
@@ -14013,19 +14106,22 @@ function formatMonthLabel(rawVal) {
             </div>
           `;
         } else {
+          const propObjForUpi = findPropertyObject(targetProp);
           const resolvedContact = resolveFlatUpiAndContact(targetProp, assignedFlatObj, primaryRenter);
-          const fallbackUpiId = resolvedContact.upiId || "";
-          const fallbackUpiName = resolvedContact.upiName || targetProp || "Property Admin";
-          const fallbackPhone = resolvedContact.contractMobile || renterPhoneDisplay || "--";
+          const fallbackUpiName = String(propObjForUpi?.UPIName || resolvedContact.upiName || "").trim();
+          const fallbackUpiId = String(propObjForUpi?.UPIID || resolvedContact.upiId || "").trim();
+          const safeFallbackUpiIdArg = String(fallbackUpiId || "").replace(/'/g, "\\'");
+          const fallbackPhone =
+            sanitizeContactPhoneDisplay(propObjForUpi?.ContractNumber || propObjForUpi?.ContractMobile) ||
+            resolvedContact.contractMobile ||
+            "N/A";
 
-          if (fallbackUpiId && baseRentConfigured > 0) {
-            qrRenderData = {
-              upiId: fallbackUpiId,
-              upiName: fallbackUpiName,
-              amount: baseRentConfigured,
-              note: `Rent ${targetProp} Flat ${targetFlat} (${activeMonthLabel})`
-            };
-          }
+          qrRenderData = {
+            upiId: fallbackUpiId,
+            upiName: fallbackUpiName || "N/A",
+            amount: baseRentConfigured,
+            note: `Rent ${targetProp} Flat ${targetFlat} (${activeMonthLabel})`
+          };
 
           statementLeftHtml = `
             <div class="renter-statement-card" style="display:flex; flex-direction:column; justify-content:space-between;">
@@ -14096,45 +14192,48 @@ function formatMonthLabel(rawVal) {
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;">
                   <div>
                     <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
-                      <i class="fa-solid fa-headset"></i> Resident Support &amp; Payment Hub
+                      <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
                     </div>
                     <h4 style="margin:3px 0 0 0; font-size:1.08rem; font-weight:900; color:var(--text-main);">
-                      Quick Assistance &amp; UPI Details
+                      Scan &amp; Pay (${activeMonthLabel})
                     </h4>
                   </div>
                 </div>
 
-                ${fallbackUpiId ? `
-                  <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
-                    ${baseRentConfigured > 0 ? `
-                      <div style="background:#ffffff; padding:8px; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <canvas id="renterHomeInlineQrCanvas" width="116" height="116" style="width:116px; height:116px; display:block;"></canvas>
-                      </div>
-                    ` : ""}
-                    <div style="flex:1; min-width:160px;">
-                      <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Official Payee</div>
-                      <div style="font-size:0.94rem; font-weight:900; color:var(--text-main); margin-bottom:6px;">${fallbackUpiName}</div>
-                      <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Official UPI ID</div>
-                      <div style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all; margin-bottom:6px;">${fallbackUpiId}</div>
-                      <div style="font-size:0.73rem; color:var(--text-muted);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:4px;"></i>Support: <strong>${fallbackPhone}</strong></div>
-                    </div>
+                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
+                  <div
+                    style="background:#ffffff; padding:8px; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.18);"
+                    title="Click to enlarge QR Code"
+                    onclick="event.stopPropagation(); openRentCollectionQrModal();"
+                  >
+                    <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:128px; height:128px; display:block;"></canvas>
                   </div>
-                ` : `
-                  <div style="padding:18px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
-                    <div style="font-size:0.84rem; font-weight:700; color:var(--text-main); margin-bottom:6px;">Direct Property Administration Support</div>
-                    <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.55;">
-                      Connect directly with your property administrator via 1-on-1 Live Chat for billing inquiries, maintenance requests, or receipt assistance.
+                  <div style="flex:1; min-width:165px;">
+                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
+                    <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${fallbackUpiName || "N/A"}</div>
+                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                      <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${fallbackUpiId || "N/A"}</span>
+                      ${fallbackUpiId ? `
+                        <button
+                          type="button"
+                          onclick="event.stopPropagation(); copyRenterHomeUpiId('${safeFallbackUpiIdArg}');"
+                          style="background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.35); color:#818cf8; border-radius:6px; padding:2px 7px; font-size:0.68rem; font-weight:800; cursor:pointer;"
+                          title="Copy UPI ID"
+                        >
+                          <i class="fa-regular fa-copy"></i> Copy
+                        </button>
+                      ` : ""}
                     </div>
+                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Contact Number</div>
+                    <div style="font-size:0.84rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i><strong>${fallbackPhone || "N/A"}</strong></div>
                   </div>
-                `}
+                </div>
               </div>
 
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
                 <button type="button" class="renter-action-btn emerald" style="flex:1; justify-content:center;" onclick="openRentCollectionQrModal()">
-                  <i class="fa-solid fa-qrcode"></i> UPI QR Modal
-                </button>
-                <button type="button" class="renter-action-btn primary" style="flex:1; justify-content:center;" onclick="openModularLiveChatWidget()">
-                  <i class="fa-solid fa-comments"></i> Live Chat
+                  <i class="fa-solid fa-qrcode"></i> Open Full Payment &amp; UPI QR Modal
                 </button>
                 <button type="button" class="renter-action-btn secondary" style="justify-content:center;" onclick="openContactUsModal()">
                   <i class="fa-solid fa-headset"></i> Help
@@ -14217,14 +14316,6 @@ function formatMonthLabel(rawVal) {
                       <i class="fa-solid fa-user-shield"></i>
                       <span>My KYC Profile</span>
                     </button>
-                    <button
-                      type="button"
-                      class="renter-action-btn secondary"
-                      onclick="openModularLiveChatWidget()"
-                    >
-                      <i class="fa-solid fa-comments" style="color:#38bdf8;"></i>
-                      <span>Live Chat</span>
-                    </button>
                   </div>
                 </div>
 
@@ -14296,21 +14387,35 @@ function formatMonthLabel(rawVal) {
             </div>
           `;
 
-          if (qrRenderData && qrRenderData.upiId) {
-            setTimeout(() => {
-              const qrCanvasEl = document.getElementById("renterHomeInlineQrCanvas");
-              if (qrCanvasEl && typeof generatePropertyRentQrCode === "function") {
-                generatePropertyRentQrCode({
-                  upiId: qrRenderData.upiId,
-                  upiName: qrRenderData.upiName,
-                  amount: qrRenderData.amount,
-                  note: qrRenderData.note,
-                  canvasEl: qrCanvasEl,
-                  size: 128
-                });
+          setTimeout(() => {
+            const qrCanvasEl = document.getElementById("renterHomeInlineQrCanvas");
+            if (!qrCanvasEl) return;
+            if (qrRenderData && qrRenderData.upiId && typeof generatePropertyRentQrCode === "function") {
+              generatePropertyRentQrCode({
+                upiId: qrRenderData.upiId,
+                upiName: qrRenderData.upiName === "N/A" ? "Rent Receiver" : qrRenderData.upiName,
+                amount: qrRenderData.amount,
+                note: qrRenderData.note,
+                canvasEl: qrCanvasEl,
+                size: 128
+              });
+            } else {
+              const ctx = qrCanvasEl.getContext("2d");
+              if (ctx) {
+                ctx.clearRect(0, 0, qrCanvasEl.width, qrCanvasEl.height);
+                ctx.fillStyle = "#f8fafc";
+                ctx.fillRect(0, 0, qrCanvasEl.width, qrCanvasEl.height);
+                ctx.strokeStyle = "#cbd5e1";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(6, 6, qrCanvasEl.width - 12, qrCanvasEl.height - 12);
+                ctx.fillStyle = "#64748b";
+                ctx.font = "bold 13px sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText("UPI N/A", qrCanvasEl.width / 2, qrCanvasEl.height / 2);
               }
-            }, 30);
-          }
+            }
+          }, 30);
         }
 
         hasAutoOpenedViewerFlatOnce = true;
@@ -25581,10 +25686,10 @@ function formatMonthLabel(rawVal) {
         el.classList.add("active");
         document.getElementById("actionMenu")?.classList.remove("show");
         document.getElementById("homePortfolioMenu")?.classList.remove("show");
+        document.body.classList.add("modal-open-hide-chat");
+        if (typeof closeModularLiveChatWidget === "function") closeModularLiveChatWidget();
         if (el.id === "flatDetailsModal") {
           document.body.classList.add("flat-details-open");
-          if (typeof closeModularLiveChatWidget === "function") closeModularLiveChatWidget();
-          
         }
       }
     }
@@ -25595,6 +25700,10 @@ function formatMonthLabel(rawVal) {
         if (el.id === "flatDetailsModal") {
           document.body.classList.remove("flat-details-open");
           if (typeof syncFloatingCornerButtonsByRole === "function") syncFloatingCornerButtonsByRole();
+        }
+        const anyActiveModal = document.querySelector(".modal-overlay.active");
+        if (!anyActiveModal) {
+          document.body.classList.remove("modal-open-hide-chat");
         }
       }
     }
@@ -27024,27 +27133,6 @@ function formatMonthLabel(rawVal) {
       const waNumber = rawWa.length === 10 ? "91" + rawWa : rawWa;
       const waUrl = waNumber ? `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(cfg.name || "Admin")}%2C%20I%20need%20assistance%20regarding%20my%20flat.` : "";
 
-      const myTickets = (typeof getStoredMaintenanceTickets === "function" ? getStoredMaintenanceTickets() : []).filter(t => {
-        if (activeRole === "Admin" || activeRole === "Manager") return true;
-        return String(t.username || "").toLowerCase() === String(activeUser || "").toLowerCase();
-      }).slice(0, 6);
-
-      const myTicketsHtml = myTickets.length === 0
-        ? `<div style="font-size:0.74rem; color:var(--text-muted); text-align:center; padding:8px;">No maintenance tickets submitted yet.</div>`
-        : myTickets.map(t => {
-            const st = String(t.status || "Open");
-            const stColor = st === "Resolved" ? "#10b981" : (st === "In Progress" ? "#f59e0b" : "#ef4444");
-            return `
-              <div style="background:rgba(15,23,42,0.55); border:1px solid var(--glass-border); border-radius:8px; padding:7px 9px; font-size:0.74rem; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                <div>
-                  <div><strong style="color:#f59e0b;">[${t.category || "Issue"}]</strong> ${t.description || ""}</div>
-                  <div style="font-size:0.66rem; color:var(--text-muted);">${t.propertyName || ""} Flat ${t.flatName || "--"} • ${t.createdAt || ""}</div>
-                </div>
-                <span style="padding:2px 8px; border-radius:999px; font-size:0.66rem; font-weight:800; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor};">${st}</span>
-              </div>
-            `;
-          }).join("");
-
       body.innerHTML = `
         <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
@@ -27089,14 +27177,46 @@ function formatMonthLabel(rawVal) {
             <div style="font-size:0.84rem; color:var(--text-main); margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ${officialAddress}</div>
           </div>
         </div>
+      `;
+    }
 
-        <!-- G1: Renter Maintenance Complaint / Ticket System -->
-        <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.35); border-radius:14px; padding:12px; margin-top:10px;">
-          <div style="font-size:0.8rem; font-weight:800; color:#f59e0b; margin-bottom:8px;">
-            <i class="fa-solid fa-screwdriver-wrench"></i> Raise a Maintenance Complaint / Ticket
+    function openContactUsModal() {
+      renderContactUsDynamicBody();
+      openModal("contactUsModal");
+    }
+
+    function renderRenterMaintenanceModalBody() {
+      const body = document.getElementById("renterMaintenanceDynamicBody");
+      if (!body) return;
+
+      const myTickets = (typeof getStoredMaintenanceTickets === "function" ? getStoredMaintenanceTickets() : []).filter(t => {
+        if (activeRole === "Admin" || activeRole === "Manager") return true;
+        return String(t.username || "").toLowerCase() === String(activeUser || "").toLowerCase();
+      }).slice(0, 12);
+
+      const myTicketsHtml = myTickets.length === 0
+        ? `<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:14px;">No maintenance tickets submitted yet.</div>`
+        : myTickets.map(t => {
+            const st = String(t.status || "Open");
+            const stColor = st === "Resolved" ? "#10b981" : (st === "In Progress" ? "#f59e0b" : "#ef4444");
+            return `
+              <div style="background:rgba(15,23,42,0.55); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px; font-size:0.76rem; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+                <div>
+                  <div><strong style="color:#f59e0b;">[${t.category || "Issue"}]</strong> ${t.description || ""}</div>
+                  <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">${t.id ? `${t.id} • ` : ""}${t.propertyName || ""} Flat ${t.flatName || "--"} • ${t.createdAt || ""}</div>
+                </div>
+                <span style="padding:3px 9px; border-radius:999px; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor};">${st}</span>
+              </div>
+            `;
+          }).join("");
+
+      body.innerHTML = `
+        <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.35); border-radius:14px; padding:14px;">
+          <div style="font-size:0.84rem; font-weight:800; color:#f59e0b; margin-bottom:10px;">
+            <i class="fa-solid fa-screwdriver-wrench"></i> Raise a Maintenance Complaint
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
-            <select id="renterTicketCategory" class="form-control" style="padding:7px 10px; font-size:0.78rem;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+            <select id="renterTicketCategory" class="form-control" style="padding:8px 10px; font-size:0.8rem;">
               <option value="Plumbing">Plumbing / Water Leak</option>
               <option value="Electrical">Electrical / Sub-Meter / Fan</option>
               <option value="Water Supply">Water Motor / Tank Supply</option>
@@ -27104,35 +27224,31 @@ function formatMonthLabel(rawVal) {
               <option value="Cleaning / Common Area">Cleaning / Common Area</option>
               <option value="Other">Other Maintenance Issue</option>
             </select>
-            <select id="renterTicketPriority" class="form-control" style="padding:7px 10px; font-size:0.78rem;">
+            <select id="renterTicketPriority" class="form-control" style="padding:8px 10px; font-size:0.8rem;">
               <option value="Normal">Priority: Normal</option>
               <option value="High">Priority: High</option>
               <option value="Urgent">Priority: Urgent / Emergency</option>
             </select>
           </div>
-          <div style="display:flex; gap:8px; margin-bottom:10px;">
-            <input type="text" id="renterTicketDesc" class="form-control" placeholder="Describe issue (e.g. Kitchen tap leaking in Flat 102)..." style="flex:1; padding:7px 10px; font-size:0.78rem;">
-            <button type="button" class="btn-primary" style="width:auto; padding:7px 14px; font-size:0.76rem; background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="submitRenterMaintenanceTicket()">
+          <div style="display:flex; gap:8px; margin-bottom:14px;">
+            <input type="text" id="renterTicketDesc" class="form-control" placeholder="Describe issue (e.g. Kitchen tap leaking in Flat 102)..." style="flex:1; padding:8px 10px; font-size:0.8rem;">
+            <button type="button" class="btn-primary" style="width:auto; padding:8px 16px; font-size:0.78rem; background:linear-gradient(135deg,#f59e0b,#d97706);" onclick="submitRenterMaintenanceTicket()">
               <i class="fa-solid fa-paper-plane"></i> Submit
             </button>
           </div>
-          <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin-bottom:5px;">Recent Tickets &amp; Live Status:</div>
-          <div style="display:flex; flex-direction:column; gap:5px; max-height:130px; overflow-y:auto;">
+          <div style="font-size:0.76rem; font-weight:800; color:var(--text-muted); margin-bottom:6px;">
+            <i class="fa-solid fa-list-check" style="color:#38bdf8; margin-right:5px;"></i>Track Ticket &amp; Live Status:
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;">
             ${myTicketsHtml}
           </div>
-        </div>
-
-        <div style="text-align:center; margin-top:8px;">
-          <button type="button" class="btn-ledger-action" style="padding:7px 16px; font-size:0.78rem;" onclick="closeModal('contactUsModal'); openModularLiveChatWidget();">
-            <i class="fa-solid fa-comments" style="color:#10b981;"></i> Or Open Private Live Chat
-          </button>
         </div>
       `;
     }
 
-    function openContactUsModal() {
-      renderContactUsDynamicBody();
-      openModal("contactUsModal");
+    function openRenterMaintenanceModal() {
+      renderRenterMaintenanceModalBody();
+      openModal("renterMaintenanceModal");
     }
 
     // ==========================================================================
@@ -28934,6 +29050,7 @@ function formatMonthLabel(rawVal) {
       list.unshift(ticket);
       saveStoredMaintenanceTickets(list);
       if (document.getElementById("renterTicketDesc")) document.getElementById("renterTicketDesc").value = "";
+      if (typeof renderRenterMaintenanceModalBody === "function") renderRenterMaintenanceModalBody();
       renderContactUsDynamicBody();
       renderAdminMaintenanceTickets();
       triggerSideToast("Maintenance Ticket Raised", `Ticket ${ticket.id} (${cat}) submitted to Admin.`, true);
