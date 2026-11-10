@@ -892,50 +892,152 @@
       }
     }
     .home-portfolio-menu {
-      width: 268px;
+      width: 280px;
       top: 50px;
       right: 0;
-      padding: 10px;
-      background: rgba(15, 23, 42, 0.92) !important;
-      backdrop-filter: blur(18px) saturate(165%) !important;
-      -webkit-backdrop-filter: blur(18px) saturate(165%) !important;
-      border: 1.5px solid rgba(52, 211, 153, 0.38) !important;
-      border-radius: 16px !important;
-      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
-      gap: 8px;
+      padding: 12px;
+      background: #0f172a !important;
+      opacity: 1 !important;
+      border: 1.5px solid rgba(52, 211, 153, 0.5) !important;
+      border-radius: 18px !important;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08) inset !important;
+      gap: 10px;
+      z-index: 3100 !important;
     }
     body.theme-white .home-portfolio-menu {
-      background: rgba(255, 255, 255, 0.96) !important;
-      border: 1.5px solid rgba(16, 185, 129, 0.38) !important;
-      box-shadow: 0 18px 38px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(16, 185, 129, 0.1) !important;
+      background: #ffffff !important;
+      opacity: 1 !important;
+      border: 1.5px solid rgba(16, 185, 129, 0.5) !important;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18), 0 4px 16px rgba(16, 185, 129, 0.15) !important;
     }
     .home-portfolio-menu .menu-item {
-      padding: 10px 12px;
-      border-radius: 12px !important;
-      background: rgba(30, 41, 59, 0.72) !important;
-      border: 1px solid rgba(148, 163, 184, 0.22) !important;
-      display: flex;
+      padding: 12px 14px;
+      border-radius: 14px !important;
+      background: #1e293b !important;
+      opacity: 1 !important;
+      border: 1.5px solid rgba(148, 163, 184, 0.28) !important;
+      display: flex !important;
       align-items: center;
-      gap: 12px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      gap: 13px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       text-shadow: none !important;
+      cursor: pointer;
     }
     body.theme-white .home-portfolio-menu .menu-item {
-      background: rgba(248, 250, 252, 0.95) !important;
-      border: 1px solid rgba(148, 163, 184, 0.28) !important;
+      background: #f8fafc !important;
+      opacity: 1 !important;
+      border: 1.5px solid #cbd5e1 !important;
       color: #0f172a !important;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
     }
-    .home-portfolio-menu .menu-item:hover {
-      transform: translateX(3px) translateY(-1px);
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.28), rgba(59, 130, 246, 0.24)) !important;
-      border-color: rgba(52, 211, 153, 0.65) !important;
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.22);
+    .home-portfolio-menu #homeMenuKharchItem:hover {
+      transform: translateX(4px) translateY(-1px);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.35), #1e293b) !important;
+      border-color: #f59e0b !important;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.28);
     }
-    body.theme-white .home-portfolio-menu .menu-item:hover {
-      background: linear-gradient(135deg, #10b981, #0284c7) !important;
-      border-color: transparent !important;
-      color: #ffffff !important;
+    .home-portfolio-menu #homeMenuKhetItem:hover {
+      transform: translateX(4px) translateY(-1px);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), #1e293b) !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
+    }
+    .home-portfolio-menu #homeMenuFdItem:hover {
+      transform: translateX(4px) translateY(-1px);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), #1e293b) !important;
+      border-color: #6366f1 !important;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.28);
+    }
+    body.theme-white .home-portfolio-menu #homeMenuKharchItem:hover {
+      background: linear-gradient(135deg, #fef3c7, #fffbeb) !important;
+      border-color: #f59e0b !important;
+    }
+    body.theme-white .home-portfolio-menu #homeMenuKhetItem:hover {
+      background: linear-gradient(135deg, #d1fae5, #ecfdf5) !important;
+      border-color: #10b981 !important;
+    }
+    body.theme-white .home-portfolio-menu #homeMenuFdItem:hover {
+      background: linear-gradient(135deg, #e0e7ff, #eef2ff) !important;
+      border-color: #6366f1 !important;
+    }
+
+    /* 100% Solid & Visible Modal Background for All Three Triggers */
+    #fdModal .modal-window,
+    #khetModal .modal-window,
+    #kharchModal .modal-window {
+      background: #0b1120 !important;
+      opacity: 1 !important;
+      border: 1.5px solid rgba(148, 163, 184, 0.35) !important;
+      box-shadow: 0 25px 65px rgba(0, 0, 0, 0.88), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
+    }
+    body.theme-white #fdModal .modal-window,
+    body.theme-white #khetModal .modal-window,
+    body.theme-white #kharchModal .modal-window {
+      background: #ffffff !important;
+      opacity: 1 !important;
+      border: 1.5px solid #cbd5e1 !important;
+      box-shadow: 0 25px 65px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04) inset !important;
+    }
+
+    /* Highly Stylish & Modern Design for Text Boxes inside All Three Triggers */
+    #fdModal input.form-control,
+    #fdModal select.form-control,
+    #fdModal textarea.form-control,
+    #khetModal input.form-control,
+    #khetModal select.form-control,
+    #khetModal textarea.form-control,
+    #kharchModal input.form-control,
+    #kharchModal select.form-control,
+    #kharchModal textarea.form-control {
+      background: #1e293b !important;
+      border: 1.5px solid rgba(148, 163, 184, 0.32) !important;
+      border-radius: 12px !important;
+      padding: 11px 15px !important;
+      font-size: 0.9rem !important;
+      font-weight: 600 !important;
+      color: #f8fafc !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16) !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    body.theme-white #fdModal input.form-control,
+    body.theme-white #fdModal select.form-control,
+    body.theme-white #fdModal textarea.form-control,
+    body.theme-white #khetModal input.form-control,
+    body.theme-white #khetModal select.form-control,
+    body.theme-white #khetModal textarea.form-control,
+    body.theme-white #kharchModal input.form-control,
+    body.theme-white #kharchModal select.form-control,
+    body.theme-white #kharchModal textarea.form-control {
+      background: #ffffff !important;
+      border: 1.5px solid #cbd5e1 !important;
+      color: #0f172a !important;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06) !important;
+    }
+    #fdModal .form-control:hover,
+    #khetModal .form-control:hover,
+    #kharchModal .form-control:hover {
+      border-color: rgba(99, 102, 241, 0.6) !important;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22) !important;
+    }
+    body.theme-white #fdModal .form-control:hover,
+    body.theme-white #khetModal .form-control:hover,
+    body.theme-white #kharchModal .form-control:hover {
+      border-color: #6366f1 !important;
+    }
+    #fdModal .form-control:focus,
+    #khetModal .form-control:focus,
+    #kharchModal .form-control:focus {
+      border-color: #6366f1 !important;
+      box-shadow: 0 0 0 3.5px rgba(99, 102, 241, 0.28), 0 4px 16px rgba(99, 102, 241, 0.2) !important;
+      outline: none !important;
+    }
+    #khetModal .form-control:focus {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.28), 0 4px 16px rgba(16, 185, 129, 0.2) !important;
+    }
+    #kharchModal .form-control:focus {
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.28), 0 4px 16px rgba(245, 158, 11, 0.2) !important;
     }
     .home-menu-icon-wrap {
       width: 36px;
@@ -8919,11 +9021,121 @@
         try {
           const msg = ev?.data;
           if (!msg || !msg.topic) return;
-          if (typeof loadLocalUsersMaster === "function") DB.users = loadLocalUsersMaster();
-          if (typeof loadLocalLoginHistoryMaster === "function") DB.loginHistory = loadLocalLoginHistoryMaster();
-          if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
+          if (msg.topic === "users") {
+            if (typeof loadLocalUsersMaster === "function") DB.users = loadLocalUsersMaster();
+            if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
+          } else if (msg.topic === "chats") {
+            if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
+            if (typeof renderAdminChatChannelsList === "function") renderAdminChatChannelsList();
+            if (typeof renderRenterAdminTargetList === "function") renderRenterAdminTargetList();
+            if (typeof updateLiveChatUnreadBadge === "function") updateLiveChatUnreadBadge();
+          } else if (msg.topic === "notices") {
+            if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
+            if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
+          } else if (msg.topic === "contact") {
+            if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
+          } else {
+            if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
+          }
         } catch (e) {}
       };
+    }
+
+    // STRICT REAL-TIME SSE (Server-Sent Events) ENGINE for Chat, Notifications & Live Updates
+    let realtimeEventSource = null;
+    let realtimePollTimer = null;
+
+    function initRealtimeSSE() {
+      if (typeof EventSource !== "undefined") {
+        if (realtimeEventSource) {
+          try { realtimeEventSource.close(); } catch (e) {}
+        }
+        try {
+          realtimeEventSource = new EventSource("/api/realtime/stream");
+          realtimeEventSource.onmessage = function (ev) {
+            try {
+              const data = JSON.parse(ev.data);
+              if (!data || !data.event) return;
+
+              if (data.event === "CHAT_UPDATED") {
+                const incoming = data.payload?.privateChats || data.payload;
+                if (incoming && typeof incoming === "object") {
+                  try {
+                    localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, JSON.stringify(incoming));
+                  } catch (e) {}
+                  if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
+                  if (typeof renderAdminChatChannelsList === "function") renderAdminChatChannelsList();
+                  if (typeof renderRenterAdminTargetList === "function") renderRenterAdminTargetList();
+                  if (typeof updateLiveChatUnreadBadge === "function") updateLiveChatUnreadBadge();
+                }
+              } else if (data.event === "NOTICES_UPDATED") {
+                const incoming = data.payload?.broadcastNotices || data.payload;
+                if (Array.isArray(incoming)) {
+                  try {
+                    localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(incoming));
+                  } catch (e) {}
+                  if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
+                  if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
+                }
+              } else if (data.event === "CONTACT_UPDATED") {
+                const incoming = data.payload?.contactConfig || data.payload;
+                if (incoming && typeof incoming === "object") {
+                  try {
+                    localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(incoming));
+                  } catch (e) {}
+                  if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
+                }
+              } else if (data.event === "DATA_SYNC") {
+                if (typeof syncDataLive === "function" && activeUser) {
+                  syncDataLive(false);
+                }
+              }
+            } catch (err) {}
+          };
+          realtimeEventSource.onerror = function () {
+            // Built-in browser retry handles SSE reconnection
+          };
+        } catch (e) {}
+      }
+
+      // Fast heartbeat poll (every 2.5s) to guarantee real-time updates across distinct hosts
+      if (realtimePollTimer) clearInterval(realtimePollTimer);
+      realtimePollTimer = setInterval(async () => {
+        if (!activeUser || typeof activeRole === "undefined" || !activeRole) return;
+        try {
+          const chatRes = await fetch("/api/gas-engine/chats");
+          if (chatRes.ok) {
+            const chatData = await chatRes.json();
+            if (chatData && chatData.status === "success" && chatData.privateChats) {
+              const prevStr = localStorage.getItem(PRIVATE_CHAT_STORAGE_KEY) || "{}";
+              const newStr = JSON.stringify(chatData.privateChats);
+              if (prevStr !== newStr) {
+                localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, newStr);
+                if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
+                if (typeof renderAdminChatChannelsList === "function") renderAdminChatChannelsList();
+                if (typeof renderRenterAdminTargetList === "function") renderRenterAdminTargetList();
+                if (typeof updateLiveChatUnreadBadge === "function") updateLiveChatUnreadBadge();
+              }
+            }
+          }
+        } catch (e) {}
+
+        try {
+          const noticeRes = await fetch("/api/gas-engine/notices");
+          if (noticeRes.ok) {
+            const noticeData = await noticeRes.json();
+            if (noticeData && noticeData.status === "success" && Array.isArray(noticeData.broadcastNotices)) {
+              const prevStr = localStorage.getItem(PORTAL_NOTIFICATIONS_KEY) || "[]";
+              const newStr = JSON.stringify(noticeData.broadcastNotices);
+              if (prevStr !== newStr) {
+                localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, newStr);
+                if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
+                if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
+              }
+            }
+          }
+        } catch (e) {}
+      }, 2500);
     }
 
     function loadLocalUsersMaster() {
@@ -12309,7 +12521,10 @@ function formatMonthLabel(rawVal) {
         } else if (event.persisted && activeUser) {
           syncDataLive(true);
         }
-      });
+      try {
+        if (typeof initRealtimeSSE === "function") initRealtimeSSE();
+      } catch (e) {}
+    });
     });
 
     const PERSISTED_AUTH_SESSION_KEY = "portal_active_auth_session_v1";
@@ -12331,108 +12546,65 @@ function formatMonthLabel(rawVal) {
         sessionStorage.setItem("active_session_assigned_aadhaar", activeAssignedAadhaar || "");
         sessionStorage.setItem("active_session_manager_perms", JSON.stringify(normalizedPerms));
         sessionStorage.setItem("active_session_token", activeSessionToken || "");
-        const sessionPayload = {
-          username: activeUser,
-          fullName: activeUserFullName || activeUser,
-          mobile: activeUserMobile || "",
-          role: activeRole || "Admin",
-          assignedProperty: activeAssignedProperty || "",
-          assignedFlat: activeAssignedFlat || "",
-          assignedAadhaar: activeAssignedAadhaar || "",
-          managerPermissions: normalizedPerms,
-          sessionToken: activeSessionToken || "",
-          selectedProperty: selectedProperty || "",
-          updatedAt: Date.now()
-        };
-        localStorage.setItem(PERSISTED_AUTH_SESSION_KEY, JSON.stringify(sessionPayload));
+        // Requirement 2: Never store login credentials/session in localStorage so closing tab or browser window always logs out
+        localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
       } catch (e) {}
     }
 
     function restoreSavedActiveSession() {
       try {
-        // Bug 2 Fix: If the user explicitly logged out, never restore any session on refresh
+        // Requirement 2: Strictly restore session ONLY from current tab sessionStorage
+        // If tab was closed, window was closed, or reopened from history, sessionStorage is empty -> prompts for credentials
         if (localStorage.getItem(EXPLICIT_LOGOUT_FLAG_KEY) === "1") {
           sessionStorage.clear();
           localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
-          localStorage.removeItem("active_session_user");
-          localStorage.removeItem("active_session_role");
-          localStorage.removeItem("active_session_token");
           return null;
         }
+        localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
+
         const sUser = sessionStorage.getItem("active_session_user");
         const sToken = sessionStorage.getItem("active_session_token");
+        if (!sUser) {
+          return null;
+        }
+
         const knownUsers = loadLocalUsersMaster();
         let blockedList = [];
         try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
 
-        function isSavedSessionUserValid(uName) {
-          const cleanName = String(uName || "").trim().toLowerCase();
-          if (!cleanName) return false;
-          if (blockedList.includes(cleanName)) return false;
-          if (knownUsers.length > 0) {
-            const found = knownUsers.find(u => String(u.Username || "").trim().toLowerCase() === cleanName);
-            if (!found) return false;
-            if (String(found.Status || found.AccountStatus || "Active").trim().toLowerCase() === "blocked") return false;
-            const savedPass = sessionStorage.getItem("active_session_password") || localStorage.getItem("portal_session_pass_" + cleanName) || "";
-            if (savedPass && String(found.Password || "").trim() && String(found.Password || "").trim() !== savedPass) {
-              return false;
-            }
-          }
-          return true;
+        const cleanName = String(sUser || "").trim().toLowerCase();
+        if (blockedList.includes(cleanName)) {
+          sessionStorage.clear();
+          return null;
         }
-
-        if (sUser) {
-          if (!isSavedSessionUserValid(sUser)) {
+        if (knownUsers.length > 0) {
+          const found = knownUsers.find(u => String(u.Username || "").trim().toLowerCase() === cleanName);
+          if (!found) {
             sessionStorage.clear();
-            localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
             return null;
           }
-          let sPerms = [];
-          try {
-            sPerms = JSON.parse(sessionStorage.getItem("active_session_manager_perms") || "[]");
-          } catch (e) {}
-          return {
-            username: sUser,
-            fullName: sessionStorage.getItem("active_session_fullname") || sUser,
-            mobile: sessionStorage.getItem("active_session_mobile") || "",
-            role: sessionStorage.getItem("active_session_role") || "Admin",
-            assignedProperty: sessionStorage.getItem("active_session_assigned_prop") || "",
-            assignedFlat: sessionStorage.getItem("active_session_assigned_flat") || "",
-            assignedAadhaar: sessionStorage.getItem("active_session_assigned_aadhaar") || "",
-            managerPermissions: normalizeManagerPermissionsList(sPerms),
-            sessionToken: sToken || "",
-            selectedProperty: sessionStorage.getItem("active_selected_property") || null
-          };
-        }
-        const rawLocal = localStorage.getItem(PERSISTED_AUTH_SESSION_KEY);
-        if (rawLocal) {
-          const parsed = JSON.parse(rawLocal);
-          if (parsed && parsed.username) {
-            if (!isSavedSessionUserValid(parsed.username)) {
-              sessionStorage.clear();
-              localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
-              return null;
-            }
-            // Verify token has not been superseded by another tab on the same browser
-            const deviceKey = "portal_device_session_" + String(parsed.username).trim().toLowerCase();
-            const latestDeviceTok = localStorage.getItem(deviceKey);
-            if (latestDeviceTok && parsed.sessionToken && latestDeviceTok !== parsed.sessionToken) {
-              return null;
-            }
-            const normalizedPerms = normalizeManagerPermissionsList(parsed.managerPermissions || []);
-            sessionStorage.setItem("active_session_user", parsed.username);
-            sessionStorage.setItem("active_session_fullname", parsed.fullName || parsed.username);
-            sessionStorage.setItem("active_session_mobile", parsed.mobile || "");
-            sessionStorage.setItem("active_session_role", parsed.role || "Admin");
-            sessionStorage.setItem("active_session_assigned_prop", parsed.assignedProperty || "");
-            sessionStorage.setItem("active_session_assigned_flat", parsed.assignedFlat || "");
-            sessionStorage.setItem("active_session_assigned_aadhaar", parsed.assignedAadhaar || "");
-            sessionStorage.setItem("active_session_manager_perms", JSON.stringify(normalizedPerms));
-            sessionStorage.setItem("active_session_token", parsed.sessionToken || "");
-            parsed.managerPermissions = normalizedPerms;
-            return parsed;
+          if (String(found.Status || found.AccountStatus || "Active").trim().toLowerCase() === "blocked") {
+            sessionStorage.clear();
+            return null;
           }
         }
+
+        let sPerms = [];
+        try {
+          sPerms = JSON.parse(sessionStorage.getItem("active_session_manager_perms") || "[]");
+        } catch (e) {}
+        return {
+          username: sUser,
+          fullName: sessionStorage.getItem("active_session_fullname") || sUser,
+          mobile: sessionStorage.getItem("active_session_mobile") || "",
+          role: sessionStorage.getItem("active_session_role") || "Admin",
+          assignedProperty: sessionStorage.getItem("active_session_assigned_prop") || "",
+          assignedFlat: sessionStorage.getItem("active_session_assigned_flat") || "",
+          assignedAadhaar: sessionStorage.getItem("active_session_assigned_aadhaar") || "",
+          managerPermissions: normalizeManagerPermissionsList(sPerms),
+          sessionToken: sToken || "",
+          selectedProperty: sessionStorage.getItem("active_selected_property") || null
+        };
       } catch (e) {}
       return null;
     }
@@ -13314,6 +13486,7 @@ function formatMonthLabel(rawVal) {
         if (chevron) chevron.style.transform = "rotate(0deg)";
         syncNotificationsBadgeUI();
         renderNotificationsListUI();
+        notifyCrossTabSync("notices", existing);
         const audienceDesc = targetProperties.includes("ALL") ? "all properties" : targetProperties.join(", ");
         triggerSideToast("Broadcast Sent", `Notice "${title}" sent to ${audienceDesc}!`, true);
       }
@@ -13341,6 +13514,7 @@ function formatMonthLabel(rawVal) {
       localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(existing));
       syncNotificationsBadgeUI();
       renderNotificationsListUI();
+      notifyCrossTabSync("notices", existing);
       triggerSideToast("Notice Deleted", "Broadcast notice removed everywhere.", true);
 
       // Sync deletion live to Firestore so it is automatically removed everywhere
@@ -14325,6 +14499,9 @@ function formatMonthLabel(rawVal) {
       try {
         if (typeof initFirestoreLiveListeners === "function") initFirestoreLiveListeners();
       } catch (e) {}
+      try {
+        if (typeof initRealtimeSSE === "function") initRealtimeSSE();
+      } catch (e) {}
 
       if (syncTimer) clearInterval(syncTimer);
       // Poll every 6 seconds so second-device logins & sheet changes are detected rapidly
@@ -14563,30 +14740,50 @@ function formatMonthLabel(rawVal) {
       renderAllDashboardUI();
     }
 
-    // Progressive 3-Tier Login Lockout System (1 Minute -> 1 Hour -> 24 Hours)
-    // Tier 0: 3 failed attempts -> 1-minute lock (60,000 ms), then moves to Tier 1 (3 more attempts).
-    // Tier 1: 3 failed attempts -> 1-hour lock (3,600,000 ms), then moves to Tier 2 (3 more attempts).
-    // Tier 2: 3 failed attempts -> 24-hour lock (86,400,000 ms), then resets to Tier 0 after 24-hour lock expires.
-    const LOGIN_LOCKOUT_STORAGE_KEY = "portal_login_lockout_state_v2";
-    try { localStorage.removeItem("portal_login_lockout_state_v1"); } catch (e) {}
+    // Progressive 4-Tier Login Lockout & Permanent Account Blocking System
+    // Stage 0: 3 failed attempts -> Locked for 1 Minute (60,000 ms)
+    // Stage 1: 3 failed attempts after 1m lock -> Locked for 1 Hour (3,600,000 ms)
+    // Stage 2: 3 failed attempts after 1h lock -> Locked for 24 Hours (86,400,000 ms)
+    // Stage 3: 3 failed attempts after 24h lock -> COMPLETELY BLOCK USER ACCOUNT
+    const LOGIN_LOCKOUT_PREFIX = "portal_login_lockout_u_";
     let loginLockoutCountdownTimer = null;
 
-    function getLoginLockoutState() {
-      const defaultState = { stage: 0, failedInStage: 0, lockedUntil: 0, lockedTierLabel: "" };
+    function getLoginLockoutKey(username) {
+      const u = String(username || document.getElementById("loginUsername")?.value || "").trim().toLowerCase();
+      return LOGIN_LOCKOUT_PREFIX + (u || "default");
+    }
+
+    function getLoginLockoutState(username) {
+      const u = String(username || document.getElementById("loginUsername")?.value || "").trim().toLowerCase();
+      const storageKey = getLoginLockoutKey(u);
+      const defaultState = { username: u, stage: 0, failedInStage: 0, lockedUntil: 0, lockedTierLabel: "", isPermanentlyBlocked: false };
       try {
-        const raw = localStorage.getItem(LOGIN_LOCKOUT_STORAGE_KEY);
+        let blockedList = [];
+        try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
+        if (u && blockedList.includes(u)) {
+          defaultState.isPermanentlyBlocked = true;
+          return defaultState;
+        }
+
+        const raw = localStorage.getItem(storageKey);
         if (!raw) return defaultState;
         const parsed = JSON.parse(raw);
         const state = {
+          username: u,
           stage: Number(parsed.stage) || 0,
           failedInStage: Number(parsed.failedInStage) || 0,
           lockedUntil: Number(parsed.lockedUntil) || 0,
-          lockedTierLabel: String(parsed.lockedTierLabel || "")
+          lockedTierLabel: String(parsed.lockedTierLabel || ""),
+          isPermanentlyBlocked: Boolean(parsed.isPermanentlyBlocked)
         };
+        if (state.isPermanentlyBlocked || (u && blockedList.includes(u))) {
+          state.isPermanentlyBlocked = true;
+          return state;
+        }
         if (state.lockedUntil > 0 && Date.now() >= state.lockedUntil) {
           state.lockedUntil = 0;
           state.failedInStage = 0;
-          localStorage.setItem(LOGIN_LOCKOUT_STORAGE_KEY, JSON.stringify(state));
+          localStorage.setItem(storageKey, JSON.stringify(state));
         }
         return state;
       } catch (e) {
@@ -14594,21 +14791,23 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    function saveLoginLockoutState(state) {
+    function saveLoginLockoutState(username, state) {
       try {
-        localStorage.setItem(LOGIN_LOCKOUT_STORAGE_KEY, JSON.stringify(state));
+        const storageKey = getLoginLockoutKey(username);
+        localStorage.setItem(storageKey, JSON.stringify(state));
       } catch (e) {}
     }
 
-    function resetLoginLockoutState() {
+    function resetLoginLockoutState(username) {
       try {
-        localStorage.removeItem(LOGIN_LOCKOUT_STORAGE_KEY);
+        const storageKey = getLoginLockoutKey(username);
+        localStorage.removeItem(storageKey);
       } catch (e) {}
       if (loginLockoutCountdownTimer) {
         clearInterval(loginLockoutCountdownTimer);
         loginLockoutCountdownTimer = null;
       }
-      updateLoginLockoutUI();
+      updateLoginLockoutUI(username);
     }
 
     function formatLockoutRemainingTime(ms) {
@@ -14623,20 +14822,39 @@ function formatMonthLabel(rawVal) {
       return parts.join(" ");
     }
 
-    function updateLoginLockoutUI() {
-      const state = getLoginLockoutState();
+    function updateLoginLockoutUI(targetUsername = "") {
+      const u = String(targetUsername || document.getElementById("loginUsername")?.value || "").trim().toLowerCase();
+      const state = getLoginLockoutState(u);
       const bannerEl = document.getElementById("loginLockoutStatusBanner");
       const userEl = document.getElementById("loginUsername");
       const passEl = document.getElementById("loginPassword");
       const btn = document.getElementById("loginBtn");
       const now = Date.now();
 
+      if (state.isPermanentlyBlocked) {
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = `<i class="fa-solid fa-ban"></i> Account Completely Blocked`;
+        }
+        if (bannerEl) {
+          bannerEl.style.display = "block";
+          bannerEl.innerHTML = `
+            <div style="background:rgba(239, 68, 68, 0.22); border:1.5px solid #ef4444; border-radius:12px; padding:12px 14px; color:#fecaca; font-size:0.8rem; line-height:1.45; text-align:left; box-shadow:0 8px 24px rgba(239, 68, 68, 0.25);">
+              <div style="font-weight:900; color:#f87171; font-size:0.86rem; margin-bottom:4px; display:flex; align-items:center; gap:7px;">
+                <i class="fa-solid fa-triangle-exclamation"></i> USER ACCOUNT COMPLETELY BLOCKED
+              </div>
+              <div>This user account (<strong>@${state.username || u}</strong>) has been <strong>completely blocked</strong> after repeated failed password attempts. Access is strictly denied. Please contact the Administrator.</div>
+            </div>
+          `;
+        }
+        return true;
+      }
+
       if (state.lockedUntil > now) {
         const remainingMs = state.lockedUntil - now;
         const remainingFormatted = formatLockoutRemainingTime(remainingMs);
         const tierLabel = state.lockedTierLabel || "Temporary";
 
-        if (userEl) userEl.disabled = true;
         if (passEl) passEl.disabled = true;
         if (btn) {
           btn.disabled = true;
@@ -14648,17 +14866,17 @@ function formatMonthLabel(rawVal) {
           bannerEl.innerHTML = `
             <div style="background:rgba(239, 68, 68, 0.16); border:1.5px solid rgba(239, 68, 68, 0.55); border-radius:12px; padding:11px 14px; color:#fecaca; font-size:0.8rem; line-height:1.45; text-align:left; box-shadow:0 8px 20px rgba(239, 68, 68, 0.18);">
               <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; font-weight:800; color:#f87171; font-size:0.84rem; margin-bottom:4px;">
-                <span><i class="fa-solid fa-shield-halved"></i> Account / Device Locked (${tierLabel})</span>
+                <span><i class="fa-solid fa-shield-halved"></i> Username Locked (${tierLabel})</span>
                 <span style="background:rgba(239,68,68,0.25); padding:2px 8px; border-radius:999px; font-family:monospace; font-size:0.82rem; color:#ffffff;">${remainingFormatted}</span>
               </div>
-              <div>Too many failed login attempts. Please wait <strong>${remainingFormatted}</strong> for the ${tierLabel.toLowerCase()} lock period to end before trying again.</div>
+              <div>Too many failed login attempts for <strong>@${state.username || u}</strong>. Please wait <strong>${remainingFormatted}</strong> for the ${tierLabel.toLowerCase()} lock period to expire before trying again.</div>
             </div>
           `;
         }
 
         if (!loginLockoutCountdownTimer) {
           loginLockoutCountdownTimer = setInterval(() => {
-            updateLoginLockoutUI();
+            updateLoginLockoutUI(u);
           }, 1000);
         }
         return true;
@@ -14670,7 +14888,6 @@ function formatMonthLabel(rawVal) {
       }
 
       if (!isSubmittingLogin) {
-        if (userEl) userEl.disabled = false;
         if (passEl) passEl.disabled = false;
         if (btn) {
           btn.disabled = false;
@@ -14681,12 +14898,12 @@ function formatMonthLabel(rawVal) {
       if (bannerEl) {
         if (state.failedInStage > 0 || state.stage > 0) {
           const attemptsLeft = Math.max(0, 3 - state.failedInStage);
-          const nextLockText = state.stage === 0 ? "1 Minute" : (state.stage === 1 ? "1 Hour" : "24 Hours");
+          const nextLockText = state.stage === 0 ? "1 Minute" : (state.stage === 1 ? "1 Hour" : (state.stage === 2 ? "24 Hours" : "Complete Permanent Block"));
           bannerEl.style.display = "block";
           bannerEl.innerHTML = `
             <div style="background:rgba(245, 158, 11, 0.14); border:1px solid rgba(245, 158, 11, 0.45); border-radius:10px; padding:9px 12px; color:#fde68a; font-size:0.78rem; line-height:1.4; text-align:left;">
               <i class="fa-solid fa-triangle-exclamation" style="color:#fbbf24;"></i>
-              <strong>Security Notice:</strong> ${attemptsLeft} attempt${attemptsLeft === 1 ? "" : "s"} remaining before a <strong>${nextLockText}</strong> login lock is activated.
+              <strong>Security Notice:</strong> ${attemptsLeft} attempt${attemptsLeft === 1 ? "" : "s"} remaining before a <strong>${nextLockText}</strong> login lock is activated for @${state.username || u}.
             </div>
           `;
         } else {
@@ -14698,42 +14915,76 @@ function formatMonthLabel(rawVal) {
       return false;
     }
 
-    function recordFailedLoginAttemptAndLockIfNeeded() {
-      const state = getLoginLockoutState();
+    function recordFailedLoginAttemptAndLockIfNeeded(username) {
+      const u = String(username || document.getElementById("loginUsername")?.value || "").trim().toLowerCase();
+      const state = getLoginLockoutState(u);
+      state.username = u;
       state.failedInStage = (Number(state.failedInStage) || 0) + 1;
 
       if (state.failedInStage >= 3) {
-        let lockDurationMs = 60 * 1000; // Stage 0: 1 Minute
-        let tierLabel = "1 Minute";
-        let nextStage = 1;
+        if (state.stage === 0) {
+          state.lockedUntil = Date.now() + 60 * 1000; // 1 Minute
+          state.lockedTierLabel = "1 Minute";
+          state.stage = 1;
+          state.failedInStage = 0;
+          saveLoginLockoutState(u, state);
+          updateLoginLockoutUI(u);
+          return { justLocked: true, tierLabel: "1 Minute", lockedUntil: state.lockedUntil };
+        } else if (state.stage === 1) {
+          state.lockedUntil = Date.now() + 60 * 60 * 1000; // 1 Hour
+          state.lockedTierLabel = "1 Hour";
+          state.stage = 2;
+          state.failedInStage = 0;
+          saveLoginLockoutState(u, state);
+          updateLoginLockoutUI(u);
+          return { justLocked: true, tierLabel: "1 Hour", lockedUntil: state.lockedUntil };
+        } else if (state.stage === 2) {
+          state.lockedUntil = Date.now() + 24 * 60 * 60 * 1000; // 24 Hours
+          state.lockedTierLabel = "24 Hours";
+          state.stage = 3;
+          state.failedInStage = 0;
+          saveLoginLockoutState(u, state);
+          updateLoginLockoutUI(u);
+          return { justLocked: true, tierLabel: "24 Hours", lockedUntil: state.lockedUntil };
+        } else {
+          // Stage 3 -> completely block user
+          state.isPermanentlyBlocked = true;
+          state.lockedUntil = 0;
+          state.failedInStage = 0;
+          saveLoginLockoutState(u, state);
 
-        if (state.stage === 1) {
-          lockDurationMs = 60 * 60 * 1000; // Stage 1: 1 Hour
-          tierLabel = "1 Hour";
-          nextStage = 2;
-        } else if (state.stage >= 2) {
-          lockDurationMs = 24 * 60 * 60 * 1000; // Stage 2: 24 Hours
-          tierLabel = "24 Hours";
-          nextStage = 0; // After 24h lock expires, user can attempt logging in again
+          // Permanently block user in local storage, memory, and sync to Google Sheet
+          let blockedList = [];
+          try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
+          if (!blockedList.includes(u)) {
+            blockedList.push(u);
+            localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
+          }
+          (DB.users || []).forEach(usr => {
+            if (String(usr.Username || "").trim().toLowerCase() === u) {
+              usr.Status = "Blocked";
+              usr.AccountStatus = "Blocked";
+              usr.ActiveSessionToken = "";
+            }
+          });
+          saveLocalUsersMaster(DB.users);
+
+          sendFirebaseAction({
+            action: "toggleUserBlock",
+            targetUsername: u,
+            block: true,
+            newStatus: "Blocked"
+          }).catch(() => {});
+
+          updateLoginLockoutUI(u);
+          return { completelyBlocked: true, username: u };
         }
-
-        state.lockedUntil = Date.now() + lockDurationMs;
-        state.lockedTierLabel = tierLabel;
-        state.failedInStage = 0;
-        state.stage = nextStage;
-        saveLoginLockoutState(state);
-        updateLoginLockoutUI();
-        return {
-          justLocked: true,
-          tierLabel,
-          lockedUntil: state.lockedUntil
-        };
       }
 
-      saveLoginLockoutState(state);
-      updateLoginLockoutUI();
+      saveLoginLockoutState(u, state);
+      updateLoginLockoutUI(u);
       const attemptsLeft = Math.max(0, 3 - state.failedInStage);
-      const nextLockLabel = state.stage === 0 ? "1 minute" : (state.stage === 1 ? "1 hour" : "24 hours");
+      const nextLockLabel = state.stage === 0 ? "1 minute" : (state.stage === 1 ? "1 hour" : (state.stage === 2 ? "24 hours" : "permanent block"));
       return {
         justLocked: false,
         attemptsLeft,
@@ -14741,23 +14992,20 @@ function formatMonthLabel(rawVal) {
       };
     }
 
-    // Initialize lockout check on script load and DOM ready
+    // Initialize lockout check on script load, input change, and DOM ready
     setTimeout(() => {
       try { updateLoginLockoutUI(); } catch (e) {}
     }, 50);
+
+    document.getElementById("loginUsername")?.addEventListener("input", (e) => {
+      updateLoginLockoutUI(e.target.value);
+    });
 
     // 1. Live Server-Verified Login Every Time + Single-Device Session Token Generation (Strictly Verified Against Google Sheets)
     let isSubmittingLogin = false;
     async function handleLoginSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
       if (isSubmittingLogin) return;
-
-      if (updateLoginLockoutUI()) {
-        const lockState = getLoginLockoutState();
-        const rem = formatLockoutRemainingTime(lockState.lockedUntil - Date.now());
-        triggerSideToast("Login Locked", `Too many failed attempts. Please wait ${rem} before trying again.`, false);
-        return;
-      }
 
       const userEl = document.getElementById("loginUsername");
       const passEl = document.getElementById("loginPassword");
@@ -14767,6 +15015,18 @@ function formatMonthLabel(rawVal) {
 
       if (!user || !pass) {
         triggerSideToast("Missing Credentials", "Please enter both Username and Password.", false);
+        return;
+      }
+
+      const cleanU = user.toLowerCase();
+      if (updateLoginLockoutUI(cleanU)) {
+        const lockState = getLoginLockoutState(cleanU);
+        if (lockState.isPermanentlyBlocked) {
+          triggerSideToast("User Blocked", `This user account (@${cleanU}) has been completely blocked due to repeated failed login attempts.`, false);
+          return;
+        }
+        const rem = formatLockoutRemainingTime(lockState.lockedUntil - Date.now());
+        triggerSideToast("Login Locked", `Username @${cleanU} is currently locked for ${lockState.lockedTierLabel}. Please wait ${rem} before trying again.`, false);
         return;
       }
 
@@ -14796,7 +15056,7 @@ function formatMonthLabel(rawVal) {
         }
 
         if (res && res.status === "success") {
-          resetLoginLockoutState();
+          resetLoginLockoutState(cleanU);
           try {
             localStorage.removeItem(EXPLICIT_LOGOUT_FLAG_KEY);
           } catch (e) {}
@@ -14826,7 +15086,6 @@ function formatMonthLabel(rawVal) {
             document.getElementById("dashboardScreen")?.classList.add("active");
           }
 
-          // Refresh sheet entities immediately in background if cache was empty at login time
           if (!Array.isArray(DB.properties) || DB.properties.length === 0) {
             setTimeout(() => {
               try { syncDataLive(true); } catch (e) {}
@@ -14842,13 +15101,16 @@ function formatMonthLabel(rawVal) {
           return;
         }
 
-        // Record failed attempt & apply progressive 3-tier lockout (1m -> 1h -> 24h)
-        const lockOutcome = recordFailedLoginAttemptAndLockIfNeeded();
+        // Record failed attempt for this specific username & apply progressive 4-tier policy
+        const lockOutcome = recordFailedLoginAttemptAndLockIfNeeded(cleanU);
         const baseFailureMsg = (res && res.message) ? res.message : "Invalid username or password.";
-        if (lockOutcome.justLocked) {
+
+        if (lockOutcome.completelyBlocked) {
+          showAccountBlockedModal(`This user account (@${cleanU}) has been completely blocked after repeated failed attempts. Login access is permanently locked.`);
+        } else if (lockOutcome.justLocked) {
           triggerSideToast(
             `Locked for ${lockOutcome.tierLabel}`,
-            `3 failed login attempts reached. Login is now locked on this device for ${lockOutcome.tierLabel}.`,
+            `3 failed password attempts reached on @${cleanU}. Login is now locked for ${lockOutcome.tierLabel}.`,
             false
           );
         } else {
@@ -14863,7 +15125,7 @@ function formatMonthLabel(rawVal) {
         triggerSideToast("Login Notice", "Unable to log in at this moment. Please check your credentials and try again.", false);
       } finally {
         isSubmittingLogin = false;
-        updateLoginLockoutUI();
+        updateLoginLockoutUI(cleanU);
       }
     }
 
@@ -20065,14 +20327,6 @@ function formatMonthLabel(rawVal) {
               <button type="button" class="btn-ledger-action receipt-btn" onclick="openBillReceiptModal('${bill.BillID}', '${cleanMonth}')" title="Show Receipt & Share on WhatsApp">
                 <i class="fa-solid fa-receipt"></i> Receipt
               </button>
-              ${pendingDue > 0 ? `
-              <button type="button" class="btn-ledger-action" style="background:rgba(16,185,129,0.18); color:#10b981; border:1px solid rgba(16,185,129,0.4);" onclick="openDynamicBillUpiQrModal('${bill.BillID}')" title="Scan Dynamic UPI QR for ₹${pendingDue.toFixed(0)}">
-                <i class="fa-solid fa-qrcode"></i> Pay QR
-              </button>
-              <button type="button" class="btn-ledger-action" style="background:rgba(56,189,248,0.18); color:#38bdf8; border:1px solid rgba(56,189,248,0.4);" onclick="openSubmitPaymentProofModalForBill('${bill.BillID}')" title="Submit UTR / Payment Screenshot">
-                <i class="fa-solid fa-file-circle-check"></i> Proof
-              </button>
-              ` : ""}
               ${(activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"))) ? `
               <button type="button" class="btn-ledger-action edit-btn admin-only" onclick="editBillMonthFromHistory('${cleanMonth}')" title="Edit Everything for This Month">
                 <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -26642,39 +26896,17 @@ function formatMonthLabel(rawVal) {
       const cfg = { name, phone, whatsapp, mobile, email, address, updatedAt: Date.now() };
       localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(cfg));
 
-      const primaryNumber = phone || mobile || whatsapp || "";
-      if (primaryNumber) {
-        (DB.properties || []).forEach(p => {
-          p.ContractNumber = primaryNumber;
-          p.ContractMobile = primaryNumber;
-        });
-        (DB.flats || []).forEach(f => {
-          f.ContractMobile = primaryNumber;
-          f.ContractNumber = primaryNumber;
-        });
-        (DB.renters || []).forEach(r => {
-          r.ContractMobile = primaryNumber;
-        });
-        (DB.bills || []).forEach(b => {
-          b.ContractMobile = primaryNumber;
-        });
-        const profContractEl = document.getElementById("profContractMobile");
-        if (profContractEl) profContractEl.value = primaryNumber;
-      }
-
-      saveDbSnapshotToCache();
+      // Strictly isolated: Do NOT overwrite or touch properties, flats, renters, or bills
+      notifyCrossTabSync("contact", cfg);
       renderContactUsDynamicBody();
-      renderAllDashboardUI();
 
-      triggerSideToast("Contact Info Saved & Synced", "All Contact Info details synced live across all Renter Help Centers!", true);
+      triggerSideToast("Contact Info Saved", "Contact Info details stored strictly for the Renter Help Center and synced live!", true);
 
       try {
-        {
-          await sendFirebaseAction({
-            action: "saveContactConfig",
-            contactConfig: cfg
-          });
-        }
+        await sendFirebaseAction({
+          action: "saveContactConfig",
+          contactConfig: cfg
+        });
       } catch (e) {}
     }
 
@@ -26835,6 +27067,7 @@ function formatMonthLabel(rawVal) {
       try {
         localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, JSON.stringify(store || {}));
       } catch (e) {}
+      notifyCrossTabSync("chats", store);
       if (syncToServer && activeUser) {
         {
           sendFirebaseAction({
