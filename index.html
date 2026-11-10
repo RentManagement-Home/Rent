@@ -1402,74 +1402,6 @@
       border: 1px solid rgba(255, 255, 255, 0.22);
     }
 
-    /* Requirement 5: 3-Parameter Graph on All Flats (1. Base Rent, 2. Utilities, 3. Paid Collected) */
-    .flat-3param-graph-box {
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.58);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      color: #f8fafc;
-    }
-    .flat-3param-graph-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.68rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      color: rgba(255, 255, 255, 0.85);
-      margin-bottom: 8px;
-    }
-    .flat-3param-bars-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .flat-3param-row {
-      display: grid;
-      grid-template-columns: 74px 1fr 64px;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.71rem;
-    }
-    .flat-3param-label {
-      font-weight: 700;
-      color: #e2e8f0;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .flat-3param-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .flat-3param-track {
-      width: 100%;
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.14);
-      overflow: hidden;
-    }
-    .flat-3param-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.35s ease;
-    }
-    .flat-3param-val {
-      text-align: right;
-      font-weight: 800;
-      color: #ffffff;
-      font-size: 0.72rem;
-      white-space: nowrap;
-    }
-    .flat-3param-dot.rent, .flat-3param-fill.rent { background: #818cf8 !important; }
-    .flat-3param-dot.util, .flat-3param-fill.util { background: #f59e0b !important; }
-    .flat-3param-dot.paid, .flat-3param-fill.paid { background: #10b981 !important; }
 
     /* Global Modal Window */
     .modal-overlay {
@@ -1930,30 +1862,6 @@
       color: var(--text-main);
     }
 
-    /* Theme Selector Grid inside Settings Modal */
-    .theme-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .theme-card {
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--glass-border);
-      background: var(--bg-input);
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .theme-card.active {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.4);
-    }
-
     /* Viewer Role Lock Styling */
     body.role-viewer .admin-only {
       display: none !important;
@@ -1962,19 +1870,6 @@
     /* ==========================================================================
        STYLISH, COLOURFUL DASHBOARD SETTINGS DESIGN & CARDS
        ========================================================================== */
-    .settings-feature-banner {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(236, 72, 153, 0.18) 50%, rgba(16, 185, 129, 0.18) 100%);
-      border: 1.5px solid rgba(129, 140, 248, 0.4);
-      border-radius: 16px;
-      padding: 14px 16px;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    }
     .settings-nav-grid {
       display: grid !important;
       grid-template-columns: repeat(3, 1fr) !important;
@@ -2028,20 +1923,6 @@
       color: var(--text-main);
       line-height: 1.25;
     }
-    .settings-nav-card .s-nav-sub {
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      line-height: 1.25;
-    }
-    .settings-nav-card.nav-theme {
-      background: linear-gradient(145deg, rgba(56, 189, 248, 0.14), rgba(59, 130, 246, 0.05));
-      border-color: rgba(56, 189, 248, 0.4);
-    }
-    .settings-nav-card.nav-theme .s-nav-icon {
-      background: rgba(56, 189, 248, 0.2);
-      color: #38bdf8;
-    }
     .settings-nav-card.nav-create {
       background: linear-gradient(145deg, rgba(16, 185, 129, 0.14), rgba(5, 150, 105, 0.05));
       border-color: rgba(16, 185, 129, 0.4);
@@ -2058,21 +1939,9 @@
       background: rgba(239, 68, 68, 0.2);
       color: #f87171;
     }
-    .settings-nav-card.nav-other {
-      background: linear-gradient(145deg, rgba(168, 85, 247, 0.16), rgba(236, 72, 153, 0.06));
-      border-color: rgba(168, 85, 247, 0.45);
-    }
-    .settings-nav-card.nav-other .s-nav-icon {
-      background: rgba(168, 85, 247, 0.22);
-      color: #c084fc;
-    }
     .settings-nav-card.active {
       transform: translateY(-2px);
       box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
-    }
-    .settings-nav-card.nav-theme.active {
-      background: linear-gradient(135deg, #0284c7, #2563eb) !important;
-      border-color: #38bdf8 !important;
     }
     .settings-nav-card.nav-create.active {
       background: linear-gradient(135deg, #059669, #10b981) !important;
@@ -2082,12 +1951,7 @@
       background: linear-gradient(135deg, #dc2626, #ef4444) !important;
       border-color: #f87171 !important;
     }
-    .settings-nav-card.nav-other.active {
-      background: linear-gradient(135deg, #7c3aed, #db2777) !important;
-      border-color: #f472b6 !important;
-    }
     .settings-nav-card.active .s-nav-title,
-    .settings-nav-card.active .s-nav-sub,
     .settings-nav-card.active .s-nav-icon {
       color: #ffffff !important;
     }
@@ -2115,12 +1979,6 @@
       font-size: 0.8rem;
       font-weight: 800;
       width: 100%;
-    }
-    .other-tool-card .tool-desc {
-      font-size: 0.68rem;
-      opacity: 0.85;
-      font-weight: 600;
-      line-height: 1.25;
     }
 
     /* Mobile Auto-Fit Perfection — Zero Text Cut-Off Across All Screens */
@@ -2614,126 +2472,6 @@
       border-color: #6366f1 !important;
     }
 
-    /* ==========================================================================
-       REQUIREMENT 7: STYLISH HOME PAGE "KHET" (FIELD) SECTION & CARDS
-       ========================================================================== */
-    .home-khet-section {
-      max-width: 1280px;
-      margin: 4px auto 40px auto;
-      padding: 0 24px;
-    }
-    .home-khet-shell {
-      background: linear-gradient(145deg, rgba(6, 78, 59, 0.42) 0%, rgba(15, 23, 42, 0.78) 55%, rgba(20, 83, 45, 0.38) 100%);
-      border: 1.5px solid rgba(52, 211, 153, 0.45);
-      border-radius: 22px;
-      padding: 22px 24px;
-      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-    }
-    body.theme-white .home-khet-shell {
-      background: linear-gradient(145deg, rgba(236, 253, 245, 0.92) 0%, rgba(209, 250, 229, 0.88) 100%);
-      border-color: rgba(16, 185, 129, 0.55);
-      box-shadow: 0 14px 32px rgba(16, 185, 129, 0.14);
-    }
-    .home-khet-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 14px;
-      padding-bottom: 16px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid rgba(52, 211, 153, 0.28);
-    }
-    .home-khet-brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .home-khet-icon-badge {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.35rem;
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-    }
-    .home-khet-stats-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .home-khet-stat-pill {
-      background: rgba(15, 23, 42, 0.55);
-      border: 1px solid rgba(52, 211, 153, 0.35);
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 0.78rem;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    body.theme-white .home-khet-stat-pill {
-      background: rgba(255, 255, 255, 0.85);
-      border-color: rgba(16, 185, 129, 0.4);
-    }
-    .home-khet-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
-      gap: 16px;
-    }
-    .khet-stylish-card {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(15, 23, 42, 0.72) 100%);
-      border: 1.5px solid rgba(52, 211, 153, 0.42);
-      border-top: 4px solid #10b981;
-      border-radius: 16px;
-      padding: 16px;
-      transition: all 0.22s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
-    }
-    .khet-stylish-card:hover {
-      transform: translateY(-3px);
-      border-color: #34d399;
-      box-shadow: 0 12px 28px rgba(16, 185, 129, 0.25);
-    }
-    body.theme-white .khet-stylish-card {
-      background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
-      border-color: #6ee7b7;
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.12);
-    }
-    .khet-detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 10px;
-      border-radius: 9px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.8rem;
-    }
-    body.theme-white .khet-detail-row {
-      background: rgba(16, 185, 129, 0.06);
-      border-color: rgba(16, 185, 129, 0.18);
-    }
-    @media (max-width: 768px) {
-      .home-khet-section {
-        padding: 0 12px;
-      }
-      .home-khet-shell {
-        padding: 16px 14px;
-      }
-    }
 
     /* ==========================================================================
        STYLISH & COLORFUL BOXES DESIGN ACROSS THE ENTIRE SITE (Requirement 2)
@@ -3001,13 +2739,11 @@
   }
   /* Requirement 1 & 2: Help Center & Maintenance Ticket icon strictly visible ONLY on Renter's dashboard */
   #btnRenterNavHelpCenter,
-  #btnRenterNavMaintenance,
-  #fabContactUsBtn {
+  #btnRenterNavMaintenance {
     display: none !important;
   }
   body.role-renter #btnRenterNavHelpCenter,
-  body.role-renter #btnRenterNavMaintenance,
-  body.role-renter #fabContactUsBtn {
+  body.role-renter #btnRenterNavMaintenance {
     display: inline-flex !important;
   }
   .live-chat-icon-only-btn:hover,
@@ -3134,11 +2870,6 @@
     display: none !important;
   }
 
-  /* Requirement 6: Completely hide Live Portfolio Overview strip */
-  .home-welcome-hero-strip,
-  #homeWelcomeHeroStrip {
-    display: none !important;
-  }
 
   /* Requirement 3: Upgraded Executive, Clean & Modern Renter Portal Interface */
   @keyframes homePortalEntryFade {
@@ -3895,20 +3626,11 @@
   #settingsModal .settings-nav-card.nav-notify {
     border-top: 3.5px solid #f59e0b !important;
   }
-  #settingsModal .settings-nav-card.nav-chat {
-    border-top: 3.5px solid #06b6d4 !important;
-  }
-  #settingsModal .settings-nav-card.nav-theme {
-    border-top: 3.5px solid #38bdf8 !important;
-  }
   #settingsModal .settings-nav-card.nav-create {
     border-top: 3.5px solid #10b981 !important;
   }
   #settingsModal .settings-nav-card.nav-delete {
     border-top: 3.5px solid #f43f5e !important;
-  }
-  #settingsModal .settings-nav-card.nav-other {
-    border-top: 3.5px solid #a855f7 !important;
   }
   #settingsModal .settings-nav-card.active {
     background: linear-gradient(135deg, rgba(79, 70, 229, 0.32) 0%, rgba(14, 165, 233, 0.2) 100%) !important;
@@ -3936,24 +3658,12 @@
     background: linear-gradient(135deg, #f59e0b, #d97706) !important;
     color: #ffffff !important;
   }
-  #settingsModal .nav-chat .s-nav-icon {
-    background: linear-gradient(135deg, #06b6d4, #10b981) !important;
-    color: #ffffff !important;
-  }
-  #settingsModal .nav-theme .s-nav-icon {
-    background: linear-gradient(135deg, #0284c7, #38bdf8) !important;
-    color: #ffffff !important;
-  }
   #settingsModal .nav-create .s-nav-icon {
     background: linear-gradient(135deg, #059669, #10b981) !important;
     color: #ffffff !important;
   }
   #settingsModal .nav-delete .s-nav-icon {
     background: linear-gradient(135deg, #e11d48, #f43f5e) !important;
-    color: #ffffff !important;
-  }
-  #settingsModal .nav-other .s-nav-icon {
-    background: linear-gradient(135deg, #7c3aed, #ec4899) !important;
     color: #ffffff !important;
   }
   #settingsModal .s-nav-title {
@@ -3964,28 +3674,6 @@
   }
   body.theme-white #settingsModal .s-nav-title {
     color: #0f172a !important;
-  }
-  #settingsModal .s-nav-sub {
-    color: #cbd5e1 !important;
-    font-weight: 600 !important;
-    font-size: 0.68rem !important;
-    white-space: nowrap !important;
-  }
-  body.theme-white #settingsModal .s-nav-sub {
-    color: #475569 !important;
-  }
-  #settingsModal .theme-card {
-    border-radius: 16px !important;
-    padding: 15px 18px !important;
-    transition: all 0.22s ease !important;
-    border: 1.5px solid var(--glass-border) !important;
-  }
-  #settingsModal .theme-card:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
-  }
-  #settingsModal .theme-card.active {
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3), 0 10px 24px rgba(0, 0, 0, 0.25) !important;
   }
   #settingsModal .other-tool-card {
     background: linear-gradient(145deg, #111827, #1e293b) !important;
@@ -4003,12 +3691,6 @@
     background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
     color: #0f172a !important;
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07) !important;
-  }
-  #settingsModal .other-tool-card .tool-desc {
-    color: #cbd5e1 !important;
-  }
-  body.theme-white #settingsModal .other-tool-card .tool-desc {
-    color: #334155 !important;
   }
   body.theme-white #settingsModal #createRenterAadhaarBox,
   body.theme-white #settingsModal #viewerScopeSelectionBox {
@@ -4263,26 +3945,6 @@
   body.theme-white .notification-badge-dot {
     border-color: #ffffff;
   }
-  /* Renter Bill Warning Banner */
-  .renter-due-warning-box {
-    margin-top: 14px;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(185, 28, 28, 0.28) 100%);
-    border: 2px solid #ef4444;
-    border-radius: 16px;
-    padding: 16px;
-    color: #ffffff;
-    box-shadow: 0 10px 28px rgba(239, 68, 68, 0.25);
-    animation: pulseDueBorder 2s infinite ease-in-out;
-  }
-  @keyframes pulseDueBorder {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.12); }
-  }
-  body.theme-white .renter-due-warning-box {
-    background: #fef2f2 !important;
-    border-color: #dc2626 !important;
-    color: #991b1b !important;
-  }
 
   /* ==========================================================================
      STYLISH EXECUTIVE POP-UP MODALS (ADD PROPERTY, EDIT PROPERTY, ADD FLAT, ADD RENTER)
@@ -4473,16 +4135,6 @@
     color: #b45309;
     border-color: #fde68a;
   }
-  .exec-field-purpose {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-    line-height: 1.38;
-    display: block;
-  }
-  body.theme-white .exec-field-purpose {
-    color: #475569 !important;
-  }
   .exec-field-card .form-control {
     background: rgba(15, 23, 42, 0.85) !important;
     border: 1.5px solid rgba(148, 163, 184, 0.32) !important;
@@ -4527,107 +4179,6 @@
     transform: translateY(-2px);
   }
 
-  /* Requirement 8 & 9: Renter Home Page Card & Renter Theme-Adaptive Text Readability */
-  .renter-home-portal-card {
-    grid-column: 1 / -1;
-    max-width: 780px;
-    margin: 10px auto;
-    width: 100%;
-    cursor: pointer;
-    border-radius: 22px;
-    padding: 22px;
-    background: linear-gradient(145deg, rgba(17, 24, 39, 0.92) 0%, rgba(30, 41, 59, 0.90) 100%);
-    border: 2px solid rgba(192, 132, 252, 0.6) !important;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
-    color: #f8fafc;
-    transition: all 0.25s ease;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-  }
-  .renter-home-portal-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 24px 52px rgba(139, 92, 246, 0.28);
-  }
-  body.theme-white .renter-home-portal-card {
-    background: linear-gradient(145deg, #ffffff 0%, #f5f3ff 100%) !important;
-    border: 2px solid #8b5cf6 !important;
-    box-shadow: 0 16px 38px rgba(79, 70, 229, 0.14) !important;
-    color: #0f172a !important;
-  }
-  .renter-home-portal-tag {
-    font-size: 0.72rem;
-    font-weight: 800;
-    color: #c084fc;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  body.theme-white .renter-home-portal-tag {
-    color: #6d28d9 !important;
-  }
-  .renter-home-portal-title {
-    margin: 2px 0 0 0;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: #ffffff;
-  }
-  body.theme-white .renter-home-portal-title {
-    color: #0f172a !important;
-  }
-  .renter-home-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-    gap: 10px;
-    background: rgba(15, 23, 42, 0.72);
-    padding: 14px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    font-size: 0.82rem;
-    margin-bottom: 14px;
-  }
-  body.theme-white .renter-home-info-grid {
-    background: #ffffff !important;
-    border: 1.5px solid #cbd5e1 !important;
-    box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.04);
-  }
-  .renter-home-info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 6px 8px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
-  }
-  body.theme-white .renter-home-info-item {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-  }
-  .renter-home-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-  body.theme-white .renter-home-label {
-    color: #475569 !important;
-  }
-  .renter-home-val {
-    font-size: 0.88rem;
-    font-weight: 800;
-    color: #ffffff;
-  }
-  body.theme-white .renter-home-val {
-    color: #0f172a !important;
-  }
-  .renter-home-val.val-cyan { color: #38bdf8; }
-  body.theme-white .renter-home-val.val-cyan { color: #0369a1 !important; }
-  .renter-home-val.val-emerald { color: #34d399; }
-  body.theme-white .renter-home-val.val-emerald { color: #047857 !important; }
-  .renter-home-val.val-amber { color: #fbbf24; }
-  body.theme-white .renter-home-val.val-amber { color: #b45309 !important; }
-  .renter-home-val.val-green { color: #22c55e; }
-  body.theme-white .renter-home-val.val-green { color: #15803d !important; }
-
   /* Ensure all text inside Renter Profile, Ledger, and Empty Prompt adapts cleanly in Light Mode */
   body.theme-white .empty-flats-prompt {
     background: rgba(255, 255, 255, 0.95) !important;
@@ -4662,61 +4213,8 @@
   }
 
   /* ==========================================================================
-     REQUIREMENTS 6, 7 & 8: MODULAR & MOVABLE AI ASSISTANT + PRIVATE LIVE CHAT
+     REQUIREMENTS 6, 7 & 8: MODULAR PRIVATE LIVE CHAT WIDGET
      ========================================================================== */
-  .floating-corner-dock {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 8800;
-    display: none !important;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-    pointer-events: none;
-  }
-  .floating-corner-dock.dock-left {
-    right: auto;
-    left: 20px;
-    align-items: flex-start;
-  }
-  .floating-corner-dock > * {
-    pointer-events: auto;
-  }
-  .fab-pill-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    padding: 11px 16px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: #ffffff;
-    border: 1.5px solid rgba(255, 255, 255, 0.28);
-    cursor: pointer;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.38);
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
-    user-select: none;
-    backdrop-filter: blur(12px);
-  }
-  .fab-pill-btn:hover {
-    transform: translateY(-3px) scale(1.02);
-  }
-  .fab-pill-btn:active {
-    transform: scale(0.96);
-  }
-  .fab-ai-btn {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
-    box-shadow: 0 10px 28px rgba(124, 58, 237, 0.45);
-  }
-  .fab-chat-btn {
-    background: linear-gradient(135deg, #059669 0%, #0d9488 55%, #0284c7 100%);
-    box-shadow: 0 10px 28px rgba(16, 185, 129, 0.42);
-  }
-  .fab-contact-btn {
-    background: linear-gradient(135deg, #ea580c 0%, #f59e0b 100%);
-    box-shadow: 0 10px 24px rgba(245, 158, 11, 0.4);
-  }
   .modular-floating-widget {
     position: fixed;
     bottom: 24px;
@@ -4774,19 +4272,6 @@
   body.role-renter #tabProfile .admin-only,
   body.role-renter #tabProfile button:not(.zoomable-photo-badge) {
     display: none !important;
-  }
-  @keyframes pulseContinuousUrgentWarning {
-    0%, 100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55), 0 8px 24px rgba(239, 68, 68, 0.35);
-    }
-    50% {
-      transform: scale(1.008);
-      box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.18), 0 12px 30px rgba(239, 68, 68, 0.5);
-    }
-  }
-  .continuous-unpaid-warning-banner {
-    animation: pulseContinuousUrgentWarning 1.6s infinite ease-in-out;
   }
   body.theme-white .modular-floating-widget {
     background: rgba(255, 255, 255, 0.98);
@@ -6011,19 +5496,6 @@
     </main>
   </section>
 
-  <!-- ==================== REQUIREMENTS 6, 7 & 8: BOTTOM-RIGHT FLOATING DOCK, MODULAR AI ASSISTANT & PRIVATE LIVE CHAT ==================== -->
-  <div id="bottomRightFloatingDock" class="floating-corner-dock">
-    <!-- Dock Side Switch Button -->
-    <button type="button" onclick="toggleFloatingDockScreenSide()" title="Switch Floating Buttons Between Left & Right Corner" style="background:rgba(15,23,42,0.82); border:1px solid rgba(148,163,184,0.35); color:#cbd5e1; border-radius:999px; padding:4px 10px; font-size:0.68rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
-      <i class="fa-solid fa-arrows-left-right"></i> Switch Side
-    </button>
-
-    <!-- RENTER & VIEWER ONLY: Contact Us / Help Center Button -->
-    <button type="button" id="fabContactUsBtn" class="fab-pill-btn fab-contact-btn" style="display:none;" onclick="openContactUsModal()">
-      <i class="fa-solid fa-headset" style="font-size:1rem;"></i>
-      <span>Help Center / Contact Us</span>
-    </button>
-  </div>
 
   <!-- MODULAR & MOVABLE PRIVATE LIVE CHAT WIDGET (1-ON-1 ISOLATED RENTER <-> ADMIN CHANNEL) -->
   <div id="modularLiveChatWidget" class="modular-floating-widget" style="border-color:rgba(16, 185, 129, 0.5);">
@@ -6942,17 +6414,14 @@
               <span id="settingsNotificationBadge" class="notification-badge-dot" style="display:none; top:-5px; right:-5px;">0</span>
             </div>
             <div class="s-nav-title">Notifications</div>
-            <div class="s-nav-sub"></div>
           </div>
           <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
             <div class="s-nav-icon"><i class="fa-solid fa-user-plus"></i></div>
             <div class="s-nav-title">Create User ID</div>
-            <div class="s-nav-sub"></div>
           </div>
           <div id="settingsTabBtnDeleteCenter" class="flat-nav-item settings-nav-card nav-delete" onclick="switchSettingsSubTab(event, 'setSubDeleteManage')">
             <div class="s-nav-icon"><i class="fa-solid fa-trash-can"></i></div>
             <div class="s-nav-title">Delete Center</div>
-            <div class="s-nav-sub"></div>
           </div>
         </div>
       </div>
@@ -6968,7 +6437,6 @@
               </label>
               <span class="exec-field-tag tag-required">Official Broadcast</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input type="text" id="adminNoticeTitleInput" class="form-control" style="margin-bottom:8px;" placeholder="Notice Title (e.g. Water Tank Cleaning / Rent Due Reminder)">
             <textarea id="adminNoticeBodyInput" class="form-control" rows="3" style="margin-bottom:8px;" placeholder="Type complete announcement message details here..."></textarea>
 
@@ -7248,7 +6716,6 @@
             onclick="switchOtherSubOption('users')"
           >
             <div class="tool-top" style="color:#38bdf8;"><i class="fa-solid fa-users-gear"></i> 1. Registered Users</div>
-            <div class="tool-desc"></div>
           </button>
           <button
             type="button"
@@ -7258,7 +6725,6 @@
             onclick="switchOtherSubOption('history')"
           >
             <div class="tool-top" style="color:#34d399;"><i class="fa-solid fa-clock-rotate-left"></i> 2. Last Logins</div>
-            <div class="tool-desc"></div>
           </button>
           <button
             type="button"
@@ -7268,7 +6734,6 @@
             onclick="switchOtherSubOption('changeBg')"
           >
             <div class="tool-top" style="color:#f472b6;"><i class="fa-solid fa-image"></i> 3. Background Photo</div>
-            <div class="tool-desc"></div>
           </button>
           <button
             type="button"
@@ -7278,7 +6743,6 @@
             onclick="switchOtherSubOption('editEverything')"
           >
             <div class="tool-top" style="color:#c084fc;"><i class="fa-solid fa-pen-ruler"></i> 4. Edit Everything</div>
-            <div class="tool-desc"></div>
           </button>
           <button
             type="button"
@@ -7288,7 +6752,6 @@
             onclick="switchOtherSubOption('contactSettings')"
           >
             <div class="tool-top" style="color:#f59e0b;"><i class="fa-solid fa-address-book"></i> 5. Contact Info</div>
-            <div class="tool-desc"></div>
           </button>
           <button
             type="button"
@@ -7298,7 +6761,6 @@
             onclick="switchOtherSubOption('tickets')"
           >
             <div class="tool-top" style="color:#38bdf8;"><i class="fa-solid fa-screwdriver-wrench"></i> 6. Maintenance Tickets</div>
-            <div class="tool-desc"></div>
           </button>
           <button
             type="button"
@@ -7308,7 +6770,6 @@
             onclick="switchOtherSubOption('auditLog')"
           >
             <div class="tool-top" style="color:#fb7185;"><i class="fa-solid fa-shield-cat"></i> 7. Audit Trail Log</div>
-            <div class="tool-desc"></div>
           </button>
         </div>
 
@@ -7574,7 +7035,6 @@
             <i class="fa-solid fa-plus-circle"></i> Property
           </span>
           <h3 class="exec-modal-title">Add New Property</h3>
-          <p class="exec-modal-subtitle"></p>
         </div>
       </div>
 
@@ -7586,7 +7046,6 @@
             </label>
             <span class="exec-field-tag tag-required">Compulsory</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <input type="text" id="newPropName" class="form-control" placeholder="e.g. Patna">
         </div>
 
@@ -7598,7 +7057,6 @@
               </label>
               <span class="exec-field-tag tag-optional">Optional</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input type="text" id="newPropUpiName" class="form-control" placeholder="e.g. Rajesh Sharma">
           </div>
 
@@ -7609,7 +7067,6 @@
               </label>
               <span class="exec-field-tag tag-optional">Optional</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input type="text" id="newPropUpiId" class="form-control" placeholder="e.g. name@okhdfcbank">
           </div>
         </div>
@@ -7621,7 +7078,6 @@
             </label>
             <span class="exec-field-tag tag-required">Max 10 Digits</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <div style="display:flex; gap:8px;">
             <select id="newPropCountryCode" class="form-control" style="width:122px; flex-shrink:0;">
               <option value="+91" selected>🇮🇳 +91 (IN)</option>
@@ -7665,7 +7121,6 @@
            <i class="fa-solid fa-sliders"></i> Property Configuration
           </span>
           <h3 class="exec-modal-title">Edit Property Details</h3>
-          <p class="exec-modal-subtitle"></p>
         </div>
       </div>
 
@@ -7678,7 +7133,6 @@
             </label>
             <span class="exec-field-tag tag-required">Step 1</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <select id="editPropDropdown" class="form-control" onchange="syncEditPropDisplay()"></select>
         </div>
 
@@ -7691,7 +7145,6 @@
               </label>
               <span class="exec-field-tag tag-locked">Read-Only</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input type="text" id="editPropCurrentName" class="form-control" readonly>
           </div>
 
@@ -7703,7 +7156,6 @@
               </label>
               <span class="exec-field-tag tag-required">Compulsory</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input type="text" id="editPropNewName" class="form-control" placeholder="New Name">
           </div>
         </div>
@@ -7717,7 +7169,6 @@
               </label>
               <span class="exec-field-tag tag-optional">Payment Info</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input type="text" id="editPropUpiName" class="form-control" placeholder="Account Holder / Payee Name">
           </div>
 
@@ -7729,7 +7180,6 @@
               </label>
               <span class="exec-field-tag tag-optional">QR Generator</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input type="text" id="editPropUpiId" class="form-control" placeholder="e.g. name@okhdfcbank">
           </div>
         </div>
@@ -7742,7 +7192,6 @@
             </label>
             <span class="exec-field-tag tag-optional">Support Line</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <input
             type="tel"
             id="editPropContractMobile"
@@ -7791,7 +7240,6 @@
             <i class="fa-solid fa-layer-group"></i> Unit Creation
           </span>
           <h3 class="exec-modal-title">Add New Flat</h3>
-          <p class="exec-modal-subtitle"></p>
         </div>
       </div>
 
@@ -7803,7 +7251,6 @@
             </label>
             <span class="exec-field-tag tag-required">Compulsory</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <select id="addFlatPropDropdown" class="form-control" required></select>
         </div>
 
@@ -7814,7 +7261,6 @@
             </label>
             <span class="exec-field-tag tag-required">Compulsory</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <input type="text" id="addFlatNumber" class="form-control" placeholder="e.g. 101, 204, or 3B" required>
         </div>
 
@@ -7838,7 +7284,6 @@
             <i class="fa-solid fa-id-card-clip"></i> Tenant Onboarding
           </span>
           <h3 class="exec-modal-title">Add New Renter</h3>
-          <p class="exec-modal-subtitle"></p>
         </div>
       </div>
 
@@ -7851,7 +7296,6 @@
               </label>
               <span class="exec-field-tag tag-required">Compulsory</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <select id="addRenterPropDropdown" class="form-control" onchange="populateAddRenterFlatsDropdown()" required></select>
           </div>
 
@@ -7862,7 +7306,6 @@
               </label>
               <span class="exec-field-tag tag-required">Compulsory</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <select id="addRenterFlatDropdown" class="form-control" onchange="handleAddRenterFlatSelectionChange()" required></select>
           </div>
         </div>
@@ -7874,7 +7317,6 @@
             </label>
             <span class="exec-field-tag tag-required">Compulsory</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <input type="text" id="addRenterNameInput" class="form-control" placeholder="Enter Renter Full Name" required>
         </div>
 
@@ -7887,7 +7329,6 @@
               </label>
               <span class="exec-field-tag tag-required">Compulsory</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input
               type="number"
               id="addRenterFlatRateInput"
@@ -7906,7 +7347,6 @@
               </label>
               <span class="exec-field-tag tag-optional">₹ / Unit</span>
             </div>
-            <span class="exec-field-purpose"></span>
             <input
               type="number"
               id="addRenterElecRateInput"
@@ -7925,7 +7365,6 @@
             </label>
             <span class="exec-field-tag tag-optional">Optional</span>
           </div>
-          <span class="exec-field-purpose"></span>
           <input
             type="text"
             id="addRenterAadhaarInput"
@@ -11990,15 +11429,6 @@ function formatMonthLabel(rawVal) {
       return `${monthNames[mIdx] || month} ${year}`;
     }
 
-    // Requirement 4: Strictly displays ONLY the name of the month with zero brackets in Flat History
-    function formatMonthNameOnly(rawVal) {
-      const clean = normalizeMonthYear(rawVal);
-      if (!/^\d{4}-\d{2}$/.test(clean)) return String(clean || "--").replace(/[()[\]]/g, "").trim();
-      const [, month] = clean.split("-");
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      const mIdx = parseInt(month, 10) - 1;
-      return monthNames[mIdx] || month;
-    }
 
     function sanitizeAllBillsMonths(billsArray) {
       return (billsArray || []).map(b => {
@@ -12482,9 +11912,7 @@ function formatMonthLabel(rawVal) {
           display: none !important;
         }
         /* Requirement 3 & 5: Automatically hide Live Chat whenever any Modal or Profile view is open */
-        body.flat-details-open #bottomRightFloatingDock,
         body.flat-details-open #modularLiveChatWidget,
-        body.modal-open-hide-chat #bottomRightFloatingDock,
         body.modal-open-hide-chat #modularLiveChatWidget {
           display: none !important;
           visibility: hidden !important;
@@ -12741,8 +12169,6 @@ function formatMonthLabel(rawVal) {
       document.getElementById("loginScreen")?.classList.add("active");
       document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
 
-      const dockEl = document.getElementById("bottomRightFloatingDock");
-      if (dockEl) dockEl.style.display = "none";
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
 
@@ -13640,15 +13066,6 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    // Requirement 6: Remove 'Live Portfolio Overview' section completely
-    function renderHomeWelcomeHeroStrip() {
-      const strip = document.getElementById("homeWelcomeHeroStrip");
-      if (strip) {
-        strip.style.display = "none";
-        strip.innerHTML = "";
-      }
-    }
-
     function copyRenterHomeUpiId(upiIdText) {
       const cleanUpi = String(upiIdText || "").trim();
       if (!cleanUpi || cleanUpi === "Not Configured" || cleanUpi === "N/A") {
@@ -13668,13 +13085,10 @@ function formatMonthLabel(rawVal) {
 
     function renderAllDashboardUI() {
       const viewerScope = resolveViewerAssignedScope();
-      renderHomeWelcomeHeroStrip();
       if (activeRole === "Renter") {
         const flatsContainer = document.getElementById("flatsList");
         const propsBar = document.querySelector(".properties-bar");
-        const khetSec = document.getElementById("homeKhetSection");
         if (propsBar) propsBar.style.display = "none";
-        if (khetSec) khetSec.style.display = "none";
 
         const renterAadhaar = getNormalizedActiveRenterAadhaar();
         const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
@@ -15647,63 +15061,6 @@ function formatMonthLabel(rawVal) {
       };
     }
 
-    // Requirement 5: 3-Parameter Graph for All Flats (1. Base Rent, 2. Utilities [Elec+PNG+Water], 3. Paid Collected)
-    function buildFlatThreeParamGraphHTML(flat, renter, isModalView = false) {
-      if (!flat) return "";
-      const allFlatBills = (DB.bills || [])
-        .filter(b => isSamePropAndFlat(b.PropertyName, b.FlatName, flat.PropertyName, flat.FlatName))
-        .sort((a, b) => normalizeMonthYear(a.MonthYear).localeCompare(normalizeMonthYear(b.MonthYear)));
-
-      const activeRenterBills = renter ? getBillsForSpecificRenter(flat.PropertyName, flat.FlatName, renter) : [];
-      const sourceBills = activeRenterBills.length > 0 ? activeRenterBills : allFlatBills;
-
-      let paramRent = parseFloat(flat.RentAmount || renter?.RentAmount || 0) || 0;
-      let paramUtilities = 0;
-      let paramPaid = 0;
-      let periodLabel = "Current Profile";
-
-      if (sourceBills.length > 0) {
-        const latestBill = sourceBills[sourceBills.length - 1];
-        paramRent = parseFloat(latestBill.BaseRent) || paramRent;
-        const eTot = parseFloat(latestBill.ElecTotal) || 0;
-        const pTot = parseFloat(latestBill.PNGTotal) || 0;
-        const wTot = parseFloat(latestBill.WaterTotal) || 0;
-        paramUtilities = eTot + pTot + wTot;
-        paramPaid = parseFloat(latestBill.PaidAmount) || 0;
-        periodLabel = formatMonthNameOnly(latestBill.MonthYear) || "Latest Bill";
-      }
-
-      const maxVal = Math.max(paramRent, paramUtilities, paramPaid, 1);
-      const rentPct = Math.min(100, Math.max(paramRent > 0 ? 8 : 2, Math.round((paramRent / maxVal) * 100)));
-      const utilPct = Math.min(100, Math.max(paramUtilities > 0 ? 8 : 2, Math.round((paramUtilities / maxVal) * 100)));
-      const paidPct = Math.min(100, Math.max(paramPaid > 0 ? 8 : 2, Math.round((paramPaid / maxVal) * 100)));
-
-      return `
-        <div class="flat-3param-graph-box" ${isModalView ? 'style="margin-top:0; background:var(--bg-input);"' : ''}>
-          <div class="flat-3param-graph-header">
-            <span><i class="fa-solid fa-chart-simple"></i> 3-Parameter Flat Graph</span>
-            <span>${periodLabel}</span>
-          </div>
-          <div class="flat-3param-bars-wrap">
-            <div class="flat-3param-row">
-              <div class="flat-3param-label"><span class="flat-3param-dot rent"></span>1. Rent</div>
-              <div class="flat-3param-track"><div class="flat-3param-fill rent" style="width:${rentPct}%;"></div></div>
-              <div class="flat-3param-val">₹${paramRent.toLocaleString('en-IN')}</div>
-            </div>
-            <div class="flat-3param-row">
-              <div class="flat-3param-label"><span class="flat-3param-dot util"></span>2. Utility</div>
-              <div class="flat-3param-track"><div class="flat-3param-fill util" style="width:${utilPct}%;"></div></div>
-              <div class="flat-3param-val">₹${paramUtilities.toLocaleString('en-IN')}</div>
-            </div>
-            <div class="flat-3param-row">
-              <div class="flat-3param-label"><span class="flat-3param-dot paid"></span>3. Paid</div>
-              <div class="flat-3param-track"><div class="flat-3param-fill paid" style="width:${paidPct}%;"></div></div>
-              <div class="flat-3param-val">₹${paramPaid.toLocaleString('en-IN')}</div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
 
     // Requirement 5: Dynamic Profit & Loss by Selected Property (Displays total for all properties by default; dynamically switches to selected property when clicked)
     function updateGlobalProfitAndLoss() {
@@ -16210,10 +15567,7 @@ function formatMonthLabel(rawVal) {
       if (profThemeBadge) {
         profThemeBadge.innerText = isLightTheme ? "White Mode" : "Dark Mode";
       }
-      const normalizedPref = (activeThemePref === "dark" || !activeThemePref) ? "black" : (activeThemePref === "light" ? "white" : activeThemePref);
-      document.getElementById("themeCardBlack")?.classList.toggle("active", normalizedPref === "black");
-      document.getElementById("themeCardWhite")?.classList.toggle("active", normalizedPref === "white");
-      document.getElementById("themeCardSystem")?.classList.toggle("active", normalizedPref === "system");
+
 
       activeUserMobile = sanitizeContactPhoneDisplay(activeUserMobile);
       document.getElementById("profViewFullName").value = activeUserFullName || activeUser || "";
@@ -17696,9 +17050,7 @@ function formatMonthLabel(rawVal) {
       document.body.classList.remove("theme-black", "theme-white");
       document.body.classList.add(effectiveTheme === "white" ? "theme-white" : "theme-black");
 
-      document.getElementById("themeCardBlack")?.classList.toggle("active", activeThemePref === "black");
-      document.getElementById("themeCardWhite")?.classList.toggle("active", activeThemePref === "white");
-      document.getElementById("themeCardSystem")?.classList.toggle("active", activeThemePref === "system");
+
       // Dynamically re-render flat analytics graphs so their SVG theme colors adapt immediately
       if (typeof refreshAllAnalyticsGraphs === "function") {
         refreshAllAnalyticsGraphs();
@@ -18987,23 +18339,6 @@ function formatMonthLabel(rawVal) {
       { key: "png",   label: "PNG Gas",     color: "#ec4899", bg: "rgba(236, 72, 153, 0.16)" }
     ];
 
-    let flatGraph2YearFilters = {}; // { [year]: true/false }
-
-    function ensureThreeYearFiltersInitialized() {
-      const currentYear = new Date().getFullYear();
-      const threeYears = [currentYear, currentYear - 1, currentYear - 2];
-      let hasAnyKey = false;
-      threeYears.forEach(y => {
-        if (flatGraph2YearFilters.hasOwnProperty(y)) hasAnyKey = true;
-      });
-      if (!hasAnyKey) {
-        threeYears.forEach(y => { flatGraph2YearFilters[y] = true; });
-      }
-      if (! threeYears.some(y => Boolean(flatGraph2YearFilters[y]))) {
-        threeYears.forEach(y => { flatGraph2YearFilters[y] = true; });
-      }
-    }
-
     function toggleFlatGraph1Expense(expenseKey) {
       if (expenseKey === "ALL_ON") {
         Object.keys(flatGraph1ExpenseFilters).forEach(k => { flatGraph1ExpenseFilters[k] = true; });
@@ -19018,37 +18353,6 @@ function formatMonthLabel(rawVal) {
 
     function setFlatGraph1Scope(scopeVal) {
       flatGraph1SelectedScope = scopeVal || "ALL";
-      refreshAllAnalyticsGraphs();
-    }
-
-    function toggleFlatGraph2Year(yearVal) {
-      ensureThreeYearFiltersInitialized();
-      const currentYear = new Date().getFullYear();
-      const threeYears = [currentYear, currentYear - 1, currentYear - 2];
-
-      if (yearVal === "ALL_3_YEARS") {
-        threeYears.forEach(y => { flatGraph2YearFilters[y] = true; });
-      } else {
-        const yNum = parseInt(yearVal, 10);
-        if (!isNaN(yNum)) {
-          flatGraph2YearFilters[yNum] = !flatGraph2YearFilters[yNum];
-          if (!threeYears.some(y => Boolean(flatGraph2YearFilters[y]))) {
-            flatGraph2YearFilters[yNum] = true;
-          }
-        }
-      }
-      refreshAllAnalyticsGraphs();
-    }
-
-    function selectOnlyFlatGraph2Year(yearVal) {
-      const currentYear = new Date().getFullYear();
-      const threeYears = [currentYear, currentYear - 1, currentYear - 2];
-      if (yearVal === "ALL_3_YEARS") {
-        threeYears.forEach(y => { flatGraph2YearFilters[y] = true; });
-      } else {
-        const yNum = parseInt(yearVal, 10);
-        threeYears.forEach(y => { flatGraph2YearFilters[y] = (y === yNum); });
-      }
       refreshAllAnalyticsGraphs();
     }
 
@@ -20883,19 +20187,6 @@ function formatMonthLabel(rawVal) {
       openModal("rentCollectionQrModal");
     }
 
-    function selectRentQrPresetAmount(amountVal, labelText) {
-      if (activeRole === "Renter") return;
-      const amtInput = document.getElementById("qrCollectAmountInput");
-      if (amtInput) {
-        amtInput.value = Number(amountVal || 0).toFixed(2);
-      }
-      const hintEl = document.getElementById("qrModalDueSourceHint");
-      if (hintEl && labelText) {
-        hintEl.innerText = `Selected: ${labelText}`;
-      }
-      refreshRentCollectionQrModal();
-    }
-
     function refreshRentCollectionQrModal() {
       const upiId = document.getElementById("qrCollectUpiIdInput")?.value?.trim() || "";
       const upiName = document.getElementById("qrCollectUpiNameInput")?.value?.trim() || "Rent Receiver";
@@ -20943,130 +20234,6 @@ function formatMonthLabel(rawVal) {
           directPayLink.href = qrResult.upiUri;
           directPayLink.onclick = null;
         }
-      }
-    }
-
-    async function copyRentCollectionUpiLink() {
-      const upiId = document.getElementById("qrCollectUpiIdInput")?.value?.trim() || "";
-      const upiName = document.getElementById("qrCollectUpiNameInput")?.value?.trim() || "Rent Receiver";
-      const amount = parseFloat(document.getElementById("qrCollectAmountInput")?.value) || 0;
-      const note = document.getElementById("qrCollectNoteInput")?.value?.trim() || "";
-      const upiUri = buildValidUpiUri(upiId, upiName, amount, note);
-
-      if (!upiUri) {
-        return triggerSideToast("Missing UPI ID", "Please enter a valid UPI ID (e.g. name@upi) first.", false);
-      }
-      try {
-        await navigator.clipboard.writeText(upiUri);
-        triggerSideToast("UPI Link Copied", `Copied UPI payment link for ₹${amount.toLocaleString('en-IN')}!`, true);
-      } catch (e) {
-        triggerSideToast("UPI ID", `${upiId} — Amount: ₹${amount}`, true);
-      }
-    }
-
-    function downloadRentCollectionQrCard() {
-      const upiId = document.getElementById("qrCollectUpiIdInput")?.value?.trim() || "";
-      const upiName = document.getElementById("qrCollectUpiNameInput")?.value?.trim() || "Rent Receiver";
-      const amount = parseFloat(document.getElementById("qrCollectAmountInput")?.value) || 0;
-      const note = document.getElementById("qrCollectNoteInput")?.value?.trim() || "";
-      const qrCanvas = document.getElementById("rentCollectionQrCanvas");
-
-      const upiUri = buildValidUpiUri(upiId, upiName, amount, note);
-      if (!upiUri || !qrCanvas) {
-        return triggerSideToast("Invalid QR Code", "Please enter a valid UPI ID before downloading.", false);
-      }
-
-      const propName = selectedFlat?.PropertyName || selectedProperty || "Property";
-      const flatName = selectedFlat?.FlatName || "";
-
-      // Create a styled summary card canvas with header, QRious QR, UPI ID & Amount Due
-      const exportCanvas = document.createElement("canvas");
-      exportCanvas.width = 420;
-      exportCanvas.height = 520;
-      const ctx = exportCanvas.getContext("2d");
-
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-
-      ctx.fillStyle = "#0f172a";
-      ctx.fillRect(0, 0, exportCanvas.width, 76);
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 20px 'Plus Jakarta Sans', sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(`${propName} — Flat ${flatName}`, 210, 34);
-
-      ctx.fillStyle = "#34d399";
-      ctx.font = "600 13px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText(note || "Property Rent Payment", 210, 58);
-
-      ctx.fillStyle = "#0f172a";
-      ctx.font = "bold 18px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText(upiName, 210, 112);
-
-      ctx.drawImage(qrCanvas, 80, 128, 260, 260);
-
-      ctx.fillStyle = "#4f46e5";
-      ctx.font = "bold 15px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText(`UPI ID: ${upiId}`, 210, 415);
-
-      ctx.fillStyle = "#059669";
-      ctx.font = "bold 26px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText(`Amount Due: ₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 210, 456);
-
-      ctx.fillStyle = "#64748b";
-      ctx.font = "600 12px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText("Scan with Google Pay, PhonePe, Paytm or BHIM", 210, 492);
-
-      const link = document.createElement("a");
-      link.download = `Rent_QR_${propName}_Flat_${flatName}_Rs${amount.toFixed(0)}.png`.replace(/\s+/g, "_");
-      link.href = exportCanvas.toDataURL("image/png");
-      link.click();
-      triggerSideToast("QR Downloaded", "Rent collection QR card saved as PNG.", true);
-    }
-
-    function shareRentCollectionQrOnWhatsApp() {
-      const upiId = document.getElementById("qrCollectUpiIdInput")?.value?.trim() || "";
-      const upiName = document.getElementById("qrCollectUpiNameInput")?.value?.trim() || "Rent Receiver";
-      const amount = parseFloat(document.getElementById("qrCollectAmountInput")?.value) || 0;
-      const note = document.getElementById("qrCollectNoteInput")?.value?.trim() || "";
-      const upiUri = buildValidUpiUri(upiId, upiName, amount, note);
-
-      if (!upiUri) {
-        return triggerSideToast("Missing UPI ID", "Please enter a valid UPI ID before sharing on WhatsApp.", false);
-      }
-
-      const propName = selectedFlat?.PropertyName || selectedProperty || "Property";
-      const flatName = selectedFlat?.FlatName || "";
-      const tenantName = document.getElementById("renterName")?.value?.trim() || activeFlatRenterObj?.RenterName || "Tenant";
-      const rawPhone = resolveReceiptTargetMobile(null, activeFlatRenterObj);
-      const waPhone = formatWhatsAppPhone(rawPhone);
-
-      const msgLines = [
-        `*RENT PAYMENT REQUEST*`,
-        `Property: *${propName} (Flat ${flatName})*`,
-        `Tenant: *${tenantName}*`,
-        `Amount Due: *₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}*`,
-        `Payee Name: *${upiName}*`,
-        `UPI ID: *${upiId}*`,
-        note ? `Note: ${note}` : ``,
-        ``,
-        `Pay Instantly via UPI App:`,
-        upiUri
-      ].filter(Boolean).join("\n");
-
-      const waUrl = waPhone
-        ? `https://wa.me/${waPhone}?text=${encodeURIComponent(msgLines)}`
-        : `https://wa.me/?text=${encodeURIComponent(msgLines)}`;
-
-      try {
-        window.open(waUrl, "_blank", "noopener,noreferrer");
-      } catch (err) {
-        const a = document.createElement("a");
-        a.href = waUrl;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.click();
       }
     }
 
@@ -24954,10 +24121,7 @@ function formatMonthLabel(rawVal) {
       `;
     }
 
-    // Requirement 1: Farmland section at the bottom of the home page is removed (Farmland button in top dashboard & modal remain intact)
     function renderHomeKhetSection() {
-      const sectionEl = document.getElementById("homeKhetSection");
-      if (sectionEl) sectionEl.style.display = "none";
       populateKhetPartnerFilterAndQuickFill();
     }
 
@@ -26862,8 +26026,6 @@ function formatMonthLabel(rawVal) {
       document.getElementById("loginScreen")?.classList.add("active");
       document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
 
-      const dockEl = document.getElementById("bottomRightFloatingDock");
-      if (dockEl) dockEl.style.display = "none";
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
 
@@ -27229,19 +26391,13 @@ function formatMonthLabel(rawVal) {
        ============================================================================ */
     const PRIVATE_CHAT_STORAGE_KEY = "elite_estate_isolated_1on1_chats_v1";
     let activeSelectedChatChannelId = "";
-    let floatingDockSide = localStorage.getItem("elite_floating_dock_side") || "right";
 
     function syncFloatingCornerButtonsByRole() {
-      const dock = document.getElementById("bottomRightFloatingDock");
       const chatWidget = document.getElementById("modularLiveChatWidget");
       const isFlatModalOpen = document.getElementById("flatDetailsModal")?.classList.contains("active");
 
       document.body.classList.toggle("flat-details-open", Boolean(isFlatModalOpen));
 
-      // Requirement 6 & 8: Live Chat & Help Center buttons are removed from the bottom-right dock and placed in the top dashboard header
-      if (dock) {
-        dock.style.display = "none";
-      }
       if (chatWidget && isFlatModalOpen) {
         chatWidget.style.display = "none";
       }
@@ -27254,21 +26410,6 @@ function formatMonthLabel(rawVal) {
 
       initModularDraggableWidgets();
       updateLiveChatUnreadBadge();
-    }
-
-    function toggleFloatingDockScreenSide() {
-      floatingDockSide = floatingDockSide === "left" ? "right" : "left";
-      localStorage.setItem("elite_floating_dock_side", floatingDockSide);
-      const dock = document.getElementById("bottomRightFloatingDock");
-      if (dock) {
-        dock.classList.toggle("dock-left", floatingDockSide === "left");
-      }
-      ["modularLiveChatWidget"].forEach(wId => {
-        const w = document.getElementById(wId);
-        if (w && !w.dataset.customDragged) {
-          w.classList.toggle("docked-left", floatingDockSide === "left");
-        }
-      });
     }
 
     function switchWidgetScreenSide(widgetId) {
@@ -28505,90 +27646,6 @@ function formatMonthLabel(rawVal) {
     // GROUP A (1–6), GROUP B (APPLIANCE CHECKLIST), GROUP C (1–3), GROUP G (1–3)
     // ============================================================================
 
-    // --- A1: DYNAMIC UPI QR CODE ON BILLS & RENTER PORTAL ---
-    async function openDynamicBillUpiQrModal(billId = "") {
-      let propName = selectedFlat?.PropertyName || selectedProperty || "";
-      let flatName = selectedFlat?.FlatName || "";
-      let tenantName = document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Tenant";
-      let monthYear = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
-      let upiId = "";
-      let upiName = "";
-      let pendingDue = 0;
-
-      if (billId) {
-        const b = (DB.bills || []).find(x => String(x.BillID || "") === String(billId));
-        if (b) {
-          propName = b.PropertyName || propName;
-          flatName = b.FlatName || flatName;
-          tenantName = b.TenantName || tenantName;
-          monthYear = normalizeMonthYear(b.MonthYear);
-          upiId = b.UPIID || "";
-          upiName = b.UPIName || "";
-          pendingDue = Math.max(0, (parseFloat(b.TotalBilled) || 0) - (parseFloat(b.PaidAmount) || 0));
-        }
-      } else {
-        const rawGrand = parseFloat((document.getElementById("calcGrandTotal")?.innerText || "0").replace(/[^\d.-]/g, "")) || 0;
-        const paidNow = parseFloat(document.getElementById("calcPaidNow")?.value) || 0;
-        pendingDue = Math.max(0, rawGrand - paidNow);
-      }
-
-      if (!upiId && selectedFlat) {
-        const resolved = resolveFlatUpiAndContact(propName, selectedFlat, activeFlatRenterObj);
-        upiId = resolved.upiId || "";
-        upiName = resolved.upiName || "";
-      }
-      if (!upiId) {
-        const anyProp = (DB.properties || []).find(p => String(p.PropertyName || "").toLowerCase() === String(propName || "").toLowerCase());
-        upiId = anyProp?.UPIID || "merchant@upi";
-        upiName = anyProp?.UPIName || propName || "Property Admin";
-      }
-
-      const cleanAmt = Math.max(0, Math.round(pendingDue));
-      const noteText = `${propName} Flat ${flatName} (${formatMonthLabel(monthYear)})`;
-      const upiUri = typeof buildValidUpiUri === "function"
-        ? buildValidUpiUri(upiId, upiName || "Landlord", cleanAmt, noteText)
-        : `upi://pay?pa=${String(upiId).trim()}&pn=${encodeURIComponent(upiName || "Landlord")}&am=${cleanAmt.toFixed(2)}&cu=INR&tn=${encodeURIComponent(noteText)}`;
-      const qrImgUrl = typeof fetchQrCodeAsDataUrl === "function"
-        ? await fetchQrCodeAsDataUrl(upiUri)
-        : `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUri)}`;
-
-      let overlay = document.getElementById("dynamicUpiQrModalOverlay");
-      if (!overlay) {
-        overlay = document.createElement("div");
-        overlay.id = "dynamicUpiQrModalOverlay";
-        overlay.className = "modal-overlay";
-        document.body.appendChild(overlay);
-      }
-
-      overlay.innerHTML = `
-        <div class="modal-window" style="max-width:410px; text-align:center;">
-          <div class="modal-header">
-            <h3 style="font-size:1rem;"><i class="fa-solid fa-qrcode" style="color:#10b981;"></i> Scan &amp; Pay via Any UPI App</h3>
-            <button class="modal-close-btn" onclick="document.getElementById('dynamicUpiQrModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-          <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:14px; padding:14px; margin-bottom:12px;">
-            <div style="font-size:0.74rem; color:var(--text-muted); font-weight:700;">${propName} • Flat ${flatName} • ${formatMonthLabel(monthYear)}</div>
-            <div style="font-size:1.55rem; font-weight:900; color:#10b981; margin:4px 0;">₹ ${cleanAmt.toLocaleString("en-IN")}</div>
-            <div style="font-size:0.75rem; color:var(--text-main);">Payee: <strong>${upiName || "Landlord"}</strong> (${upiId})</div>
-          </div>
-          <div style="background:#fff; padding:14px; border-radius:16px; display:inline-block; margin-bottom:12px; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
-            <img src="${qrImgUrl}" alt="UPI QR Code" style="width:210px; height:210px; display:block;">
-          </div>
-          <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:12px;">
-            Scan with Google Pay, PhonePe, Paytm, or BHIM. Amount <strong>₹${cleanAmt.toLocaleString("en-IN")}</strong> is pre-filled automatically.
-          </div>
-          <div style="display:flex; gap:8px; justify-content:center;">
-            <a href="${upiUri}" class="btn-primary" style="flex:1; padding:9px 12px; font-size:0.78rem; text-decoration:none; background:linear-gradient(135deg,#059669,#10b981);">
-              <i class="fa-solid fa-mobile-screen-button"></i> Open UPI App
-            </a>
-            <button type="button" class="btn-primary" style="flex:1; padding:9px 12px; font-size:0.78rem; background:linear-gradient(135deg,#0284c7,#2563eb);" onclick="document.getElementById('dynamicUpiQrModalOverlay').classList.remove('active'); ${billId ? `openSubmitPaymentProofModalForBill('${billId}')` : `openSubmitPaymentProofModalForCurrentFlat()`}">
-              <i class="fa-solid fa-file-circle-check"></i> Submit UTR Proof
-            </button>
-          </div>
-        </div>
-      `;
-      overlay.classList.add("active");
-    }
 
     // --- A2: PAYMENT PROOF UPLOAD & ADMIN VERIFICATION WORKFLOW ---
     function getStoredPaymentProofs() {
@@ -29707,14 +28764,6 @@ function formatMonthLabel(rawVal) {
       triggerSideToast("Audit CSV Downloaded", "Admin audit trail exported to CSV.", true);
     }
 
-    function clearAdminAuditTrailLogs() {
-      if (activeRole !== "Admin") return;
-      try { localStorage.removeItem("portal_admin_audit_logs_v1"); } catch (e) {}
-      if (DB.globalConfig) DB.globalConfig.auditLogs = [];
-      sendFirebaseAction({ action: "saveAuditLogs", auditLogs: [] }).catch(() => {});
-      renderAdminAuditTrailList();
-      triggerSideToast("Audit Log Cleared", "All local audit trail entries cleared.", true);
-    }
 
   </script>
 
