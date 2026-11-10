@@ -8919,7 +8919,8 @@
         try {
           const msg = ev?.data;
           if (!msg || !msg.topic) return;
-          if (typeof loadDbSnapshotFromCache === "function") loadDbSnapshotFromCache();
+          if (typeof loadLocalUsersMaster === "function") DB.users = loadLocalUsersMaster();
+          if (typeof loadLocalLoginHistoryMaster === "function") DB.loginHistory = loadLocalLoginHistoryMaster();
           if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
         } catch (e) {}
       };
@@ -10078,7 +10079,7 @@
           }
 
           case "uploadBackgroundPhoto": {
-            const photoUrl = data.base64Data || data.imageUrl || "";
+            const photoUrl = data.sheetSafeBase64 || data.base64Data || data.imageUrl || "";
             const slot = data.slot || data.type || "dashboard";
             const field = slot === "login" ? "bgLoginUrl" : "bgDashboardUrl";
 
@@ -10090,7 +10091,7 @@
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", url: photoUrl, message: "Background photo uploaded." };
+            return { status: "success", url: photoUrl, imageUrl: photoUrl, message: "Background photo uploaded." };
           }
 
           case "saveContactConfig": {
@@ -10127,6 +10128,55 @@
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
             return { status: "success", message: "Live chats synced to Google Sheet." };
+          }
+
+          case "savePaymentProofs": {
+            const proofs = Array.isArray(data.paymentProofs) ? data.paymentProofs : [];
+            globalConfig = {
+              ...globalConfig,
+              paymentProofs: proofs,
+              updatedAt: new Date().toISOString()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return { status: "success", message: "Payment proofs synced to Google Sheet." };
+          }
+
+          case "saveMaintenanceTickets": {
+            const tickets = Array.isArray(data.maintenanceTickets) ? data.maintenanceTickets : [];
+            globalConfig = {
+              ...globalConfig,
+              maintenanceTickets: tickets,
+              updatedAt: new Date().toISOString()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return { status: "success", message: "Maintenance tickets synced to Google Sheet." };
+          }
+
+          case "saveAuditLogs": {
+            const logs = Array.isArray(data.auditLogs) ? data.auditLogs : [];
+            globalConfig = {
+              ...globalConfig,
+              auditLogs: logs,
+              updatedAt: new Date().toISOString()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return { status: "success", message: "Audit logs synced to Google Sheet." };
+          }
+
+          case "saveFlatChecklist": {
+            const key = String(data.propertyName || "").trim().toLowerCase() + "::" + String(data.flatName || "").trim().toLowerCase();
+            const checklists = { ...(globalConfig.flatChecklists || {}), [key]: data.checklist || [] };
+            globalConfig = {
+              ...globalConfig,
+              flatChecklists: checklists,
+              updatedAt: new Date().toISOString()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return { status: "success", message: "Flat checklist synced to Google Sheet." };
           }
 
           default: {
@@ -10631,8 +10681,9 @@
           base64Data: driveUploadDataUrl,
           sheetSafeBase64: sheetSafeBase64
         });
-        const serverUrl = (res && res.status === "success" && res.imageUrl && !res.imageUrl.startsWith("data:image/"))
-          ? normalizeGoogleDriveBgUrl(res.imageUrl)
+        const rawImgUrl = (res && res.status === "success") ? (res.imageUrl || res.url || "") : "";
+        const serverUrl = (rawImgUrl && !rawImgUrl.startsWith("data:image/"))
+          ? normalizeGoogleDriveBgUrl(rawImgUrl)
           : "";
         const el = document.getElementById("bgUrlLoginScreen");
         if (serverUrl) {
@@ -14966,6 +15017,21 @@ function formatMonthLabel(rawVal) {
                 syncServerPrivateChatsToLocal(res.globalConfig.privateChats);
               }
             }
+            if (Array.isArray(res.globalConfig.paymentProofs)) {
+              try {
+                localStorage.setItem("portal_utr_payment_proofs_v1", JSON.stringify(res.globalConfig.paymentProofs));
+              } catch (e) {}
+            }
+            if (Array.isArray(res.globalConfig.maintenanceTickets)) {
+              try {
+                localStorage.setItem("portal_maintenance_tickets_v1", JSON.stringify(res.globalConfig.maintenanceTickets));
+              } catch (e) {}
+            }
+            if (Array.isArray(res.globalConfig.auditLogs)) {
+              try {
+                localStorage.setItem("portal_admin_audit_logs_v1", JSON.stringify(res.globalConfig.auditLogs));
+              } catch (e) {}
+            }
           }
           if (res.userAssignedProperty !== undefined) {
             activeAssignedProperty = res.userAssignedProperty || "";
@@ -18085,9 +18151,10 @@ function formatMonthLabel(rawVal) {
           sheetSafeBase64: compressedDataUrl
         });
 
-        const finalSavedImg = (res && res.status === "success" && res.imageUrl && res.imageUrl.startsWith("data:image"))
-          ? res.imageUrl
-          : compressedDataUrl;
+        const returnedImg = res && res.status === "success" ? (res.imageUrl || res.url || "") : "";
+        const finalSavedImg = (returnedImg && returnedImg.startsWith("data:image"))
+          ? returnedImg
+          : (returnedImg ? normalizeGoogleDriveImageUrl(returnedImg) : compressedDataUrl);
         updateLeftRenterImageSlotUI(docType, finalSavedImg);
         if (isIdentity) {
           targetRenter.IdentityImageURL = finalSavedImg;
@@ -18621,7 +18688,7 @@ function formatMonthLabel(rawVal) {
         barsSvg += `
           <g>
             <rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW.toFixed(1)}" height="${Math.max(4, barH).toFixed(1)}" rx="8" fill="${s.color}" fill-opacity="0.88" stroke="${s.color}" stroke-width="1.5">
-              <title>Home Management Portal</title>
+              <title>${s.label}: ₹${val.toLocaleString('en-IN')} (${pct}%)</title>
             </rect>
             <text x="${centerX.toFixed(1)}" y="${Math.max(16, barY - 8).toFixed(1)}" font-size="11" font-weight="800" fill="${s.color}" text-anchor="middle">₹${val.toLocaleString('en-IN')}</text>
             <text x="${centerX.toFixed(1)}" y="${chartHeight - 16}" font-size="11.5" font-weight="800" fill="${svgTextPrimary}" text-anchor="middle">${s.label}</text>
@@ -18857,7 +18924,7 @@ function formatMonthLabel(rawVal) {
           const barH = (val / maxVal) * usableH;
           const barY = padTop + usableH - barH;
           const barX = startX + yIdx * (barW + 3);
-          barsSvg += `<rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW}" height="${Math.max(0, barH).toFixed(1)}" rx="3" fill="${yc.color}" fill-opacity="0.38"><title>Home Management Portal</title></rect>`;
+          barsSvg += `<rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW}" height="${Math.max(0, barH).toFixed(1)}" rx="3" fill="${yc.color}" fill-opacity="0.38"><title>${mLabel} ${yc.year}: ₹${val.toLocaleString('en-IN')}</title></rect>`;
         });
       });
 
@@ -18875,7 +18942,7 @@ function formatMonthLabel(rawVal) {
 
         linesSvg += `<path d="${pathD}" fill="none" stroke="${yc.color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />`;
         pts.forEach(pt => {
-          linesSvg += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.2" fill="${yc.color}" stroke="${circleStroke}" stroke-width="1.8"><title>Home Management Portal</title></circle>`;
+          linesSvg += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.2" fill="${yc.color}" stroke="${circleStroke}" stroke-width="1.8"><title>${pt.mLabel} ${yc.year}: ₹${pt.val.toLocaleString('en-IN')}</title></circle>`;
         });
       });
 
@@ -19485,8 +19552,8 @@ function formatMonthLabel(rawVal) {
         document.getElementById("renterStatus").value = String(renter.Status || "Active").trim().toLowerCase() === "active" ? "Active" : "Inactive";
         document.getElementById("renterJoinDate").value = resolvedMeta.joinDate;
         document.getElementById("renterEndDate").value = resolvedMeta.endDate;
-        const resolvedProfilePic = renter.ProfileImageURL ;
-        const resolvedIdentityPic = renter.IdentityImageURL ;
+        const resolvedProfilePic = normalizeGoogleDriveImageUrl(renter.ProfileImageURL || "");
+        const resolvedIdentityPic = normalizeGoogleDriveImageUrl(renter.IdentityImageURL || "");
         if (!renter.ProfileImageURL && resolvedProfilePic) renter.ProfileImageURL = resolvedProfilePic;
         if (!renter.IdentityImageURL && resolvedIdentityPic) renter.IdentityImageURL = resolvedIdentityPic;
         updateRenterImageSlotUI("profile", resolvedProfilePic);
@@ -20848,7 +20915,7 @@ function formatMonthLabel(rawVal) {
         upiNameDisplay.innerText = upiName || "--";
       }
 
-      const qrPayableAmount = selectedTotal;
+      const qrPayableAmount = allChecked ? netClosing : selectedTotal;
       updateReceiptUpiQr(qrPayableAmount);
 
       return { selectedTotal, paidAmt, netClosing };
@@ -26268,9 +26335,10 @@ function formatMonthLabel(rawVal) {
         });
 
         // Always prefer the Sheet-safe data URL or verified imageUrl so mobile browsers never fail on third-party Drive cookies
-        const finalImageUrl = (res && res.status === "success" && res.imageUrl && res.imageUrl.startsWith("data:image"))
-          ? res.imageUrl
-          : sheetSafeBase64;
+        const returnedUrl = res && res.status === "success" ? (res.imageUrl || res.url || "") : "";
+        const finalImageUrl = (returnedUrl && returnedUrl.startsWith("data:image"))
+          ? returnedUrl
+          : (returnedUrl ? normalizeGoogleDriveImageUrl(returnedUrl) : sheetSafeBase64);
 
         if (res && res.resolvedRenterId && activeFlatRenterObj) {
           activeFlatRenterObj.RenterID = res.resolvedRenterId;
@@ -27673,7 +27741,7 @@ function formatMonthLabel(rawVal) {
     // ============================================================================
 
     // --- A1: DYNAMIC UPI QR CODE ON BILLS & RENTER PORTAL ---
-    function openDynamicBillUpiQrModal(billId = "") {
+    async function openDynamicBillUpiQrModal(billId = "") {
       let propName = selectedFlat?.PropertyName || selectedProperty || "";
       let flatName = selectedFlat?.FlatName || "";
       let tenantName = document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Tenant";
@@ -27712,8 +27780,12 @@ function formatMonthLabel(rawVal) {
 
       const cleanAmt = Math.max(0, Math.round(pendingDue));
       const noteText = `${propName} Flat ${flatName} (${formatMonthLabel(monthYear)})`;
-      const upiUri = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName || "Landlord")}&am=${cleanAmt}&cu=INR&tn=${encodeURIComponent(noteText)}`;
-      const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUri)}`;
+      const upiUri = typeof buildValidUpiUri === "function"
+        ? buildValidUpiUri(upiId, upiName || "Landlord", cleanAmt, noteText)
+        : `upi://pay?pa=${String(upiId).trim()}&pn=${encodeURIComponent(upiName || "Landlord")}&am=${cleanAmt.toFixed(2)}&cu=INR&tn=${encodeURIComponent(noteText)}`;
+      const qrImgUrl = typeof fetchQrCodeAsDataUrl === "function"
+        ? await fetchQrCodeAsDataUrl(upiUri)
+        : `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(upiUri)}`;
 
       let overlay = document.getElementById("dynamicUpiQrModalOverlay");
       if (!overlay) {
@@ -28585,8 +28657,9 @@ function formatMonthLabel(rawVal) {
       flatSelect.innerHTML = flats.length > 0
         ? flats.map(f => `<option value="${escapeHtml(f.FlatName)}">Flat ${escapeHtml(f.FlatName)}</option>`).join("")
         : `<option value="">General / Entire Property</option>`;
-      if (selectedFlat && flats.some(f => f.FlatName === selectedFlat)) {
-        flatSelect.value = selectedFlat;
+      const currentFlatName = typeof selectedFlat === "object" && selectedFlat !== null ? selectedFlat.FlatName : selectedFlat;
+      if (currentFlatName && flats.some(f => f.FlatName === currentFlatName)) {
+        flatSelect.value = currentFlatName;
       }
       onAdminTicketFlatChange();
     }
@@ -28604,7 +28677,8 @@ function formatMonthLabel(rawVal) {
 
     function submitAdminMaintenanceTicket() {
       const prop = document.getElementById("adminTicketPropertySelect")?.value || selectedProperty || "General";
-      const flat = document.getElementById("adminTicketFlatSelect")?.value || selectedFlat || "General";
+      const fallbackFlatName = typeof selectedFlat === "object" && selectedFlat !== null ? selectedFlat.FlatName : selectedFlat;
+      const flat = document.getElementById("adminTicketFlatSelect")?.value || fallbackFlatName || "General";
       const renter = (document.getElementById("adminTicketRenterName")?.value || "").trim() || ("Admin (" + (activeUserFullName || activeUser || "Admin") + ")");
       const cat = document.getElementById("adminTicketCategory")?.value || "General";
       const prio = document.getElementById("adminTicketPriority")?.value || "Normal";
