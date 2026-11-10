@@ -8988,45 +8988,10 @@
       notifyCrossTabSync("globalConfig", clean);
     }
 
-    function createDefaultAutoAdminUserObject() {
-      return {
-        Username: "admin",
-        Password: "admin@123",
-        Role: "Admin",
-        Status: "Active",
-        AccountStatus: "Active",
-        FullName: "System Administrator",
-        Email: "",
-        MobileNumber: "",
-        AssignedAadhaar: "",
-        AssignedProperty: "",
-        AssignedFlat: "",
-        ManagerPermissions: [],
-        Theme: "dark",
-        BgLogin: "",
-        BgDashboard: "",
-        ActiveSessionToken: "",
-        AutoSeededDefault: true,
-        UpdatedAt: new Date().toISOString()
-      };
-    }
-
-    // Auto-create default 'admin' user ONLY when all users have been deleted (0 users remaining)
-    function ensureSheetAdminSeededSync() {
-      let list = loadLocalUsersMaster().filter(function(u) {
+    function getKnownUsersList() {
+      return loadLocalUsersMaster().filter(function(u) {
         return u && String(u.Username || "").trim().length > 0;
       });
-      if (list.length === 0) {
-        const autoAdmin = createDefaultAutoAdminUserObject();
-        list = [autoAdmin];
-        saveLocalUsersMaster(list);
-        try {
-          let blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
-          blockedList = blockedList.filter(function(item) { return String(item || "").toLowerCase() !== "admin"; });
-          localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
-        } catch (e) {}
-      }
-      return list;
     }
 
     let lastGasSheetDataCache = (function() {
@@ -9101,7 +9066,7 @@
               fdRecords: DB.fdRecords || [],
               khetRecords: DB.khetRecords || [],
               kharchRecords: DB.kharchRecords || [],
-              users: loadLocalUsersMaster(),
+              users: getKnownUsersList(),
               loginHistory: loadLocalLoginHistoryMaster(),
               globalConfig: loadLocalGlobalConfigMaster()
             };
@@ -9113,44 +9078,52 @@
               : null;
 
             if (sheetReturnedUsersArray && remoteUsers.length === 0) {
-              // Not a single user remains in the Google Sheet -> automatically create the first default Admin user ID and persist it to the Google Sheet
-              const autoAdmin = createDefaultAutoAdminUserObject();
-              remoteUsers = [autoAdmin];
-              saveLocalUsersMaster(remoteUsers);
+              // Not a single user remains in the Google Sheet -> request backend engine to auto-seed the first Admin user ID
               try {
-                let blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
-                blockedList = blockedList.filter(function(item) { return String(item || "").toLowerCase() !== "admin"; });
-                localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
-                localStorage.removeItem("portal_session_pass_admin");
-              } catch (e) {}
-              try {
-                fetch("/api/gas-engine", {
+                const seedRes = await fetch("/api/gas-engine", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
-                }).catch(function() {});
-                fetch(GAS_WEB_APP_URL, {
-                  method: "POST",
-                  headers: { "Content-Type": "text/plain;charset=utf-8" },
-                  body: JSON.stringify({
-                    action: "createUser",
-                    newUsername: autoAdmin.Username,
-                    newPassword: autoAdmin.Password,
-                    fullName: autoAdmin.FullName,
-                    role: autoAdmin.Role,
-                    status: autoAdmin.Status,
-                    users: remoteUsers
-                  }),
-                  redirect: "follow"
-                }).catch(function() {});
+                  body: JSON.stringify({ action: "syncEmptySheetUsers" })
+                });
+                if (seedRes.ok) {
+                  const seedJson = await seedRes.json();
+                  if (seedJson && Array.isArray(seedJson.users) && seedJson.users.length > 0) {
+                    remoteUsers = seedJson.users;
+                    saveLocalUsersMaster(remoteUsers);
+                    const blockedNames = remoteUsers
+                      .filter(function(u) { return String(u.Status || u.AccountStatus || "").toLowerCase() === "blocked"; })
+                      .map(function(u) { return String(u.Username || "").trim().toLowerCase(); });
+                    localStorage.setItem("portal_blocked_users", JSON.stringify(blockedNames));
+                  }
+                  if (seedJson && seedJson.shouldSeedSheet && seedJson.seedUser) {
+                    const su = seedJson.seedUser;
+                    fetch(GAS_WEB_APP_URL, {
+                      method: "POST",
+                      headers: { "Content-Type": "text/plain;charset=utf-8" },
+                      body: JSON.stringify({
+                        action: "createUser",
+                        newUsername: su.Username,
+                        newPassword: su.Password,
+                        fullName: su.FullName,
+                        role: su.Role,
+                        status: su.Status || "Active",
+                        users: remoteUsers
+                      }),
+                      redirect: "follow"
+                    }).catch(function() {});
+                  }
+                }
               } catch (e) {}
             } else if (remoteUsers && remoteUsers.length > 0) {
               remoteUsers = remoteUsers.map(function(u) {
                 const rawSt = String(u.Status || u.AccountStatus || "Active").trim();
                 const normSt = rawSt.toLowerCase() === "blocked" ? "Blocked" : "Active";
+                const uLower = String(u.Username || "").trim().toLowerCase();
+                const localDeviceTok = localStorage.getItem("portal_device_session_" + uLower) || "";
                 return Object.assign({}, u, {
                   Status: normSt,
-                  AccountStatus: normSt
+                  AccountStatus: normSt,
+                  ActiveSessionToken: u.ActiveSessionToken || localDeviceTok || ""
                 });
               });
               try {
@@ -9159,16 +9132,20 @@
                   .map(function(u) { return String(u.Username || "").trim().toLowerCase(); });
                 localStorage.setItem("portal_blocked_users", JSON.stringify(blockedNames));
               } catch (e) {}
-              saveLocalUsersMaster(remoteUsers);
               try {
-                fetch("/api/gas-engine", {
+                const syncRes = await fetch("/api/gas-engine", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
-                }).catch(function() {});
+                });
+                if (syncRes.ok) {
+                  const syncJson = await syncRes.json();
+                  if (syncJson && Array.isArray(syncJson.users) && syncJson.users.length > 0) {
+                    remoteUsers = syncJson.users;
+                  }
+                }
               } catch (e) {}
-            } else if (loadLocalUsersMaster().length === 0) {
-              ensureSheetAdminSeededSync();
+              saveLocalUsersMaster(remoteUsers);
             }
 
             if (Array.isArray(json.loginHistory) && json.loginHistory.length > 0) {
@@ -9187,7 +9164,7 @@
               fdRecords: Array.isArray(json.fdRecords) ? json.fdRecords : [],
               khetRecords: Array.isArray(json.khetRecords) ? json.khetRecords : [],
               kharchRecords: Array.isArray(json.kharchRecords) ? json.kharchRecords : [],
-              users: loadLocalUsersMaster(),
+              users: getKnownUsersList(),
               loginHistory: loadLocalLoginHistoryMaster(),
               globalConfig: loadLocalGlobalConfigMaster()
             };
@@ -9212,7 +9189,7 @@
           fdRecords: DB.fdRecords || [],
           khetRecords: DB.khetRecords || [],
           kharchRecords: DB.kharchRecords || [],
-          users: ensureSheetAdminSeededSync(),
+          users: getKnownUsersList(),
           loginHistory: loadLocalLoginHistoryMaster(),
           globalConfig: loadLocalGlobalConfigMaster()
         };
@@ -9237,6 +9214,9 @@
         });
         if (bRes.ok) {
           bridgeResult = await bRes.json();
+          if (bridgeResult && Array.isArray(bridgeResult.users) && bridgeResult.users.length > 0) {
+            saveLocalUsersMaster(bridgeResult.users);
+          }
         }
       } catch (e) {}
 
@@ -9397,7 +9377,7 @@
       const linked = linkSheetEntities(sheetData || {});
       const usersList = Array.isArray(sheetData?.users) && sheetData.users.length > 0
         ? sheetData.users
-        : ensureSheetAdminSeededSync();
+        : getKnownUsersList();
       const loginHistory = Array.isArray(sheetData?.loginHistory)
         ? sheetData.loginHistory
         : loadLocalLoginHistoryMaster();
@@ -9442,9 +9422,8 @@
     /**
      * ============================================================================
      * GOOGLE SHEETS LOGIN AUTHENTICATOR & LOGIN HISTORY
-     * - If all users are deleted, automatically creates default 'admin' user
-     * - Allows 'admin' ID to be blocked, renamed, or have its password changed
-     * - Strictly authenticates against the latest user ID and password
+     * - Authenticates directly against Google Apps Script / Backend Engine
+     * - Zero hardcoded credentials in HTML
      * ============================================================================
      */
     async function buildCompleteLoginSuccessPayload(userDocData, sessionToken, rawDbPayload) {
@@ -9460,7 +9439,9 @@
       }
       saveLocalUsersMaster(usersList);
 
-      const sheetData = rawDbPayload || (await fetchGasSheetData(false));
+      const sheetData = (rawDbPayload && Array.isArray(rawDbPayload.properties) && rawDbPayload.properties.length > 0)
+        ? rawDbPayload
+        : (lastGasSheetDataCache || rawDbPayload || {});
       const linked = linkSheetEntities(sheetData || {});
       const globalConfig = sheetData?.globalConfig || loadLocalGlobalConfigMaster();
       const loginHistory = Array.isArray(sheetData?.loginHistory) && sheetData.loginHistory.length > 0
@@ -9503,133 +9484,186 @@
         return { status: "error", message: "Username and password are required." };
       }
 
-      // Refresh from Google Sheets first so empty-sheet auto-admin seeding, changed passwords, and Blocked statuses are 100% up-to-date
-      let latestSheetData = null;
-      try {
-        latestSheetData = await fetchGasSheetData(true);
-      } catch (e) {}
+      const loginPayloadObj = {
+        action: "loginUser",
+        username: cleanUser,
+        password: cleanPass,
+        sessionToken: sessionToken,
+        deviceInfo: navigator.userAgent || "Web Browser"
+      };
+      const bodyStr = JSON.stringify(loginPayloadObj);
 
-      const currentUsers = loadLocalUsersMaster();
-      const preCheckMatch = currentUsers.find(function(u) {
-        return String(u.Username || "").trim().toLowerCase() === cleanUser.toLowerCase();
-      });
+      // Run backend engine verification and live Google Apps Script verification in parallel (bounded by 5.5s so login never hangs)
+      const enginePromise = fetch("/api/gas-engine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: bodyStr
+      })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .catch(function() { return null; });
 
-      if (preCheckMatch) {
-        let blockedList = [];
-        try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
-        const preStatus = String(preCheckMatch.Status || preCheckMatch.AccountStatus || "Active").trim();
-        if (preStatus.toLowerCase() === "blocked" || blockedList.includes(cleanUser.toLowerCase())) {
+      const gasPromise = (async function() {
+        const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+        const timer = setTimeout(function() {
+          if (controller) controller.abort();
+        }, 5500);
+        try {
+          const response = await fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: bodyStr,
+            redirect: "follow",
+            signal: controller ? controller.signal : undefined
+          });
+          clearTimeout(timer);
+          if (!response.ok) return null;
+          return await response.json();
+        } catch (e) {
+          clearTimeout(timer);
+          return null;
+        }
+      })();
+
+      const [engineRes, gasRes] = await Promise.all([enginePromise, gasPromise]);
+
+      // 1. If the user's password or block status was explicitly modified in the portal, strictly enforce it
+      if (engineRes && engineRes.userModified === true) {
+        if (engineRes.status === "blocked") {
+          return {
+            status: "blocked",
+            message: engineRes.message || "This account has been blocked by an administrator. Login access is strictly denied."
+          };
+        }
+        if (engineRes.status === "error") {
+          return {
+            status: "error",
+            message: engineRes.message || "Incorrect username or password."
+          };
+        }
+      }
+
+      // 2. Check live Google Apps Script response if available
+      if (gasRes && gasRes.status === "blocked") {
+        return {
+          status: "blocked",
+          message: gasRes.message || "This account has been blocked by an administrator. Login access is strictly denied."
+        };
+      }
+
+      if (gasRes && gasRes.status === "success" && (gasRes.user || gasRes.username)) {
+        const userDocData = gasRes.user || {
+          Username: gasRes.username || cleanUser,
+          Password: cleanPass,
+          FullName: gasRes.fullName || gasRes.username || cleanUser,
+          Role: gasRes.role || "Admin",
+          Status: "Active",
+          AccountStatus: "Active",
+          MobileNumber: gasRes.mobile || "",
+          AssignedProperty: gasRes.assignedProperty || "",
+          AssignedFlat: gasRes.assignedFlat || "",
+          AssignedAadhaar: gasRes.assignedAadhaar || "",
+          ManagerPermissions: gasRes.managerPermissions || [],
+          Theme: gasRes.theme || "dark",
+          ActiveSessionToken: sessionToken
+        };
+        const verifiedStatus = String(userDocData.Status || userDocData.AccountStatus || "Active").trim();
+        if (verifiedStatus.toLowerCase() === "blocked") {
           return {
             status: "blocked",
             message: "This account has been blocked by an administrator. Login access is strictly denied."
           };
         }
-        if (String(preCheckMatch.Password || "").trim() !== "" && String(preCheckMatch.Password || "").trim() !== cleanPass) {
+        if (userDocData.Password !== undefined && String(userDocData.Password).trim() !== "" && String(userDocData.Password).trim() !== cleanPass) {
           return {
             status: "error",
             message: "Incorrect password entered."
           };
         }
+        userDocData.Password = cleanPass;
+        userDocData.ActiveSessionToken = sessionToken;
+        try {
+          sessionStorage.setItem("active_session_password", cleanPass);
+          localStorage.setItem("portal_session_pass_" + cleanUser.toLowerCase(), cleanPass);
+          localStorage.setItem("portal_device_session_" + cleanUser.toLowerCase(), sessionToken);
+        } catch (e) {}
+        if (Array.isArray(gasRes.users) && gasRes.users.length > 0) {
+          saveLocalUsersMaster(gasRes.users);
+          fetch("/api/gas-engine", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "replaceUsersFromSheet", users: gasRes.users })
+          }).catch(function() {});
+        }
+        if (Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
+          saveLocalLoginHistoryMaster(gasRes.loginHistory);
+        }
+        lastWriteCompletedAt = Date.now();
+        return await buildCompleteLoginSuccessPayload(
+          userDocData,
+          sessionToken,
+          gasRes.dbPayload || (Array.isArray(gasRes.properties) ? gasRes : lastGasSheetDataCache)
+        );
       }
 
-      try {
-        // Direct server-side authentication against Google Sheets
-        let res = await sendGasSheetAction({
-          action: "loginUser",
-          username: cleanUser,
-          password: cleanPass,
-          sessionToken: sessionToken,
-          deviceInfo: navigator.userAgent || "Web Browser"
-        });
+      if (
+        gasRes &&
+        gasRes.status === "error" &&
+        /incorrect password/i.test(String(gasRes.message || "")) &&
+        !(engineRes && engineRes.userModified === true && engineRes.status === "success")
+      ) {
+        return gasRes;
+      }
 
-        // If the Google Sheet was completely empty and the first automatic admin was just seeded, ensure it is created in the sheet and retry login once
-        if (
-          res &&
-          res.status === "error" &&
-          /not found in Google Sheets/i.test(String(res.message || "")) &&
-          currentUsers.length === 1 &&
-          preCheckMatch &&
-          String(preCheckMatch.Username || "").toLowerCase() === "admin" &&
-          String(preCheckMatch.Password || "") === cleanPass &&
-          String(preCheckMatch.Status || "Active").toLowerCase() !== "blocked"
-        ) {
-          await sendGasSheetAction({
-            action: "createUser",
-            newUsername: preCheckMatch.Username,
-            newPassword: preCheckMatch.Password,
-            fullName: preCheckMatch.FullName || "System Administrator",
-            role: preCheckMatch.Role || "Admin",
-            status: "Active",
-            users: currentUsers
-          });
-          res = await sendGasSheetAction({
-            action: "loginUser",
-            username: cleanUser,
-            password: cleanPass,
-            sessionToken: sessionToken,
-            deviceInfo: navigator.userAgent || "Web Browser"
-          });
-        }
-
-        if (res && res.status === "blocked") {
+      // 3. Fallback / Empty-Sheet Auto-Admin Verification via Backend Engine (/api/gas-engine)
+      if (engineRes) {
+        if (engineRes.status === "blocked") {
           return {
             status: "blocked",
-            message: res.message || "This account has been blocked by an administrator. Login access is strictly denied."
+            message: engineRes.message || "This account has been blocked by an administrator. Login access is strictly denied."
           };
         }
-
-        if (res && res.status === "success" && (res.user || res.username)) {
-          const userDocData = res.user || {
-            Username: res.username || cleanUser,
+        if (engineRes.status === "success" && (engineRes.user || engineRes.username)) {
+          const userDocData = Object.assign({}, engineRes.user || { Username: engineRes.username || cleanUser }, {
             Password: cleanPass,
-            FullName: res.fullName || res.username || cleanUser,
-            Role: res.role || "Admin",
-            Status: "Active",
-            AccountStatus: "Active",
-            MobileNumber: res.mobile || "",
-            AssignedProperty: res.assignedProperty || "",
-            AssignedFlat: res.assignedFlat || "",
-            AssignedAadhaar: res.assignedAadhaar || "",
-            ManagerPermissions: res.managerPermissions || [],
-            Theme: res.theme || "dark",
             ActiveSessionToken: sessionToken
-          };
-          const verifiedStatus = String(userDocData.Status || userDocData.AccountStatus || "Active").trim();
-          if (verifiedStatus.toLowerCase() === "blocked") {
-            return {
-              status: "blocked",
-              message: "This account has been blocked by an administrator. Login access is strictly denied."
-            };
-          }
-          if (userDocData.Password !== undefined && String(userDocData.Password).trim() !== "" && String(userDocData.Password).trim() !== cleanPass) {
-            return {
-              status: "error",
-              message: "Incorrect password entered."
-            };
-          }
-          userDocData.Password = cleanPass;
+          });
           try {
             sessionStorage.setItem("active_session_password", cleanPass);
             localStorage.setItem("portal_session_pass_" + cleanUser.toLowerCase(), cleanPass);
+            localStorage.setItem("portal_device_session_" + cleanUser.toLowerCase(), sessionToken);
           } catch (e) {}
-          if (Array.isArray(res.users) && res.users.length > 0) {
-            saveLocalUsersMaster(res.users);
+          if (Array.isArray(engineRes.users) && engineRes.users.length > 0) {
+            saveLocalUsersMaster(engineRes.users);
           }
-          if (Array.isArray(res.loginHistory) && res.loginHistory.length > 0) {
-            saveLocalLoginHistoryMaster(res.loginHistory);
-          }
-          return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, res.dbPayload || (res.properties ? res : latestSheetData));
+          // Ensure the user exists in Google Sheets in the background
+          fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+              action: "createUser",
+              newUsername: userDocData.Username,
+              newPassword: userDocData.Password,
+              fullName: userDocData.FullName || userDocData.Username,
+              role: userDocData.Role || "Admin",
+              status: userDocData.Status || "Active",
+              users: engineRes.users || [userDocData]
+            }),
+            redirect: "follow"
+          }).catch(function() {});
+          lastWriteCompletedAt = Date.now();
+          return await buildCompleteLoginSuccessPayload(
+            userDocData,
+            sessionToken,
+            lastGasSheetDataCache || engineRes.dbPayload || engineRes
+          );
         }
-
-        if (res && res.status === "error" && !/not recognized|unknown action/i.test(String(res.message || ""))) {
-          return res;
+        if (engineRes.status === "error") {
+          return engineRes;
         }
-      } catch (netErr) {
-        console.warn("GAS live login verification failed or offline:", netErr);
       }
 
-      // Offline fallback: strictly verify against local mirror
-      const localUsers = ensureSheetAdminSeededSync();
+      // 4. Offline local mirror verification
+      const localUsers = getKnownUsersList();
       const match = localUsers.find(function(u) {
         return String(u.Username || "").trim().toLowerCase() === cleanUser.toLowerCase();
       });
@@ -9645,9 +9679,11 @@
           try {
             sessionStorage.setItem("active_session_password", cleanPass);
             localStorage.setItem("portal_session_pass_" + cleanUser.toLowerCase(), cleanPass);
+            localStorage.setItem("portal_device_session_" + cleanUser.toLowerCase(), sessionToken);
           } catch (e) {}
           saveLocalUsersMaster(localUsers);
-          return await buildCompleteLoginSuccessPayload(match, sessionToken, latestSheetData);
+          lastWriteCompletedAt = Date.now();
+          return await buildCompleteLoginSuccessPayload(match, sessionToken, lastGasSheetDataCache);
         }
       }
 
@@ -9658,7 +9694,7 @@
     async function firebaseGetUserProfile(username) {
       const cleanUser = String(username || "").trim();
       const lowerUser = cleanUser.toLowerCase();
-      const usersList = ensureSheetAdminSeededSync();
+      const usersList = getKnownUsersList();
       const localMatch = usersList.find(function(u) {
         return String(u.Username || "").trim().toLowerCase() === lowerUser;
       });
@@ -9717,7 +9753,7 @@
       }
 
       try {
-        let usersList = ensureSheetAdminSeededSync();
+        let usersList = getKnownUsersList();
         let globalConfig = loadLocalGlobalConfigMaster();
 
         switch (action) {
@@ -9757,7 +9793,6 @@
               ManagerPermissions: roleVal === "Manager" ? managerPerms : [],
               Status: "Active",
               AccountStatus: "Active",
-              AutoSeededDefault: false,
               CreatedAt: new Date().toISOString(),
               BgLogin: "",
               BgDashboard: "",
@@ -9803,7 +9838,6 @@
               Role: roleVal,
               Status: nextStatus,
               AccountStatus: nextStatus,
-              AutoSeededDefault: false,
               AssignedProperty: String(data.assignedProperty || "").trim(),
               AssignedFlat: String(data.assignedFlat || "").trim(),
               AssignedAadhaar: cleanPhoneStr(data.assignedAadhaar || "").slice(0, 12),
@@ -9840,7 +9874,6 @@
                   ...u,
                   Status: newStatus,
                   AccountStatus: newStatus,
-                  AutoSeededDefault: false,
                   ActiveSessionToken: String(newStatus).toLowerCase() === "blocked" ? "" : (u.ActiveSessionToken || ""),
                   UpdatedAt: new Date().toISOString()
                 };
@@ -9864,11 +9897,11 @@
             usersList = usersList.filter(function(u) {
               return String(u.Username || "").trim().toLowerCase() !== targetU;
             });
-            if (usersList.length === 0) {
-              usersList = [createDefaultAutoAdminUserObject()];
-            }
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({ ...data, users: usersList });
+            const delRes = await sendGasSheetAction({ ...data, users: usersList });
+            if (delRes && Array.isArray(delRes.users) && delRes.users.length > 0) {
+              saveLocalUsersMaster(delRes.users);
+            }
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("DELETE_USER", `Deleted user account @${rawTarget}`, activeUser || "Admin");
             }
@@ -9890,7 +9923,6 @@
               usersList[idx] = {
                 ...usersList[idx],
                 Password: newPasswordClean,
-                AutoSeededDefault: false,
                 ActiveSessionToken: "",
                 UpdatedAt: new Date().toISOString()
               };
@@ -9902,7 +9934,6 @@
                 Role: activeRole || "Admin",
                 Status: "Active",
                 AccountStatus: "Active",
-                AutoSeededDefault: false,
                 ActiveSessionToken: "",
                 UpdatedAt: new Date().toISOString()
               });
@@ -14485,7 +14516,8 @@ function formatMonthLabel(rawVal) {
     // Tier 0: 3 failed attempts -> 1-minute lock (60,000 ms), then moves to Tier 1 (3 more attempts).
     // Tier 1: 3 failed attempts -> 1-hour lock (3,600,000 ms), then moves to Tier 2 (3 more attempts).
     // Tier 2: 3 failed attempts -> 24-hour lock (86,400,000 ms), then resets to Tier 0 after 24-hour lock expires.
-    const LOGIN_LOCKOUT_STORAGE_KEY = "portal_login_lockout_state_v1";
+    const LOGIN_LOCKOUT_STORAGE_KEY = "portal_login_lockout_state_v2";
+    try { localStorage.removeItem("portal_login_lockout_state_v1"); } catch (e) {}
     let loginLockoutCountdownTimer = null;
 
     function getLoginLockoutState() {
@@ -14698,10 +14730,9 @@ function formatMonthLabel(rawVal) {
         let res = null;
 
         try {
-          // Race Firebase login against an 8-second timeout to prevent indefinite hanging
           const loginPromise = firebaseLogin(user, pass, newSessionToken);
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Server connection timed out")), 8000)
+            setTimeout(() => reject(new Error("Server connection timed out")), 20000)
           );
           res = await Promise.race([loginPromise, timeoutPromise]);
         } catch (netErr) {
@@ -14744,7 +14775,19 @@ function formatMonthLabel(rawVal) {
             document.getElementById("dashboardScreen")?.classList.add("active");
           }
 
+          // Refresh sheet entities immediately in background if cache was empty at login time
+          if (!Array.isArray(DB.properties) || DB.properties.length === 0) {
+            setTimeout(() => {
+              try { syncDataLive(true); } catch (e) {}
+            }, 150);
+          }
+
           triggerSideToast("Welcome Back", `Logged in as ${activeUserFullName || user}`, true);
+          return;
+        }
+
+        if (!res) {
+          triggerSideToast("Connection Notice", "Server response timed out. Please try clicking Log In again.", false);
           return;
         }
 
@@ -14810,12 +14853,7 @@ function formatMonthLabel(rawVal) {
           const activeUserStillInSheet = Boolean(matchedServerUser);
 
           // Requirement 7: Check if this account (Admin, Manager, Renter, or Viewer) has logged in from a new device!
-          const serverToken = String(res.activeSessionToken || matchedServerUser?.ActiveSessionToken || "").trim();
-          const isLocalFallbackToken = String(activeSessionToken || "").startsWith("SESS-LOCAL");
-          if (
-            !isLocalFallbackToken &&
-            (res.sessionConflict === true || (activeSessionToken && serverToken && serverToken !== activeSessionToken))
-          ) {
+          if (res.sessionConflict === true) {
             triggerSingleDeviceSessionConflict();
             return;
           }
