@@ -5637,7 +5637,29 @@
 
       <!-- TAB 3 (Features F1 & F3): PROPERTY-WISE NET PROFIT / ROI STATEMENT & FINANCIAL YEAR (APRIL-MARCH) CA TAX SUMMARY -->
       <div id="kharchTabRoiContent" style="display:none;">
-        <div id="kharchRoiAndTaxReportContainer" style="display:flex; flex-direction:column; gap:14px;"></div>
+        <div id="kharchRoiAndTaxReportContainer" style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px; padding:10px 14px;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <label for="kharchFyFilterSelect" style="font-size:0.76rem; font-weight:800; color:var(--text-muted); margin:0;"><i class="fa-solid fa-calendar-check" style="color:#10b981;"></i> Financial Year (Apr–Mar):</label>
+              <select id="kharchFyFilterSelect" class="form-control" style="width:auto; min-width:150px; padding:5px 10px; font-size:0.78rem; font-weight:800;" onchange="renderKharchRoiAndTaxReport()">
+                <option value="2026-27">FY 2026-27 (Apr 26 – Mar 27)</option>
+                <option value="2025-26">FY 2025-26 (Apr 25 – Mar 26)</option>
+                <option value="2024-25">FY 2024-25 (Apr 24 – Mar 25)</option>
+                <option value="ALL">All-Time Cumulative</option>
+              </select>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-ledger-action" style="padding:6px 12px; font-size:0.74rem; font-weight:800; color:#38bdf8; border-color:rgba(56,189,248,0.4);" onclick="exportFyTaxSummaryCsv()">
+                <i class="fa-solid fa-file-csv"></i> Export CA Tax CSV
+              </button>
+              <button type="button" class="btn-ledger-action" style="padding:6px 12px; font-size:0.74rem; font-weight:800; color:#a855f7; border-color:rgba(168,85,247,0.4);" onclick="printFyTaxSummaryForCa()">
+                <i class="fa-solid fa-print"></i> Print Statement
+              </button>
+            </div>
+          </div>
+          <div id="kharchFyTaxSummaryGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(175px, 1fr)); gap:10px;"></div>
+          <div id="kharchPropertyRoiTableContainer"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -8890,6 +8912,17 @@
           gasLiveBroadcastChannel.postMessage({ topic: topic, payload: payload, ts: Date.now() });
         }
       } catch (e) {}
+    }
+
+    if (gasLiveBroadcastChannel) {
+      gasLiveBroadcastChannel.onmessage = function (ev) {
+        try {
+          const msg = ev?.data;
+          if (!msg || !msg.topic) return;
+          if (typeof loadDbSnapshotFromCache === "function") loadDbSnapshotFromCache();
+          if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
+        } catch (e) {}
+      };
     }
 
     function loadLocalUsersMaster() {
@@ -21746,8 +21779,8 @@ function formatMonthLabel(rawVal) {
       const principal = parseFloat(document.getElementById("fdAmount")?.value) || 0;
       const rate = parseFloat(document.getElementById("fdRate")?.value) || 0;
       const matAmt = parseFloat(document.getElementById("fdMaturityAmount")?.value) || principal;
-      const form15g = document.getElementById("fd15gStatus")?.value || "Not Submitted (10% TDS if > ₹40k)";
-      const payoutType = document.getElementById("fdPayoutType")?.value || "Cumulative (Compounded)";
+      const form15g = document.getElementById("fd15gStatus")?.value || "Not Submitted (10% TDS if >40k)";
+      const payoutType = document.getElementById("fdPayoutType")?.value || "Cumulative";
 
       const grossInterest = Math.max(0, Math.round(matAmt - principal));
       const annualInterest = Math.round(principal * (rate / 100));
@@ -21868,7 +21901,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function renderFdCashflowProjection() {
-      const container = document.getElementById("fdProjectionSummaryContainer");
+      const container = document.getElementById("fdCashflowProjectionContainer") || document.getElementById("fdProjectionSummaryContainer");
       if (!container) return;
       const rawList = getStoredFdRecords().filter(item => {
         const pType = String(item.purposeType || item.PurposeType || "Saving / Fixed Deposit (FD)");
@@ -22058,9 +22091,15 @@ function formatMonthLabel(rawVal) {
       const usageDateEl = document.getElementById("fdUsageDate");
       if (usageDateEl) usageDateEl.value = cleanUsage;
       const payoutEl = document.getElementById("fdPayoutType");
-      if (payoutEl) payoutEl.value = target.payoutType || target.PayoutType || "Cumulative (Compounded)";
+      if (payoutEl) {
+        const rawPayout = target.payoutType || target.PayoutType || "Cumulative";
+        payoutEl.value = rawPayout.startsWith("Cumulative") ? "Cumulative" : rawPayout;
+      }
       const f15gEl = document.getElementById("fd15gStatus");
-      if (f15gEl) f15gEl.value = target.form15gStatus || target.Form15GStatus || "Not Submitted (10% TDS if > ₹40k)";
+      if (f15gEl) {
+        const raw15g = target.form15gStatus || target.Form15GStatus || "Not Submitted (10% TDS if >40k)";
+        f15gEl.value = raw15g.includes("Not Submitted") ? "Not Submitted (10% TDS if >40k)" : raw15g;
+      }
       const notesEl = document.getElementById("fdNotes");
       if (notesEl) notesEl.value = target.notes || target.Notes || "";
 
@@ -22104,8 +22143,8 @@ function formatMonthLabel(rawVal) {
       }
       if (matEl) matEl.value = "";
       if (usageEl) usageEl.value = new Date().toISOString().split("T")[0];
-      if (payoutEl) payoutEl.value = "Cumulative (Compounded)";
-      if (f15gEl) f15gEl.value = "Not Submitted (10% TDS if > ₹40k)";
+      if (payoutEl) payoutEl.value = "Cumulative";
+      if (f15gEl) f15gEl.value = "Not Submitted (10% TDS if >40k)";
       if (notesEl) notesEl.value = "";
       handleFdPurposeTypeChange();
       updateFdTdsLivePreview();
@@ -22131,8 +22170,8 @@ function formatMonthLabel(rawVal) {
       const maturityAmount = parseFloat(document.getElementById("fdMaturityAmount")?.value) || (isSaving ? amount : 0);
       const maturity = document.getElementById("fdMaturityDate")?.value || "";
       const usageDate = document.getElementById("fdUsageDate")?.value || new Date().toISOString().split("T")[0];
-      const payoutType = document.getElementById("fdPayoutType")?.value || "Cumulative (Compounded)";
-      const form15gStatus = document.getElementById("fd15gStatus")?.value || "Not Submitted (10% TDS if > ₹40k)";
+      const payoutType = document.getElementById("fdPayoutType")?.value || "Cumulative";
+      const form15gStatus = document.getElementById("fd15gStatus")?.value || "Not Submitted (10% TDS if >40k)";
       const notes = document.getElementById("fdNotes")?.value.trim() || "";
 
       const usedPurpose = usedPurposeRaw || purposeType;
@@ -23428,7 +23467,7 @@ function formatMonthLabel(rawVal) {
       setVal("khetHarvestGross", f.harvestGross || "");
       setVal("khetInputCost", f.inputCost || "");
       setVal("khetNetCropProfit", f.netCropProfit || "");
-      setVal("khetMutationStatus", f.mutationStatus || "Verified / Mutated (Updated)");
+      setVal("khetMutationStatus", (!f.mutationStatus || f.mutationStatus === "Verified / Mutated (Updated)") ? "Completed (Mutated)" : f.mutationStatus);
       setVal("khetJamabandiNo", f.jamabandiNo === "--" ? "" : f.jamabandiNo);
       setVal("khetMalguzariYear", f.malguzariYear === "--" ? "" : f.malguzariYear);
       setVal("khetDocKewala", f.docKewala);
@@ -23468,7 +23507,7 @@ function formatMonthLabel(rawVal) {
         if (el) el.value = "";
       });
       const mutEl = document.getElementById("khetMutationStatus");
-      if (mutEl) mutEl.value = "Verified / Mutated (Updated)";
+      if (mutEl) mutEl.value = "Completed (Mutated)";
       const payDateEl = document.getElementById("khetPaymentDate");
       if (payDateEl) payDateEl.value = new Date().toISOString().split("T")[0];
       runKhetLiveValuationMath(true);
@@ -23508,7 +23547,7 @@ function formatMonthLabel(rawVal) {
       const harvestGross = parseFloat(document.getElementById("khetHarvestGross")?.value) || 0;
       const inputCost = parseFloat(document.getElementById("khetInputCost")?.value) || 0;
       const netCropProfit = parseFloat(document.getElementById("khetNetCropProfit")?.value) || Math.max(0, harvestGross - inputCost);
-      const mutationStatus = document.getElementById("khetMutationStatus")?.value || "Verified / Mutated (Updated)";
+      const mutationStatus = document.getElementById("khetMutationStatus")?.value || "Completed (Mutated)";
       const jamabandiNo = document.getElementById("khetJamabandiNo")?.value.trim() || "";
       const malguzariYear = document.getElementById("khetMalguzariYear")?.value.trim() || "";
       const docKewala = document.getElementById("khetDocKewala")?.value.trim() || "";
@@ -27417,10 +27456,10 @@ function formatMonthLabel(rawVal) {
       }
 
       overlay.innerHTML = `
-        <div class="modal-card" style="max-width:410px; text-align:center;">
+        <div class="modal-window" style="max-width:410px; text-align:center;">
           <div class="modal-header">
             <h3 style="font-size:1rem;"><i class="fa-solid fa-qrcode" style="color:#10b981;"></i> Scan &amp; Pay via Any UPI App</h3>
-            <button class="btn-close" onclick="document.getElementById('dynamicUpiQrModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            <button class="modal-close-btn" onclick="document.getElementById('dynamicUpiQrModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
           </div>
           <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:14px; padding:14px; margin-bottom:12px;">
             <div style="font-size:0.74rem; color:var(--text-muted); font-weight:700;">${propName} • Flat ${flatName} • ${formatMonthLabel(monthYear)}</div>
@@ -27499,10 +27538,10 @@ function formatMonthLabel(rawVal) {
       }
 
       overlay.innerHTML = `
-        <div class="modal-card" style="max-width:440px;">
+        <div class="modal-window" style="max-width:440px;">
           <div class="modal-header">
             <h3 style="font-size:1rem;"><i class="fa-solid fa-file-circle-check" style="color:#38bdf8;"></i> Submit Payment Proof (UTR / Screenshot)</h3>
-            <button class="btn-close" onclick="document.getElementById('submitPaymentProofModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            <button class="modal-close-btn" onclick="document.getElementById('submitPaymentProofModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
           </div>
           <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">
             <strong>${propName} — Flat ${flatName}</strong> • Billing Month: <strong>${formatMonthLabel(monthYear)}</strong>
@@ -27599,8 +27638,8 @@ function formatMonthLabel(rawVal) {
     }
 
     function renderAdminPaymentProofQueue() {
-      const box = document.getElementById("adminPaymentProofVerificationList");
-      const badge = document.getElementById("paymentProofPendingCountBadge");
+      const box = document.getElementById("adminPaymentProofQueueList") || document.getElementById("adminPaymentProofVerificationList");
+      const badge = document.getElementById("pendingProofCountBadge") || document.getElementById("paymentProofPendingCountBadge");
       const list = getStoredPaymentProofs();
       const pendingCount = list.filter(p => p.status === "Pending").length;
       if (badge) badge.innerText = `${pendingCount} Pending`;
@@ -27733,12 +27772,13 @@ function formatMonthLabel(rawVal) {
 
     function computeAutomatedLateFeePreview() {
       const dueDay = Math.max(1, Math.min(28, parseInt(document.getElementById("lateFeeDueDay")?.value || "10", 10)));
-      const mode = document.getElementById("lateFeeMode")?.value || "per_day";
+      const rawMode = String(document.getElementById("lateFeeMode")?.value || "PER_DAY").toUpperCase();
       const rateVal = parseFloat(document.getElementById("lateFeeRateVal")?.value) || 0;
       const rent = parseFloat(document.getElementById("calcRent")?.value) || 0;
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
 
       let overdueDays = 0;
+      const overdueInput = document.getElementById("lateFeeOverdueDays");
       if (chosenMonth && /^\d{4}-\d{2}$/.test(chosenMonth)) {
         const [y, m] = chosenMonth.split("-").map(Number);
         const dueDate = new Date(y, m - 1, dueDay, 23, 59, 59);
@@ -27748,14 +27788,25 @@ function formatMonthLabel(rawVal) {
           overdueDays = Math.max(0, Math.floor((refDate - dueDate) / (1000 * 60 * 60 * 24)));
         }
       }
+      if (overdueInput) {
+        if (document.activeElement === overdueInput && overdueInput.value !== "") {
+          overdueDays = Math.max(0, parseInt(overdueInput.value, 10) || 0);
+        } else {
+          overdueInput.value = overdueDays;
+        }
+      }
 
       let penalty = 0;
       if (overdueDays > 0) {
-        if (mode === "per_day") penalty = Math.round(overdueDays * rateVal);
-        else if (mode === "flat") penalty = Math.round(rateVal);
-        else if (mode === "pct_rent") penalty = Math.round(rent * (rateVal / 100));
+        if (rawMode === "PER_DAY") penalty = Math.round(overdueDays * rateVal);
+        else if (rawMode === "FLAT") penalty = Math.round(rateVal);
+        else if (rawMode === "PCT_RENT") penalty = Math.round(rent * (rateVal / 100));
       }
 
+      const previewBadge = document.getElementById("lateFeeComputedPreview");
+      if (previewBadge) {
+        previewBadge.innerText = `₹ ${penalty.toLocaleString("en-IN")}`;
+      }
       const txt = document.getElementById("lateFeePreviewText");
       if (txt) {
         txt.innerHTML = `Overdue: <strong>${overdueDays} Days</strong> (past ${dueDay}th) → Penalty: <strong style="color:#f87171;">₹${penalty.toLocaleString("en-IN")}</strong>`;
@@ -27783,29 +27834,44 @@ function formatMonthLabel(rawVal) {
       const box = document.getElementById("splitPaymentLedgerDrawer");
       if (!box) return;
       box.style.display = box.style.display === "none" ? "block" : "none";
+      const dateInput = document.getElementById("splitInstDate");
+      if (dateInput && !dateInput.value) {
+        dateInput.value = new Date().toISOString().split("T")[0];
+      }
     }
 
     function addSplitPaymentInstallmentRow(data = null) {
-      const container = document.getElementById("splitPaymentRowsContainer");
+      const container = document.getElementById("splitInstallmentsListContainer") || document.getElementById("splitPaymentRowsContainer");
       if (!container) return;
-      const d = data || {
-        date: new Date().toISOString().split("T")[0],
-        amount: "",
-        mode: "UPI",
-        utr: ""
-      };
+      let d = data;
+      if (!d) {
+        const amtEl = document.getElementById("splitInstAmount");
+        const dateEl = document.getElementById("splitInstDate");
+        const modeEl = document.getElementById("splitInstMode");
+        const noteEl = document.getElementById("splitInstNote");
+        const enteredAmt = parseFloat(amtEl?.value || "0") || 0;
+        d = {
+          date: dateEl?.value || new Date().toISOString().split("T")[0],
+          amount: enteredAmt > 0 ? enteredAmt : "",
+          mode: modeEl?.value || "UPI",
+          utr: (noteEl?.value || "").trim()
+        };
+        if (amtEl) amtEl.value = "";
+        if (noteEl) noteEl.value = "";
+      }
       const row = document.createElement("div");
       row.className = "split-payment-row";
       row.style.cssText = "display:grid; grid-template-columns:1.1fr 0.9fr 0.9fr 1.1fr auto; gap:5px; align-items:center;";
       row.innerHTML = `
-        <input type="date" class="form-control split-pay-date" value="${toInputDateValue(d.date) || new Date().toISOString().split('T')[0]}" style="padding:5px 7px; font-size:0.73rem;">
+        <input type="date" class="form-control split-pay-date" value="${toInputDateValue(d.date) || new Date().toISOString().split('T')[0]}" onchange="syncSplitPaymentsTotalToPaidNow()" style="padding:5px 7px; font-size:0.73rem;">
         <input type="number" class="form-control split-pay-amt" placeholder="₹ Amt" value="${d.amount ?? ''}" oninput="syncSplitPaymentsTotalToPaidNow()" style="padding:5px 7px; font-size:0.73rem;">
-        <select class="form-control split-pay-mode" style="padding:5px 7px; font-size:0.73rem;">
+        <select class="form-control split-pay-mode" onchange="syncSplitPaymentsTotalToPaidNow()" style="padding:5px 7px; font-size:0.73rem;">
           <option value="UPI" ${d.mode === 'UPI' ? 'selected' : ''}>UPI</option>
           <option value="Cash" ${d.mode === 'Cash' ? 'selected' : ''}>Cash</option>
-          <option value="Bank Transfer" ${d.mode === 'Bank Transfer' ? 'selected' : ''}>Bank</option>
+          <option value="Bank Transfer" ${(d.mode === 'Bank Transfer' || d.mode === 'Bank') ? 'selected' : ''}>Bank</option>
+          <option value="Cheque" ${d.mode === 'Cheque' ? 'selected' : ''}>Cheque</option>
         </select>
-        <input type="text" class="form-control split-pay-utr" placeholder="UTR / Note" value="${String(d.utr || '').replace(/"/g, '&quot;')}" style="padding:5px 7px; font-size:0.73rem;">
+        <input type="text" class="form-control split-pay-utr" placeholder="UTR / Note" value="${String(d.utr || d.note || '').replace(/"/g, '&quot;')}" style="padding:5px 7px; font-size:0.73rem;">
         <button type="button" class="btn-ledger-action" style="padding:4px 7px; color:#f87171;" onclick="removeSplitPaymentInstallmentRow(this)"><i class="fa-solid fa-trash"></i></button>
       `;
       container.appendChild(row);
@@ -27819,7 +27885,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function collectSplitPaymentsFromDOM() {
-      const container = document.getElementById("splitPaymentRowsContainer");
+      const container = document.getElementById("splitInstallmentsListContainer") || document.getElementById("splitPaymentRowsContainer");
       if (!container) return [];
       const rows = container.querySelectorAll(".split-payment-row");
       const list = [];
@@ -27838,6 +27904,8 @@ function formatMonthLabel(rawVal) {
     function syncSplitPaymentsTotalToPaidNow() {
       const splits = collectSplitPaymentsFromDOM();
       const sum = splits.reduce((acc, s) => acc + (parseFloat(s.amount) || 0), 0);
+      const countBadge = document.getElementById("splitInstallmentsCountBadge");
+      if (countBadge) countBadge.innerText = `${splits.length} Splits (₹${sum.toLocaleString("en-IN")})`;
       const badge = document.getElementById("splitPaymentSumBadge");
       if (badge) badge.innerText = `₹ ${sum.toLocaleString("en-IN")}`;
       if (splits.length > 0) {
@@ -27855,41 +27923,67 @@ function formatMonthLabel(rawVal) {
     }
 
     function renderSplitPaymentInstallmentsFromBill(bill) {
-      const container = document.getElementById("splitPaymentRowsContainer");
+      const container = document.getElementById("splitInstallmentsListContainer") || document.getElementById("splitPaymentRowsContainer");
       if (!container) return;
       container.innerHTML = "";
-      const splits = Array.isArray(bill?.SplitPayments) ? bill.SplitPayments : [];
+      let splits = bill?.SplitPayments;
+      if (typeof splits === "string" && splits.trim()) {
+        try { splits = JSON.parse(splits); } catch (e) { splits = []; }
+      }
+      if (!Array.isArray(splits)) splits = [];
       splits.forEach(s => addSplitPaymentInstallmentRow(s));
-      const badge = document.getElementById("splitPaymentSumBadge");
       const sum = splits.reduce((acc, s) => acc + (parseFloat(s.amount) || 0), 0);
+      const countBadge = document.getElementById("splitInstallmentsCountBadge");
+      if (countBadge) countBadge.innerText = `${splits.length} Splits (₹${sum.toLocaleString("en-IN")})`;
+      const badge = document.getElementById("splitPaymentSumBadge");
       if (badge) badge.innerText = `₹ ${sum.toLocaleString("en-IN")}`;
     }
 
     // --- A5: SECURITY DEPOSIT LEDGER & MOVE-OUT SETTLEMENT ---
     function computeMoveOutSettlementPreview() {
-      const box = document.getElementById("moveOutSettlementSummaryBox");
-      if (!box || !selectedFlat) return { deposit: 0, unpaidDues: 0, damageDeduct: 0, netRefund: 0 };
+      if (!selectedFlat) return { deposit: 0, unpaidDues: 0, paintDeduct: 0, damageDeduct: 0, netRefund: 0 };
 
-      const deposit = parseFloat(document.getElementById("profSecurityDeposit")?.value) || 0;
-      const damageDeduct = parseFloat(document.getElementById("profMoveOutDeductions")?.value) || 0;
+      const profDep = parseFloat(document.getElementById("profSecurityDeposit")?.value) || 0;
+      const moveDepEl = document.getElementById("moveOutDepositHeld");
+      if (moveDepEl && (moveDepEl.value === "" || moveDepEl.value === "0") && profDep > 0) {
+        moveDepEl.value = profDep;
+      }
+      const deposit = parseFloat(moveDepEl?.value ?? profDep) || 0;
 
       const flatBills = (DB.bills || []).filter(b =>
         isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
         (!activeFlatRenterObj?.RenterID || !b.RenterID || String(b.RenterID) === String(activeFlatRenterObj.RenterID))
       );
-      let unpaidDues = 0;
+      let computedArrears = 0;
       if (flatBills.length > 0) {
         const latestBill = flatBills[flatBills.length - 1];
-        unpaidDues = Math.max(0, (parseFloat(latestBill.TotalBilled) || 0) - (parseFloat(latestBill.PaidAmount) || 0));
+        computedArrears = Math.max(0, (parseFloat(latestBill.TotalBilled) || 0) - (parseFloat(latestBill.PaidAmount) || 0));
       }
+      const arrearsEl = document.getElementById("moveOutUnpaidArrears");
+      if (arrearsEl && document.activeElement !== arrearsEl && arrearsEl.value === "") {
+        arrearsEl.value = computedArrears;
+      }
+      const unpaidDues = arrearsEl ? (parseFloat(arrearsEl.value) || 0) : computedArrears;
+      const paintDeduct = parseFloat(document.getElementById("moveOutPaintDeduction")?.value) || 0;
+      const damageDeduct = (parseFloat(document.getElementById("moveOutDamageDeduction")?.value) || 0) + (parseFloat(document.getElementById("profMoveOutDeductions")?.value) || 0);
 
-      const netRefund = deposit - unpaidDues - damageDeduct;
-      if (netRefund >= 0) {
-        box.innerHTML = `Advance Held: <strong>₹${deposit.toLocaleString("en-IN")}</strong> | Unpaid Bills: <strong style="color:#f87171;">-₹${unpaidDues.toLocaleString("en-IN")}</strong> | Deductions: <strong style="color:#f59e0b;">-₹${damageDeduct.toLocaleString("en-IN")}</strong> → <strong style="color:#10b981;">Refundable to Tenant: ₹${netRefund.toLocaleString("en-IN")}</strong>`;
-      } else {
-        box.innerHTML = `Advance Held: <strong>₹${deposit.toLocaleString("en-IN")}</strong> | Unpaid Bills: <strong style="color:#f87171;">-₹${unpaidDues.toLocaleString("en-IN")}</strong> | Deductions: <strong style="color:#f59e0b;">-₹${damageDeduct.toLocaleString("en-IN")}</strong> → <strong style="color:#ef4444;">Payable by Tenant: ₹${Math.abs(netRefund).toLocaleString("en-IN")}</strong>`;
+      const netRefund = deposit - unpaidDues - paintDeduct - damageDeduct;
+      const amtEl = document.getElementById("moveOutNetRefundAmount");
+      if (amtEl) {
+        amtEl.innerText = netRefund >= 0
+          ? `₹ ${netRefund.toLocaleString("en-IN")} (Refund to Tenant)`
+          : `₹ ${Math.abs(netRefund).toLocaleString("en-IN")} (Payable by Tenant)`;
+        amtEl.style.color = netRefund >= 0 ? "#10b981" : "#ef4444";
       }
-      return { deposit, unpaidDues, damageDeduct, netRefund };
+      const box = document.getElementById("moveOutSettlementSummaryBox");
+      if (box) {
+        if (netRefund >= 0) {
+          box.innerHTML = `Advance Held: <strong>₹${deposit.toLocaleString("en-IN")}</strong> | Unpaid Bills: <strong style="color:#f87171;">-₹${unpaidDues.toLocaleString("en-IN")}</strong> | Deductions: <strong style="color:#f59e0b;">-₹${(paintDeduct + damageDeduct).toLocaleString("en-IN")}</strong> → <strong style="color:#10b981;">Refundable to Tenant: ₹${netRefund.toLocaleString("en-IN")}</strong>`;
+        } else {
+          box.innerHTML = `Advance Held: <strong>₹${deposit.toLocaleString("en-IN")}</strong> | Unpaid Bills: <strong style="color:#f87171;">-₹${unpaidDues.toLocaleString("en-IN")}</strong> | Deductions: <strong style="color:#f59e0b;">-₹${(paintDeduct + damageDeduct).toLocaleString("en-IN")}</strong> → <strong style="color:#ef4444;">Payable by Tenant: ₹${Math.abs(netRefund).toLocaleString("en-IN")}</strong>`;
+        }
+      }
+      return { deposit, unpaidDues, paintDeduct, damageDeduct: paintDeduct + damageDeduct, netRefund };
     }
 
     function printMoveOutSettlementReceipt() {
@@ -27908,10 +28002,10 @@ function formatMonthLabel(rawVal) {
       }
 
       overlay.innerHTML = `
-        <div class="modal-card" style="max-width:460px;">
+        <div class="modal-window" style="max-width:460px;">
           <div class="modal-header">
             <h3 style="font-size:1rem;"><i class="fa-solid fa-shield-halved" style="color:#38bdf8;"></i> Final Move-Out Deposit Settlement</h3>
-            <button class="btn-close" onclick="document.getElementById('moveOutSettlementModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
+            <button class="modal-close-btn" onclick="document.getElementById('moveOutSettlementModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
           </div>
           <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px; padding:14px; font-size:0.82rem; display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; justify-content:space-between;"><span>Property &amp; Flat:</span><strong>${selectedFlat.PropertyName} — Flat ${selectedFlat.FlatName}</strong></div>
@@ -27937,7 +28031,7 @@ function formatMonthLabel(rawVal) {
 
     // --- A6: SCHEDULED ANNUAL RENT ESCALATION TRACKER ---
     function refreshRentEscalationTrackerUI() {
-      const box = document.getElementById("rentEscalationStatusBox");
+      const box = document.getElementById("rentEscalationSummaryText") || document.getElementById("rentEscalationStatusBox");
       if (!box || !selectedFlat) return;
       const baseRent = parseFloat(document.getElementById("profRent")?.value) || 0;
       const pct = parseFloat(document.getElementById("profEscalationPct")?.value) || 0;
@@ -27991,24 +28085,30 @@ function formatMonthLabel(rawVal) {
       if (!data && selectedFlat?.ApplianceChecklist) {
         data = selectedFlat.ApplianceChecklist;
       }
-      const d = data || { fans: 2, bulbs: 4, geysers: 1, keys: 2, paint: "Freshly Painted", notes: "" };
+      const d = data || { fans: 2, bulbs: 4, geysers: 1, keys: 2, meter: "Working & Sealed", paint: "Freshly Painted", notes: "" };
       if (document.getElementById("invFansCount")) document.getElementById("invFansCount").value = d.fans ?? 2;
       if (document.getElementById("invBulbsCount")) document.getElementById("invBulbsCount").value = d.bulbs ?? 4;
       if (document.getElementById("invGeysersCount")) document.getElementById("invGeysersCount").value = d.geysers ?? 1;
       if (document.getElementById("invKeysCount")) document.getElementById("invKeysCount").value = d.keys ?? 2;
-      if (document.getElementById("invPaintStatus")) document.getElementById("invPaintStatus").value = d.paint || "Freshly Painted";
-      if (document.getElementById("invConditionNotes")) document.getElementById("invConditionNotes").value = d.notes || "";
+      if (document.getElementById("invMeterCondition")) document.getElementById("invMeterCondition").value = d.meter || "Working & Sealed";
+      const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
+      if (paintEl) paintEl.value = d.paint || "Freshly Painted";
+      const notesEl = document.getElementById("invExtraNotes") || document.getElementById("invConditionNotes");
+      if (notesEl) notesEl.value = d.notes || "";
     }
 
     async function saveFlatApplianceChecklist() {
       if (!selectedFlat) return;
+      const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
+      const notesEl = document.getElementById("invExtraNotes") || document.getElementById("invConditionNotes");
       const checklist = {
         fans: parseInt(document.getElementById("invFansCount")?.value || "0", 10),
         bulbs: parseInt(document.getElementById("invBulbsCount")?.value || "0", 10),
         geysers: parseInt(document.getElementById("invGeysersCount")?.value || "0", 10),
         keys: parseInt(document.getElementById("invKeysCount")?.value || "0", 10),
-        paint: document.getElementById("invPaintStatus")?.value || "Freshly Painted",
-        notes: (document.getElementById("invConditionNotes")?.value || "").trim(),
+        meter: document.getElementById("invMeterCondition")?.value || "Working & Sealed",
+        paint: paintEl?.value || "Freshly Painted",
+        notes: (notesEl?.value || "").trim(),
         updatedAt: new Date().toISOString()
       };
       const key = getFlatChecklistStorageKey(selectedFlat.PropertyName, selectedFlat.FlatName);
@@ -28072,12 +28172,11 @@ function formatMonthLabel(rawVal) {
     }
 
     function computeMasterMeterReconciliation() {
-      const box = document.getElementById("masterMeterReconSummary");
-      if (!box || !selectedFlat) return;
+      if (!selectedFlat) return;
       const propName = selectedFlat.PropertyName;
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
-      const masterUnits = parseFloat(document.getElementById("reconMasterUnits")?.value) || 0;
-      const masterBillAmt = parseFloat(document.getElementById("reconMasterBillAmt")?.value) || 0;
+      const masterUnits = parseFloat((document.getElementById("masterMeterUnitsInput") || document.getElementById("reconMasterUnits"))?.value) || 0;
+      const masterBillAmt = parseFloat((document.getElementById("masterMeterBillInput") || document.getElementById("reconMasterBillAmt"))?.value) || 0;
 
       const propMonthBills = (DB.bills || []).filter(b =>
         String(b.PropertyName || "").trim().toLowerCase() === String(propName || "").trim().toLowerCase() &&
@@ -28097,11 +28196,24 @@ function formatMonthLabel(rawVal) {
       const unitLoss = masterUnits > 0 ? (masterUnits - subMetersUnits) : 0;
       const amtDiff = masterBillAmt > 0 ? (masterBillAmt - subMetersBilledAmt) : 0;
 
-      box.innerHTML = `
-        Property: <strong>${propName}</strong> (${formatMonthLabel(chosenMonth)}) |
-        Sum of ${propMonthBills.length} Flat Sub-Meters: <strong style="color:#38bdf8;">${subMetersUnits} U (₹${subMetersBilledAmt.toLocaleString("en-IN")})</strong> |
-        Common Area / Motor Loss: <strong style="color:${unitLoss > 0 ? '#f59e0b' : '#10b981'};">${unitLoss} U (₹${amtDiff.toLocaleString("en-IN")})</strong>
-      `;
+      const monthLbl = document.getElementById("masterReconMonthLabel");
+      if (monthLbl) monthLbl.innerText = `${propName} • ${formatMonthLabel(chosenMonth)}`;
+      const sumBadge = document.getElementById("masterSubMetersSumBadge");
+      if (sumBadge) sumBadge.innerText = `${subMetersUnits} Units (₹${Math.round(subMetersBilledAmt).toLocaleString("en-IN")})`;
+      const lossBadge = document.getElementById("masterMeterLossBadge");
+      if (lossBadge) {
+        lossBadge.innerText = `${unitLoss} Units (₹${Math.round(amtDiff).toLocaleString("en-IN")})`;
+        lossBadge.style.color = unitLoss > 0 ? "#f59e0b" : "#10b981";
+      }
+
+      const box = document.getElementById("masterMeterReconSummary");
+      if (box) {
+        box.innerHTML = `
+          Property: <strong>${propName}</strong> (${formatMonthLabel(chosenMonth)}) |
+          Sum of ${propMonthBills.length} Flat Sub-Meters: <strong style="color:#38bdf8;">${subMetersUnits} U (₹${subMetersBilledAmt.toLocaleString("en-IN")})</strong> |
+          Common Area / Motor Loss: <strong style="color:${unitLoss > 0 ? '#f59e0b' : '#10b981'};">${unitLoss} U (₹${amtDiff.toLocaleString("en-IN")})</strong>
+        `;
+      }
     }
 
     // --- GROUP G1: MAINTENANCE COMPLAINT / TICKET SYSTEM ---
@@ -28319,7 +28431,7 @@ function formatMonthLabel(rawVal) {
 
     // --- GROUP G2: ONE-CLICK BULK MONTHLY BILL BROADCAST ---
     function getUnpaidBillsForBroadcastMonth() {
-      const monthInput = document.getElementById("bulkBroadcastMonthPicker");
+      const monthInput = document.getElementById("bulkBroadcastMonthInput") || document.getElementById("bulkBroadcastMonthPicker");
       if (monthInput && !monthInput.value) {
         const now = new Date();
         monthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -28335,6 +28447,10 @@ function formatMonthLabel(rawVal) {
     function renderBulkBillBroadcastQueue() {
       const unpaid = getUnpaidBillsForBroadcastMonth();
       const totalDue = unpaid.reduce((acc, b) => acc + Math.max(0, (parseFloat(b.TotalBilled) || 0) - (parseFloat(b.PaidAmount) || 0)), 0);
+      const countBadge = document.getElementById("bulkUnpaidCountBadge");
+      if (countBadge) {
+        countBadge.innerText = `${unpaid.length} Unpaid (₹${Math.round(totalDue).toLocaleString("en-IN")})`;
+      }
       const summaryEl = document.getElementById("bulkBroadcastSummaryText");
       if (summaryEl) {
         summaryEl.innerHTML = `Unpaid / Partial Bills in Selected Month: <strong style="color:#f59e0b;">${unpaid.length} Flats</strong> (Total Pending: <strong style="color:#ef4444;">₹${Math.round(totalDue).toLocaleString("en-IN")}</strong>)`;
@@ -28376,14 +28492,17 @@ function formatMonthLabel(rawVal) {
       if (unpaid.length === 0) {
         return triggerSideToast("No Unpaid Bills", "There are no unpaid bills for the selected month to broadcast.", "warning");
       }
-      const monthLabel = formatMonthLabel(normalizeMonthYear(document.getElementById("bulkBroadcastMonthPicker")?.value || ""));
-      const titleInput = document.getElementById("notifTitleInput");
-      const msgInput = document.getElementById("notifMessageInput");
-      const targetSelect = document.getElementById("notifTargetTypeSelect");
+      const monthInput = document.getElementById("bulkBroadcastMonthInput") || document.getElementById("bulkBroadcastMonthPicker");
+      const monthLabel = formatMonthLabel(normalizeMonthYear(monthInput?.value || ""));
+      const titleInput = document.getElementById("adminNoticeTitleInput") || document.getElementById("notifTitleInput");
+      const msgInput = document.getElementById("adminNoticeBodyInput") || document.getElementById("notifMessageInput");
+      const targetSelect = document.getElementById("adminNoticeTargetSelect") || document.getElementById("notifTargetTypeSelect");
       if (titleInput) titleInput.value = `Rent & Utility Bill Reminder — ${monthLabel}`;
       if (msgInput) msgInput.value = `Dear Renter, your monthly rent & utility bill for ${monthLabel} is generated. Kindly check your History Ledger, scan the Dynamic UPI QR code to pay your pending due, and submit your UTR payment proof.`;
       if (targetSelect) targetSelect.value = "ALL";
-      if (typeof sendAdminBroadcastNotification === "function") {
+      if (typeof submitAdminBroadcastNotification === "function") {
+        await submitAdminBroadcastNotification();
+      } else if (typeof sendAdminBroadcastNotification === "function") {
         await sendAdminBroadcastNotification();
       }
       if (typeof recordAdminAuditLog === "function") {
@@ -28423,12 +28542,13 @@ function formatMonthLabel(rawVal) {
       } catch (e) {}
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.auditLogs = trimmed;
+      sendFirebaseAction({ action: "saveAuditLogs", auditLogs: trimmed }).catch(() => {});
     }
 
-    function renderAdminAuditTrailList() {
-      const box = document.getElementById("adminAuditTrailListContainer");
+    function renderAdminAuditTrailList(optionalQuery = "") {
+      const box = document.getElementById("adminAuditTrailList") || document.getElementById("adminAuditTrailListContainer");
       if (!box) return;
-      const q = (document.getElementById("auditLogSearchInput")?.value || "").trim().toLowerCase();
+      const q = String(optionalQuery || document.getElementById("auditLogSearchInput")?.value || "").trim().toLowerCase();
       const all = getStoredAdminAuditLogs();
       const filtered = q
         ? all.filter(a =>
@@ -28483,13 +28603,14 @@ function formatMonthLabel(rawVal) {
       if (activeRole !== "Admin") return;
       try { localStorage.removeItem("portal_admin_audit_logs_v1"); } catch (e) {}
       if (DB.globalConfig) DB.globalConfig.auditLogs = [];
+      sendFirebaseAction({ action: "saveAuditLogs", auditLogs: [] }).catch(() => {});
       renderAdminAuditTrailList();
       triggerSideToast("Audit Log Cleared", "All local audit trail entries cleared.", true);
     }
 
   </script>
 
-  <div id="root"></div>
+  <div id="root" style="display:none;"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
