@@ -22374,8 +22374,9 @@ function formatMonthLabel(rawVal) {
         `;
       }
 
-        const globalDropdown = document.getElementById("globalSearchResultsBox");
-        if (globalDropdown) globalDropdown.classList.remove("active");
+        if (globalDropdown) {
+          globalDropdown.classList.remove("active");
+        }
 
         openModal("tenantFullProfileModal");
       } catch (err) {
