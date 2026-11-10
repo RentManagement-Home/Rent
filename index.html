@@ -9052,9 +9052,10 @@
             try {
               const data = JSON.parse(ev.data);
               if (!data || !data.event) return;
+              const payload = data.payload || data.data || {};
 
               if (data.event === "CHAT_UPDATED") {
-                const incoming = data.payload?.privateChats || data.payload;
+                const incoming = payload.privateChats || payload;
                 if (incoming && typeof incoming === "object") {
                   try {
                     localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, JSON.stringify(incoming));
@@ -9065,7 +9066,7 @@
                   if (typeof updateLiveChatUnreadBadge === "function") updateLiveChatUnreadBadge();
                 }
               } else if (data.event === "NOTICES_UPDATED") {
-                const incoming = data.payload?.broadcastNotices || data.payload;
+                const incoming = payload.broadcastNotices || payload;
                 if (Array.isArray(incoming)) {
                   try {
                     localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(incoming));
@@ -9074,7 +9075,7 @@
                   if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
                 }
               } else if (data.event === "CONTACT_UPDATED") {
-                const incoming = data.payload?.contactConfig || data.payload;
+                const incoming = payload.contactConfig || payload;
                 if (incoming && typeof incoming === "object") {
                   try {
                     localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(incoming));
@@ -9082,16 +9083,16 @@
                   if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
                 }
               } else if (data.event === "USER_SESSION_REVOKED") {
-                const targetU = String(data.payload?.username || "").trim().toLowerCase();
-                const newTok = String(data.payload?.newSessionToken || "").trim();
+                const targetU = String(payload.username || "").trim().toLowerCase();
+                const newTok = String(payload.newSessionToken || "").trim();
                 if (activeUser && String(activeUser).trim().toLowerCase() === targetU) {
                   if (activeSessionToken && newTok && String(activeSessionToken).trim() !== newTok) {
                     triggerSingleDeviceSessionConflict();
                   }
                 }
               } else if (data.event === "USER_LOCKOUT") {
-                const targetU = String(data.payload?.username || "").trim().toLowerCase();
-                const lockData = data.payload?.lockout;
+                const targetU = String(payload.username || "").trim().toLowerCase();
+                const lockData = payload.lockout;
                 if (targetU && lockData) {
                   const state = getLoginLockoutState(targetU);
                   state.lockedUntil = Number(lockData.lockedUntil || 0);
@@ -11960,16 +11961,6 @@ function formatMonthLabel(rawVal) {
 
     function resolveFlatUpiAndContact(propertyName, flatObj, renterObj) {
       const propObj = findPropertyObject(propertyName || flatObj?.PropertyName || renterObj?.PropertyName);
-      let globalCfgPhone = "";
-      let globalCfgName = "";
-      try {
-        const rawCfg = localStorage.getItem("portal_admin_contact_cfg");
-        if (rawCfg) {
-          const parsedCfg = JSON.parse(rawCfg);
-          globalCfgPhone = sanitizeContactPhoneDisplay(parsedCfg?.phone || parsedCfg?.whatsapp || "");
-          globalCfgName = String(parsedCfg?.name || "").trim();
-        }
-      } catch (e) {}
       const domProfContract = sanitizeContactPhoneDisplay(document.getElementById("profContractMobile")?.value);
       const flatContract = sanitizeContactPhoneDisplay(flatObj?.ContractMobile || flatObj?.ContractNumber);
       const propContract = sanitizeContactPhoneDisplay(propObj?.ContractNumber || propObj?.ContractMobile);
@@ -11983,9 +11974,9 @@ function formatMonthLabel(rawVal) {
       const adminMobileFallback = sanitizeContactPhoneDisplay(activeUserMobile) || sanitizeContactPhoneDisplay(adminUserObj?.MobileNumber);
 
       return {
-        upiName: flatObj?.UPIName || renterObj?.UPIName || propObj?.UPIName || globalCfgName || "",
+        upiName: flatObj?.UPIName || renterObj?.UPIName || propObj?.UPIName || "",
         upiId: flatObj?.UPIID || renterObj?.UPIID || propObj?.UPIID || "",
-        contractMobile: globalCfgPhone || flatContract || propContract || renterContract || fallbackFlatContract || domProfContract || adminMobileFallback || ""
+        contractMobile: flatContract || propContract || renterContract || fallbackFlatContract || domProfContract || adminMobileFallback || ""
       };
     }
 
@@ -12521,6 +12512,11 @@ function formatMonthLabel(rawVal) {
         prewarmServerInBackground();
       }
 
+      // Initialize Real-time SSE on page load
+      try {
+        if (typeof initRealtimeSSE === "function") initRealtimeSSE();
+      } catch (e) {}
+
       // If page is restored from bfcache after logout, keep locked; if logged in, fetch fresh data
       window.addEventListener("pageshow", (event) => {
         const currentSaved = restoreSavedActiveSession();
@@ -12529,10 +12525,10 @@ function formatMonthLabel(rawVal) {
         } else if (event.persisted && activeUser) {
           syncDataLive(true);
         }
-      try {
-        if (typeof initRealtimeSSE === "function") initRealtimeSSE();
-      } catch (e) {}
-    });
+        try {
+          if (typeof initRealtimeSSE === "function") initRealtimeSSE();
+        } catch (e) {}
+      });
     });
 
     const PERSISTED_AUTH_SESSION_KEY = "portal_active_auth_session_v1";
@@ -15005,8 +15001,39 @@ function formatMonthLabel(rawVal) {
       try { updateLoginLockoutUI(); } catch (e) {}
     }, 50);
 
+    let checkLockoutDebounceTimer = null;
     document.getElementById("loginUsername")?.addEventListener("input", (e) => {
-      updateLoginLockoutUI(e.target.value);
+      const cleanVal = String(e.target.value || "").trim().toLowerCase();
+      updateLoginLockoutUI(cleanVal);
+      if (!cleanVal) return;
+
+      if (checkLockoutDebounceTimer) clearTimeout(checkLockoutDebounceTimer);
+      checkLockoutDebounceTimer = setTimeout(async () => {
+        try {
+          const res = await fetch("/api/gas-engine", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "checkUserLockout", username: cleanVal })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.status === "locked" && data.lockedUntil) {
+              const state = getLoginLockoutState(cleanVal);
+              state.username = cleanVal;
+              state.lockedUntil = data.lockedUntil;
+              state.lockedTierLabel = data.tierLabel || "1 minute";
+              saveLoginLockoutState(cleanVal, state);
+              updateLoginLockoutUI(cleanVal);
+            } else if (data && data.status === "blocked") {
+              const state = getLoginLockoutState(cleanVal);
+              state.username = cleanVal;
+              state.isPermanentlyBlocked = true;
+              saveLoginLockoutState(cleanVal, state);
+              updateLoginLockoutUI(cleanVal);
+            }
+          }
+        } catch (e) {}
+      }, 300);
     });
 
     // 1. Live Server-Verified Login Every Time + Single-Device Session Token Generation (Strictly Verified Against Google Sheets)
@@ -21823,6 +21850,7 @@ function formatMonthLabel(rawVal) {
       // show their quick details & "View Profile" button right below the search bar
       if (quickBanner) {
         if (searchQuery && filteredRenters.length > 0) {
+          window.__filteredRenterSearchResults = filteredRenters;
           quickBanner.style.display = "block";
           quickBanner.innerHTML = `
             <div style="background:rgba(79,70,229,0.12); border:1.5px solid var(--primary); border-radius:12px; padding:10px 12px;">
@@ -21830,7 +21858,7 @@ function formatMonthLabel(rawVal) {
                 <i class="fa-solid fa-user-check"></i> Search Result Below Search Bar (${filteredRenters.length} Match)
               </div>
               <div style="display:flex; flex-direction:column; gap:8px;">
-                ${filteredRenters.map(item => {
+                ${filteredRenters.map((item, idx) => {
                   const { merged: rMerged } = consolidateRenterHistoryDetailsByAadhaar(item.r);
                   const r = {
                     ...item.r,
@@ -21846,12 +21874,8 @@ function formatMonthLabel(rawVal) {
                   const avatarSrc = (!isPlaceholderImageUrl(r.ProfileImageURL))
                     ? r.ProfileImageURL
                     : "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E";
-                  const safeId = String(item.rId || "").replace(/'/g, "\\'");
-                  const safeProp = String(prop || "").replace(/'/g, "\\'");
-                  const safeFlat = String(flat || "").replace(/'/g, "\\'");
-                  const safeName = String(r.RenterName || "").replace(/'/g, "\\'");
                   return `
-                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px; padding:8px 12px; cursor:pointer;" onclick="event.stopPropagation(); openTenantFullProfilePopup('${safeId}', '${safeProp}', '${safeFlat}', '${safeName}')">
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px; padding:8px 12px; cursor:pointer;" onclick="event.stopPropagation(); openTenantProfileByHistorySearchIndex(${idx})">
                       <div style="display:flex; align-items:center; gap:10px;">
                         <div class="renter-avatar" style="width:40px; height:40px; flex-shrink:0;">
                           <img src="${avatarSrc}" alt="${r.RenterName || 'Tenant'}">
@@ -21866,7 +21890,7 @@ function formatMonthLabel(rawVal) {
                           </div>
                         </div>
                       </div>
-                      <button type="button" class="btn-primary" style="width:auto; padding:7px 14px; font-size:0.76rem;" onclick="event.stopPropagation(); openTenantFullProfilePopup('${safeId}', '${safeProp}', '${safeFlat}', '${safeName}')">
+                      <button type="button" class="btn-primary" style="width:auto; padding:7px 14px; font-size:0.76rem;" onclick="event.stopPropagation(); openTenantProfileByHistorySearchIndex(${idx})">
                         <i class="fa-solid fa-id-card"></i> View Profile
                       </button>
                     </div>
@@ -22097,6 +22121,17 @@ function formatMonthLabel(rawVal) {
         }
       } catch (err) {
         console.error("openTenantProfileBySearchResultIndex error:", err);
+      }
+    }
+
+    function openTenantProfileByHistorySearchIndex(idx) {
+      try {
+        const item = (window.__filteredRenterSearchResults && window.__filteredRenterSearchResults[idx]) ? window.__filteredRenterSearchResults[idx] : null;
+        if (item && item.r) {
+          openTenantFullProfilePopup(item.r, item.r.PropertyName || (selectedFlat ? selectedFlat.PropertyName : ""), item.r.FlatName || (selectedFlat ? selectedFlat.FlatName : ""), item.r.RenterName);
+        }
+      } catch (err) {
+        console.error("openTenantProfileByHistorySearchIndex error:", err);
       }
     }
 
@@ -27457,10 +27492,9 @@ function formatMonthLabel(rawVal) {
         }
       });
       if (admins.length === 0) {
-        const cfg = typeof getAdminContactSettings === "function" ? getAdminContactSettings() : {};
         admins.push({
           username: "admin",
-          fullName: cfg.name || "Property Admin",
+          fullName: "Property Admin",
           roleLabel: "Admin",
           mobile: ""
         });
