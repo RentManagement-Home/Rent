@@ -1871,19 +1871,26 @@
        STYLISH, COLOURFUL DASHBOARD SETTINGS DESIGN & CARDS
        ========================================================================== */
     .settings-nav-grid {
-      display: grid !important;
-      grid-template-columns: repeat(3, 1fr) !important;
-      gap: 10px !important;
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      align-items: stretch !important;
+      gap: 8px !important;
+      overflow-x: auto !important;
       background: transparent !important;
       border: none !important;
-      padding: 0 !important;
-      margin-bottom: 18px !important;
+      padding: 2px 2px 8px 2px !important;
+      margin-bottom: 16px !important;
+    }
+    .settings-nav-grid .settings-nav-card {
+      flex: 1 0 118px;
+      min-width: 118px;
     }
     .delete-center-split-layout {
       display: grid;
-      grid-template-columns: minmax(270px, 340px) minmax(0, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 16px;
-      align-items: start;
+      align-items: stretch;
     }
     @media (max-width: 820px) {
       .delete-center-split-layout {
@@ -6405,7 +6412,7 @@
         <h3 class="settings-header-title">Settings</h3>
       </div>
 
-      <!-- Horizontal Left-to-Right Options Box (Notifications, Create User ID, Delete Center) -->
+      <!-- Horizontal Left-to-Right Options Box (Notifications, Create User ID, Delete Center + All 7 Modules One by One to the Right Side) -->
       <div class="settings-horizontal-options-box">
         <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid">
           <div id="settingsTabBtnNotifications" class="flat-nav-item settings-nav-card nav-notify active" onclick="switchSettingsSubTab(event, 'setSubNotifications')">
@@ -6422,6 +6429,34 @@
           <div id="settingsTabBtnDeleteCenter" class="flat-nav-item settings-nav-card nav-delete" onclick="switchSettingsSubTab(event, 'setSubDeleteManage')">
             <div class="s-nav-icon"><i class="fa-solid fa-trash-can"></i></div>
             <div class="s-nav-title">Delete Center</div>
+          </div>
+          <div id="btnOtherOptUsers" class="flat-nav-item settings-nav-card" style="border-color: rgba(56, 189, 248, 0.45);" onclick="switchOtherSubOption('users')">
+            <div class="s-nav-icon" style="background: rgba(56, 189, 248, 0.18); color: #38bdf8;"><i class="fa-solid fa-users-gear"></i></div>
+            <div class="s-nav-title">Registered Users</div>
+          </div>
+          <div id="btnOtherOptLoginHistory" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(16, 185, 129, 0.45);" onclick="switchOtherSubOption('history')">
+            <div class="s-nav-icon" style="background: rgba(16, 185, 129, 0.18); color: #34d399;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <div class="s-nav-title">Last Logins</div>
+          </div>
+          <div id="btnOtherOptChangeBg" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(236, 72, 153, 0.45);" onclick="switchOtherSubOption('changeBg')">
+            <div class="s-nav-icon" style="background: rgba(236, 72, 153, 0.18); color: #f472b6;"><i class="fa-solid fa-image"></i></div>
+            <div class="s-nav-title">Background Photo</div>
+          </div>
+          <div id="btnOtherOptEditEverything" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(168, 85, 247, 0.45);" onclick="switchOtherSubOption('editEverything')">
+            <div class="s-nav-icon" style="background: rgba(168, 85, 247, 0.18); color: #c084fc;"><i class="fa-solid fa-pen-ruler"></i></div>
+            <div class="s-nav-title">Edit Everything</div>
+          </div>
+          <div id="btnOtherOptContactSettings" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(245, 158, 11, 0.45);" onclick="switchOtherSubOption('contactSettings')">
+            <div class="s-nav-icon" style="background: rgba(245, 158, 11, 0.18); color: #f59e0b;"><i class="fa-solid fa-address-book"></i></div>
+            <div class="s-nav-title">Contact Info</div>
+          </div>
+          <div id="btnOtherOptTickets" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(14, 165, 233, 0.45);" onclick="switchOtherSubOption('tickets')">
+            <div class="s-nav-icon" style="background: rgba(14, 165, 233, 0.18); color: #38bdf8;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <div class="s-nav-title">Maintenance Tickets</div>
+          </div>
+          <div id="btnOtherOptAuditLog" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(244, 63, 94, 0.45);" onclick="switchOtherSubOption('auditLog')">
+            <div class="s-nav-icon" style="background: rgba(244, 63, 94, 0.18); color: #fb7185;"><i class="fa-solid fa-shield-cat"></i></div>
+            <div class="s-nav-title">Audit Trail Log</div>
           </div>
         </div>
       </div>
@@ -6666,123 +6701,51 @@
         </button>
       </div>
 
-      <!-- Settings Tab 3: Delete Center (Left Side: Delete Property & Delete Flat | Right Side: All 7 Control & Management Items) -->
+      <!-- Settings Tab 3: Delete Center -->
       <div id="setSubDeleteManage" class="tab-content">
         <div class="delete-center-split-layout">
-          <!-- Left Side of Delete Center -->
-          <div class="delete-center-left-col" style="display:flex; flex-direction:column; gap:14px;">
-            <div style="background:linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(185, 28, 28, 0.06)); border:1.5px solid rgba(239, 68, 68, 0.45); border-radius:16px; padding:16px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-                <h4 style="font-size:0.98rem; font-weight:800; color:#f87171; display:flex; align-items:center; gap:8px; margin:0;">
-                  <i class="fa-solid fa-building-circle-xmark"></i> Option A: Delete Entire Property
-                </h4>
-                <span class="badge-unpaid" style="font-size:0.68rem;">Cascade Delete</span>
-              </div>
-              <p style="font-size:0.79rem; color:var(--text-muted); margin-bottom:12px; line-height:1.4;">
-                Permanently delete a building/property along with all flats, tenant profiles, renter User IDs, and billing history inside it from Google Sheet.
-              </p>
-              <button type="button" class="btn-primary admin-only" style="background:linear-gradient(135deg, #dc2626, #ef4444);" onclick="closeModal('settingsModal'); syncPropertyDropdowns(); openModal('deletePropertyModal');">
-                <i class="fa-solid fa-trash-can"></i> Open Delete Property Tool
-              </button>
+          <div style="background:linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(185, 28, 28, 0.06)); border:1.5px solid rgba(239, 68, 68, 0.45); border-radius:16px; padding:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+              <h4 style="font-size:0.98rem; font-weight:800; color:#f87171; display:flex; align-items:center; gap:8px; margin:0;">
+                <i class="fa-solid fa-building-circle-xmark"></i> Option A: Delete Entire Property
+              </h4>
+              <span class="badge-unpaid" style="font-size:0.68rem;">Cascade Delete</span>
             </div>
-
-            <div style="background:linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(239, 68, 68, 0.06)); border:1.5px solid rgba(249, 115, 22, 0.45); border-radius:16px; padding:16px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-                <h4 style="font-size:0.98rem; font-weight:800; color:#fb923c; display:flex; align-items:center; gap:8px; margin:0;">
-                  <i class="fa-solid fa-door-closed"></i> Option B: Delete Single Flat
-                </h4>
-                <span class="badge-partial" style="font-size:0.68rem;">Single Unit Wipe</span>
-              </div>
-              <p style="font-size:0.79rem; color:var(--text-muted); margin-bottom:12px; line-height:1.4;">
-                Permanently delete one specific flat and its associated tenant, renter User ID, and billing records while keeping the rest of the property intact.
-              </p>
-              <button type="button" class="btn-primary admin-only" style="background:linear-gradient(135deg, #ea580c, #ef4444);" onclick="closeModal('settingsModal'); syncPropertyDropdowns(); openModal('deleteFlatModal');">
-                <i class="fa-solid fa-rectangle-xmark"></i> Open Delete Flat Tool
-              </button>
-            </div>
+            <p style="font-size:0.79rem; color:var(--text-muted); margin-bottom:12px; line-height:1.4;">
+              Permanently delete a building/property along with all flats, tenant profiles, renter User IDs, and billing history inside it from Google Sheet.
+            </p>
+            <button type="button" class="btn-primary admin-only" style="background:linear-gradient(135deg, #dc2626, #ef4444);" onclick="closeModal('settingsModal'); syncPropertyDropdowns(); openModal('deletePropertyModal');">
+              <i class="fa-solid fa-trash-can"></i> Open Delete Property Tool
+            </button>
           </div>
 
-          <!-- Right Side of Delete Center: All 7 Control Items -->
-          <div class="delete-center-right-col" style="background:rgba(15, 23, 42, 0.28); border:1.5px solid var(--glass-border); border-radius:16px; padding:14px;">
-            <div style="font-size:0.76rem; font-weight:800; color:var(--text-muted); margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
-              <span><i class="fa-solid fa-compass" style="color:#c084fc;"></i> SYSTEM CONTROLS &amp; ADMINISTRATION (7 MODULES):</span>
+          <div style="background:linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(239, 68, 68, 0.06)); border:1.5px solid rgba(249, 115, 22, 0.45); border-radius:16px; padding:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+              <h4 style="font-size:0.98rem; font-weight:800; color:#fb923c; display:flex; align-items:center; gap:8px; margin:0;">
+                <i class="fa-solid fa-door-closed"></i> Option B: Delete Single Flat
+              </h4>
+              <span class="badge-partial" style="font-size:0.68rem;">Single Unit Wipe</span>
             </div>
-            <div id="otherOptionsBtnGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 14px;">
-          <button
-            type="button"
-            id="btnOtherOptUsers"
-            class="btn-primary other-tool-card"
-            style="border-color: rgba(56, 189, 248, 0.5) !important; background: linear-gradient(135deg, rgba(14, 165, 233, 0.25), rgba(37, 99, 235, 0.15));"
-            onclick="switchOtherSubOption('users')"
-          >
-            <div class="tool-top" style="color:#38bdf8;"><i class="fa-solid fa-users-gear"></i> 1. Registered Users</div>
-          </button>
-          <button
-            type="button"
-            id="btnOtherOptLoginHistory"
-            class="btn-ledger-action admin-only other-tool-card"
-            style="border-color: rgba(16, 185, 129, 0.5) !important; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.08));"
-            onclick="switchOtherSubOption('history')"
-          >
-            <div class="tool-top" style="color:#34d399;"><i class="fa-solid fa-clock-rotate-left"></i> 2. Last Logins</div>
-          </button>
-          <button
-            type="button"
-            id="btnOtherOptChangeBg"
-            class="btn-ledger-action admin-only other-tool-card"
-            style="border-color: rgba(236, 72, 153, 0.5) !important; background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.08));"
-            onclick="switchOtherSubOption('changeBg')"
-          >
-            <div class="tool-top" style="color:#f472b6;"><i class="fa-solid fa-image"></i> 3. Background Photo</div>
-          </button>
-          <button
-            type="button"
-            id="btnOtherOptEditEverything"
-            class="btn-ledger-action admin-only other-tool-card"
-            style="border-color: rgba(168, 85, 247, 0.5) !important; background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(99, 102, 241, 0.08));"
-            onclick="switchOtherSubOption('editEverything')"
-          >
-            <div class="tool-top" style="color:#c084fc;"><i class="fa-solid fa-pen-ruler"></i> 4. Edit Everything</div>
-          </button>
-          <button
-            type="button"
-            id="btnOtherOptContactSettings"
-            class="btn-ledger-action admin-only other-tool-card"
-            style="border-color: rgba(245, 158, 11, 0.5) !important; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.08));"
-            onclick="switchOtherSubOption('contactSettings')"
-          >
-            <div class="tool-top" style="color:#f59e0b;"><i class="fa-solid fa-address-book"></i> 5. Contact Info</div>
-          </button>
-          <button
-            type="button"
-            id="btnOtherOptTickets"
-            class="btn-ledger-action admin-only other-tool-card"
-            style="border-color: rgba(14, 165, 233, 0.5) !important; background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(6, 182, 212, 0.08));"
-            onclick="switchOtherSubOption('tickets')"
-          >
-            <div class="tool-top" style="color:#38bdf8;"><i class="fa-solid fa-screwdriver-wrench"></i> 6. Maintenance Tickets</div>
-          </button>
-          <button
-            type="button"
-            id="btnOtherOptAuditLog"
-            class="btn-ledger-action admin-only other-tool-card"
-            style="border-color: rgba(244, 63, 94, 0.5) !important; background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(225, 29, 72, 0.08));"
-            onclick="switchOtherSubOption('auditLog')"
-          >
-            <div class="tool-top" style="color:#fb7185;"><i class="fa-solid fa-shield-cat"></i> 7. Audit Trail Log</div>
-          </button>
-        </div>
-
-        <!-- Option 1 Panel: Registered User (Admin can Delete Users, Demote Admin to Regular User, or Promote Regular User to Admin) -->
-        <div id="otherPanelUsers" class="stat-pill" style="text-align: left; border: 1.5px solid rgba(56, 189, 248, 0.35);">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; padding-bottom:6px; border-bottom:1px solid var(--glass-border);">
-            <span style="color:#38bdf8; font-weight:800;"><i class="fa-solid fa-users-gear"></i> REGISTERED USER MANAGEMENT</span>
-            <span style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">Delete • Block • Change Role (Admin ↔ Viewer ↔ Renter)</span>
-          </div>
-          <div id="otherUsersList" style="margin-top: 8px; font-size: 0.82rem; max-height: 290px; overflow-y: auto;">
-            <!-- Populated dynamically -->
+            <p style="font-size:0.79rem; color:var(--text-muted); margin-bottom:12px; line-height:1.4;">
+              Permanently delete one specific flat and its associated tenant, renter User ID, and billing records while keeping the rest of the property intact.
+            </p>
+            <button type="button" class="btn-primary admin-only" style="background:linear-gradient(135deg, #ea580c, #ef4444);" onclick="closeModal('settingsModal'); syncPropertyDropdowns(); openModal('deleteFlatModal');">
+              <i class="fa-solid fa-rectangle-xmark"></i> Open Delete Flat Tool
+            </button>
           </div>
         </div>
+      </div>
+
+      <!-- Option 1 Panel: Registered Users -->
+      <div id="otherPanelUsers" class="stat-pill" style="text-align: left; display: none; border: 1.5px solid rgba(56, 189, 248, 0.35);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; padding-bottom:6px; border-bottom:1px solid var(--glass-border);">
+          <span style="color:#38bdf8; font-weight:800;"><i class="fa-solid fa-users-gear"></i> REGISTERED USER MANAGEMENT</span>
+          <span style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">Delete • Block • Change Role (Admin ↔ Viewer ↔ Renter)</span>
+        </div>
+        <div id="otherUsersList" style="margin-top: 8px; font-size: 0.82rem; max-height: 290px; overflow-y: auto;">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
 
         
         <!-- Option: Change Background Photo (Home Page Only in Full HD Quality — Login/Logout Screen Unchanged) -->
@@ -7016,9 +6979,6 @@
           </div>
           <div id="adminAuditTrailList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:6px; font-size:0.76rem;"></div>
         </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -14957,8 +14917,8 @@ function formatMonthLabel(rawVal) {
         b => !cleanTargetMonth || normalizeMonthYear(b.MonthYear) < cleanTargetMonth
       );
 
-      // Use the latest bill before target month if available; otherwise fall back to the latest recorded bill for the flat
-      const candidateBills = billsBeforeMonth.length > 0 ? billsBeforeMonth : allBillsForFlat;
+      // Strictly use bills prior to cleanTargetMonth when a target month is specified so future bills never leak into previous months
+      const candidateBills = cleanTargetMonth ? billsBeforeMonth : allBillsForFlat;
       const flatObj = findFlatObject(propertyName, flatName);
 
       if (candidateBills.length > 0) {
@@ -14992,7 +14952,8 @@ function formatMonthLabel(rawVal) {
         };
       }
 
-      if (flatObj && (flatObj.LastElecReading || flatObj.LastPNGReading || flatObj.LastWaterReading)) {
+      const currentYearMonth = getCurrentCalendarYearMonth();
+      if ((!cleanTargetMonth || cleanTargetMonth >= currentYearMonth) && flatObj && (flatObj.LastElecReading || flatObj.LastPNGReading || flatObj.LastWaterReading)) {
         return {
           hasPriorReading: true,
           elecPrev: parseFloat(flatObj.LastElecReading) || 0,
@@ -16189,8 +16150,9 @@ function formatMonthLabel(rawVal) {
       }).join("");
     }
 
-    // Requirement 4 & 7: Switch Other Sub-Options (Users, History, ChangeBg, Edit Everything — ChangeBg is strictly Admin-Only)
+    // Requirement 4 & 7: Switch Other Sub-Options directly from the Settings top horizontal row
     function switchOtherSubOption(opt) {
+      const parent = document.getElementById("settingsModal");
       const usersPanel = document.getElementById("otherPanelUsers");
       const historyPanel = document.getElementById("otherPanelLoginHistory");
       const changeBgPanel = document.getElementById("otherPanelChangeBg");
@@ -16212,39 +16174,40 @@ function formatMonthLabel(rawVal) {
         opt = "users";
       }
 
+      if (parent) {
+        parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
+        parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      }
       [usersPanel, historyPanel, changeBgPanel, eePanel, contactPanel, ticketsPanel, auditPanel].forEach(p => { if (p) p.style.display = "none"; });
-      if (btnUsers) btnUsers.className = "btn-ledger-action other-tool-card";
-      if (btnChangeBg) btnChangeBg.className = "btn-ledger-action admin-only other-tool-card";
-      [btnHistory, btnEe, btnContact, btnTickets, btnAudit].forEach(b => { if (b) b.className = "btn-ledger-action admin-only other-tool-card"; });
 
       if (opt === "history") {
         if (historyPanel) historyPanel.style.display = "block";
-        if (btnHistory) btnHistory.className = "btn-primary admin-only other-tool-card";
+        if (btnHistory) btnHistory.classList.add("active");
         currentLoginHistoryPage = 1;
         renderLoginHistoryPage();
       } else if (opt === "changeBg") {
         if (changeBgPanel) changeBgPanel.style.display = "block";
-        if (btnChangeBg) btnChangeBg.className = "btn-primary admin-only other-tool-card";
+        if (btnChangeBg) btnChangeBg.classList.add("active");
         initCustomBgInputs();
       } else if (opt === "editEverything") {
         if (eePanel) eePanel.style.display = "block";
-        if (btnEe) btnEe.className = "btn-primary admin-only other-tool-card";
+        if (btnEe) btnEe.classList.add("active");
         renderEditEverythingBillsList();
       } else if (opt === "contactSettings") {
         if (contactPanel) contactPanel.style.display = "block";
-        if (btnContact) btnContact.className = "btn-primary admin-only other-tool-card";
+        if (btnContact) btnContact.classList.add("active");
         initAdminContactSettingsInputs();
       } else if (opt === "tickets") {
         if (ticketsPanel) ticketsPanel.style.display = "block";
-        if (btnTickets) btnTickets.className = "btn-primary admin-only other-tool-card";
+        if (btnTickets) btnTickets.classList.add("active");
         if (typeof renderAdminMaintenanceTickets === "function") renderAdminMaintenanceTickets();
       } else if (opt === "auditLog") {
         if (auditPanel) auditPanel.style.display = "block";
-        if (btnAudit) btnAudit.className = "btn-primary admin-only other-tool-card";
+        if (btnAudit) btnAudit.classList.add("active");
         if (typeof renderAdminAuditTrailList === "function") renderAdminAuditTrailList();
       } else {
         if (usersPanel) usersPanel.style.display = "block";
-        if (btnUsers) btnUsers.className = "btn-primary other-tool-card";
+        if (btnUsers) btnUsers.classList.add("active");
         renderRegisteredUsersList();
       }
     }
@@ -16966,6 +16929,9 @@ function formatMonthLabel(rawVal) {
       }
 
       const canControlAll = isAdmin || (isManager && hasManagerPermission("controlOf"));
+      const btnTickets = document.getElementById("btnOtherOptTickets");
+      const btnAudit = document.getElementById("btnOtherOptAuditLog");
+      const btnUsers = document.getElementById("btnOtherOptUsers");
       if (!canControlAll) {
         if (btnLoginHist) btnLoginHist.style.display = "none";
         if (panelLoginHist) panelLoginHist.style.display = "none";
@@ -16975,14 +16941,17 @@ function formatMonthLabel(rawVal) {
         if (panelChangeBg) panelChangeBg.style.display = "none";
         if (btnContact) btnContact.style.display = "none";
         if (panelContact) panelContact.style.display = "none";
-        if (btnGrid) btnGrid.style.gridTemplateColumns = "1fr";
-        switchOtherSubOption("users");
+        if (btnTickets) btnTickets.style.display = "none";
+        if (btnAudit) btnAudit.style.display = "none";
+        if (btnUsers) btnUsers.style.display = "none";
       } else {
+        if (btnUsers) btnUsers.style.display = "flex";
         if (btnLoginHist) btnLoginHist.style.display = "flex";
         if (btnEditEvery) btnEditEvery.style.display = "flex";
         if (btnChangeBg) btnChangeBg.style.display = "flex";
         if (btnContact) btnContact.style.display = "flex";
-        if (btnGrid) btnGrid.style.gridTemplateColumns = "repeat(auto-fit, minmax(150px, 1fr))";
+        if (btnTickets) btnTickets.style.display = "flex";
+        if (btnAudit) btnAudit.style.display = "flex";
         renderLoginHistoryPage();
       }
 
@@ -16999,6 +16968,10 @@ function formatMonthLabel(rawVal) {
       if (!parent) return;
       parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
       parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      ["otherPanelUsers", "otherPanelLoginHistory", "otherPanelChangeBg", "otherPanelEditEverything", "otherPanelContactSettings", "otherPanelTickets", "otherPanelAuditLog"].forEach(id => {
+        const p = document.getElementById(id);
+        if (p) p.style.display = "none";
+      });
       if (evt && evt.currentTarget) {
         evt.currentTarget.classList.add("active");
       } else {
@@ -17283,8 +17256,142 @@ function formatMonthLabel(rawVal) {
       return isNaN(num) ? "" : num;
     }
 
+    function isCalculatorMonthLockedForEdits(chosenMonth) {
+      if (!selectedFlat) return false;
+      const cleanMonth = normalizeMonthYear(chosenMonth);
+      const currentCalMonth = getCurrentCalendarYearMonth();
+      const allFlatBills = (DB.bills || []).filter(b =>
+        isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)
+      );
+      const existingBill = allFlatBills.find(b =>
+        normalizeMonthYear(b.MonthYear) === cleanMonth &&
+        (!activeFlatRenterObj || !b.RenterID || String(b.RenterID) === String(activeFlatRenterObj.RenterID))
+      ) || allFlatBills.find(b => normalizeMonthYear(b.MonthYear) === cleanMonth) || null;
+      const hasSubsequentBill = allFlatBills.some(b => normalizeMonthYear(b.MonthYear) > cleanMonth);
+      if (existingBill) {
+        if (cleanMonth < currentCalMonth || hasSubsequentBill || existingBill.ReceiptGenerated || existingBill.CalculationDone) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function setCalculatorFullMonthLockState(isLocked, reasonText = "") {
+      const allInputIds = [
+        "calcRent", "calcElecPrev", "calcElecCurr", "calcElecRate",
+        "calcPngPrev", "calcPngCurr", "calcPngRate",
+        "calcWaterPrev", "calcWaterCurr", "calcWaterRate",
+        "calcAddName", "calcAddAmount", "calcPrevCarryBalance",
+        "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes"
+      ];
+      allInputIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (isLocked) {
+          el.setAttribute("readonly", true);
+          el.style.opacity = "0.82";
+          el.style.cursor = "not-allowed";
+        } else {
+          if (!["calcRent", "calcElecPrev", "calcElecRate", "calcPngPrev", "calcPngRate", "calcWaterPrev", "calcWaterRate", "calcPrevCarryBalance"].includes(id)) {
+            el.removeAttribute("readonly");
+          }
+          el.style.opacity = "";
+          el.style.cursor = "";
+        }
+      });
+      ["calcAddToggle", "calcPayMode"].forEach(selId => {
+        const sel = document.getElementById(selId);
+        if (sel) sel.disabled = Boolean(isLocked);
+      });
+      document.querySelectorAll("#tabCalc .pencil-lock-btn").forEach(btn => {
+        btn.style.display = isLocked ? "none" : "";
+      });
+      const submitBtn = document.getElementById("calcSubmitBtn");
+      const submitBtnText = document.getElementById("calcSubmitBtnText");
+      if (submitBtn) {
+        submitBtn.disabled = Boolean(isLocked);
+        submitBtn.style.opacity = isLocked ? "0.55" : "";
+        submitBtn.style.pointerEvents = isLocked ? "none" : "";
+      }
+      if (isLocked && reasonText && submitBtnText) {
+        submitBtnText.innerText = reasonText;
+      }
+    }
+
+    function renderPrevMonthPendingRentDetailsBox(chosenMonth, existingBill, autoCarryBalance, allFlatBills) {
+      const box = document.getElementById("prevMonthPendingRentBox");
+      if (!box) return;
+      const currentCalMonth = getCurrentCalendarYearMonth();
+      const hasSubsequentBill = (allFlatBills || []).some(b => normalizeMonthYear(b.MonthYear) > chosenMonth);
+      const isPrevMonth = (chosenMonth < currentCalMonth) || hasSubsequentBill;
+
+      // Determine pending rent details for this month or carried from prior month
+      let billPendingDue = 0;
+      if (existingBill) {
+        const tot = parseFloat(existingBill.TotalBilled) || 0;
+        const paid = parseFloat(existingBill.PaidAmount) || 0;
+        billPendingDue = Math.max(0, Math.round((tot - paid) * 100) / 100);
+      }
+      const priorPendingDue = Math.max(0, Math.round((parseFloat(autoCarryBalance) || 0) * 100) / 100);
+
+      // Find the latest prior bill with pending rent when viewing carry-forward
+      const priorPendingBill = (allFlatBills || [])
+        .filter(b => normalizeMonthYear(b.MonthYear) < chosenMonth && ((parseFloat(b.TotalBilled) || 0) - (parseFloat(b.PaidAmount) || 0)) > 0)
+        .sort((a, b) => normalizeMonthYear(b.MonthYear).localeCompare(normalizeMonthYear(a.MonthYear)))[0] || null;
+
+      if (isPrevMonth && existingBill && billPendingDue > 0) {
+        box.style.display = "block";
+        box.innerHTML = `
+          <div style="background:linear-gradient(135deg, rgba(239,68,68,0.16), rgba(15,23,42,0.85)); border:1.5px solid rgba(239,68,68,0.55); border-radius:14px; padding:12px 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+              <span style="font-size:0.82rem; font-weight:800; color:#f87171; text-transform:uppercase; letter-spacing:0.5px;">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Previous Month Pending Rent Details (${formatMonthLabel(chosenMonth)})
+              </span>
+              <span class="badge-unpaid" style="font-size:0.74rem;">Pending Rent: ₹${billPendingDue.toLocaleString("en-IN")}</span>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; font-size:0.78rem; color:var(--text-main);">
+              <div>Tenant: <strong>${existingBill.TenantName || "--"}</strong></div>
+              <div>Base Rent: <strong>₹${(parseFloat(existingBill.BaseRent) || 0).toLocaleString("en-IN")}</strong></div>
+              <div>Utilities: <strong>₹${((parseFloat(existingBill.ElecTotal) || 0) + (parseFloat(existingBill.PNGTotal) || 0) + (parseFloat(existingBill.WaterTotal) || 0)).toLocaleString("en-IN")}</strong></div>
+              <div>Total Billed: <strong>₹${(parseFloat(existingBill.TotalBilled) || 0).toLocaleString("en-IN")}</strong></div>
+              <div>Amount Paid: <strong style="color:#10b981;">₹${(parseFloat(existingBill.PaidAmount) || 0).toLocaleString("en-IN")}</strong></div>
+              <div>Pending Balance: <strong style="color:#ef4444;">₹${billPendingDue.toLocaleString("en-IN")}</strong></div>
+            </div>
+          </div>
+        `;
+      } else if (priorPendingDue > 0) {
+        const srcLabel = priorPendingBill ? formatMonthLabel(normalizeMonthYear(priorPendingBill.MonthYear)) : "Prior Month(s)";
+        box.style.display = "block";
+        box.innerHTML = `
+          <div style="background:linear-gradient(135deg, rgba(245,158,11,0.16), rgba(15,23,42,0.85)); border:1.5px solid rgba(245,158,11,0.5); border-radius:14px; padding:12px 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+              <span style="font-size:0.82rem; font-weight:800; color:#fbbf24; text-transform:uppercase; letter-spacing:0.5px;">
+                <i class="fa-solid fa-clock-rotate-left"></i> Previous Pending Rent Carried Forward (From ${srcLabel})
+              </span>
+              <span class="badge-unpaid" style="font-size:0.74rem;">Pending Rent: ₹${priorPendingDue.toLocaleString("en-IN")}</span>
+            </div>
+            ${priorPendingBill ? `
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; font-size:0.78rem; color:var(--text-main);">
+              <div>Source Month: <strong>${srcLabel}</strong></div>
+              <div>Base Rent: <strong>₹${(parseFloat(priorPendingBill.BaseRent) || 0).toLocaleString("en-IN")}</strong></div>
+              <div>Total Billed: <strong>₹${(parseFloat(priorPendingBill.TotalBilled) || 0).toLocaleString("en-IN")}</strong></div>
+              <div>Paid: <strong style="color:#10b981;">₹${(parseFloat(priorPendingBill.PaidAmount) || 0).toLocaleString("en-IN")}</strong></div>
+              <div>Pending Rent Due: <strong style="color:#ef4444;">₹${priorPendingDue.toLocaleString("en-IN")}</strong></div>
+            </div>` : ""}
+          </div>
+        `;
+      } else {
+        box.style.display = "none";
+        box.innerHTML = "";
+      }
+    }
+
     async function toggleCalcFieldLock(inputId, btnEl, fieldCategory) {
       if (activeRole === "Viewer") return;
+      const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value);
+      if (isCalculatorMonthLockedForEdits(chosenMonth)) {
+        return triggerSideToast("Previous Month Locked", "Once a month's calculation and receipt are generated, previous month details cannot be edited.", false);
+      }
       const input = document.getElementById(inputId);
       if (!input) return;
 
@@ -17300,8 +17407,6 @@ function formatMonthLabel(rawVal) {
         btnEl.innerHTML = `<i class="fa-solid fa-pen"></i>`;
         runBillMath();
 
-        // Requirement 1: Editing Base Rent in Calculation is strictly for this month's calculation only!
-        // It must NEVER overwrite the flat profile's saved Base Rent.
         if (fieldCategory === "rent") {
           triggerSideToast(
             "Monthly Rent Override Set",
@@ -17312,7 +17417,6 @@ function formatMonthLabel(rawVal) {
         }
 
         if (fieldCategory === "rate") {
-          const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker").value);
           const renterBills = getBillsForSpecificRenter(selectedFlat.PropertyName, selectedFlat.FlatName, activeFlatRenterObj);
           const existingBillForMonth = renterBills.find(b => normalizeMonthYear(b.MonthYear) === chosenMonth);
 
@@ -17349,23 +17453,25 @@ function formatMonthLabel(rawVal) {
               pngRate: newPngRate,
               waterRate: newWaterRate
             });
-          } else {
-            triggerSideToast("Bill Override Ready", "Modified rate for this month's calculation. Click Update & Replace Bill to save.", "warning");
           }
         }
       }
     }
 
     // Immediately reflect flat profile Rent & Fixed Rates in the live calculator
-    // ONLY when the calculator is on an unbilled month (past generated bills stay 100% locked!)
+    // ONLY when the calculator is on a current/new unbilled month (past months stay 100% locked!)
     function syncProfileRatesToLiveCalculator() {
       if (!selectedFlat) return;
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker").value);
-      const renterBills = getBillsForSpecificRenter(selectedFlat.PropertyName, selectedFlat.FlatName, activeFlatRenterObj);
-      const existingBill = renterBills.find(b => normalizeMonthYear(b.MonthYear) === chosenMonth);
+      const currentCalMonth = getCurrentCalendarYearMonth();
+      const allFlatBills = (DB.bills || []).filter(b =>
+        isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)
+      );
+      const existingBill = allFlatBills.find(b => normalizeMonthYear(b.MonthYear) === chosenMonth);
+      const hasSubsequentBill = allFlatBills.some(b => normalizeMonthYear(b.MonthYear) > chosenMonth);
 
-      // Never overwrite calculator values if viewing an already-generated past bill
-      if (existingBill) return;
+      // Never overwrite calculator values if viewing an already-generated bill or a previous month
+      if (existingBill || chosenMonth < currentCalMonth || hasSubsequentBill) return;
 
       const profRentRaw = document.getElementById("profRent").value;
       const profElecRaw = document.getElementById("profElecRate").value;
@@ -17389,20 +17495,21 @@ function formatMonthLabel(rawVal) {
 
       const statusTag = document.getElementById("calcMonthStatusTag");
       const submitBtnText = document.getElementById("calcSubmitBtnText");
+      const currentCalMonth = getCurrentCalendarYearMonth();
 
-      // Check all flat bills for this month (including departed renters)
-      const allFlatBillsForMonth = (DB.bills || []).filter(b =>
-        isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+      const allFlatBills = (DB.bills || []).filter(b =>
+        isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)
+      );
+      const allFlatBillsForMonth = allFlatBills.filter(b =>
         normalizeMonthYear(b.MonthYear) === chosenMonth
       );
 
-      // Prioritize active renter bill if exists, otherwise load historical departed tenant bill
       const existingBill = allFlatBillsForMonth.find(b =>
         activeFlatRenterObj && String(b.RenterID || "") === String(activeFlatRenterObj.RenterID || "")
       ) || allFlatBillsForMonth[0] || null;
 
-      // Requirement 1: Never reset previous meter readings to 0 even if viewing a month before a new tenant's join date
-      // or after a previous tenant vacates. The flat's last recorded meter reading is always preserved.
+      const hasSubsequentBill = allFlatBills.some(b => normalizeMonthYear(b.MonthYear) > chosenMonth);
+      const isPreviousMonth = (chosenMonth < currentCalMonth) || hasSubsequentBill;
 
       const autoCarryBalance = calculateNetBalanceForRenterBeforeMonth(
         selectedFlat.PropertyName,
@@ -17411,42 +17518,46 @@ function formatMonthLabel(rawVal) {
         chosenMonth
       );
 
+      renderPrevMonthPendingRentDetailsBox(chosenMonth, existingBill, autoCarryBalance, allFlatBills);
+
       if (existingBill) {
         currentEditingBillId = String(existingBill.BillID || "");
-        statusTag.innerText = `Existing Bill Found - ${formatMonthLabel(chosenMonth)} - Locked Snapshot`;
-        statusTag.className = "calc-month-status-tag existing";
-        submitBtnText.innerText = `Update & Replace Bill for ${formatMonthLabel(chosenMonth)}`;
+        const billTotal = parseFloat(existingBill.TotalBilled) || 0;
+        const billPaid = parseFloat(existingBill.PaidAmount) || 0;
+        const billPendingRent = Math.max(0, Math.round((billTotal - billPaid) * 100) / 100);
+        const savedCarry = (existingBill.PrevCarryBalance !== undefined && existingBill.PrevCarryBalance !== "")
+          ? (parseFloat(existingBill.PrevCarryBalance) || 0)
+          : autoCarryBalance;
 
-        document.getElementById("calcRent").value = existingBill.BaseRent !== undefined && existingBill.BaseRent !== "" ? existingBill.BaseRent : 0;
-        document.getElementById("calcElecPrev").value = existingBill.ElecPrev ?? 0;
+        document.getElementById("calcRent").value = existingBill.BaseRent !== undefined && existingBill.BaseRent !== "" ? existingBill.BaseRent : "";
+        document.getElementById("calcElecPrev").value = existingBill.ElecPrev ?? "";
         document.getElementById("calcElecCurr").value = existingBill.ElecCurr ?? "";
-        document.getElementById("calcElecRate").value = resolveExactRateValue(existingBill.ElecRate, selectedFlat.ElecRate);
+        document.getElementById("calcElecRate").value = existingBill.ElecRate !== undefined && existingBill.ElecRate !== null ? existingBill.ElecRate : "";
 
-        document.getElementById("calcPngPrev").value = existingBill.PNGPrev ?? 0;
+        document.getElementById("calcPngPrev").value = existingBill.PNGPrev ?? "";
         document.getElementById("calcPngCurr").value = existingBill.PNGCurr ?? "";
-        document.getElementById("calcPngRate").value = resolveExactRateValue(existingBill.PNGRate, selectedFlat.PNGRate);
+        document.getElementById("calcPngRate").value = existingBill.PNGRate !== undefined && existingBill.PNGRate !== null ? existingBill.PNGRate : "";
 
-        document.getElementById("calcWaterPrev").value = existingBill.WaterPrev ?? 0;
+        document.getElementById("calcWaterPrev").value = existingBill.WaterPrev ?? "";
         document.getElementById("calcWaterCurr").value = existingBill.WaterCurr ?? "";
-        document.getElementById("calcWaterRate").value = resolveExactRateValue(existingBill.WaterRate, selectedFlat.WaterRate);
+        document.getElementById("calcWaterRate").value = existingBill.WaterRate !== undefined && existingBill.WaterRate !== null ? existingBill.WaterRate : "";
 
         const addAmtVal = parseFloat(existingBill.AdditionalAmount) || 0;
         document.getElementById("calcAddName").value = existingBill.AdditionalName || "";
         document.getElementById("calcAddToggle").value = addAmtVal < 0 ? "-" : "+";
         document.getElementById("calcAddAmount").value = Math.abs(addAmtVal) || "";
 
-        const savedCarry = (existingBill.PrevCarryBalance !== undefined && existingBill.PrevCarryBalance !== "")
-          ? (parseFloat(existingBill.PrevCarryBalance) || 0)
-          : autoCarryBalance;
-        document.getElementById("calcPrevCarryBalance").value = savedCarry;
-        document.getElementById("calcPaidNow").value = existingBill.PaidAmount ?? 0;
+        // Show pending rent in Previous Pending Rent box; if no pending rent, leave it empty ("")
+        const pendingValueToShow = savedCarry !== 0 ? savedCarry : (isPreviousMonth && billPendingRent > 0 ? billPendingRent : "");
+        document.getElementById("calcPrevCarryBalance").value = pendingValueToShow;
+        document.getElementById("calcPaidNow").value = existingBill.PaidAmount ?? "";
         const billDateEl = document.getElementById("calcBillDatePicker");
         if (billDateEl) {
-          billDateEl.value = toInputDateValue(existingBill.BillDate || existingBill.PaymentDate) || new Date().toISOString().split("T")[0];
+          billDateEl.value = toInputDateValue(existingBill.BillDate || existingBill.PaymentDate) || "";
         }
         const payDateEl = document.getElementById("calcPaymentDate");
         if (payDateEl) {
-          payDateEl.value = toInputDateValue(existingBill.PaymentDate || existingBill.BillDate) || new Date().toISOString().split("T")[0];
+          payDateEl.value = toInputDateValue(existingBill.PaymentDate || existingBill.BillDate) || "";
         }
         document.getElementById("calcPayMode").value = existingBill.PaymentMode || "UPI";
         document.getElementById("calcNotes").value = existingBill.Notes || "";
@@ -17459,25 +17570,74 @@ function formatMonthLabel(rawVal) {
           renderSplitPaymentInstallmentsFromBill(existingBill);
         }
 
-        document.getElementById("elecRolloverHint").innerText = "Loaded from saved bill snapshot";
-        document.getElementById("pngRolloverHint").innerText = "Loaded from saved bill snapshot";
-        document.getElementById("waterRolloverHint").innerText = "Loaded from saved bill snapshot";
+        document.getElementById("elecRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
+        document.getElementById("pngRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
+        document.getElementById("waterRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
+
+        statusTag.innerText = `Completed Bill (${formatMonthLabel(chosenMonth)}) - Locked Read-Only`;
+        statusTag.className = "calc-month-status-tag existing";
+        setCalculatorFullMonthLockState(true, `Locked (${formatMonthLabel(chosenMonth)} Finalized)`);
+      } else if (isPreviousMonth) {
+        currentEditingBillId = null;
+        // Clicking a previous month with no generated bill:
+        // Show previous pending rent if any; if there is no pending rent, appear completely empty!
+        document.getElementById("calcRent").value = "";
+        document.getElementById("calcElecPrev").value = "";
+        document.getElementById("calcElecCurr").value = "";
+        document.getElementById("calcElecRate").value = "";
+        document.getElementById("calcPngPrev").value = "";
+        document.getElementById("calcPngCurr").value = "";
+        document.getElementById("calcPngRate").value = "";
+        document.getElementById("calcWaterPrev").value = "";
+        document.getElementById("calcWaterCurr").value = "";
+        document.getElementById("calcWaterRate").value = "";
+        document.getElementById("calcAddName").value = "";
+        document.getElementById("calcAddAmount").value = "";
+        document.getElementById("calcPrevCarryBalance").value = autoCarryBalance > 0 ? autoCarryBalance : "";
+        document.getElementById("calcPaidNow").value = "";
+        const billDateElEmpty = document.getElementById("calcBillDatePicker");
+        if (billDateElEmpty) billDateElEmpty.value = "";
+        const payDateElEmpty = document.getElementById("calcPaymentDate");
+        if (payDateElEmpty) payDateElEmpty.value = "";
+        document.getElementById("calcNotes").value = "";
+        const mProofUrlEl = document.getElementById("calcMeterProofUrl");
+        const mProofBtn = document.getElementById("btnPreviewMeterProof");
+        if (mProofUrlEl) mProofUrlEl.value = "";
+        if (mProofBtn) mProofBtn.style.display = "none";
+        if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
+          renderSplitPaymentInstallmentsFromBill(null);
+        }
+
+        if (autoCarryBalance > 0) {
+          statusTag.innerText = `Previous Month (${formatMonthLabel(chosenMonth)}) - Pending Rent: ₹${autoCarryBalance}`;
+          statusTag.className = "calc-month-status-tag existing";
+          document.getElementById("elecRolloverHint").innerText = "Previous month pending rent view";
+          document.getElementById("pngRolloverHint").innerText = "Previous month pending rent view";
+          document.getElementById("waterRolloverHint").innerText = "Previous month pending rent view";
+          setCalculatorFullMonthLockState(false);
+          submitBtnText.innerText = "Calculate Bill";
+        } else {
+          statusTag.innerText = `Previous Month (${formatMonthLabel(chosenMonth)}) - No Pending Rent`;
+          statusTag.className = "calc-month-status-tag";
+          document.getElementById("elecRolloverHint").innerText = "No pending rent recorded for this previous month";
+          document.getElementById("pngRolloverHint").innerText = "No pending rent recorded for this previous month";
+          document.getElementById("waterRolloverHint").innerText = "No pending rent recorded for this previous month";
+          setCalculatorFullMonthLockState(false);
+          submitBtnText.innerText = "Calculate Bill";
+        }
       } else {
         currentEditingBillId = null;
+        setCalculatorFullMonthLockState(false);
         statusTag.innerText = `New Month Calculation - ${formatMonthLabel(chosenMonth)}`;
         statusTag.className = "calc-month-status-tag";
         submitBtnText.innerText = "Calculate Bill";
 
-        // Requirement 1 & 7: Always restore original Base Rent and exact utility rates from Flat Profile when switching to a new/next month
         const profileBaseRent = resolveExactRateValue(selectedFlat.RentAmount, activeFlatRenterObj?.RentAmount);
         document.getElementById("calcRent").value = profileBaseRent !== "" ? profileBaseRent : 0;
         document.getElementById("calcElecRate").value = resolveExactRateValue(selectedFlat.ElecRate, activeFlatRenterObj?.ElecFixedRate);
         document.getElementById("calcPngRate").value = resolveExactRateValue(selectedFlat.PNGRate, activeFlatRenterObj?.PNGFixedRate);
         document.getElementById("calcWaterRate").value = resolveExactRateValue(selectedFlat.WaterRate, activeFlatRenterObj?.WaterFixedRate);
 
-        // Requirement 3: Previous meter readings for Electricity, PNG, and Water are pulled from the flat's
-        // permanent consumption history (across all past and current tenants) so they NEVER reset when a tenant vacates.
-        // Meanwhile, autoCarryBalance is calculated strictly for activeFlatRenterObj so a new tenant starts with 0 dues/advance!
         const flatMeterHistory = getFlatLastRecordedMeterReadings(
           selectedFlat.PropertyName,
           selectedFlat.FlatName,
@@ -17510,7 +17670,7 @@ function formatMonthLabel(rawVal) {
         document.getElementById("calcWaterCurr").value = "";
         document.getElementById("calcAddName").value = "";
         document.getElementById("calcAddAmount").value = "";
-        document.getElementById("calcPrevCarryBalance").value = autoCarryBalance;
+        document.getElementById("calcPrevCarryBalance").value = autoCarryBalance !== 0 ? autoCarryBalance : "";
         document.getElementById("calcPaidNow").value = 0;
         const todayIso = new Date().toISOString().split("T")[0];
         const billDateElNew = document.getElementById("calcBillDatePicker");
@@ -19587,6 +19747,14 @@ function formatMonthLabel(rawVal) {
         return sameMonth && sameRenter;
       });
 
+      if (existingBillIdx !== -1 && isCalculatorMonthLockedForEdits(chosenMonth)) {
+        return triggerSideToast(
+          "Previous Month Locked",
+          `Calculation & receipt for ${formatMonthLabel(chosenMonth)} are already finalized. Any changes only apply to the new month.`,
+          false
+        );
+      }
+
       const elecPrev = parseFloat(document.getElementById("calcElecPrev").value) || 0;
       const elecCurr = parseFloat(document.getElementById("calcElecCurr").value) || elecPrev;
       const elecRate = parseFloat(document.getElementById("calcElecRate").value) || 0;
@@ -19671,7 +19839,9 @@ function formatMonthLabel(rawVal) {
         ContractMobile: snapshotContractMobile,
         TenantMobile: snapshotTenantMobile,
         MeterProofUrl: meterProofVal,
-        SplitPayments: collectedSplits
+        SplitPayments: collectedSplits,
+        CalculationDone: true,
+        ReceiptGenerated: Boolean(existingBillRecord?.ReceiptGenerated)
       };
 
       if (existingBillIdx !== -1) {
@@ -19997,7 +20167,7 @@ function formatMonthLabel(rawVal) {
           const qrConfig = {
             value: upiUri,
             size: size,
-            padding: 14,
+            padding: 6,
             level: "H",
             background: "#ffffff",
             foreground: "#000000"
@@ -21196,10 +21366,26 @@ function formatMonthLabel(rawVal) {
       window.print();
     }
 
-    // Action Button 2: Edit Everything for That Month (Switches to Calculator & Unlocks All Fields)
+    // Action Button 2: Edit Everything for That Month (Switches to Calculator; Locks if Previous/Finalized Month)
     function editBillMonthFromHistory(monthYear) {
       if (activeRole === "Viewer") return;
       const cleanM = normalizeMonthYear(monthYear);
+
+      if (isCalculatorMonthLockedForEdits(cleanM)) {
+        const modal = document.getElementById("flatDetailsModal");
+        const navItems = modal.querySelectorAll(".flat-nav-item");
+        const tabs = modal.querySelectorAll(".tab-content");
+        navItems.forEach((item, i) => item.classList.toggle("active", i === 0));
+        tabs.forEach((tab, i) => tab.classList.toggle("active", i === 0));
+        const monthPicker = document.getElementById("calcMonthPicker");
+        monthPicker.value = cleanM;
+        handleBillingMonthChange();
+        return triggerSideToast(
+          "Previous Month Locked",
+          `Calculation & receipt for ${formatMonthLabel(cleanM)} are finalized. Any new changes apply only to the new month.`,
+          false
+        );
+      }
 
       const matchedBill = (DB.bills || []).find(b =>
         isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
@@ -24250,14 +24436,7 @@ function formatMonthLabel(rawVal) {
         }
       });
 
-      // Also keep ContractMobile & UPI details synced on bills of this property if updated
-      DB.bills.forEach(b => {
-        if (String(b.PropertyName || "").trim().toLowerCase() === targetPropKey) {
-          if (upiName) b.UPIName = upiName;
-          if (upiId) b.UPIID = upiId;
-          if (contractMobile) b.ContractMobile = contractMobile;
-        }
-      });
+      // Historical bills remain immutable snapshots and are not mutated by future profile edits
     }
 
     // 9. Profile Form Logic & Strict Flat-Isolated Rent, Rates & Flat Name Updates (Bug 6 Fix: Never auto-save; only save when clicking Save button)
