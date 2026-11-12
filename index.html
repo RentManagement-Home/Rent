@@ -8460,6 +8460,12 @@
     let realtimeEventSource = null;
     let realtimePollTimer = null;
 
+    function extractSessionTokenTimestamp(token) {
+      const str = String(token || "").trim();
+      const m = str.match(/^SESS-(\d+)-/);
+      return m ? Number(m[1]) || 0 : 0;
+    }
+
     function initRealtimeSSE() {
       if (typeof EventSource !== "undefined") {
         if (realtimeEventSource) {
@@ -8505,7 +8511,9 @@
                 const targetU = String(payload.username || "").trim().toLowerCase();
                 const newTok = String(payload.newSessionToken || "").trim();
                 if (activeUser && String(activeUser).trim().toLowerCase() === targetU) {
-                  if (activeSessionToken && newTok && String(activeSessionToken).trim() !== newTok) {
+                  const localTs = extractSessionTokenTimestamp(activeSessionToken);
+                  const remoteTs = extractSessionTokenTimestamp(newTok);
+                  if (activeSessionToken && newTok && String(activeSessionToken).trim() !== newTok && (remoteTs === 0 || localTs === 0 || remoteTs >= localTs)) {
                     triggerSingleDeviceSessionConflict();
                   }
                 }
@@ -8568,6 +8576,30 @@
                 localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, newStr);
                 if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
                 if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
+              }
+            }
+          }
+        } catch (e) {}
+
+        // Immediate single-device concurrent session check (logs out older device immediately if user logs in elsewhere)
+        try {
+          if (activeUser && activeSessionToken) {
+            const sessRes = await fetch(`/api/gas-engine/session-check?username=${encodeURIComponent(activeUser)}&sessionToken=${encodeURIComponent(activeSessionToken)}`);
+            if (sessRes.ok) {
+              const sessData = await sessRes.json();
+              if (sessData && sessData.valid === false) {
+                if (sessData.reason === "session_conflict") {
+                  triggerSingleDeviceSessionConflict();
+                  return;
+                } else if (sessData.reason === "user_blocked") {
+                  performConfirmedLogout();
+                  showAccountBlockedModal("Your account has been blocked by an administrator.");
+                  return;
+                } else if (sessData.reason === "user_deleted") {
+                  performConfirmedLogout();
+                  triggerSideToast("Account Removed", "Your User ID was removed in Google Sheets. Please log in with the latest User ID.", false);
+                  return;
+                }
               }
             }
           }
@@ -8705,7 +8737,7 @@
         return lastGasSheetDataCache;
       }
       if (lastGasSheetDataCache && lastGasSheetDataCache._liveSheetVerified && !gasCacheNeedsRefresh) {
-        const maxAgeMs = forceRefresh ? 3500 : 8000;
+        const maxAgeMs = forceRefresh ? 1800 : 4000;
         if (now - lastGasFetchTimestamp < maxAgeMs) {
           return lastGasSheetDataCache;
         }
@@ -8819,19 +8851,21 @@
                 }).catch(function() {});
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
-              const activeUKey = String(activeUser || "").trim().toLowerCase();
               remoteUsers = remoteUsers.map(function(u) {
                 const rawSt = String(u.Status || u.AccountStatus || "Active").trim();
                 const normSt = rawSt.toLowerCase() === "blocked" ? "Blocked" : "Active";
-                const uLower = String(u.Username || "").trim().toLowerCase();
-                const localDeviceTok = localStorage.getItem("portal_device_session_" + uLower) || "";
-                const withinLoginGrace = (uLower === activeUKey) && activeSessionToken && (Date.now() - lastLoginCompletedAt < 15000);
+                let resolvedTok = String(u.ActiveSessionToken || "").trim();
+                if (activeUser && activeSessionToken && String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase()) {
+                  const localTs = extractSessionTokenTimestamp(activeSessionToken);
+                  const sheetTs = extractSessionTokenTimestamp(resolvedTok);
+                  if (localTs > sheetTs) {
+                    resolvedTok = activeSessionToken;
+                  }
+                }
                 return Object.assign({}, u, {
                   Status: normSt,
                   AccountStatus: normSt,
-                  ActiveSessionToken: withinLoginGrace
-                    ? activeSessionToken
-                    : (u.ActiveSessionToken || localDeviceTok || "")
+                  ActiveSessionToken: resolvedTok
                 });
               });
               try {
@@ -9339,15 +9373,18 @@
       };
       const bodyStr = JSON.stringify(loginPayloadObj);
 
-      fetch("/api/gas-engine", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: bodyStr
-      }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
-        if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
-          saveLocalLoginHistoryMaster(engineRes.loginHistory);
-        }
-      }).catch(function() {});
+      await Promise.race([
+        fetch("/api/gas-engine", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: bodyStr
+        }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
+          if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
+            saveLocalLoginHistoryMaster(engineRes.loginHistory);
+          }
+        }).catch(function() {}),
+        new Promise(function(resolve) { setTimeout(resolve, 1200); })
+      ]);
 
       fetch(GAS_WEB_APP_URL, {
         method: "POST",
@@ -12473,8 +12510,7 @@ function formatMonthLabel(rawVal) {
       const componentSum = baseRent + elecTot + pngTot + waterTot + addAmt;
 
       const billTotal = parseFloat(billObj.TotalBilled !== undefined ? billObj.TotalBilled : billObj.TotalAmount) || 0;
-      const prevCarry = parseFloat(billObj.PrevCarryBalance) || 0;
-      const standaloneCharge = componentSum > 0 ? componentSum : Math.max(0, billTotal - prevCarry);
+      const standaloneCharge = billTotal > 0 ? billTotal : componentSum;
       const paidAmount = parseFloat(billObj.PaidAmount) || 0;
       const diff = paidAmount - standaloneCharge;
 
@@ -12552,10 +12588,7 @@ function formatMonthLabel(rawVal) {
       }
 
       pnlTracker.innerHTML = `
-        <div class="renter-pnl-balanced" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important;" title="Current Active Month (${metrics.monthLabel}) Status">
-          <span style="font-size:0.82rem; font-weight:800; color:#38bdf8; background:transparent !important; border:none !important; padding:0 !important; white-space:nowrap;">
-            ${metrics.monthLabel}:
-          </span>
+        <div class="renter-pnl-balanced" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important;">
           ${statusTextHtml}
         </div>
       `;
@@ -13190,51 +13223,83 @@ function formatMonthLabel(rawVal) {
           return (new Date(b.BillDate || b.PaymentDate || 0).getTime()) - (new Date(a.BillDate || a.PaymentDate || 0).getTime());
         });
 
-        // Resolve the current active month's bill for this individual renter
+        // Resolve the latest generated bill or receipt for this individual renter
+        const latestBill = myBills.length > 0 ? myBills[0] : null;
         const currentCalendarYM = getCurrentCalendarYearMonth();
-        const currentMonthBill = myBills.find(b => normalizeMonthYear(b.MonthYear || b.BillDate) === currentCalendarYM) || myBills[0] || null;
+        const currentMonthBill = latestBill || null;
         const currentMonthMetrics = computeCurrentMonthStandaloneAdvanceAndDue(currentMonthBill);
         const activeMonthLabel = currentMonthMetrics.monthLabel;
 
-        // Update Top Dashboard Header to show ONLY Advance or Due status for the current active month
-        updateRenterTopDashboardBalance(currentMonthBill);
+        // Requirement 2: Due and Advance amounts shown at the top must be updated based on the latest generated bill or receipt
+        updateRenterTopDashboardBalance(latestBill);
 
-        const safePropArg = String(targetProp).replace(/'/g, "\\'");
-        const safeFlatArg = String(targetFlat).replace(/'/g, "\\'");
-        const renterNameDisplay = primaryRenter.RenterName || activeUserFullName || "Valued Resident";
-        const avatarInitials = String(renterNameDisplay || "R").trim().split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "R";
-        const profileImgUrl = primaryRenter.ProfileImageURL && !isPlaceholderImageUrl(primaryRenter.ProfileImageURL)
-          ? primaryRenter.ProfileImageURL
-          : "";
-        const safeProfileImgArg = String(profileImgUrl || "").replace(/'/g, "\\'");
-        const safeRenterNameArg = String(renterNameDisplay || "Resident").replace(/'/g, "\\'");
-        const renterPhoneDisplay = sanitizeContactPhoneDisplay(primaryRenter.MobileNumber || activeUserMobile || "");
-        const effectiveAadhaar = renterAadhaar || String(primaryRenter.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-
-        // Active Month Status KPI Card (Strictly Advance OR Due for the current active month)
-        const hasAdvance = currentMonthMetrics.advanceAmt > 0;
-        const hasDue = currentMonthMetrics.dueAmt > 0;
-        const activeStatusTitle = hasAdvance
-          ? `${activeMonthLabel} Advance Credit`
-          : `${activeMonthLabel} Due Balance`;
-        const activeStatusValue = hasAdvance
-          ? `₹${currentMonthMetrics.advanceAmt.toLocaleString("en-IN")}`
-          : `₹${currentMonthMetrics.dueAmt.toLocaleString("en-IN")}`;
-        const activeStatusColor = hasAdvance
-          ? "#34d399"
-          : (hasDue ? "#f87171" : "#34d399");
-        const activeStatusSub = hasAdvance
-          ? `<i class="fa-solid fa-arrow-up-right-dots"></i> Paid in advance for ${activeMonthLabel}`
-          : (hasDue
-            ? `<i class="fa-solid fa-clock"></i> Pending payment for ${activeMonthLabel}`
-            : `<i class="fa-solid fa-circle-check"></i> All settled for ${activeMonthLabel}`);
+        // Requirement 4: Metrics for the new box below Verified Student Portal reflecting the latest generated receipt
+        let latestReceiptMonthLabel = "";
+        let latestBaseRent = 0;
+        let latestTotalCharge = 0;
+        let latestPaidAmount = 0;
+        let latestDueAmt = 0;
+        let latestAdvanceAmt = 0;
 
         const baseRentConfigured = parseFloat(
+          (latestBill && latestBill.BaseRent) ||
           (currentMonthBill && currentMonthBill.BaseRent) ||
           assignedFlatObj.RentAmount ||
           primaryRenter.RentAmount ||
           0
         ) || 0;
+
+        if (latestBill) {
+          const rawYM = normalizeMonthYear(latestBill.MonthYear || latestBill.BillDate) || currentCalendarYM;
+          latestReceiptMonthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(rawYM) : rawYM;
+          latestBaseRent = parseFloat(latestBill.BaseRent) || baseRentConfigured;
+
+          const bRent = parseFloat(latestBill.BaseRent) || 0;
+          const bElec = parseFloat(latestBill.ElecTotal) || 0;
+          const bPng = parseFloat(latestBill.PNGTotal) || 0;
+          const bWater = parseFloat(latestBill.WaterTotal) || 0;
+          const bAdd = parseFloat(latestBill.AdditionalAmount) || 0;
+          const compSum = bRent + bElec + bPng + bWater + bAdd;
+
+          const bTotal = parseFloat(latestBill.TotalBilled !== undefined ? latestBill.TotalBilled : latestBill.TotalAmount) || 0;
+          latestTotalCharge = bTotal > 0 ? Math.round(bTotal) : Math.round(compSum);
+
+          latestPaidAmount = Math.round(parseFloat(latestBill.PaidAmount) || 0);
+
+          const diff = latestPaidAmount - latestTotalCharge;
+          if (diff > 0) {
+            latestAdvanceAmt = Math.round(diff);
+            latestDueAmt = 0;
+          } else if (diff < 0) {
+            latestAdvanceAmt = 0;
+            latestDueAmt = Math.round(Math.abs(diff));
+          }
+        } else {
+          latestReceiptMonthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(currentCalendarYM) : currentCalendarYM;
+          latestBaseRent = baseRentConfigured;
+          latestTotalCharge = 0;
+          latestPaidAmount = 0;
+          latestDueAmt = 0;
+          latestAdvanceAmt = 0;
+        }
+
+        let latestDueLabel = "Total Due Balance";
+        let latestDueValue = `₹${latestDueAmt.toLocaleString("en-IN")}`;
+        let latestDueColor = "#f87171";
+        let latestDueBg = "rgba(239,68,68,0.15)";
+        let latestDueBorder = "rgba(239,68,68,0.35)";
+        let latestDueIcon = "fa-clock";
+        let latestDueSub = "Outstanding Due Balance";
+
+        if (latestDueAmt === 0) {
+          latestDueLabel = "Total Due Balance";
+          latestDueValue = "₹0";
+          latestDueColor = "#34d399";
+          latestDueBg = "rgba(16,185,129,0.15)";
+          latestDueBorder = "rgba(16,185,129,0.35)";
+          latestDueIcon = "fa-circle-check";
+          latestDueSub = latestAdvanceAmt > 0 ? `All dues cleared (+₹${latestAdvanceAmt.toLocaleString("en-IN")} Advance)` : "All dues cleared";
+        }
 
         // Statement & Payment Hub HTML
         let statementLeftHtml = "";
@@ -13273,6 +13338,13 @@ function formatMonthLabel(rawVal) {
 
           const addAmt = parseFloat(currentMonthBill.AdditionalAmount) || 0;
           const addName = currentMonthBill.AdditionalName || "None";
+
+          const rawCarryVal = parseFloat(currentMonthBill.PrevCarryBalance ?? currentMonthBill.PrevPending) || 0;
+          const compSumStmt = baseRentAmt + elecTot + pngTot + waterTot + addAmt;
+          let stmtCarryVal = rawCarryVal;
+          if (stmtCarryVal === 0 && billTotal > 0 && Math.abs(billTotal - compSumStmt) >= 1) {
+            stmtCarryVal = Math.round((billTotal - compSumStmt) * 100) / 100;
+          }
 
           const propObjForUpi = findPropertyObject(currentMonthBill.PropertyName || targetProp);
           const resolvedContact = resolveFlatUpiAndContact(currentMonthBill.PropertyName || targetProp, assignedFlatObj, primaryRenter);
@@ -13335,10 +13407,9 @@ function formatMonthLabel(rawVal) {
                       <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#fca5a5;">Payment Action Needed</div>
                       <div style="font-size:0.88rem; font-weight:700; color:var(--text-main);">Pending balance of <strong>₹${billDue.toLocaleString("en-IN")}</strong> for ${billMonthName}.</div>
                     </div>
+                  <div style="font-size:0.82rem; font-weight:800; color:#f87171; display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-arrow-down"></i> Pay via Instant UPI Payment below
                   </div>
-                  <button type="button" class="renter-action-btn emerald" style="padding:9px 16px; font-size:0.82rem;" onclick="event.stopPropagation(); openRentCollectionQrModal();">
-                    <i class="fa-solid fa-qrcode"></i> Pay ₹${billDue.toLocaleString("en-IN")} Now
-                  </button>
                 </div>
               ` : `
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; background:rgba(16,185,129,0.1); border:1.5px solid rgba(16,185,129,0.35); border-radius:14px; padding:12px 16px; margin-bottom:18px;">
@@ -13436,6 +13507,21 @@ function formatMonthLabel(rawVal) {
                   <strong style="font-size:1.05rem; font-weight:900; color:#c084fc; font-variant-numeric:tabular-nums;">₹${addAmt.toLocaleString("en-IN")}</strong>
                 </div>
                 ` : ""}
+
+                ${stmtCarryVal !== 0 ? `
+                <div class="renter-utility-item">
+                  <div class="renter-utility-item-left">
+                    <div class="renter-utility-icon" style="background:${stmtCarryVal > 0 ? "rgba(239,68,68,0.15)" : "rgba(16,185,129,0.15)"}; color:${stmtCarryVal > 0 ? "#f87171" : "#34d399"}; border:1px solid ${stmtCarryVal > 0 ? "rgba(239,68,68,0.3)" : "rgba(16,185,129,0.3)"};">
+                      <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div>
+                      <div style="font-size:0.9rem; font-weight:800; color:var(--text-main);">Carry-Forward Balance</div>
+                      <div style="font-size:0.74rem; color:var(--text-muted); margin-top:3px;">${stmtCarryVal > 0 ? "Previous Month Pending Due" : "Previous Advance Credit"}</div>
+                    </div>
+                  </div>
+                  <strong style="font-size:1.05rem; font-weight:900; color:${stmtCarryVal > 0 ? "#f87171" : "#34d399"}; font-variant-numeric:tabular-nums;">${stmtCarryVal > 0 ? "+" : "-"}₹${Math.abs(stmtCarryVal).toLocaleString("en-IN")}</strong>
+                </div>
+                ` : ""}
               </div>
 
               <!-- Total Summary Bar -->
@@ -13471,9 +13557,8 @@ function formatMonthLabel(rawVal) {
                   <div>
                     <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
                       <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
-                    </div>
                     <h4 style="margin:3px 0 0 0; font-size:1.1rem; font-weight:900; color:var(--text-main);">
-                      Scan &amp; Pay (${billMonthName})
+                      Instant UPI Payment (${billMonthName})
                     </h4>
                   </div>
                   <span style="font-size:0.8rem; font-weight:900; padding:5px 11px; border-radius:9px; background:rgba(16,185,129,0.14); color:#34d399; border:1px solid rgba(16,185,129,0.35); font-variant-numeric:tabular-nums;">
@@ -13483,9 +13568,7 @@ function formatMonthLabel(rawVal) {
 
                 <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
                   <div
-                    style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
-                    title="Click to enlarge QR Code"
-                    onclick="event.stopPropagation(); openRentCollectionQrModal();"
+                    style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
                   >
                     <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
                   </div>
@@ -13493,7 +13576,7 @@ function formatMonthLabel(rawVal) {
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
                     <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${upiName || "N/A"}</div>
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
-                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                       <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${upiId || "N/A"}</span>
                       ${upiId ? `
                         <button
@@ -13506,19 +13589,8 @@ function formatMonthLabel(rawVal) {
                         </button>
                       ` : ""}
                     </div>
-                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Contact Number</div>
-                    <div style="font-size:0.84rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i><strong>${contactPhone || "N/A"}</strong></div>
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  class="renter-action-btn emerald"
-                  style="width:100%; justify-content:center; padding:13px 20px; font-size:0.9rem;"
-                  onclick="event.stopPropagation(); openRentCollectionQrModal();"
-                >
-                  <i class="fa-solid fa-indian-rupee-sign"></i> Open Full Payment &amp; UPI QR Modal
-                </button>
               </div>
 
               <!-- Recent Individual Statements Quick List -->
@@ -13642,7 +13714,7 @@ function formatMonthLabel(rawVal) {
                 <button
                   type="button"
                   class="renter-action-btn secondary"
-                  onclick="openFlatDetailsModal(findFlatObject('${safePropArg}', '${safeFlatArg}') || {PropertyName:'${safePropArg}', FlatName:'${safeFlatArg}'}); setTimeout(() => { if (typeof switchFlatTabToProfile === 'function') switchFlatTabToProfile(); }, 40);"
+                  onclick="openRenterKycProfileOnlyModal();"
                 >
                   <i class="fa-solid fa-id-card"></i> View Registered KYC Profile
                 </button>
@@ -13659,16 +13731,14 @@ function formatMonthLabel(rawVal) {
                       <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
                     </div>
                     <h4 style="margin:3px 0 0 0; font-size:1.08rem; font-weight:900; color:var(--text-main);">
-                      Scan &amp; Pay (${activeMonthLabel})
+                      Instant UPI Payment (${activeMonthLabel})
                     </h4>
                   </div>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
                   <div
-                    style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
-                    title="Click to enlarge QR Code"
-                    onclick="event.stopPropagation(); openRentCollectionQrModal();"
+                    style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
                   >
                     <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
                   </div>
@@ -13676,7 +13746,7 @@ function formatMonthLabel(rawVal) {
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
                     <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${fallbackUpiName || "N/A"}</div>
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
-                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                       <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${fallbackUpiId || "N/A"}</span>
                       ${fallbackUpiId ? `
                         <button
@@ -13689,18 +13759,13 @@ function formatMonthLabel(rawVal) {
                         </button>
                       ` : ""}
                     </div>
-                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Contact Number</div>
-                    <div style="font-size:0.84rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i><strong>${fallbackPhone || "N/A"}</strong></div>
                   </div>
                 </div>
               </div>
 
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button type="button" class="renter-action-btn emerald" style="flex:1; justify-content:center;" onclick="openRentCollectionQrModal()">
-                  <i class="fa-solid fa-qrcode"></i> Open Full Payment &amp; UPI QR Modal
-                </button>
-                <button type="button" class="renter-action-btn secondary" style="justify-content:center;" onclick="openContactUsModal()">
-                  <i class="fa-solid fa-headset"></i> Help
+                <button type="button" class="renter-action-btn secondary" style="width:100%; justify-content:center;" onclick="openContactUsModal()">
+                  <i class="fa-solid fa-headset"></i> Help &amp; Support
                 </button>
               </div>
             </div>
@@ -13758,16 +13823,8 @@ function formatMonthLabel(rawVal) {
                   <div class="renter-hero-actions">
                     <button
                       type="button"
-                      class="renter-action-btn emerald"
-                      onclick="openRentCollectionQrModal()"
-                    >
-                      <i class="fa-solid fa-qrcode"></i>
-                      <span>Scan &amp; Pay UPI</span>
-                    </button>
-                    <button
-                      type="button"
                       class="renter-action-btn primary"
-                      onclick="openFlatDetailsModal(findFlatObject('${safePropArg}', '${safeFlatArg}') || {PropertyName:'${safePropArg}', FlatName:'${safeFlatArg}'});"
+                      onclick="openRenterReceiptsModal();"
                     >
                       <i class="fa-solid fa-receipt"></i>
                       <span>My Receipts (${myBills.length})</span>
@@ -13775,16 +13832,43 @@ function formatMonthLabel(rawVal) {
                     <button
                       type="button"
                       class="renter-action-btn secondary"
-                      onclick="openFlatDetailsModal(findFlatObject('${safePropArg}', '${safeFlatArg}') || {PropertyName:'${safePropArg}', FlatName:'${safeFlatArg}'}); setTimeout(() => { if (typeof switchFlatTabToProfile === 'function') switchFlatTabToProfile(); }, 40);"
+                      onclick="openRenterKycProfileOnlyModal();"
                     >
                       <i class="fa-solid fa-user-shield"></i>
                       <span>My KYC Profile</span>
                     </button>
                   </div>
                 </div>
+              </div>
 
-                <!-- 2. 4-CARD KPI BENTO GRID (CURRENT ACTIVE MONTH) -->
-                <div class="renter-kpi-bento-grid">
+              <!-- 2. LATEST GENERATED RECEIPT / BILL STATEMENT SUMMARY BOX (Requirement 4) -->
+              <div class="renter-kpi-summary-box" style="margin-top: 18px; margin-bottom: 22px; padding: 22px; border-radius: 18px; background: var(--bg-card); border: 1.5px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.18);">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(99,102,241,0.18); color:#818cf8; display:flex; align-items:center; justify-content:center; font-size:1.05rem;">
+                      <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                      <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
+                        Latest Generated Receipt Summary
+                      </div>
+                      <div style="font-size:1.05rem; font-weight:900; color:var(--text-main);">
+                        ${latestReceiptMonthLabel} Statement Breakdown
+                      </div>
+                    </div>
+                  </div>
+                  ${latestBill ? `
+                    <span style="font-size:0.78rem; font-weight:800; padding:4px 12px; border-radius:20px; background:rgba(16,185,129,0.15); color:#34d399; border:1px solid rgba(16,185,129,0.35);">
+                      <i class="fa-solid fa-file-invoice"></i> Bill Date: ${latestBill.BillDate || "Latest"}
+                    </span>
+                  ` : `
+                    <span style="font-size:0.78rem; font-weight:800; padding:4px 12px; border-radius:20px; background:rgba(148,163,184,0.15); color:var(--text-muted); border:1px solid var(--glass-border);">
+                      No Generated Receipts Yet
+                    </span>
+                  `}
+                </div>
+
+                <div class="renter-kpi-bento-grid" style="margin-top:0;">
                   <div class="renter-kpi-card">
                     <div class="renter-kpi-head">
                       <span class="renter-kpi-label">Active Billing Period</span>
@@ -13792,51 +13876,51 @@ function formatMonthLabel(rawVal) {
                         <i class="fa-regular fa-calendar-check"></i>
                       </div>
                     </div>
-                    <div class="renter-kpi-value" style="color:#38bdf8; font-size:1.32rem;">${activeMonthLabel}</div>
+                    <div class="renter-kpi-value" style="color:#38bdf8; font-size:1.32rem;">${latestReceiptMonthLabel}</div>
                     <div class="renter-kpi-sub">
                       <i class="fa-solid fa-house" style="color:#38bdf8;"></i>
-                      <span>Base Rent: ₹${baseRentConfigured.toLocaleString("en-IN")}/mo</span>
+                      <span>Base Rent: ₹${latestBaseRent.toLocaleString("en-IN")}/mo</span>
                     </div>
                   </div>
 
                   <div class="renter-kpi-card">
                     <div class="renter-kpi-head">
-                      <span class="renter-kpi-label">${activeMonthLabel} Total Charges</span>
+                      <span class="renter-kpi-label">Total Charge</span>
                       <div class="renter-kpi-icon-badge" style="background:rgba(99,102,241,0.14); color:#818cf8; border:1px solid rgba(99,102,241,0.3);">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                       </div>
                     </div>
-                    <div class="renter-kpi-value">₹${currentMonthMetrics.standaloneCharge.toLocaleString("en-IN")}</div>
+                    <div class="renter-kpi-value">₹${latestTotalCharge.toLocaleString("en-IN")}</div>
                     <div class="renter-kpi-sub">
                       <i class="fa-solid fa-layer-group" style="color:#818cf8;"></i>
-                      <span>Rent + Electricity + PNG + Water</span>
+                      <span>Total Billed on Receipt</span>
                     </div>
                   </div>
 
                   <div class="renter-kpi-card">
                     <div class="renter-kpi-head">
-                      <span class="renter-kpi-label">${activeMonthLabel} Paid Amount</span>
+                      <span class="renter-kpi-label">Paid Amount</span>
                       <div class="renter-kpi-icon-badge" style="background:rgba(14,165,233,0.14); color:#38bdf8; border:1px solid rgba(14,165,233,0.3);">
                         <i class="fa-solid fa-money-bill-transfer"></i>
                       </div>
                     </div>
-                    <div class="renter-kpi-value" style="color:#38bdf8;">₹${currentMonthMetrics.paidAmount.toLocaleString("en-IN")}</div>
+                    <div class="renter-kpi-value" style="color:#38bdf8;">₹${latestPaidAmount.toLocaleString("en-IN")}</div>
                     <div class="renter-kpi-sub">
                       <i class="fa-solid fa-receipt" style="color:#38bdf8;"></i>
-                      <span>Recorded payments for ${activeMonthLabel}</span>
+                      <span>Recorded Payment</span>
                     </div>
                   </div>
 
-                  <div class="renter-kpi-card" style="border-color:${hasAdvance ? "rgba(16,185,129,0.45)" : (hasDue ? "rgba(239,68,68,0.5)" : "rgba(16,185,129,0.35)")};">
+                  <div class="renter-kpi-card" style="border-color:${latestDueColor};">
                     <div class="renter-kpi-head">
-                      <span class="renter-kpi-label">${activeStatusTitle}</span>
-                      <div class="renter-kpi-icon-badge" style="background:${hasAdvance ? "rgba(16,185,129,0.15)" : (hasDue ? "rgba(239,68,68,0.15)" : "rgba(16,185,129,0.15)")}; color:${activeStatusColor}; border:1px solid ${hasAdvance ? "rgba(16,185,129,0.35)" : (hasDue ? "rgba(239,68,68,0.35)" : "rgba(16,185,129,0.35)")};">
-                        <i class="fa-solid ${hasAdvance ? "fa-vault" : (hasDue ? "fa-clock" : "fa-circle-check")}"></i>
+                      <span class="renter-kpi-label">${latestDueLabel}</span>
+                      <div class="renter-kpi-icon-badge" style="background:${latestDueBg}; color:${latestDueColor}; border:1px solid ${latestDueBorder};">
+                        <i class="fa-solid ${latestDueIcon}"></i>
                       </div>
                     </div>
-                    <div class="renter-kpi-value" style="color:${activeStatusColor};">${activeStatusValue}</div>
-                    <div class="renter-kpi-sub" style="color:${activeStatusColor};">
-                      ${activeStatusSub}
+                    <div class="renter-kpi-value" style="color:${latestDueColor};">${latestDueValue}</div>
+                    <div class="renter-kpi-sub" style="color:${latestDueColor};">
+                      ${latestDueSub}
                     </div>
                   </div>
                 </div>
@@ -13994,6 +14078,7 @@ function formatMonthLabel(rawVal) {
         syncTimer = null;
       }
       const prevUser = String(activeUser || "").trim().toLowerCase();
+      const prevToken = String(activeSessionToken || "").trim();
       // Immediately clear active session state on this previous device
       activeUser = null;
       activeSessionToken = "";
@@ -14002,11 +14087,13 @@ function formatMonthLabel(rawVal) {
       activeFlatRenterObj = null;
       sessionStorage.clear();
       try {
-        localStorage.setItem(EXPLICIT_LOGOUT_FLAG_KEY, "1");
-        localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
-        localStorage.removeItem("portal_active_auth_session_v1");
-        if (prevUser) {
-          localStorage.removeItem("portal_device_session_" + prevUser);
+        if (prevUser && prevToken) {
+          const currentStoredDevTok = localStorage.getItem("portal_device_session_" + prevUser) || "";
+          if (currentStoredDevTok === prevToken) {
+            localStorage.removeItem("portal_device_session_" + prevUser);
+            localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
+            localStorage.removeItem("portal_active_auth_session_v1");
+          }
         }
       } catch (e) {}
 
@@ -14077,10 +14164,10 @@ function formatMonthLabel(rawVal) {
       } catch (e) {}
 
       if (syncTimer) clearInterval(syncTimer);
-      // Poll every 6 seconds so second-device logins & sheet changes are detected rapidly
+      // Poll every 3 seconds so second-device logins & sheet changes are detected rapidly
       syncTimer = setInterval(() => {
         if (!document.hidden && typeof syncDataLive === "function") syncDataLive(false);
-      }, 6000);
+      }, 3000);
     }
 
     
@@ -15003,9 +15090,15 @@ function formatMonthLabel(rawVal) {
           );
           const activeUserStillInSheet = Boolean(matchedServerUser);
 
-          // Single-Device Session Conflict: Check if this account logged in from another device (ignore within 15s of login while background GAS write settles)
-          const withinLoginGraceWindow = (Date.now() - lastLoginCompletedAt) < 15000;
-          if (!withinLoginGraceWindow && (res.sessionConflict === true || (matchedServerUser && matchedServerUser.ActiveSessionToken && activeSessionToken && String(matchedServerUser.ActiveSessionToken).trim() !== String(activeSessionToken).trim()))) {
+          // Single-Device Session Conflict: Check if this account logged in from another device
+          const serverTok = matchedServerUser && matchedServerUser.ActiveSessionToken ? String(matchedServerUser.ActiveSessionToken).trim() : "";
+          const localTok = String(activeSessionToken || "").trim();
+          const serverTokTs = extractSessionTokenTimestamp(serverTok);
+          const localTokTs = extractSessionTokenTimestamp(localTok);
+          if (
+            res.sessionConflict === true ||
+            (serverTok && localTok && serverTok !== localTok && (serverTokTs === 0 || localTokTs === 0 || serverTokTs >= localTokTs))
+          ) {
             triggerSingleDeviceSessionConflict();
             return;
           }
@@ -19875,6 +19968,10 @@ function formatMonthLabel(rawVal) {
 
       const modal = document.getElementById("flatDetailsModal");
       const navBar = document.getElementById("flatModalNavBar");
+      const qrHeaderBtn = document.getElementById("btnFlatHeaderQrCollect");
+      if (qrHeaderBtn) {
+        qrHeaderBtn.style.display = (activeRole === "Renter") ? "none" : "";
+      }
       if (activeRole === "Renter") {
         // Requirement 6 & 10: Renter role only has access to their own Historical Receipts (Tab 2) and their own Profile (Tab 3) in strictly View-Only mode
         if (navBar) navBar.style.gridTemplateColumns = "repeat(2, 1fr)";
@@ -19932,6 +20029,78 @@ function formatMonthLabel(rawVal) {
         populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName);
         renderAllRentersGraphForFlat(selectedFlat.PropertyName, selectedFlat.FlatName);
       }
+    }
+
+    function openRenterKycProfileOnlyModal() {
+      const targetProp = (typeof activeFlatRenterObj !== "undefined" && activeFlatRenterObj?.PropertyName) || (typeof selectedFlat !== "undefined" && selectedFlat?.PropertyName) || "";
+      const targetFlat = (typeof activeFlatRenterObj !== "undefined" && activeFlatRenterObj?.FlatName) || (typeof selectedFlat !== "undefined" && selectedFlat?.FlatName) || "";
+      const flatObj = (typeof findFlatObject === "function" ? findFlatObject(targetProp, targetFlat) : null) || selectedFlat || { PropertyName: targetProp, FlatName: targetFlat };
+      const matchedProfiles = typeof getRenterProfilesForLoggedInAadhaar === "function" ? getRenterProfilesForLoggedInAadhaar() : [];
+      const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || activeFlatRenterObj || null;
+
+      openFlatDetailsModal(flatObj, primaryRenter);
+
+      const modal = document.getElementById("flatDetailsModal");
+      const navBar = document.getElementById("flatModalNavBar");
+      const tabHistoryNav = document.getElementById("flatNavTabHistory");
+      const tabProfileNav = document.getElementById("flatNavTabProfile");
+      const tabHistory = document.getElementById("tabHistory");
+      const tabProfile = document.getElementById("tabProfile");
+
+      // Hide the history tab and nav bar completely so only the KYC profile itself is shown
+      if (navBar) navBar.style.display = "none";
+      if (tabHistoryNav) {
+        tabHistoryNav.style.display = "none";
+        tabHistoryNav.classList.remove("active");
+      }
+      if (tabHistory) tabHistory.classList.remove("active");
+
+      // Activate only the Profile tab
+      if (tabProfileNav) {
+        tabProfileNav.style.display = "";
+        tabProfileNav.classList.add("active");
+      }
+      if (tabProfile) {
+        tabProfile.classList.add("active");
+      }
+
+      const titleEl = document.getElementById("modalHeaderTitle");
+      if (titleEl) titleEl.innerText = "My KYC Profile";
+      const qrBtn = document.getElementById("btnFlatHeaderQrCollect");
+      if (qrBtn) qrBtn.style.display = "none";
+    }
+
+    function openRenterReceiptsModal() {
+      const targetProp = (typeof activeFlatRenterObj !== "undefined" && activeFlatRenterObj?.PropertyName) || (typeof selectedFlat !== "undefined" && selectedFlat?.PropertyName) || "";
+      const targetFlat = (typeof activeFlatRenterObj !== "undefined" && activeFlatRenterObj?.FlatName) || (typeof selectedFlat !== "undefined" && selectedFlat?.FlatName) || "";
+      const flatObj = (typeof findFlatObject === "function" ? findFlatObject(targetProp, targetFlat) : null) || selectedFlat || { PropertyName: targetProp, FlatName: targetFlat };
+      const matchedProfiles = typeof getRenterProfilesForLoggedInAadhaar === "function" ? getRenterProfilesForLoggedInAadhaar() : [];
+      const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || activeFlatRenterObj || null;
+
+      openFlatDetailsModal(flatObj, primaryRenter);
+
+      const modal = document.getElementById("flatDetailsModal");
+      const navBar = document.getElementById("flatModalNavBar");
+      const tabHistoryNav = document.getElementById("flatNavTabHistory");
+      const tabProfileNav = document.getElementById("flatNavTabProfile");
+      const tabHistory = document.getElementById("tabHistory");
+      const tabProfile = document.getElementById("tabProfile");
+
+      if (navBar) navBar.style.display = "none";
+      if (tabHistoryNav) {
+        tabHistoryNav.style.display = "";
+        tabHistoryNav.classList.add("active");
+      }
+      if (tabProfileNav) {
+        tabProfileNav.classList.remove("active");
+      }
+      if (tabHistory) tabHistory.classList.add("active");
+      if (tabProfile) tabProfile.classList.remove("active");
+
+      const titleEl = document.getElementById("modalHeaderTitle");
+      if (titleEl) titleEl.innerText = "My Receipts & Ledger";
+      const qrBtn = document.getElementById("btnFlatHeaderQrCollect");
+      if (qrBtn) qrBtn.style.display = "none";
     }
 
     function switchFlatTabToProfile() {
@@ -20247,6 +20416,7 @@ function formatMonthLabel(rawVal) {
         notes: newBillObj.Notes,
         renterId: newBillObj.RenterID,
         prevCarryBalance: prevCarryBalance,
+        prevPending: prevCarryBalance,
         upiName: snapshotUpiName,
         upiId: snapshotUpiId,
         contractMobile: snapshotContractMobile,
@@ -20886,11 +21056,6 @@ function formatMonthLabel(rawVal) {
       // Requirement 7: Remove the billing date located at the very top next to the billing month
       document.getElementById("recMonthLabel").innerText = `Billing Month: ${formatMonthLabel(bill.MonthYear)}`;
 
-      const carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending) || 0;
-      const carryLine = carryVal > 0
-        ? `<span style="color:var(--accent-red);">+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)</span>`
-        : (carryVal < 0 ? `<span style="color:var(--accent-green);">- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)</span>` : `₹0`);
-
       const elecPrev = parseFloat(bill.ElecPrev) || 0;
       const elecCurr = parseFloat(bill.ElecCurr) || 0;
       const elecUnits = bill.ElecUnits !== undefined && bill.ElecUnits !== "" ? (parseFloat(bill.ElecUnits) || 0) : Math.max(0, elecCurr - elecPrev);
@@ -20913,6 +21078,17 @@ function formatMonthLabel(rawVal) {
       const addAmtVal = parseFloat(bill.AdditionalAmount ?? bill.ExtraAmount) || 0;
       const paidAmtVal = parseFloat(bill.PaidAmount) || 0;
       const payModeStr = bill.PaymentMode || "UPI";
+
+      const baseRentVal = parseFloat(bill.BaseRent) || 0;
+      const compSumForCarry = baseRentVal + elecTotal + pngTotal + waterTotal + addAmtVal;
+      const totalBilledVal = parseFloat(bill.TotalBilled !== undefined ? bill.TotalBilled : bill.TotalAmount) || 0;
+      let carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending) || 0;
+      if (carryVal === 0 && totalBilledVal > 0 && Math.abs(totalBilledVal - compSumForCarry) >= 1) {
+        carryVal = Math.round((totalBilledVal - compSumForCarry) * 100) / 100;
+      }
+      const carryLine = carryVal > 0
+        ? `<span style="color:var(--accent-red);">+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)</span>`
+        : (carryVal < 0 ? `<span style="color:var(--accent-green);">- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)</span>` : `₹0`);
 
       const resolvedContact = resolveFlatUpiAndContact(bill.PropertyName, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
       const upiId = (resolvedContact.upiId && String(resolvedContact.upiId).trim())
@@ -25608,6 +25784,10 @@ function formatMonthLabel(rawVal) {
         el.classList.remove("active");
         if (el.id === "flatDetailsModal") {
           document.body.classList.remove("flat-details-open");
+          const navBar = document.getElementById("flatModalNavBar");
+          if (navBar) navBar.style.display = "";
+          const tabHistoryNav = document.getElementById("flatNavTabHistory");
+          if (tabHistoryNav) tabHistoryNav.style.display = "";
           if (typeof syncFloatingCornerButtonsByRole === "function") syncFloatingCornerButtonsByRole();
         }
         const anyActiveModal = document.querySelector(".modal-overlay.active");
