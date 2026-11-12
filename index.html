@@ -6888,7 +6888,7 @@
           </div>
         </div>
 
-        <!-- Option 5 Panel: Contact Info Configuration (Live Sync to All Renter Help Centers with N/A Fallback) -->
+        <!-- Option 5 Panel: Contact Info Configuration (Property-Isolated Support Details) -->
         <div id="otherPanelContactSettings" class="stat-pill admin-only" style="text-align: left; display: none;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
             <div>
@@ -6896,11 +6896,29 @@
                 <i class="fa-solid fa-address-book"></i> Contact Us Details &amp; WhatsApp Support Configuration
               </span>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
+                Assign official contact information strictly to a specific property.
               </div>
             </div>
             <span style="font-size:0.7rem; color:#f59e0b; font-weight:700; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:12px;">
               <i class="fa-solid fa-headset"></i> Live Support Sync
             </span>
+          </div>
+
+          <!-- Extra Option: Target Property Selection (Requirement 1: Contact info strictly isolated per property) -->
+          <div class="form-group" style="margin-bottom:14px; background:var(--bg-input); border:1.5px solid rgba(245,158,11,0.35); border-radius:12px; padding:12px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+              <label for="cfgContactProperty" style="font-size:0.78rem; font-weight:800; color:#f59e0b; margin-bottom:0; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-building-user"></i> Which Property Does This Contact Info Belong To?
+              </label>
+              <span style="font-size:0.68rem; font-weight:800; color:#10b981; background:rgba(16,185,129,0.15); padding:2px 8px; border-radius:8px; border:1px solid rgba(16,185,129,0.35);">
+                <i class="fa-solid fa-lock"></i> Visible Only to This Property's Renters
+              </span>
+            </div>
+            <select id="cfgContactProperty" class="form-control" style="font-size:0.84rem; font-weight:700; color:var(--text-main); background:var(--bg-card); cursor:pointer;" onchange="onContactSettingsPropertyChange()">
+            </select>
+            <div style="font-size:0.71rem; color:var(--text-muted); margin-top:5px; line-height:1.4;">
+              <i class="fa-solid fa-circle-info" style="color:#f59e0b;"></i> Only renters assigned to this selected property will receive and see these contact details. Renters from any other property will strictly not see this information.
+            </div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
@@ -7466,8 +7484,8 @@
       <!-- QRious Canvas Display Card -->
       <div style="background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; padding:16px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.18); margin-bottom:14px;">
         <div id="qrModalPayeeNameBadge" style="font-size:0.88rem; font-weight:800; color:#0f172a; margin-bottom:8px;">Property Rent Receiver</div>
-        <div style="display:inline-flex; align-items:center; justify-content:center; padding:8px; background:#ffffff; border-radius:12px; border:1px solid #cbd5e1;">
-          <canvas id="rentCollectionQrCanvas" width="230" height="230" style="width:210px; height:210px; display:block;"></canvas>
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:218px; height:218px; padding:8px; box-sizing:border-box; background:#ffffff; border-radius:12px; border:1.5px solid #cbd5e1; overflow:hidden; margin:0 auto;">
+          <canvas id="rentCollectionQrCanvas" width="202" height="202" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
         </div>
         <div id="qrModalMissingUpiWarning" style="display:none; padding:14px 10px; color:#dc2626; font-size:0.78rem; font-weight:700; background:#fef2f2; border-radius:10px; border:1px dashed #f87171; margin-top:6px;">
           <i class="fa-solid fa-triangle-exclamation"></i> No valid UPI ID (e.g. name@okaxis) found for this property/flat. Enter a UPI ID below to generate the QR code.
@@ -13356,11 +13374,11 @@ function formatMonthLabel(rawVal) {
 
                 <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
                   <div
-                    style="background:#ffffff; padding:8px; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.18);"
+                    style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
                     title="Click to enlarge QR Code"
                     onclick="event.stopPropagation(); openRentCollectionQrModal();"
                   >
-                    <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:128px; height:128px; display:block;"></canvas>
+                    <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
                   </div>
                   <div style="flex:1; min-width:165px;">
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
@@ -13539,11 +13557,11 @@ function formatMonthLabel(rawVal) {
 
                 <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
                   <div
-                    style="background:#ffffff; padding:8px; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.18);"
+                    style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
                     title="Click to enlarge QR Code"
                     onclick="event.stopPropagation(); openRentCollectionQrModal();"
                   >
-                    <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:128px; height:128px; display:block;"></canvas>
+                    <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
                   </div>
                   <div style="flex:1; min-width:165px;">
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
@@ -14457,12 +14475,14 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
+      // Requirement 2: Run verification silently in background without displaying 'Checking...' on the UI
       if (badgeEl) {
-        badgeEl.style.display = "inline-flex";
-        badgeEl.style.background = "rgba(148, 163, 184, 0.15)";
-        badgeEl.style.color = "#cbd5e1";
-        badgeEl.style.border = "1px solid rgba(148, 163, 184, 0.3)";
-        badgeEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Checking...`;
+        badgeEl.style.display = "none";
+        badgeEl.innerHTML = "";
+      }
+      if (noteEl) {
+        noteEl.style.display = "none";
+        noteEl.innerHTML = "";
       }
 
       try {
@@ -14525,15 +14545,12 @@ function formatMonthLabel(rawVal) {
           if (data && data.userExists) {
             updateLoginLockoutUI(cleanVal);
             if (badgeEl) {
-              badgeEl.style.display = "inline-flex";
-              badgeEl.style.background = "rgba(16, 185, 129, 0.18)";
-              badgeEl.style.color = "#34d399";
-              badgeEl.style.border = "1px solid rgba(16, 185, 129, 0.45)";
-              badgeEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Verified`;
+              badgeEl.style.display = "none";
+              badgeEl.innerHTML = "";
             }
             if (noteEl) {
-              noteEl.style.display = "block";
-              noteEl.innerHTML = `<span style="color:#34d399;"><i class="fa-solid fa-cloud-check"></i> Username verified in Google Sheet</span>`;
+              noteEl.style.display = "none";
+              noteEl.innerHTML = "";
             }
             return;
           }
@@ -14541,27 +14558,20 @@ function formatMonthLabel(rawVal) {
           if (data && data.userExists === false) {
             updateLoginLockoutUI(cleanVal);
             if (badgeEl) {
-              badgeEl.style.display = "inline-flex";
-              badgeEl.style.background = "rgba(245, 158, 11, 0.16)";
-              badgeEl.style.color = "#fbbf24";
-              badgeEl.style.border = "1px solid rgba(245, 158, 11, 0.45)";
-              badgeEl.innerHTML = `<i class="fa-solid fa-circle-question"></i> Not Found`;
+              badgeEl.style.display = "none";
+              badgeEl.innerHTML = "";
             }
             if (noteEl) {
-              noteEl.style.display = "block";
-              noteEl.innerHTML = `<span style="color:#fbbf24;"><i class="fa-solid fa-circle-info"></i> Username not found in Google Sheet</span>`;
+              noteEl.style.display = "none";
+              noteEl.innerHTML = "";
             }
             return;
           }
         }
       } catch (e) {
-        const localMatch = (DB.users || []).some(u => String(u.Username || "").trim().toLowerCase() === cleanVal);
-        if (localMatch && badgeEl) {
-          badgeEl.style.display = "inline-flex";
-          badgeEl.style.background = "rgba(16, 185, 129, 0.18)";
-          badgeEl.style.color = "#34d399";
-          badgeEl.style.border = "1px solid rgba(16, 185, 129, 0.45)";
-          badgeEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> Verified`;
+        if (badgeEl) {
+          badgeEl.style.display = "none";
+          badgeEl.innerHTML = "";
         }
       }
     }
@@ -17342,20 +17352,50 @@ function formatMonthLabel(rawVal) {
       });
     }
 
+    let isExplicitBillEditMode = false;
+
     function unlockAllCalculatorFieldsForEdit() {
+      isExplicitBillEditMode = true;
+      setCalculatorFullMonthLockState(false);
       const lockableIds = [
-        "calcRent", "calcElecPrev", "calcElecRate",
-        "calcPngPrev", "calcPngRate", "calcWaterPrev", "calcWaterRate",
-        "calcPrevCarryBalance"
+        "calcRent", "calcElecPrev", "calcElecCurr", "calcElecRate",
+        "calcPngPrev", "calcPngCurr", "calcPngRate",
+        "calcWaterPrev", "calcWaterCurr", "calcWaterRate",
+        "calcAddName", "calcAddAmount", "calcPrevCarryBalance",
+        "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes"
       ];
       lockableIds.forEach(id => {
         const input = document.getElementById(id);
-        if (input) input.removeAttribute("readonly");
+        if (input) {
+          input.removeAttribute("readonly");
+          input.style.opacity = "";
+          input.style.cursor = "";
+        }
+      });
+      ["calcAddToggle", "calcPayMode"].forEach(selId => {
+        const sel = document.getElementById(selId);
+        if (sel) sel.disabled = false;
       });
       document.querySelectorAll("#tabCalc .pencil-lock-btn").forEach(btn => {
+        btn.style.display = "";
         btn.classList.add("unlocked-save");
         btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i>`;
       });
+      const statusTag = document.getElementById("calcMonthStatusTag");
+      if (statusTag) {
+        statusTag.innerText = "Edit Mode Active - Modify Any Detail & Save";
+        statusTag.className = "calc-month-status-tag new";
+      }
+      const submitBtn = document.getElementById("calcSubmitBtn");
+      const submitBtnText = document.getElementById("calcSubmitBtnText");
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "";
+        submitBtn.style.pointerEvents = "";
+      }
+      if (submitBtnText) {
+        submitBtnText.innerText = "Update & Save Bill";
+      }
     }
 
     // Requirement 7 Helper: Preserves exact user-set rate values (including 0 or empty string "") without resetting to 45 or 15
@@ -17379,6 +17419,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function isCalculatorMonthLockedForEdits(chosenMonth) {
+      if (isExplicitBillEditMode) return false;
       if (!selectedFlat) return false;
       const cleanMonth = normalizeMonthYear(chosenMonth);
       const currentCalMonth = getCurrentCalendarYearMonth();
@@ -17610,6 +17651,7 @@ function formatMonthLabel(rawVal) {
 
     function handleBillingMonthChange() {
       if (!selectedFlat) return;
+      isExplicitBillEditMode = false;
       resetAllCalculatorLocks();
 
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker").value);
@@ -20289,7 +20331,7 @@ function formatMonthLabel(rawVal) {
           const qrConfig = {
             value: upiUri,
             size: size,
-            padding: 6,
+            padding: 0,
             level: "H",
             background: "#ffffff",
             foreground: "#000000"
@@ -20756,16 +20798,6 @@ function formatMonthLabel(rawVal) {
             <span id="recDynamicTotalDisplay" style="color:var(--primary);">₹0</span>
           </div>
 
-          <div class="receipt-line" id="row_rec_paid">
-            <span>Amount Paid (${payModeStr}${paidDateFormatted && paidDateFormatted !== '--' ? ' • ' + paidDateFormatted : ''}):</span>
-            <strong id="recDynamicPaidDisplay" style="color:var(--accent-green);">₹${paidAmtVal.toLocaleString('en-IN')}</strong>
-          </div>
-
-          <div class="receipt-line" id="row_rec_status">
-            <span>Payment Status / Closing Balance:</span>
-            <strong id="recDynamicClosingStatusDisplay">--</strong>
-          </div>
-
           <!-- Pay UPI Name -->
           <div class="receipt-line" id="row_rec_balance">
             <span>Pay UPI Name:</span>
@@ -20792,7 +20824,9 @@ function formatMonthLabel(rawVal) {
         <!-- Working Valid UPI QR Code + UPI ID Shown Below in Center -->
         <div id="receiptUpiQrBox" class="receipt-line" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; margin: 12px 0; padding: 14px; background:var(--bg-input); border-radius:12px; border:1px solid var(--glass-border);">
           <div style="font-size:0.76rem; font-weight:700; margin-bottom:8px; color:var(--text-muted); text-align:center;">Scan QR Code to Pay via UPI</div>
-          <img id="receiptUpiQrImg" src="" alt="UPI QR Code" style="width:160px; height:160px; border-radius:10px; background:#ffffff; padding:6px; display:none; margin:0 auto; box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+          <div style="width:168px; height:168px; background:#ffffff; border-radius:12px; border:2px solid #cbd5e1; padding:6px; display:flex; align-items:center; justify-content:center; box-sizing:border-box; margin:0 auto; box-shadow:0 4px 12px rgba(0,0,0,0.12); overflow:hidden;">
+            <img id="receiptUpiQrImg" src="" alt="UPI QR Code" style="width:100%; height:100%; object-fit:contain; border-radius:8px; background:#ffffff; display:none; margin:0;">
+          </div>
           <div id="receiptQrUpiIdCenter" style="width:100%; text-align:center; font-size:0.86rem; font-weight:800; color:var(--primary); margin-top:8px; letter-spacing:0.2px; word-break:break-all;">${upiId || 'N/A'}</div>
           <div id="receiptUpiTextHint" style="width:100%; text-align:center; font-size:0.72rem; color:var(--text-muted); margin-top:4px;">--</div>
         </div>
@@ -20828,8 +20862,6 @@ function formatMonthLabel(rawVal) {
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="additional" data-row="row_rec_additional" data-amount="${addAmtVal}" checked onchange="recalculateReceiptSelection()"> <span>Additional Charge</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="carry" data-row="row_rec_carry" data-amount="${carryVal}" checked onchange="recalculateReceiptSelection()"> <span>Carry-Forward</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="total" data-row="row_rec_total" checked onchange="recalculateReceiptSelection()"> <span>Total Billed</span></label>
-            <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="paid" data-row="row_rec_paid" checked onchange="recalculateReceiptSelection()"> <span>Amount Paid</span></label>
-            <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="status" data-row="row_rec_status" checked onchange="recalculateReceiptSelection()"> <span>Payment Status</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="balance" data-row="row_rec_balance" checked onchange="recalculateReceiptSelection()"> <span>Pay UPI Name</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="contact" data-row="row_rec_contact" checked onchange="recalculateReceiptSelection()"> <span>Contact Phone</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="upi" data-row="row_rec_upi" checked onchange="recalculateReceiptSelection()"> <span>UPI &amp; QR Code</span></label>
@@ -21002,7 +21034,7 @@ function formatMonthLabel(rawVal) {
             element: qrCanvas,
             value: upiUri,
             size: 220,
-            padding: 12,
+            padding: 0,
             level: "M",
             background: "#ffffff",
             foreground: "#000000"
@@ -21488,26 +21520,10 @@ function formatMonthLabel(rawVal) {
       window.print();
     }
 
-    // Action Button 2: Edit Everything for That Month (Switches to Calculator; Locks if Previous/Finalized Month)
+    // Action Button 2: Edit Everything for That Month (Switches to Calculator & Unlocks All Details for Editing)
     function editBillMonthFromHistory(monthYear) {
       if (activeRole === "Viewer") return;
       const cleanM = normalizeMonthYear(monthYear);
-
-      if (isCalculatorMonthLockedForEdits(cleanM)) {
-        const modal = document.getElementById("flatDetailsModal");
-        const navItems = modal.querySelectorAll(".flat-nav-item");
-        const tabs = modal.querySelectorAll(".tab-content");
-        navItems.forEach((item, i) => item.classList.toggle("active", i === 0));
-        tabs.forEach((tab, i) => tab.classList.toggle("active", i === 0));
-        const monthPicker = document.getElementById("calcMonthPicker");
-        monthPicker.value = cleanM;
-        handleBillingMonthChange();
-        return triggerSideToast(
-          "Previous Month Locked",
-          `Calculation & receipt for ${formatMonthLabel(cleanM)} are finalized. Any new changes apply only to the new month.`,
-          false
-        );
-      }
 
       const matchedBill = (DB.bills || []).find(b =>
         isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
@@ -21526,7 +21542,7 @@ function formatMonthLabel(rawVal) {
       handleBillingMonthChange();
 
       unlockAllCalculatorFieldsForEdit();
-      triggerSideToast("Edit Mode Active", `Editing bill for ${formatMonthLabel(cleanM)}. Modify any field and click Update!`, "warning");
+      triggerSideToast("Edit Mode Active", `Editing bill for ${formatMonthLabel(cleanM)}. Modify any detail and click Update & Save Bill!`, true);
     }
 
     function filterLedgerTable(query) {
@@ -26804,7 +26820,7 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    // Admin-Configured Contact Details & Live Sync Across All Renter Help Centers
+    // Admin-Configured Contact Details & Live Sync Across All Renter Help Centers (Property-Isolated)
     function normalizeCleanContactPhone(rawVal) {
       const str = String(rawVal || "").trim();
       if (!str || str === "+91" || str === "+91 ") return "";
@@ -26812,34 +26828,92 @@ function formatMonthLabel(rawVal) {
       return (cleaned === "+91" || cleaned === "+91 ") ? "" : cleaned.trim();
     }
 
-    function getAdminContactSettings() {
+    function getAdminContactSettings(targetProperty = "") {
       try {
         const raw = localStorage.getItem("portal_admin_contact_cfg");
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === "object") {
+            const byProp = (parsed.byProperty && typeof parsed.byProperty === "object") ? parsed.byProperty : {};
+
+            if (targetProperty) {
+              const cleanTarget = targetProperty.trim().toLowerCase();
+              const matchedKey = Object.keys(byProp).find(k => k.trim().toLowerCase() === cleanTarget);
+              if (matchedKey && byProp[matchedKey]) {
+                const p = byProp[matchedKey];
+                return {
+                  propertyName: matchedKey,
+                  name: String(p.name || "").trim(),
+                  phone: normalizeCleanContactPhone(p.phone),
+                  whatsapp: normalizeCleanContactPhone(p.whatsapp),
+                  mobile: normalizeCleanContactPhone(p.mobile),
+                  email: String(p.email || "").trim(),
+                  address: String(p.address || "").trim(),
+                  byProperty: byProp,
+                  isConfigured: Boolean(p.name || p.phone || p.mobile || p.whatsapp || p.email)
+                };
+              }
+              if (parsed.propertyName && parsed.propertyName.trim().toLowerCase() === cleanTarget) {
+                return {
+                  propertyName: parsed.propertyName,
+                  name: String(parsed.name || "").trim(),
+                  phone: normalizeCleanContactPhone(parsed.phone),
+                  whatsapp: normalizeCleanContactPhone(parsed.whatsapp),
+                  mobile: normalizeCleanContactPhone(parsed.mobile),
+                  email: String(parsed.email || "").trim(),
+                  address: String(parsed.address || "").trim(),
+                  byProperty: byProp,
+                  isConfigured: Boolean(parsed.name || parsed.phone || parsed.mobile || parsed.whatsapp || parsed.email)
+                };
+              }
+              return {
+                propertyName: targetProperty,
+                name: "",
+                phone: "",
+                whatsapp: "",
+                mobile: "",
+                email: "",
+                address: "",
+                byProperty: byProp,
+                isConfigured: false
+              };
+            }
+
             return {
+              propertyName: String(parsed.propertyName || "").trim(),
               name: String(parsed.name || "").trim(),
               phone: normalizeCleanContactPhone(parsed.phone),
               whatsapp: normalizeCleanContactPhone(parsed.whatsapp),
               mobile: normalizeCleanContactPhone(parsed.mobile),
               email: String(parsed.email || "").trim(),
-              address: String(parsed.address || "").trim()
+              address: String(parsed.address || "").trim(),
+              byProperty: byProp,
+              isConfigured: Boolean(parsed.name || parsed.phone || parsed.mobile || parsed.whatsapp || parsed.email)
             };
           }
         }
       } catch (e) {}
       return {
+        propertyName: targetProperty || "",
         name: "",
         phone: "",
         whatsapp: "",
         mobile: "",
         email: "",
-        address: ""
+        address: "",
+        byProperty: {},
+        isConfigured: false
       };
     }
 
     async function saveAdminContactSettings() {
+      const propSelect = document.getElementById("cfgContactProperty");
+      const chosenProp = String(propSelect?.value || selectedProperty || "").trim();
+      if (!chosenProp) {
+        triggerSideToast("Select Property", "Please select a property to assign this contact info to.", false);
+        return;
+      }
+
       const name = (document.getElementById("cfgContactName")?.value || "").trim();
       const rawPhone = (document.getElementById("cfgContactPhone")?.value || "").trim();
       const rawWhatsapp = (document.getElementById("cfgContactWhatsapp")?.value || "").trim();
@@ -26851,35 +26925,79 @@ function formatMonthLabel(rawVal) {
       const whatsapp = normalizeCleanContactPhone(rawWhatsapp);
       const mobile = normalizeCleanContactPhone(rawMobile);
 
-      if (document.getElementById("cfgContactPhone")) {
-        document.getElementById("cfgContactPhone").value = phone;
-      }
-      if (document.getElementById("cfgContactWhatsapp")) {
-        document.getElementById("cfgContactWhatsapp").value = whatsapp;
-      }
-      if (document.getElementById("cfgContactMobile")) {
-        document.getElementById("cfgContactMobile").value = mobile;
-      }
+      if (document.getElementById("cfgContactPhone")) document.getElementById("cfgContactPhone").value = phone;
+      if (document.getElementById("cfgContactWhatsapp")) document.getElementById("cfgContactWhatsapp").value = whatsapp;
+      if (document.getElementById("cfgContactMobile")) document.getElementById("cfgContactMobile").value = mobile;
 
-      const cfg = { name, phone, whatsapp, mobile, email, address, updatedAt: Date.now() };
+      const fullCfg = getAdminContactSettings();
+      const byProperty = fullCfg.byProperty || {};
+      byProperty[chosenProp] = {
+        propertyName: chosenProp,
+        name,
+        phone,
+        whatsapp,
+        mobile,
+        email,
+        address,
+        updatedAt: Date.now()
+      };
+
+      const cfg = {
+        propertyName: chosenProp,
+        name,
+        phone,
+        whatsapp,
+        mobile,
+        email,
+        address,
+        byProperty,
+        updatedAt: Date.now()
+      };
       localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(cfg));
 
-      // Strictly isolated: Do NOT overwrite or touch properties, flats, renters, or bills
       notifyCrossTabSync("contact", cfg);
       renderContactUsDynamicBody();
 
-      triggerSideToast("Contact Info Saved", "Contact Info details stored strictly for the Renter Help Center and synced live!", true);
+      triggerSideToast("Contact Info Saved", `Contact details saved strictly for property "${chosenProp}" and synced live!`, true);
 
       try {
         await sendFirebaseAction({
           action: "saveContactConfig",
-          contactConfig: cfg
+          contactConfig: cfg,
+          propertyName: chosenProp
         });
       } catch (e) {}
     }
 
     function initAdminContactSettingsInputs() {
-      const cfg = getAdminContactSettings();
+      const propSelect = document.getElementById("cfgContactProperty");
+      const propNames = (DB.properties || []).map(p => String(p.PropertyName || "").trim()).filter(Boolean);
+      const distinctProps = [...new Set(propNames)];
+
+      if (propSelect) {
+        if (distinctProps.length > 0) {
+          const currentSelected = propSelect.value;
+          propSelect.innerHTML = distinctProps.map(p =>
+            `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`
+          ).join("");
+          if (currentSelected && distinctProps.includes(currentSelected)) {
+            propSelect.value = currentSelected;
+          } else if (selectedProperty && distinctProps.includes(selectedProperty)) {
+            propSelect.value = selectedProperty;
+          }
+        } else {
+          propSelect.innerHTML = `<option value="">No Properties Found</option>`;
+        }
+      }
+
+      onContactSettingsPropertyChange();
+    }
+
+    function onContactSettingsPropertyChange() {
+      const propSelect = document.getElementById("cfgContactProperty");
+      const chosenProp = propSelect ? propSelect.value : "";
+      const cfg = getAdminContactSettings(chosenProp);
+
       if (document.getElementById("cfgContactName")) document.getElementById("cfgContactName").value = cfg.name || "";
       if (document.getElementById("cfgContactPhone")) document.getElementById("cfgContactPhone").value = cfg.phone || "";
       if (document.getElementById("cfgContactWhatsapp")) document.getElementById("cfgContactWhatsapp").value = cfg.whatsapp || "";
@@ -26889,9 +27007,39 @@ function formatMonthLabel(rawVal) {
     }
 
     function renderContactUsDynamicBody() {
-      const cfg = getAdminContactSettings();
       const body = document.getElementById("contactUsDynamicBody");
       if (!body) return;
+
+      let targetProp = "";
+      if (activeRole === "Renter" || activeRole === "Viewer") {
+        targetProp = String(
+          activeAssignedProperty ||
+          (typeof selectedFlat !== "undefined" && selectedFlat?.PropertyName) ||
+          (typeof activeFlatRenterObj !== "undefined" && activeFlatRenterObj?.PropertyName) ||
+          ""
+        ).trim();
+      } else {
+        const adminPropSelect = document.getElementById("cfgContactProperty");
+        targetProp = String(adminPropSelect?.value || selectedProperty || "").trim();
+      }
+
+      const cfg = targetProp ? getAdminContactSettings(targetProp) : getAdminContactSettings();
+      const hasAnyDetails = Boolean(cfg.isConfigured || cfg.name || cfg.phone || cfg.whatsapp || cfg.mobile || cfg.email || cfg.address);
+
+      if (!hasAnyDetails) {
+        body.innerHTML = `
+          <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:14px; padding:20px; text-align:center;">
+            <div style="width:48px; height:48px; border-radius:50%; background:rgba(245,158,11,0.15); color:#f59e0b; display:inline-flex; align-items:center; justify-content:center; font-size:1.3rem; margin-bottom:10px;">
+              <i class="fa-solid fa-address-book"></i>
+            </div>
+            <h4 style="font-size:0.95rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">No Contact Info Configured</h4>
+            <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.45; margin:0;">
+              No official contact details have been assigned for <strong>${escapeHtml(targetProp || "your property")}</strong> yet. Contact details are strictly property-isolated.
+            </p>
+          </div>
+        `;
+        return;
+      }
 
       const supportPersonName = cfg.name || "N/A";
       const supportPhone = cfg.phone || "N/A";
@@ -26899,17 +27047,24 @@ function formatMonthLabel(rawVal) {
       const mobilePhone = cfg.mobile || "N/A";
       const supportEmail = cfg.email || "N/A";
       const officialAddress = cfg.address || "N/A";
+      const propLabel = cfg.propertyName || targetProp || "";
 
       const rawWa = cfg.whatsapp ? String(cfg.whatsapp).replace(/[^0-9]/g, "") : "";
       const waNumber = rawWa.length === 10 ? "91" + rawWa : rawWa;
-      const waUrl = waNumber ? `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(cfg.name || "Admin")}%2C%20I%20need%20assistance%20regarding%20my%20flat.` : "";
+      const waUrl = waNumber ? `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(cfg.name || "Admin")}%2C%20I%20am%20contacting%20regarding%20${encodeURIComponent(propLabel || "my flat")}.` : "";
 
       body.innerHTML = `
         <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:12px;">
+          ${propLabel ? `
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
+              <span style="font-size:0.75rem; font-weight:800; color:#f59e0b;"><i class="fa-solid fa-building"></i> ${escapeHtml(propLabel)}</span>
+              <span style="font-size:0.68rem; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:2px 8px; border-radius:6px;"><i class="fa-solid fa-shield-check"></i> Property Isolated</span>
+            </div>
+          ` : ""}
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
             <div>
               <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Contact Person</div>
-              <div style="font-size:0.95rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-user-shield" style="color:#10b981; margin-right:5px;"></i>${supportPersonName}</div>
+              <div style="font-size:0.95rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-user-shield" style="color:#10b981; margin-right:5px;"></i>${escapeHtml(supportPersonName)}</div>
             </div>
             <span class="badge-paid" style="font-size:0.68rem;">24/7 Help Center</span>
           </div>
@@ -26917,7 +27072,7 @@ function formatMonthLabel(rawVal) {
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
             <div>
               <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Phone Number</div>
-              <div style="font-size:0.95rem; font-weight:900; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i>${supportPhone}</div>
+              <div style="font-size:0.95rem; font-weight:900; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i>${escapeHtml(supportPhone)}</div>
             </div>
             ${cfg.phone ? `<a href="tel:${String(cfg.phone).replace(/\s+/g, "")}" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none;"><i class="fa-solid fa-phone"></i> Call</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
           </div>
@@ -26925,7 +27080,7 @@ function formatMonthLabel(rawVal) {
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
             <div>
               <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">WhatsApp Support Phone</div>
-              <div style="font-size:0.92rem; font-weight:800; color:#22c55e;"><i class="fa-brands fa-whatsapp"></i> ${whatsappPhone}</div>
+              <div style="font-size:0.92rem; font-weight:800; color:#22c55e;"><i class="fa-brands fa-whatsapp"></i> ${escapeHtml(whatsappPhone)}</div>
             </div>
             ${waUrl ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none; background:linear-gradient(135deg, #16a34a, #22c55e);"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
           </div>
@@ -26933,19 +27088,19 @@ function formatMonthLabel(rawVal) {
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
             <div>
               <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Mobile Number</div>
-              <div style="font-size:0.92rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-mobile-screen-button" style="color:#a855f7; margin-right:5px;"></i>${mobilePhone}</div>
+              <div style="font-size:0.92rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-mobile-screen-button" style="color:#a855f7; margin-right:5px;"></i>${escapeHtml(mobilePhone)}</div>
             </div>
             ${cfg.mobile ? `<a href="tel:${String(cfg.mobile).replace(/\s+/g, "")}" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none; background:linear-gradient(135deg, #8b5cf6, #6366f1);"><i class="fa-solid fa-phone"></i> Call</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
           </div>
 
           <div style="padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
             <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Email ID</div>
-            <div style="font-size:0.86rem; font-weight:700; color:var(--accent-cyan); margin-top:2px;"><i class="fa-solid fa-envelope"></i> ${supportEmail}</div>
+            <div style="font-size:0.86rem; font-weight:700; color:var(--accent-cyan); margin-top:2px;"><i class="fa-solid fa-envelope"></i> ${escapeHtml(supportEmail)}</div>
           </div>
 
           <div>
             <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Official Property Address</div>
-            <div style="font-size:0.84rem; color:var(--text-main); margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ${officialAddress}</div>
+            <div style="font-size:0.84rem; color:var(--text-main); margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ${escapeHtml(officialAddress)}</div>
           </div>
         </div>
       `;
