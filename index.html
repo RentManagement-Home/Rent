@@ -8514,6 +8514,8 @@
                 const lockData = payload.lockout;
                 if (targetU && lockData) {
                   const state = getLoginLockoutState(targetU);
+                  state.stage = Number(lockData.tier || 0);
+                  state.failedInStage = Number(lockData.attempts || 0);
                   state.lockedUntil = Number(lockData.lockedUntil || 0);
                   state.lockedTierLabel = lockData.tierLabel || "1 minute";
                   state.isPermanentlyBlocked = Boolean(lockData.isPermanentlyBlocked);
@@ -9073,7 +9075,8 @@
     async function portalGetInitialData(loggedUsername, clientSessionToken) {
       const sheetData = await fetchGasSheetData(true);
       const linked = linkSheetEntities(sheetData || {});
-      const usersList = Array.isArray(sheetData?.users) && sheetData.users.length > 0
+      const hasSheetUsersArray = Array.isArray(sheetData?.users);
+      const usersList = hasSheetUsersArray
         ? sheetData.users
         : getKnownUsersList();
       const loginHistory = Array.isArray(sheetData?.loginHistory)
@@ -9100,8 +9103,8 @@
         globalConfig: globalConfig,
         bgLoginUrl: globalConfig.bgLoginUrl || matchedUser?.BgLogin || "",
         bgDashboardUrl: globalConfig.bgDashboardUrl || matchedUser?.BgDashboard || "",
-        userExists: matchedUser ? true : (usersList.length === 0 ? true : false),
-        userDeleted: matchedUser ? false : (usersList.length > 0 && Boolean(cleanU)),
+        userExists: matchedUser ? true : (cleanU ? false : true),
+        userDeleted: matchedUser ? false : Boolean(cleanU),
         userStatus: matchedUser?.Status || matchedUser?.AccountStatus || "Active",
         accountStatus: matchedUser?.AccountStatus || matchedUser?.Status || "Active",
         activeSessionToken: matchedUser?.ActiveSessionToken || clientSessionToken || "",
@@ -14850,25 +14853,23 @@ function formatMonthLabel(rawVal) {
         }
 
         // Valid username with wrong password -> Record failed attempt centrally on server & Google Sheet (4-Stage Progressive Lockout)
-        let serverOutcome = null;
-        try {
-          const failRes = await fetch("/api/gas-engine", {
+        const failBodyStr = JSON.stringify({ action: "recordFailedAttempt", username: cleanU });
+        const [engineFailOutcome, gasFailOutcome] = await Promise.all([
+          fetch("/api/gas-engine", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "recordFailedAttempt", username: cleanU })
-          });
-          if (failRes.ok) {
-            serverOutcome = await failRes.json();
-          }
-        } catch (e) {}
-
-        // Also asynchronously update Google Apps Script
-        fetch(GAS_WEB_APP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ action: "recordFailedAttempt", username: cleanU }),
-          redirect: "follow"
-        }).catch(() => {});
+            body: failBodyStr
+          }).then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: failBodyStr,
+            redirect: "follow"
+          }).then(r => r.ok ? r.json() : null).catch(() => null)
+        ]);
+        const serverOutcome = (gasFailOutcome && gasFailOutcome.userExists !== undefined)
+          ? gasFailOutcome
+          : engineFailOutcome;
 
         if (serverOutcome && serverOutcome.userExists === false) {
           resetLoginLockoutState(cleanU);
@@ -14992,7 +14993,7 @@ function formatMonthLabel(rawVal) {
           }
 
           // If the currently logged-in user's ID (including Admin) was deleted or renamed in Google Sheets, log out immediately!
-          if (incomingUsers.length > 0 && (res.userDeleted === true || res.userExists === false || !activeUserStillInSheet)) {
+          if (res.userDeleted === true || res.userExists === false || !activeUserStillInSheet) {
             DB.properties = [];
             DB.flats = [];
             DB.renters = [];
