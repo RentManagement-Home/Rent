@@ -6896,29 +6896,12 @@
                 <i class="fa-solid fa-address-book"></i> Contact Us Details &amp; WhatsApp Support Configuration
               </span>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Assign official contact information strictly to a specific property.
+                Assign official contact information to All properties or a specific property.
               </div>
             </div>
             <span style="font-size:0.7rem; color:#f59e0b; font-weight:700; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:12px;">
               <i class="fa-solid fa-headset"></i> Live Support Sync
             </span>
-          </div>
-
-          <!-- Extra Option: Target Property Selection (Requirement 1: Contact info strictly isolated per property) -->
-          <div class="form-group" style="margin-bottom:14px; background:var(--bg-input); border:1.5px solid rgba(245,158,11,0.35); border-radius:12px; padding:12px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-              <label for="cfgContactProperty" style="font-size:0.78rem; font-weight:800; color:#f59e0b; margin-bottom:0; display:flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-building-user"></i> Which Property Does This Contact Info Belong To?
-              </label>
-              <span style="font-size:0.68rem; font-weight:800; color:#10b981; background:rgba(16,185,129,0.15); padding:2px 8px; border-radius:8px; border:1px solid rgba(16,185,129,0.35);">
-                <i class="fa-solid fa-lock"></i> Visible Only to This Property's Renters
-              </span>
-            </div>
-            <select id="cfgContactProperty" class="form-control" style="font-size:0.84rem; font-weight:700; color:var(--text-main); background:var(--bg-card); cursor:pointer;" onchange="onContactSettingsPropertyChange()">
-            </select>
-            <div style="font-size:0.71rem; color:var(--text-muted); margin-top:5px; line-height:1.4;">
-              <i class="fa-solid fa-circle-info" style="color:#f59e0b;"></i> Only renters assigned to this selected property will receive and see these contact details. Renters from any other property will strictly not see this information.
-            </div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
@@ -6954,7 +6937,15 @@
             </div>
           </div>
 
-          <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <div style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:10px; margin-top:4px;">
+            <div style="display:flex; align-items:center; gap:7px; background:var(--bg-input); border:1px solid rgba(245,158,11,0.38); border-radius:10px; padding:4px 10px;">
+              <label for="cfgContactProperty" style="font-size:0.72rem; font-weight:800; color:#f59e0b; margin:0; white-space:nowrap; display:flex; align-items:center; gap:5px;">
+                <i class="fa-solid fa-building-user"></i> Which property does this contact info belong to?
+              </label>
+              <select id="cfgContactProperty" class="form-control" style="width:auto; min-width:120px; max-width:190px; padding:4px 8px; height:30px; font-size:0.75rem; font-weight:700; color:var(--text-main); background:var(--bg-card); cursor:pointer;" onchange="onContactSettingsPropertyChange()">
+                <option value="ALL">All</option>
+              </select>
+            </div>
             <button type="button" class="btn-primary" style="width:auto; padding:8px 20px; font-size:0.78rem; font-weight:700; background:linear-gradient(135deg, #f59e0b, #d97706);" onclick="saveAdminContactSettings()">
               <i class="fa-solid fa-floppy-disk"></i> Save Contact Details
             </button>
@@ -6984,10 +6975,10 @@
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
             <div>
               <span style="font-weight:800; font-size:0.88rem; color:#fb7185;">
-                <i class="fa-solid fa-shield-cat"></i> Detailed Admin Audit Trail &amp; Activity Log
+                <i class="fa-solid fa-shield-cat"></i> Audit Trail Log (Max 30 Records)
               </span>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Immutable security log of bill edits, user role/password changes, property updates &amp; settlements.
+                Holds up to 30 latest records at a time. When a 31st record is added, the oldest record is automatically deleted.
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
@@ -10377,23 +10368,119 @@
     
 
     // Requirement 5: User Block Management & Blocked Login Modal (Supports blocking any user ID including default 'admin')
+    function isRenterUserMovedOut(userObj) {
+      if (!userObj || String(userObj.Role || "").trim().toLowerCase() !== "renter") return false;
+      const uAadhaar = String(userObj.AssignedAadhaar || userObj.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+      const uProp = String(userObj.AssignedProperty || "").trim();
+      const uFlat = String(userObj.AssignedFlat || "").trim();
+      const renters = DB.renters || [];
+      if (uAadhaar.length === 12) {
+        const matchingRenters = renters.filter(r => String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12) === uAadhaar);
+        if (matchingRenters.length > 0) {
+          const hasActiveStay = matchingRenters.some(r => String(r.Status || "").trim().toLowerCase() === "active");
+          return !hasActiveStay;
+        }
+      }
+      if (uProp && uFlat) {
+        const flatRenters = renters.filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, uProp, uFlat));
+        if (flatRenters.length > 0) {
+          const hasActiveInFlat = flatRenters.some(r => String(r.Status || "").trim().toLowerCase() === "active");
+          return !hasActiveInFlat;
+        }
+      }
+      return Boolean(userObj.MovedOutAutoBlocked);
+    }
+
+    function autoBlockRenterUserAccountOnMoveOut(aadhaarNumber, propertyName, flatName, renterName = "") {
+      const cleanAadhaar = String(aadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+      const renters = DB.renters || [];
+      if (cleanAadhaar.length === 12) {
+        const stillActiveSomewhere = renters.some(r =>
+          String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12) === cleanAadhaar &&
+          String(r.Status || "").trim().toLowerCase() === "active"
+        );
+        if (stillActiveSomewhere) return;
+      }
+
+      let blockedList = [];
+      try {
+        blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+      } catch (e) {}
+
+      const affectedUsers = [];
+      (DB.users || []).forEach(u => {
+        if (String(u.Role || "").trim().toLowerCase() !== "renter") return;
+        const uAadhaar = String(u.AssignedAadhaar || u.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+        const matchByAadhaar = cleanAadhaar.length === 12 && uAadhaar === cleanAadhaar;
+        const matchByFlat = (!cleanAadhaar || !uAadhaar) && propertyName && flatName && isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, propertyName, flatName);
+        if (matchByAadhaar || matchByFlat) {
+          u.Status = "Blocked";
+          u.AccountStatus = "Blocked";
+          u.MovedOutAutoBlocked = true;
+          u.ActiveSessionToken = "";
+          const uClean = String(u.Username || "").trim().toLowerCase();
+          if (uClean && !blockedList.includes(uClean)) {
+            blockedList.push(uClean);
+          }
+          affectedUsers.push(u);
+        }
+      });
+
+      if (affectedUsers.length > 0) {
+        try {
+          localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
+        } catch (e) {}
+        saveLocalUsersMaster(DB.users || []);
+        saveDbSnapshotToCache();
+        if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
+        affectedUsers.forEach(u => {
+          sendFirebaseAction({
+            action: "toggleUserBlock",
+            requesterUsername: activeUser || "admin",
+            targetUsername: u.Username,
+            newStatus: "Blocked",
+            block: true
+          }).catch(() => {});
+          if (typeof recordAdminAuditLog === "function") {
+            recordAdminAuditLog(
+              "AUTO_BLOCK_MOVEOUT",
+              `@${u.Username}`,
+              `Renter ${renterName || u.FullName || u.Username} moved out (${propertyName || ""} Flat ${flatName || ""}) — account automatically blocked. Only Admin can unblock.`
+            );
+          }
+        });
+      }
+    }
+
     async function toggleUserBlockStatus(targetUsername, newStatus) {
-      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+      const callerRole = String(activeRole || "").trim().toLowerCase();
+      const targetClean = String(targetUsername || "").trim().toLowerCase();
+      const targetU = (DB.users || []).find(u => String(u.Username || "").toLowerCase() === targetClean);
+      const isBlocking = newStatus === "Blocked";
+
+      // Only Admin can unblock a moved-out renter account (or unblock any blocked account when not Admin)
+      if (!isBlocking && callerRole !== "admin") {
+        return triggerSideToast("Admin Only", "Only the Admin can unblock a blocked user account.", false);
+      }
+      if (isBlocking && callerRole !== "admin" && !(callerRole === "manager" && typeof hasManagerPermission === "function" && hasManagerPermission("controlOf"))) {
         return triggerSideToast("Admin Only", "Only an Administrator has authority to block or unblock users.", false);
       }
-      const targetClean = String(targetUsername || "").trim().toLowerCase();
+      if (isBlocking && targetU && isRenterUserMovedOut(targetU) && callerRole !== "admin") {
+        return triggerSideToast("Admin Only", "This renter has moved out. Only the Admin can manage their block status.", false);
+      }
+
       const isSelfTarget = targetClean === String(activeUser || "").trim().toLowerCase();
-      const isBlocking = newStatus === "Blocked";
       openCenteredConfirmModal(
         isBlocking ? `Block User Account @${targetUsername}?` : `Unblock User Account @${targetUsername}?`,
         isBlocking
           ? `Are you sure you want to block @${targetUsername}? ${isSelfTarget ? "Because this is your currently logged-in ID, you will be immediately logged out and barred from logging in with this ID until it is unblocked." : "They will be immediately barred from logging in and a popup will notify them that their account has been blocked."}`
           : `Are you sure you want to unblock @${targetUsername} and restore their login access?`,
         async () => {
-          const targetU = (DB.users || []).find(u => String(u.Username || "").toLowerCase() === targetClean);
-          if (targetU) {
-            targetU.Status = newStatus;
-            targetU.AccountStatus = newStatus;
+          const uObj = (DB.users || []).find(u => String(u.Username || "").toLowerCase() === targetClean);
+          if (uObj) {
+            uObj.Status = newStatus;
+            uObj.AccountStatus = newStatus;
+            if (!isBlocking) uObj.MovedOutAutoBlocked = false;
           }
 
           let blockedList = [];
@@ -10406,6 +10493,14 @@
             blockedList = blockedList.filter(u => u !== targetClean);
           }
           localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
+
+          if (typeof recordAdminAuditLog === "function") {
+            recordAdminAuditLog(
+              isBlocking ? "USER_BLOCKED" : "USER_UNBLOCKED",
+              `@${targetUsername}`,
+              `Account status set to ${newStatus} by @${activeUser || "admin"}`
+            );
+          }
 
           saveDbSnapshotToCache();
           renderRegisteredUsersList();
@@ -10924,6 +11019,9 @@
         if (isSamePropAndFlat(r.PropertyName, r.FlatName, destProp, destFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
           r.Status = "Inactive";
           if (!r.EndDate) r.EndDate = joinDate;
+          if (typeof autoBlockRenterUserAccountOnMoveOut === "function") {
+            autoBlockRenterUserAccountOnMoveOut(r.IdentityDocNumber, r.PropertyName, r.FlatName, r.RenterName);
+          }
         }
       });
 
@@ -11158,6 +11256,9 @@
         if (isSamePropAndFlat(r.PropertyName, r.FlatName, destProp, destFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
           r.Status = "Inactive";
           if (!r.EndDate) r.EndDate = shiftDate;
+          if (typeof autoBlockRenterUserAccountOnMoveOut === "function") {
+            autoBlockRenterUserAccountOnMoveOut(r.IdentityDocNumber, r.PropertyName, r.FlatName, r.RenterName);
+          }
         }
       });
 
@@ -16694,6 +16795,10 @@ function formatMonthLabel(rawVal) {
       }
       const newFullNameRaw = String(document.getElementById("editAssignFullName")?.value || "").trim() || rawEnteredUsername;
       const newStatusRaw = String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active";
+      const wasPreviouslyBlocked = String(u.Status || "").trim().toLowerCase() === "blocked";
+      if (wasPreviouslyBlocked && newStatusRaw === "Active" && String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Permission Required", "Only the Admin can unblock a blocked user account.", false);
+      }
 
       const newRole = document.getElementById("editAssignRole").value;
       const scopeLevel = document.getElementById("editAssignScopeLevel")?.value || "FLAT";
@@ -16880,10 +16985,13 @@ function formatMonthLabel(rawVal) {
           let blockedList = [];
           try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
           const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uName.toLowerCase());
+          const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
           const blockBtn = isBlocked
-            ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="Unblock user login">
-                 <i class="fa-solid fa-lock-open"></i> Unblock
-               </button>`
+            ? (isStrictAdmin
+                ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="Unblock user login (Admin Only)">
+                     <i class="fa-solid fa-lock-open"></i> Unblock
+                   </button>`
+                : `<span style="font-size:0.68rem; color:#f87171; font-weight:700; padding:4px 8px;"><i class="fa-solid fa-lock"></i> Admin Only Unblock</span>`)
             : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#ef4444; border-color:rgba(239,68,68,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Blocked')" title="Block user from logging in">
                  <i class="fa-solid fa-ban"></i> Block
                </button>`;
@@ -20502,10 +20610,11 @@ function formatMonthLabel(rawVal) {
       const amtInput = document.getElementById("qrCollectAmountInput");
       const noteInput = document.getElementById("qrCollectNoteInput");
 
-      if (upiIdInput) { upiIdInput.value = upiId; upiIdInput.readOnly = true; }
-      if (upiNameInput) { upiNameInput.value = upiName; upiNameInput.readOnly = true; }
-      if (amtInput) { amtInput.value = dueInfo.primaryAmountDue; amtInput.readOnly = true; }
-      if (noteInput) { noteInput.value = defaultNote; noteInput.readOnly = true; }
+      const isReadOnlyQr = (activeRole === "Renter" || activeRole === "Viewer");
+      if (upiIdInput) { upiIdInput.value = upiId; upiIdInput.readOnly = isReadOnlyQr; }
+      if (upiNameInput) { upiNameInput.value = upiName; upiNameInput.readOnly = isReadOnlyQr; }
+      if (amtInput) { amtInput.value = dueInfo.primaryAmountDue; amtInput.readOnly = isReadOnlyQr; }
+      if (noteInput) { noteInput.value = defaultNote; noteInput.readOnly = isReadOnlyQr; }
 
       const pillsContainer = document.getElementById("qrModalPresetPills");
       if (pillsContainer) {
@@ -24543,23 +24652,29 @@ function formatMonthLabel(rawVal) {
     }
 
     // Helper: Propagate UPI Name, UPI ID, and Contact Mobile across the parent Property and all associated Flats & Active Renters
-    function propagatePropertyWideUpiAndContactLocal(propertyName, upiName, upiId, contractMobile) {
+    function propagatePropertyWideUpiAndContactLocal(propertyName, upiName, upiId, contractMobile, allowEmptyOverwrite = false) {
       const targetPropKey = String(propertyName || "").trim().toLowerCase();
       if (!targetPropKey) return;
 
       DB.properties.forEach(p => {
         if (String(p.PropertyName || "").trim().toLowerCase() === targetPropKey) {
-          p.UPIName = upiName;
-          p.UPIID = upiId;
-          p.ContractNumber = contractMobile;
+          if (allowEmptyOverwrite || upiName !== undefined && String(upiName).trim() !== "") p.UPIName = upiName;
+          if (allowEmptyOverwrite || upiId !== undefined && String(upiId).trim() !== "") p.UPIID = upiId;
+          if (allowEmptyOverwrite || contractMobile !== undefined && String(contractMobile).trim() !== "") {
+            p.ContractNumber = contractMobile;
+            p.ContractMobile = contractMobile;
+          }
         }
       });
 
       DB.flats.forEach(f => {
         if (String(f.PropertyName || "").trim().toLowerCase() === targetPropKey) {
-          f.UPIName = upiName;
-          f.UPIID = upiId;
-          f.ContractMobile = contractMobile;
+          if (allowEmptyOverwrite || upiName !== undefined && String(upiName).trim() !== "") f.UPIName = upiName;
+          if (allowEmptyOverwrite || upiId !== undefined && String(upiId).trim() !== "") f.UPIID = upiId;
+          if (allowEmptyOverwrite || contractMobile !== undefined && String(contractMobile).trim() !== "") {
+            f.ContractMobile = contractMobile;
+            f.ContractNumber = contractMobile;
+          }
         }
       });
 
@@ -24568,9 +24683,11 @@ function formatMonthLabel(rawVal) {
           String(r.PropertyName || "").trim().toLowerCase() === targetPropKey &&
           String(r.Status || "").trim().toLowerCase() === "active"
         ) {
-          r.UPIName = upiName;
-          r.UPIID = upiId;
-          r.ContractMobile = contractMobile;
+          if (allowEmptyOverwrite || upiName !== undefined && String(upiName).trim() !== "") r.UPIName = upiName;
+          if (allowEmptyOverwrite || upiId !== undefined && String(upiId).trim() !== "") r.UPIID = upiId;
+          if (allowEmptyOverwrite || contractMobile !== undefined && String(contractMobile).trim() !== "") {
+            r.ContractMobile = contractMobile;
+          }
         }
       });
 
@@ -25104,9 +25221,10 @@ function formatMonthLabel(rawVal) {
       const savedWaterNum = selectedFlat.WaterNumber || activeFlatRenterObj?.WaterNumber || "";
       const savedWaterMeter = selectedFlat.WaterMeterNumber || activeFlatRenterObj?.WaterMeterNumber || "";
       const savedElecMeter = selectedFlat.ElecMeterNumber || activeFlatRenterObj?.ElecMeterNumber || "";
-      const savedUpiName = selectedFlat.UPIName || activeFlatRenterObj?.UPIName || "";
-      const savedUpiId = selectedFlat.UPIID || activeFlatRenterObj?.UPIID || "";
-      const savedContractMob = selectedFlat.ContractMobile || activeFlatRenterObj?.ContractMobile || "";
+      const resolvedCurrentContact = resolveFlatUpiAndContact(selectedFlat.PropertyName, selectedFlat, activeFlatRenterObj);
+      const savedUpiName = selectedFlat.UPIName || activeFlatRenterObj?.UPIName || resolvedCurrentContact.upiName || "";
+      const savedUpiId = selectedFlat.UPIID || activeFlatRenterObj?.UPIID || resolvedCurrentContact.upiId || "";
+      const savedContractMob = selectedFlat.ContractMobile || activeFlatRenterObj?.ContractMobile || resolvedCurrentContact.contractMobile || "";
 
       const joinDateVal = toInputDateValue(document.getElementById("renterJoinDate").value) || toInputDateValue(activeFlatRenterObj?.JoinDate) || new Date().toISOString().split('T')[0];
       const rawEndInput = toInputDateValue(document.getElementById("renterEndDate").value);
@@ -25230,6 +25348,14 @@ function formatMonthLabel(rawVal) {
           previousAadhaarBeforeEdit
         );
 
+        // Automatically block any Renter User ID linked to this Aadhaar / flat when renter moves out (Inactive)
+        autoBlockRenterUserAccountOnMoveOut(
+          payload.identityDocNumber || previousAadhaarBeforeEdit,
+          selectedFlat.PropertyName,
+          selectedFlat.FlatName,
+          payload.renterName
+        );
+
         // Requirement 5: If we were editing a departed renter from history, keep their edited data visible and status 'Inactive'
         if (wasAlreadyInactive && existingRenterRecord) {
           activeFlatRenterObj = existingRenterRecord;
@@ -25240,7 +25366,7 @@ function formatMonthLabel(rawVal) {
           activeFlatRenterObj = null;
           clearRenterRightForm();
           handleBillingMonthChange();
-          triggerSideToast("Renter Vacated & Meter History Preserved", "Previous meter readings kept permanently! Carry-forward dues reset to ₹0 for the new tenant.", true);
+          triggerSideToast("Renter Vacated & Account Blocked", "Renter marked Left/Inactive and their login account has been automatically moved to Blocked status.", true);
         }
       } else {
         if (existingRenterRecord) {
@@ -25819,6 +25945,9 @@ function formatMonthLabel(rawVal) {
         if (isSamePropAndFlat(r.PropertyName, r.FlatName, targetProp, targetFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
           r.Status = "Inactive";
           if (!r.EndDate) r.EndDate = new Date().toISOString().split("T")[0];
+          if (typeof autoBlockRenterUserAccountOnMoveOut === "function") {
+            autoBlockRenterUserAccountOnMoveOut(r.IdentityDocNumber, r.PropertyName, r.FlatName, r.RenterName);
+          }
         }
       });
 
@@ -25970,9 +26099,11 @@ function formatMonthLabel(rawVal) {
       if (newEl) newEl.value = val;
 
       const propObj = findPropertyObject(val);
-      if (upiNameEl) upiNameEl.value = propObj?.UPIName || "";
-      if (upiIdEl) upiIdEl.value = propObj?.UPIID || "";
-      if (mobEl) mobEl.value = propObj?.ContractNumber ? formatIndianMobilePlus91(propObj.ContractNumber) : "+91";
+      const resolved = resolveFlatUpiAndContact(val, null, null);
+      if (upiNameEl) upiNameEl.value = propObj?.UPIName || resolved.upiName || "";
+      if (upiIdEl) upiIdEl.value = propObj?.UPIID || resolved.upiId || "";
+      const savedMob = propObj?.ContractNumber || propObj?.ContractMobile || resolved.contractMobile || "";
+      if (mobEl) mobEl.value = savedMob ? formatIndianMobilePlus91(savedMob) : "+91";
     }
 
     function populateDeleteFlatList() {
@@ -25993,15 +26124,21 @@ function formatMonthLabel(rawVal) {
       const cCode = document.getElementById("newPropCountryCode")?.value || "+91";
       const rawContractDigits = (document.getElementById("newPropContract")?.value || "").replace(/\D/g, '').slice(0, 10);
       const formattedContractMob = rawContractDigits ? (cCode + ' ' + rawContractDigits) : "";
+      const upiNameVal = (document.getElementById("newPropUpiName")?.value || "").trim();
+      const upiIdVal = (document.getElementById("newPropUpiId")?.value || "").trim();
 
       const newPropObj = {
         PropertyName: name,
-        UPIName: document.getElementById("newPropUpiName").value,
-        UPIID: document.getElementById("newPropUpiId").value,
-        ContractNumber: formattedContractMob
+        UPIName: upiNameVal,
+        UPIID: upiIdVal,
+        ContractNumber: formattedContractMob,
+        ContractMobile: formattedContractMob
       };
 
       DB.properties.push(newPropObj);
+      if (typeof recordAdminAuditLog === "function") {
+        recordAdminAuditLog("ADD_PROPERTY", name, `UPI: ${upiIdVal || "N/A"} (${upiNameVal || "N/A"})`);
+      }
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       closeModal("addPropertyModal");
@@ -26012,7 +26149,8 @@ function formatMonthLabel(rawVal) {
         propertyName: newPropObj.PropertyName,
         upiName: newPropObj.UPIName,
         upiId: newPropObj.UPIID,
-        contractNumber: newPropObj.ContractNumber
+        contractNumber: newPropObj.ContractNumber,
+        contractMobile: newPropObj.ContractMobile
       });
       syncDataLive();
     }
@@ -26027,6 +26165,8 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Duplicate Name", "This property name is already taken. Please use a different name.", false);
       }
 
+      const existingProp = findPropertyObject(oldName);
+      const existingResolved = resolveFlatUpiAndContact(oldName, null, null);
       const upiName = (document.getElementById("editPropUpiName")?.value || "").trim();
       const upiId = (document.getElementById("editPropUpiId")?.value || "").trim();
       const rawMob = (document.getElementById("editPropContractMobile")?.value || "").trim();
@@ -26034,7 +26174,9 @@ function formatMonthLabel(rawVal) {
       if (rawMob && rawMob !== "+91" && mobDigits.length > 0 && mobDigits.length !== 10) {
         return triggerSideToast("Invalid Contact Mobile", "Please enter a valid 10-digit Indian mobile number.", false);
       }
-      const contractNumber = mobDigits.length === 10 ? ("+91 " + mobDigits) : "";
+      const contractNumber = mobDigits.length === 10
+        ? ("+91 " + mobDigits)
+        : (existingProp?.ContractNumber || existingProp?.ContractMobile || existingResolved.contractMobile || "");
 
       DB.properties.forEach(p => {
         if (String(p.PropertyName).trim().toLowerCase() === oldName.toLowerCase()) {
@@ -26042,6 +26184,7 @@ function formatMonthLabel(rawVal) {
           p.UPIName = upiName;
           p.UPIID = upiId;
           p.ContractNumber = contractNumber;
+          p.ContractMobile = contractNumber;
         }
       });
       DB.flats.forEach(f => {
@@ -26050,6 +26193,7 @@ function formatMonthLabel(rawVal) {
           f.UPIName = upiName;
           f.UPIID = upiId;
           f.ContractMobile = contractNumber;
+          f.ContractNumber = contractNumber;
         }
       });
       DB.renters.forEach(r => {
@@ -26072,6 +26216,9 @@ function formatMonthLabel(rawVal) {
         selectedProperty = newName;
         sessionStorage.setItem("active_selected_property", newName);
       }
+      if (typeof recordAdminAuditLog === "function") {
+        recordAdminAuditLog("EDIT_PROPERTY", `${oldName} -> ${newName}`, `UPI: ${upiId || "N/A"} (${upiName || "N/A"}), Contact: ${contractNumber || "N/A"}`);
+      }
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       closeModal("editPropertyModal");
@@ -26079,11 +26226,15 @@ function formatMonthLabel(rawVal) {
 
       await sendFirebaseAction({
         action: "editProperty",
+        propertyName: oldName,
         oldName: oldName,
+        oldPropertyName: oldName,
         newName: newName,
+        newPropertyName: newName,
         upiName: upiName,
         upiId: upiId,
-        contractNumber: contractNumber
+        contractNumber: contractNumber,
+        contractMobile: contractNumber
       });
       syncDataLive();
     }
@@ -26841,19 +26992,41 @@ function formatMonthLabel(rawVal) {
               const matchedKey = Object.keys(byProp).find(k => k.trim().toLowerCase() === cleanTarget);
               if (matchedKey && byProp[matchedKey]) {
                 const p = byProp[matchedKey];
-                return {
-                  propertyName: matchedKey,
-                  name: String(p.name || "").trim(),
-                  phone: normalizeCleanContactPhone(p.phone),
-                  whatsapp: normalizeCleanContactPhone(p.whatsapp),
-                  mobile: normalizeCleanContactPhone(p.mobile),
-                  email: String(p.email || "").trim(),
-                  address: String(p.address || "").trim(),
-                  byProperty: byProp,
-                  isConfigured: Boolean(p.name || p.phone || p.mobile || p.whatsapp || p.email)
-                };
+                const hasSpecific = Boolean(p.name || p.phone || p.mobile || p.whatsapp || p.email || p.address);
+                if (hasSpecific || cleanTarget === "all") {
+                  return {
+                    propertyName: matchedKey,
+                    name: String(p.name || "").trim(),
+                    phone: normalizeCleanContactPhone(p.phone),
+                    whatsapp: normalizeCleanContactPhone(p.whatsapp),
+                    mobile: normalizeCleanContactPhone(p.mobile),
+                    email: String(p.email || "").trim(),
+                    address: String(p.address || "").trim(),
+                    byProperty: byProp,
+                    isConfigured: hasSpecific
+                  };
+                }
               }
-              if (parsed.propertyName && parsed.propertyName.trim().toLowerCase() === cleanTarget) {
+              // Fallback to "ALL" if configured for all properties
+              const allKey = Object.keys(byProp).find(k => k.trim().toLowerCase() === "all");
+              if (allKey && byProp[allKey]) {
+                const pAll = byProp[allKey];
+                const hasAll = Boolean(pAll.name || pAll.phone || pAll.mobile || pAll.whatsapp || pAll.email || pAll.address);
+                if (hasAll) {
+                  return {
+                    propertyName: targetProperty === "ALL" ? "ALL" : targetProperty,
+                    name: String(pAll.name || "").trim(),
+                    phone: normalizeCleanContactPhone(pAll.phone),
+                    whatsapp: normalizeCleanContactPhone(pAll.whatsapp),
+                    mobile: normalizeCleanContactPhone(pAll.mobile),
+                    email: String(pAll.email || "").trim(),
+                    address: String(pAll.address || "").trim(),
+                    byProperty: byProp,
+                    isConfigured: true
+                  };
+                }
+              }
+              if (parsed.propertyName && (parsed.propertyName.trim().toLowerCase() === cleanTarget || parsed.propertyName.trim().toLowerCase() === "all")) {
                 return {
                   propertyName: parsed.propertyName,
                   name: String(parsed.name || "").trim(),
@@ -26880,7 +27053,7 @@ function formatMonthLabel(rawVal) {
             }
 
             return {
-              propertyName: String(parsed.propertyName || "").trim(),
+              propertyName: String(parsed.propertyName || "ALL").trim(),
               name: String(parsed.name || "").trim(),
               phone: normalizeCleanContactPhone(parsed.phone),
               whatsapp: normalizeCleanContactPhone(parsed.whatsapp),
@@ -26894,7 +27067,7 @@ function formatMonthLabel(rawVal) {
         }
       } catch (e) {}
       return {
-        propertyName: targetProperty || "",
+        propertyName: targetProperty || "ALL",
         name: "",
         phone: "",
         whatsapp: "",
@@ -26908,7 +27081,7 @@ function formatMonthLabel(rawVal) {
 
     async function saveAdminContactSettings() {
       const propSelect = document.getElementById("cfgContactProperty");
-      const chosenProp = String(propSelect?.value || selectedProperty || "").trim();
+      const chosenProp = String(propSelect?.value || "ALL").trim();
       if (!chosenProp) {
         triggerSideToast("Select Property", "Please select a property to assign this contact info to.", false);
         return;
@@ -26931,7 +27104,7 @@ function formatMonthLabel(rawVal) {
 
       const fullCfg = getAdminContactSettings();
       const byProperty = fullCfg.byProperty || {};
-      byProperty[chosenProp] = {
+      const entryData = {
         propertyName: chosenProp,
         name,
         phone,
@@ -26941,6 +27114,16 @@ function formatMonthLabel(rawVal) {
         address,
         updatedAt: Date.now()
       };
+      byProperty[chosenProp] = entryData;
+
+      if (chosenProp.toUpperCase() === "ALL") {
+        (DB.properties || []).forEach(p => {
+          const pName = String(p.PropertyName || "").trim();
+          if (pName) {
+            byProperty[pName] = { ...entryData, propertyName: pName };
+          }
+        });
+      }
 
       const cfg = {
         propertyName: chosenProp,
@@ -26955,10 +27138,20 @@ function formatMonthLabel(rawVal) {
       };
       localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(cfg));
 
+      if (typeof recordAdminAuditLog === "function") {
+        recordAdminAuditLog("SAVE_CONTACT_INFO", chosenProp === "ALL" ? "All Properties" : chosenProp, `Contact: ${name || "N/A"}, Phone: ${phone || mobile || "N/A"}`);
+      }
+
       notifyCrossTabSync("contact", cfg);
       renderContactUsDynamicBody();
 
-      triggerSideToast("Contact Info Saved", `Contact details saved strictly for property "${chosenProp}" and synced live!`, true);
+      triggerSideToast(
+        "Contact Info Saved",
+        chosenProp.toUpperCase() === "ALL"
+          ? "Contact details saved for All Properties and synced live!"
+          : `Contact details saved strictly for property "${chosenProp}" and synced live!`,
+        true
+      );
 
       try {
         await sendFirebaseAction({
@@ -26975,18 +27168,15 @@ function formatMonthLabel(rawVal) {
       const distinctProps = [...new Set(propNames)];
 
       if (propSelect) {
-        if (distinctProps.length > 0) {
-          const currentSelected = propSelect.value;
-          propSelect.innerHTML = distinctProps.map(p =>
-            `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`
-          ).join("");
-          if (currentSelected && distinctProps.includes(currentSelected)) {
-            propSelect.value = currentSelected;
-          } else if (selectedProperty && distinctProps.includes(selectedProperty)) {
-            propSelect.value = selectedProperty;
-          }
+        const currentSelected = propSelect.value;
+        const optionsHtml = [`<option value="ALL">All</option>`].concat(
+          distinctProps.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`)
+        ).join("");
+        propSelect.innerHTML = optionsHtml;
+        if (currentSelected && (currentSelected === "ALL" || distinctProps.includes(currentSelected))) {
+          propSelect.value = currentSelected;
         } else {
-          propSelect.innerHTML = `<option value="">No Properties Found</option>`;
+          propSelect.value = "ALL";
         }
       }
 
@@ -26995,7 +27185,7 @@ function formatMonthLabel(rawVal) {
 
     function onContactSettingsPropertyChange() {
       const propSelect = document.getElementById("cfgContactProperty");
-      const chosenProp = propSelect ? propSelect.value : "";
+      const chosenProp = propSelect ? propSelect.value : "ALL";
       const cfg = getAdminContactSettings(chosenProp);
 
       if (document.getElementById("cfgContactName")) document.getElementById("cfgContactName").value = cfg.name || "";
@@ -27020,10 +27210,10 @@ function formatMonthLabel(rawVal) {
         ).trim();
       } else {
         const adminPropSelect = document.getElementById("cfgContactProperty");
-        targetProp = String(adminPropSelect?.value || selectedProperty || "").trim();
+        targetProp = String(adminPropSelect?.value || selectedProperty || "ALL").trim();
       }
 
-      const cfg = targetProp ? getAdminContactSettings(targetProp) : getAdminContactSettings();
+      const cfg = targetProp ? getAdminContactSettings(targetProp) : getAdminContactSettings("ALL");
       const hasAnyDetails = Boolean(cfg.isConfigured || cfg.name || cfg.phone || cfg.whatsapp || cfg.mobile || cfg.email || cfg.address);
 
       if (!hasAnyDetails) {
@@ -27034,7 +27224,7 @@ function formatMonthLabel(rawVal) {
             </div>
             <h4 style="font-size:0.95rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">No Contact Info Configured</h4>
             <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.45; margin:0;">
-              No official contact details have been assigned for <strong>${escapeHtml(targetProp || "your property")}</strong> yet. Contact details are strictly property-isolated.
+              No official contact details have been assigned for <strong>${escapeHtml(targetProp === "ALL" ? "All Properties" : (targetProp || "your property"))}</strong> yet.
             </p>
           </div>
         `;
@@ -29132,16 +29322,16 @@ function formatMonthLabel(rawVal) {
       triggerSideToast("Bulk Broadcast Dispatched", `Live bill reminder sent for ${unpaid.length} unpaid flats (${monthLabel})!`, true);
     }
 
-    // --- GROUP G3: DETAILED ADMIN AUDIT TRAIL & ACTIVITY LOG ---
+    // --- GROUP G3: DETAILED ADMIN AUDIT TRAIL & ACTIVITY LOG (MAX 30 RECORDS, AUTO-DELETES 31ST) ---
     function getStoredAdminAuditLogs() {
       try {
         const raw = localStorage.getItem("portal_admin_audit_logs_v1");
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
+          if (Array.isArray(parsed)) return parsed.slice(0, 30);
         }
       } catch (e) {}
-      if (Array.isArray(DB.globalConfig?.auditLogs)) return DB.globalConfig.auditLogs;
+      if (Array.isArray(DB.globalConfig?.auditLogs)) return DB.globalConfig.auditLogs.slice(0, 30);
       return [];
     }
 
@@ -29156,13 +29346,20 @@ function formatMonthLabel(rawVal) {
         target: String(targetLabel || ""),
         details: String(detailsText || "")
       };
+      // Add newest record at the top and automatically delete the 31st (oldest) record
       list.unshift(entry);
-      const trimmed = list.slice(0, 250);
+      const trimmed = list.slice(0, 30);
       try {
         localStorage.setItem("portal_admin_audit_logs_v1", JSON.stringify(trimmed));
       } catch (e) {}
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.auditLogs = trimmed;
+      if (typeof renderAdminAuditTrailList === "function") {
+        const panel = document.getElementById("otherPanelAuditLog");
+        if (panel && panel.style.display !== "none") {
+          renderAdminAuditTrailList();
+        }
+      }
       sendFirebaseAction({ action: "saveAuditLogs", auditLogs: trimmed }).catch(() => {});
     }
 
