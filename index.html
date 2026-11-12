@@ -8697,15 +8697,20 @@
       } catch (e) {}
     }
 
+    let lastLoginCompletedAt = 0;
+
     async function fetchGasSheetData(forceRefresh = false, bypassPendingGuard = false) {
       const now = Date.now();
       if (!bypassPendingGuard && pendingWriteCount > 0 && lastGasSheetDataCache) {
         return lastGasSheetDataCache;
       }
-      if (!forceRefresh && !gasCacheNeedsRefresh && lastGasSheetDataCache && (now - lastGasFetchTimestamp < 8000)) {
-        return lastGasSheetDataCache;
+      if (lastGasSheetDataCache && lastGasSheetDataCache._liveSheetVerified && !gasCacheNeedsRefresh) {
+        const maxAgeMs = forceRefresh ? 3500 : 8000;
+        if (now - lastGasFetchTimestamp < maxAgeMs) {
+          return lastGasSheetDataCache;
+        }
       }
-      if (inFlightGasFetchPromise && !forceRefresh) {
+      if (inFlightGasFetchPromise) {
         return inFlightGasFetchPromise;
       }
 
@@ -8814,15 +8819,19 @@
                 }).catch(function() {});
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
+              const activeUKey = String(activeUser || "").trim().toLowerCase();
               remoteUsers = remoteUsers.map(function(u) {
                 const rawSt = String(u.Status || u.AccountStatus || "Active").trim();
                 const normSt = rawSt.toLowerCase() === "blocked" ? "Blocked" : "Active";
                 const uLower = String(u.Username || "").trim().toLowerCase();
                 const localDeviceTok = localStorage.getItem("portal_device_session_" + uLower) || "";
+                const withinLoginGrace = (uLower === activeUKey) && activeSessionToken && (Date.now() - lastLoginCompletedAt < 15000);
                 return Object.assign({}, u, {
                   Status: normSt,
                   AccountStatus: normSt,
-                  ActiveSessionToken: u.ActiveSessionToken || localDeviceTok || ""
+                  ActiveSessionToken: withinLoginGrace
+                    ? activeSessionToken
+                    : (u.ActiveSessionToken || localDeviceTok || "")
                 });
               });
               try {
@@ -8831,20 +8840,12 @@
                   .map(function(u) { return String(u.Username || "").trim().toLowerCase(); });
                 localStorage.setItem("portal_blocked_users", JSON.stringify(blockedNames));
               } catch (e) {}
-              try {
-                const syncRes = await fetch("/api/gas-engine", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
-                });
-                if (syncRes.ok) {
-                  const syncJson = await syncRes.json();
-                  if (syncJson && Array.isArray(syncJson.users)) {
-                    remoteUsers = syncJson.users;
-                  }
-                }
-              } catch (e) {}
               saveLocalUsersMaster(remoteUsers);
+              fetch("/api/gas-engine", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
+              }).catch(function() {});
             }
 
             if (Array.isArray(json.loginHistory) && json.loginHistory.length > 0) {
@@ -9222,13 +9223,16 @@
         };
       }
 
-      // Check server lockout status for this valid username
+      // Check server lockout status for this valid username (with fast 1.5s timeout so login never hangs)
       try {
-        const lockCheckRes = await fetch("/api/gas-engine", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "checkUserLockout", username: cleanUKey })
-        }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+        const lockCheckRes = await Promise.race([
+          fetch("/api/gas-engine", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "checkUserLockout", username: cleanUKey })
+          }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }),
+          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 1500); })
+        ]);
 
         if (lockCheckRes) {
           if (lockCheckRes.status === "blocked" || lockCheckRes.isPermanentlyBlocked) {
@@ -9275,7 +9279,10 @@
       }
 
       // STEP 4: Verify password directly against the live Google Sheet user record
-      const livePassword = String(liveMatch.Password !== undefined ? liveMatch.Password : "").trim();
+      const rawLivePass = liveMatch.Password !== undefined && liveMatch.Password !== null
+        ? liveMatch.Password
+        : (liveMatch.password !== undefined && liveMatch.password !== null ? liveMatch.password : "");
+      const livePassword = String(rawLivePass).trim();
       if (livePassword !== cleanPass) {
         return {
           status: "wrong_password",
@@ -9286,47 +9293,7 @@
       }
 
       // STEP 5: Password matches live Google Sheet!
-      // Completely reset lockout counter & stage to zero and record login session in backend & Google Sheet
-      const loginPayloadObj = {
-        action: "loginUser",
-        username: liveMatch.Username,
-        password: cleanPass,
-        sessionToken: sessionToken,
-        loginTime: new Date().toLocaleString("en-IN"),
-        deviceInfo: navigator.userAgent || "Web Browser"
-      };
-      const bodyStr = JSON.stringify(loginPayloadObj);
-
-      const [engineRes, gasRes] = await Promise.all([
-        fetch("/api/gas-engine", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: bodyStr
-        }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }),
-        fetch(GAS_WEB_APP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: bodyStr,
-          redirect: "follow"
-        }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; })
-      ]);
-
-      // Also explicitly ensure recordUserLogin and resetUserLockout are synced if Google Apps Script uses older deployment
-      fetch(GAS_WEB_APP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          action: "recordUserLogin",
-          username: liveMatch.Username,
-          fullName: liveMatch.FullName || liveMatch.Username,
-          role: liveMatch.Role || "Admin",
-          sessionToken: sessionToken,
-          loginTime: loginPayloadObj.loginTime,
-          deviceInfo: loginPayloadObj.deviceInfo
-        }),
-        redirect: "follow"
-      }).catch(function() {});
-
+      // Immediately stamp sessionToken onto liveSheetData & cache so post-login sync never sees a stale token
       const userDocData = Object.assign({}, liveMatch, {
         Username: liveMatch.Username,
         Password: cleanPass,
@@ -9337,19 +9304,62 @@
         ActiveSessionToken: sessionToken
       });
 
+      if (Array.isArray(liveSheetData?.users)) {
+        liveSheetData.users = liveSheetData.users.map(function(u) {
+          if (String(u.Username || "").trim().toLowerCase() === cleanUKey) {
+            return Object.assign({}, u, { ActiveSessionToken: sessionToken, Status: "Active", AccountStatus: "Active" });
+          }
+          return u;
+        });
+      }
+      if (liveSheetData?.globalConfig?.loginLockouts && liveSheetData.globalConfig.loginLockouts[cleanUKey]) {
+        delete liveSheetData.globalConfig.loginLockouts[cleanUKey];
+      }
+      if (lastGasSheetDataCache && Array.isArray(lastGasSheetDataCache.users)) {
+        lastGasSheetDataCache.users = liveSheetData.users;
+      }
+
       try {
         sessionStorage.setItem("active_session_password", cleanPass);
         localStorage.setItem("portal_session_pass_" + cleanUKey, cleanPass);
         localStorage.setItem("portal_device_session_" + cleanUKey, sessionToken);
       } catch (e) {}
 
-      if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
-        saveLocalLoginHistoryMaster(gasRes.loginHistory);
-      } else if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
-        saveLocalLoginHistoryMaster(engineRes.loginHistory);
-      }
-
       lastWriteCompletedAt = Date.now();
+      lastLoginCompletedAt = Date.now();
+
+      // Record login session & reset lockout in backend and Google Apps Script asynchronously so UI unlocks immediately
+      const loginPayloadObj = {
+        action: "loginUser",
+        username: liveMatch.Username,
+        password: cleanPass,
+        sessionToken: sessionToken,
+        loginTime: new Date().toLocaleString("en-IN"),
+        deviceInfo: navigator.userAgent || "Web Browser"
+      };
+      const bodyStr = JSON.stringify(loginPayloadObj);
+
+      fetch("/api/gas-engine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: bodyStr
+      }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
+        if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
+          saveLocalLoginHistoryMaster(engineRes.loginHistory);
+        }
+      }).catch(function() {});
+
+      fetch(GAS_WEB_APP_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: bodyStr,
+        redirect: "follow"
+      }).then(function(r) { return r.ok ? r.json() : null; }).then(function(gasRes) {
+        if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
+          saveLocalLoginHistoryMaster(gasRes.loginHistory);
+        }
+      }).catch(function() {});
+
       return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, liveSheetData);
     }
     const firebaseLogin = portalLogin;
@@ -14751,7 +14761,7 @@ function formatMonthLabel(rawVal) {
         try {
           const loginPromise = firebaseLogin(user, pass, newSessionToken);
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Server connection timed out")), 20000)
+            setTimeout(() => reject(new Error("Server connection timed out")), 35000)
           );
           res = await Promise.race([loginPromise, timeoutPromise]);
         } catch (netErr) {
@@ -14796,17 +14806,9 @@ function formatMonthLabel(rawVal) {
         if (res && res.status === "success") {
           // Reset Condition: On successful login at any stage, completely clear failed attempt history and reset stage/counter to zero
           resetLoginLockoutState(cleanU);
-          fetch("/api/gas-engine", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "resetUserLockout", username: cleanU })
-          }).catch(() => {});
-          fetch(GAS_WEB_APP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "resetUserLockout", username: cleanU }),
-            redirect: "follow"
-          }).catch(() => {});
+          isSessionConflictModalOpen = false;
+          lastLoginCompletedAt = Date.now();
+          lastWriteCompletedAt = Date.now();
 
           try {
             localStorage.removeItem(EXPLICIT_LOGOUT_FLAG_KEY);
@@ -14837,12 +14839,6 @@ function formatMonthLabel(rawVal) {
             document.getElementById("dashboardScreen")?.classList.add("active");
           }
 
-          if (!Array.isArray(DB.properties) || DB.properties.length === 0) {
-            setTimeout(() => {
-              try { syncDataLive(true); } catch (e) {}
-            }, 150);
-          }
-
           triggerSideToast("Welcome Back", `Logged in as ${activeUserFullName || user}`, true);
           return;
         }
@@ -14854,22 +14850,43 @@ function formatMonthLabel(rawVal) {
 
         // Valid username with wrong password -> Record failed attempt centrally on server & Google Sheet (4-Stage Progressive Lockout)
         const failBodyStr = JSON.stringify({ action: "recordFailedAttempt", username: cleanU });
-        const [engineFailOutcome, gasFailOutcome] = await Promise.all([
+        const engineFailOutcome = await Promise.race([
           fetch("/api/gas-engine", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: failBodyStr
           }).then(r => r.ok ? r.json() : null).catch(() => null),
-          fetch(GAS_WEB_APP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: failBodyStr,
-            redirect: "follow"
-          }).then(r => r.ok ? r.json() : null).catch(() => null)
+          new Promise(resolve => setTimeout(() => resolve(null), 2500))
         ]);
-        const serverOutcome = (gasFailOutcome && gasFailOutcome.userExists !== undefined)
-          ? gasFailOutcome
-          : engineFailOutcome;
+
+        fetch(GAS_WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: failBodyStr,
+          redirect: "follow"
+        }).then(r => r.ok ? r.json() : null).then(gasOut => {
+          if (gasOut && gasOut.userExists) {
+            const st = getLoginLockoutState(cleanU);
+            if (gasOut.status === "blocked" || gasOut.isPermanentlyBlocked) {
+              st.stage = 4;
+              st.failedInStage = 0;
+              st.lockedUntil = 0;
+              st.isPermanentlyBlocked = true;
+            } else if (gasOut.status === "locked" || gasOut.locked) {
+              st.stage = Number(gasOut.tier) || st.stage || 1;
+              st.failedInStage = 0;
+              st.lockedUntil = Number(gasOut.lockedUntil) || st.lockedUntil;
+              st.lockedTierLabel = gasOut.tierLabel || st.lockedTierLabel || "1 minute";
+            } else if (gasOut.status === "attempt_counted") {
+              st.stage = Number(gasOut.tier !== undefined ? gasOut.tier : st.stage) || 0;
+              st.failedInStage = Number(gasOut.attempts) || st.failedInStage;
+            }
+            saveLoginLockoutState(cleanU, st);
+            updateLoginLockoutUI(cleanU);
+          }
+        }).catch(() => {});
+
+        const serverOutcome = engineFailOutcome;
 
         if (serverOutcome && serverOutcome.userExists === false) {
           resetLoginLockoutState(cleanU);
@@ -14986,8 +15003,9 @@ function formatMonthLabel(rawVal) {
           );
           const activeUserStillInSheet = Boolean(matchedServerUser);
 
-          // Single-Device Session Conflict: Check if this account logged in from another device
-          if (res.sessionConflict === true || (matchedServerUser && matchedServerUser.ActiveSessionToken && activeSessionToken && String(matchedServerUser.ActiveSessionToken).trim() !== String(activeSessionToken).trim())) {
+          // Single-Device Session Conflict: Check if this account logged in from another device (ignore within 15s of login while background GAS write settles)
+          const withinLoginGraceWindow = (Date.now() - lastLoginCompletedAt) < 15000;
+          if (!withinLoginGraceWindow && (res.sessionConflict === true || (matchedServerUser && matchedServerUser.ActiveSessionToken && activeSessionToken && String(matchedServerUser.ActiveSessionToken).trim() !== String(activeSessionToken).trim()))) {
             triggerSingleDeviceSessionConflict();
             return;
           }
