@@ -8588,6 +8588,26 @@
       const clean = Array.isArray(usersArr) ? usersArr : [];
       try {
         localStorage.setItem(GAS_USERS_STORE_KEY, JSON.stringify(clean));
+        // Purge cached passwords and device sessions for any user deleted from the Google Sheet
+        const validNames = new Set(
+          clean
+            .map(function(u) { return String(u.Username || "").trim().toLowerCase(); })
+            .filter(Boolean)
+        );
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (!k) continue;
+          if (k.indexOf("portal_session_pass_") === 0) {
+            const uKey = k.substring("portal_session_pass_".length).toLowerCase();
+            if (!validNames.has(uKey)) localStorage.removeItem(k);
+          } else if (k.indexOf("portal_device_session_") === 0) {
+            const uKey = k.substring("portal_device_session_".length).toLowerCase();
+            if (!validNames.has(uKey)) localStorage.removeItem(k);
+          } else if (k.indexOf("portal_login_lockout_u_") === 0) {
+            const uKey = k.substring("portal_login_lockout_u_".length).toLowerCase();
+            if (uKey !== "default" && !validNames.has(uKey)) localStorage.removeItem(k);
+          }
+        }
       } catch (e) {}
       if (typeof DB !== "undefined" && DB) {
         DB.users = clean;
@@ -8675,9 +8695,9 @@
       } catch (e) {}
     }
 
-    async function fetchGasSheetData(forceRefresh = false) {
+    async function fetchGasSheetData(forceRefresh = false, bypassPendingGuard = false) {
       const now = Date.now();
-      if (pendingWriteCount > 0 && lastGasSheetDataCache) {
+      if (!bypassPendingGuard && pendingWriteCount > 0 && lastGasSheetDataCache) {
         return lastGasSheetDataCache;
       }
       if (!forceRefresh && !gasCacheNeedsRefresh && lastGasSheetDataCache && (now - lastGasFetchTimestamp < 8000)) {
@@ -8691,21 +8711,23 @@
       inFlightGasFetchPromise = (async function() {
         try {
           const sep = GAS_WEB_APP_URL.indexOf("?") === -1 ? "?" : "&";
-          const url = GAS_WEB_APP_URL + sep + "action=getInitialData&t=" + Date.now();
+          const url = GAS_WEB_APP_URL + sep + "action=getInitialData&t=" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
           let response = await fetch(url, {
             method: "GET",
+            cache: "no-store",
             redirect: "follow"
           });
           if (!response.ok) {
             response = await fetch(GAS_WEB_APP_URL, {
               method: "POST",
+              cache: "no-store",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
-              body: JSON.stringify({ action: "getInitialData" }),
+              body: JSON.stringify({ action: "getInitialData", t: Date.now() }),
               redirect: "follow"
             });
           }
           const json = await response.json();
-          if (fetchEpochAtStart !== gasWriteEpoch || pendingWriteCount > 0) {
+          if (!bypassPendingGuard && (fetchEpochAtStart !== gasWriteEpoch || pendingWriteCount > 0)) {
             return lastGasSheetDataCache || {
               properties: DB.properties || [],
               flats: DB.flats || [],
@@ -8726,42 +8748,69 @@
               : null;
 
             if (sheetReturnedUsersArray && remoteUsers.length === 0) {
-              // Not a single user remains in the Google Sheet -> request backend engine to auto-seed the first Admin user ID
+              // All users were manually deleted in Google Sheets -> request Google Apps Script & backend engine to auto-generate the first Admin user ID
               try {
-                const seedRes = await fetch("/api/gas-engine", {
+                const gasSeedRes = await fetch(GAS_WEB_APP_URL, {
                   method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ action: "syncEmptySheetUsers" })
-                });
-                if (seedRes.ok) {
-                  const seedJson = await seedRes.json();
-                  if (seedJson && Array.isArray(seedJson.users) && seedJson.users.length > 0) {
-                    remoteUsers = seedJson.users;
-                    saveLocalUsersMaster(remoteUsers);
-                    const blockedNames = remoteUsers
-                      .filter(function(u) { return String(u.Status || u.AccountStatus || "").toLowerCase() === "blocked"; })
-                      .map(function(u) { return String(u.Username || "").trim().toLowerCase(); });
-                    localStorage.setItem("portal_blocked_users", JSON.stringify(blockedNames));
-                  }
-                  if (seedJson && seedJson.shouldSeedSheet && seedJson.seedUser) {
-                    const su = seedJson.seedUser;
-                    fetch(GAS_WEB_APP_URL, {
-                      method: "POST",
-                      headers: { "Content-Type": "text/plain;charset=utf-8" },
-                      body: JSON.stringify({
-                        action: "createUser",
-                        newUsername: su.Username,
-                        newPassword: su.Password,
-                        fullName: su.FullName,
-                        role: su.Role,
-                        status: su.Status || "Active",
-                        users: remoteUsers
-                      }),
-                      redirect: "follow"
-                    }).catch(function() {});
-                  }
+                  cache: "no-store",
+                  headers: { "Content-Type": "text/plain;charset=utf-8" },
+                  body: JSON.stringify({ action: "syncEmptySheetUsers" }),
+                  redirect: "follow"
+                }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+
+                if (gasSeedRes && Array.isArray(gasSeedRes.users) && gasSeedRes.users.length > 0) {
+                  remoteUsers = gasSeedRes.users;
                 }
               } catch (e) {}
+
+              if (!remoteUsers || remoteUsers.length === 0) {
+                try {
+                  const seedRes = await fetch("/api/gas-engine", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "syncEmptySheetUsers", forceSeedDefaultAdmin: true })
+                  });
+                  if (seedRes.ok) {
+                    const seedJson = await seedRes.json();
+                    if (seedJson && Array.isArray(seedJson.users) && seedJson.users.length > 0) {
+                      remoteUsers = seedJson.users;
+                    }
+                    if (seedJson && seedJson.shouldSeedSheet && seedJson.seedUser) {
+                      const su = seedJson.seedUser;
+                      await fetch(GAS_WEB_APP_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: JSON.stringify({
+                          action: "createUser",
+                          userDoc: su,
+                          newUsername: su.Username,
+                          newPassword: su.Password,
+                          fullName: su.FullName,
+                          role: su.Role,
+                          status: su.Status || "Active",
+                          users: remoteUsers
+                        }),
+                        redirect: "follow"
+                      }).catch(function() {});
+                    }
+                  }
+                } catch (e) {}
+              }
+
+              if (remoteUsers && remoteUsers.length > 0) {
+                saveLocalUsersMaster(remoteUsers);
+                try {
+                  const blockedNames = remoteUsers
+                    .filter(function(u) { return String(u.Status || u.AccountStatus || "").toLowerCase() === "blocked"; })
+                    .map(function(u) { return String(u.Username || "").trim().toLowerCase(); });
+                  localStorage.setItem("portal_blocked_users", JSON.stringify(blockedNames));
+                } catch (e) {}
+                await fetch("/api/gas-engine", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
+                }).catch(function() {});
+              }
             } else if (remoteUsers && remoteUsers.length > 0) {
               remoteUsers = remoteUsers.map(function(u) {
                 const rawSt = String(u.Status || u.AccountStatus || "Active").trim();
@@ -8788,7 +8837,7 @@
                 });
                 if (syncRes.ok) {
                   const syncJson = await syncRes.json();
-                  if (syncJson && Array.isArray(syncJson.users) && syncJson.users.length > 0) {
+                  if (syncJson && Array.isArray(syncJson.users)) {
                     remoteUsers = syncJson.users;
                   }
                 }
@@ -8805,6 +8854,7 @@
             }
 
             const sheetPayload = {
+              _liveSheetVerified: true,
               properties: Array.isArray(json.properties) ? json.properties : [],
               flats: Array.isArray(json.flats) ? json.flats : [],
               renters: Array.isArray(json.renters) ? json.renters : [],
@@ -8812,7 +8862,7 @@
               fdRecords: Array.isArray(json.fdRecords) ? json.fdRecords : [],
               khetRecords: Array.isArray(json.khetRecords) ? json.khetRecords : [],
               kharchRecords: Array.isArray(json.kharchRecords) ? json.kharchRecords : [],
-              users: getKnownUsersList(),
+              users: Array.isArray(remoteUsers) ? remoteUsers : getKnownUsersList(),
               loginHistory: loadLocalLoginHistoryMaster(),
               globalConfig: loadLocalGlobalConfigMaster()
             };
@@ -9070,7 +9120,7 @@
     /**
      * ============================================================================
      * GOOGLE SHEETS LOGIN AUTHENTICATOR & LOGIN HISTORY
-     * - Authenticates directly against Google Apps Script / Backend Engine
+     * - Authenticates directly against the live Google Sheet (Zero Cache Reliance)
      * - Zero hardcoded credentials in HTML
      * ============================================================================
      */
@@ -9128,234 +9178,176 @@
     async function portalLogin(username, password, sessionToken) {
       const cleanUser = String(username || "").trim();
       const cleanPass = String(password || "").trim();
+      const cleanUKey = cleanUser.toLowerCase();
       if (!cleanUser || !cleanPass) {
         return { status: "error", message: "Username and password are required." };
       }
 
+      // STEP 1: Always fetch the live Google Sheet first (bypassing any local cache)
+      // If the Google Sheet Users tab was manually emptied, fetchGasSheetData(true, true)
+      // automatically triggers Google Apps Script / backend to generate the first Admin user.
+      const liveSheetData = await fetchGasSheetData(true, true);
+      const liveUsers = Array.isArray(liveSheetData?.users) ? liveSheetData.users : [];
+
+      // STEP 2: Verify the user exists in the live Google Sheet
+      const liveMatch = liveUsers.find(function(u) {
+        return String(u.Username || "").trim().toLowerCase() === cleanUKey;
+      });
+
+      if (!liveMatch) {
+        // User does NOT exist in the live Google Sheet -> purge any stale browser cache and deny access immediately!
+        try {
+          localStorage.removeItem("portal_session_pass_" + cleanUKey);
+          localStorage.removeItem("portal_device_session_" + cleanUKey);
+        } catch (e) {}
+        return {
+          status: "error",
+          userExists: false,
+          userNotFound: true,
+          message: "Access Denied: This username does not exist in the live Google Sheet."
+        };
+      }
+
+      // STEP 3: Check if the valid user is blocked in the live Google Sheet or Lockout Registry
+      const liveStatus = String(liveMatch.Status || liveMatch.AccountStatus || "Active").trim().toLowerCase();
+      if (liveStatus === "blocked" || liveStatus === "suspended" || liveStatus === "inactive") {
+        return {
+          status: "blocked",
+          userExists: true,
+          isPermanentlyBlocked: true,
+          message: "This user account (@" + liveMatch.Username + ") has been blocked. Login access is strictly denied."
+        };
+      }
+
+      // Check server lockout status for this valid username
+      try {
+        const lockCheckRes = await fetch("/api/gas-engine", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "checkUserLockout", username: cleanUKey })
+        }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+
+        if (lockCheckRes) {
+          if (lockCheckRes.status === "blocked" || lockCheckRes.isPermanentlyBlocked) {
+            return {
+              status: "blocked",
+              userExists: true,
+              isPermanentlyBlocked: true,
+              message: lockCheckRes.message || ("This user account (@" + liveMatch.Username + ") has been permanently blocked.")
+            };
+          }
+          if (lockCheckRes.status === "locked" || lockCheckRes.locked === true) {
+            return lockCheckRes;
+          }
+        }
+      } catch (e) {}
+
+      // Also check lockout from the live Google Sheet's globalConfig.loginLockouts
+      const sheetLockouts = (liveSheetData && liveSheetData.globalConfig && liveSheetData.globalConfig.loginLockouts) || {};
+      const sheetLock = sheetLockouts[cleanUKey];
+      if (sheetLock) {
+        if (sheetLock.isPermanentlyBlocked) {
+          return {
+            status: "blocked",
+            userExists: true,
+            isPermanentlyBlocked: true,
+            message: "This user account (@" + liveMatch.Username + ") has been permanently blocked due to repeated failed login attempts."
+          };
+        }
+        if (sheetLock.lockedUntil && Number(sheetLock.lockedUntil) > Date.now()) {
+          const remMs = Number(sheetLock.lockedUntil) - Date.now();
+          return {
+            status: "locked",
+            userExists: true,
+            locked: true,
+            username: liveMatch.Username,
+            lockedUntil: Number(sheetLock.lockedUntil),
+            remainingMinutes: Math.ceil(remMs / 60000),
+            remainingSeconds: Math.ceil(remMs / 1000),
+            tier: Number(sheetLock.tier) || 1,
+            tierLabel: sheetLock.tierLabel || "1 minute",
+            message: "Username @" + liveMatch.Username + " is locked for " + (sheetLock.tierLabel || "1 minute") + "."
+          };
+        }
+      }
+
+      // STEP 4: Verify password directly against the live Google Sheet user record
+      const livePassword = String(liveMatch.Password !== undefined ? liveMatch.Password : "").trim();
+      if (livePassword !== cleanPass) {
+        return {
+          status: "wrong_password",
+          userExists: true,
+          username: liveMatch.Username,
+          message: "Invalid password."
+        };
+      }
+
+      // STEP 5: Password matches live Google Sheet!
+      // Completely reset lockout counter & stage to zero and record login session in backend & Google Sheet
       const loginPayloadObj = {
         action: "loginUser",
-        username: cleanUser,
+        username: liveMatch.Username,
         password: cleanPass,
         sessionToken: sessionToken,
+        loginTime: new Date().toLocaleString("en-IN"),
         deviceInfo: navigator.userAgent || "Web Browser"
       };
       const bodyStr = JSON.stringify(loginPayloadObj);
 
-      // Run backend engine verification and live Google Apps Script verification in parallel (bounded by 5.5s so login never hangs)
-      const enginePromise = fetch("/api/gas-engine", {
+      const [engineRes, gasRes] = await Promise.all([
+        fetch("/api/gas-engine", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: bodyStr
+        }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }),
+        fetch(GAS_WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: bodyStr,
+          redirect: "follow"
+        }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; })
+      ]);
+
+      // Also explicitly ensure recordUserLogin and resetUserLockout are synced if Google Apps Script uses older deployment
+      fetch(GAS_WEB_APP_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: bodyStr
-      })
-        .then(function(r) { return r.ok ? r.json() : null; })
-        .catch(function() { return null; });
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "recordUserLogin",
+          username: liveMatch.Username,
+          fullName: liveMatch.FullName || liveMatch.Username,
+          role: liveMatch.Role || "Admin",
+          sessionToken: sessionToken,
+          loginTime: loginPayloadObj.loginTime,
+          deviceInfo: loginPayloadObj.deviceInfo
+        }),
+        redirect: "follow"
+      }).catch(function() {});
 
-      const gasPromise = (async function() {
-        const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-        const timer = setTimeout(function() {
-          if (controller) controller.abort();
-        }, 5500);
-        try {
-          const response = await fetch(GAS_WEB_APP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: bodyStr,
-            redirect: "follow",
-            signal: controller ? controller.signal : undefined
-          });
-          clearTimeout(timer);
-          if (!response.ok) return null;
-          return await response.json();
-        } catch (e) {
-          clearTimeout(timer);
-          return null;
-        }
-      })();
-
-      const [engineRes, gasRes] = await Promise.all([enginePromise, gasPromise]);
-
-      // 1. Immediately enforce authoritative server or Google Apps Script blocked and lockout statuses
-      if (engineRes && (engineRes.status === "blocked" || engineRes.isPermanentlyBlocked)) {
-        return {
-          status: "blocked",
-          message: engineRes.message || "This account has been completely blocked due to repeated failed login attempts."
-        };
-      }
-      if (gasRes && (gasRes.status === "blocked" || gasRes.isPermanentlyBlocked)) {
-        return {
-          status: "blocked",
-          message: gasRes.message || "This account has been completely blocked due to repeated failed login attempts."
-        };
-      }
-      if (engineRes && (engineRes.status === "locked" || engineRes.locked === true)) {
-        return engineRes;
-      }
-      if (gasRes && (gasRes.status === "locked" || gasRes.locked === true)) {
-        return gasRes;
-      }
-
-      // 2. If password verification failed on the server with remaining attempts or lock info
-      if (engineRes && engineRes.status === "error" && engineRes.attemptsLeft !== undefined) {
-        return engineRes;
-      }
-      if (gasRes && gasRes.status === "error" && gasRes.attemptsLeft !== undefined) {
-        return gasRes;
-      }
-
-      // 3. If the user's password or block status was explicitly modified in the portal, strictly enforce it
-      if (engineRes && engineRes.userModified === true) {
-        if (engineRes.status === "blocked") {
-          return {
-            status: "blocked",
-            message: engineRes.message || "This account has been blocked by an administrator. Login access is strictly denied."
-          };
-        }
-        if (engineRes.status === "error") {
-          return {
-            status: "error",
-            message: engineRes.message || "Incorrect username or password."
-          };
-        }
-      }
-
-      if (gasRes && gasRes.status === "success" && (gasRes.user || gasRes.username)) {
-        const userDocData = gasRes.user || {
-          Username: gasRes.username || cleanUser,
-          Password: cleanPass,
-          FullName: gasRes.fullName || gasRes.username || cleanUser,
-          Role: gasRes.role || "Admin",
-          Status: "Active",
-          AccountStatus: "Active",
-          MobileNumber: gasRes.mobile || "",
-          AssignedProperty: gasRes.assignedProperty || "",
-          AssignedFlat: gasRes.assignedFlat || "",
-          AssignedAadhaar: gasRes.assignedAadhaar || "",
-          ManagerPermissions: gasRes.managerPermissions || [],
-          Theme: gasRes.theme || "dark",
-          ActiveSessionToken: sessionToken
-        };
-        const verifiedStatus = String(userDocData.Status || userDocData.AccountStatus || "Active").trim();
-        if (verifiedStatus.toLowerCase() === "blocked") {
-          return {
-            status: "blocked",
-            message: "This account has been blocked by an administrator. Login access is strictly denied."
-          };
-        }
-        if (userDocData.Password !== undefined && String(userDocData.Password).trim() !== "" && String(userDocData.Password).trim() !== cleanPass) {
-          return {
-            status: "error",
-            message: "Incorrect password entered."
-          };
-        }
-        userDocData.Password = cleanPass;
-        userDocData.ActiveSessionToken = sessionToken;
-        try {
-          sessionStorage.setItem("active_session_password", cleanPass);
-          localStorage.setItem("portal_session_pass_" + cleanUser.toLowerCase(), cleanPass);
-          localStorage.setItem("portal_device_session_" + cleanUser.toLowerCase(), sessionToken);
-        } catch (e) {}
-        if (Array.isArray(gasRes.users) && gasRes.users.length > 0) {
-          saveLocalUsersMaster(gasRes.users);
-          fetch("/api/gas-engine", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "replaceUsersFromSheet", users: gasRes.users })
-          }).catch(function() {});
-        }
-        if (Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
-          saveLocalLoginHistoryMaster(gasRes.loginHistory);
-        }
-        lastWriteCompletedAt = Date.now();
-        return await buildCompleteLoginSuccessPayload(
-          userDocData,
-          sessionToken,
-          gasRes.dbPayload || (Array.isArray(gasRes.properties) ? gasRes : lastGasSheetDataCache)
-        );
-      }
-
-      if (
-        gasRes &&
-        gasRes.status === "error" &&
-        /incorrect password/i.test(String(gasRes.message || "")) &&
-        !(engineRes && engineRes.userModified === true && engineRes.status === "success")
-      ) {
-        return gasRes;
-      }
-
-      // 3. Fallback / Empty-Sheet Auto-Admin Verification via Backend Engine (/api/gas-engine)
-      if (engineRes) {
-        if (engineRes.status === "blocked") {
-          return {
-            status: "blocked",
-            message: engineRes.message || "This account has been blocked by an administrator. Login access is strictly denied."
-          };
-        }
-        if (engineRes.status === "success" && (engineRes.user || engineRes.username)) {
-          const userDocData = Object.assign({}, engineRes.user || { Username: engineRes.username || cleanUser }, {
-            Password: cleanPass,
-            ActiveSessionToken: sessionToken
-          });
-          try {
-            sessionStorage.setItem("active_session_password", cleanPass);
-            localStorage.setItem("portal_session_pass_" + cleanUser.toLowerCase(), cleanPass);
-            localStorage.setItem("portal_device_session_" + cleanUser.toLowerCase(), sessionToken);
-          } catch (e) {}
-          if (Array.isArray(engineRes.users) && engineRes.users.length > 0) {
-            saveLocalUsersMaster(engineRes.users);
-          }
-          // Ensure the user exists in Google Sheets in the background
-          fetch(GAS_WEB_APP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({
-              action: "createUser",
-              newUsername: userDocData.Username,
-              newPassword: userDocData.Password,
-              fullName: userDocData.FullName || userDocData.Username,
-              role: userDocData.Role || "Admin",
-              status: userDocData.Status || "Active",
-              users: engineRes.users || [userDocData]
-            }),
-            redirect: "follow"
-          }).catch(function() {});
-          lastWriteCompletedAt = Date.now();
-          return await buildCompleteLoginSuccessPayload(
-            userDocData,
-            sessionToken,
-            lastGasSheetDataCache || engineRes.dbPayload || engineRes
-          );
-        }
-        if (engineRes.status === "error") {
-          return engineRes;
-        }
-      }
-
-      // 4. Offline local mirror verification
-      const localUsers = getKnownUsersList();
-      const match = localUsers.find(function(u) {
-        return String(u.Username || "").trim().toLowerCase() === cleanUser.toLowerCase();
+      const userDocData = Object.assign({}, liveMatch, {
+        Username: liveMatch.Username,
+        Password: cleanPass,
+        FullName: liveMatch.FullName || liveMatch.Username,
+        Role: liveMatch.Role || "Admin",
+        Status: "Active",
+        AccountStatus: "Active",
+        ActiveSessionToken: sessionToken
       });
-      if (match) {
-        let blockedList = [];
-        try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
-        const uStatus = String(match.Status || match.AccountStatus || "Active").trim();
-        if (uStatus.toLowerCase() === "blocked" || blockedList.includes(cleanUser.toLowerCase())) {
-          return { status: "blocked", message: "This account has been blocked by an administrator. Login access is strictly denied." };
-        }
-        if (String(match.Password || "").trim() === cleanPass) {
-          match.ActiveSessionToken = sessionToken;
-          try {
-            sessionStorage.setItem("active_session_password", cleanPass);
-            localStorage.setItem("portal_session_pass_" + cleanUser.toLowerCase(), cleanPass);
-            localStorage.setItem("portal_device_session_" + cleanUser.toLowerCase(), sessionToken);
-          } catch (e) {}
-          saveLocalUsersMaster(localUsers);
-          lastWriteCompletedAt = Date.now();
-          return await buildCompleteLoginSuccessPayload(match, sessionToken, lastGasSheetDataCache);
-        }
+
+      try {
+        sessionStorage.setItem("active_session_password", cleanPass);
+        localStorage.setItem("portal_session_pass_" + cleanUKey, cleanPass);
+        localStorage.setItem("portal_device_session_" + cleanUKey, sessionToken);
+      } catch (e) {}
+
+      if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
+        saveLocalLoginHistoryMaster(gasRes.loginHistory);
+      } else if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
+        saveLocalLoginHistoryMaster(engineRes.loginHistory);
       }
 
-      return { status: "error", message: "Your Username or Password is wrong." };
+      lastWriteCompletedAt = Date.now();
+      return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, liveSheetData);
     }
     const firebaseLogin = portalLogin;
 
@@ -10491,6 +10483,9 @@
             if (!blockedList.includes(targetClean)) blockedList.push(targetClean);
           } else {
             blockedList = blockedList.filter(u => u !== targetClean);
+            if (typeof resetLoginLockoutState === "function") {
+              resetLoginLockoutState(targetClean);
+            }
           }
           localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
 
@@ -14587,6 +14582,9 @@ function formatMonthLabel(rawVal) {
       }
 
       try {
+        // Refresh from live Google Sheet in background so deleted users are immediately pruned
+        fetchGasSheetData(true).catch(() => {});
+
         const res = await fetch("/api/gas-engine", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -14598,9 +14596,25 @@ function formatMonthLabel(rawVal) {
           const currentVal = String(document.getElementById("loginUsername")?.value || "").trim().toLowerCase();
           if (currentVal !== cleanVal) return;
 
+          if (data && data.userExists === false) {
+            resetLoginLockoutState(cleanVal);
+            if (badgeEl) {
+              badgeEl.style.display = "none";
+              badgeEl.innerHTML = "";
+            }
+            if (noteEl) {
+              noteEl.style.display = "none";
+              noteEl.innerHTML = "";
+            }
+            return;
+          }
+
           if (data && (data.status === "blocked" || data.isPermanentlyBlocked)) {
             const state = getLoginLockoutState(cleanVal);
             state.username = cleanVal;
+            state.stage = 4;
+            state.failedInStage = 0;
+            state.lockedUntil = 0;
             state.isPermanentlyBlocked = true;
             saveLoginLockoutState(cleanVal, state);
             updateLoginLockoutUI(cleanVal);
@@ -14614,7 +14628,7 @@ function formatMonthLabel(rawVal) {
             }
             if (noteEl) {
               noteEl.style.display = "block";
-              noteEl.innerHTML = `<span style="color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> Username @${cleanVal} is completely blocked from repeated failed attempts.</span>`;
+              noteEl.innerHTML = `<span style="color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> Username @${cleanVal} is permanently blocked.</span>`;
             }
             return;
           }
@@ -14622,6 +14636,8 @@ function formatMonthLabel(rawVal) {
           if (data && (data.status === "locked" || data.locked === true)) {
             const state = getLoginLockoutState(cleanVal);
             state.username = cleanVal;
+            state.stage = Number(data.tier) || state.stage || 1;
+            state.failedInStage = 0;
             state.lockedUntil = data.lockedUntil;
             state.lockedTierLabel = data.tierLabel || "1 minute";
             saveLoginLockoutState(cleanVal, state);
@@ -14644,19 +14660,13 @@ function formatMonthLabel(rawVal) {
           }
 
           if (data && data.userExists) {
-            updateLoginLockoutUI(cleanVal);
-            if (badgeEl) {
-              badgeEl.style.display = "none";
-              badgeEl.innerHTML = "";
-            }
-            if (noteEl) {
-              noteEl.style.display = "none";
-              noteEl.innerHTML = "";
-            }
-            return;
-          }
-
-          if (data && data.userExists === false) {
+            const state = getLoginLockoutState(cleanVal);
+            state.username = cleanVal;
+            state.stage = Number(data.tier) || 0;
+            state.failedInStage = Number(data.attempts) || 0;
+            state.lockedUntil = 0;
+            state.isPermanentlyBlocked = false;
+            saveLoginLockoutState(cleanVal, state);
             updateLoginLockoutUI(cleanVal);
             if (badgeEl) {
               badgeEl.style.display = "none";
@@ -14717,7 +14727,7 @@ function formatMonthLabel(rawVal) {
       if (updateLoginLockoutUI(cleanU)) {
         const lockState = getLoginLockoutState(cleanU);
         if (lockState.isPermanentlyBlocked) {
-          triggerSideToast("User Blocked", `This user account (@${cleanU}) has been completely blocked due to repeated failed login attempts.`, false);
+          triggerSideToast("User Blocked", `This user account (@${cleanU}) has been permanently blocked due to repeated failed login attempts.`, false);
           return;
         }
         const rem = formatLockoutRemainingTime(lockState.lockedUntil - Date.now());
@@ -14745,18 +14755,30 @@ function formatMonthLabel(rawVal) {
           console.warn("Server live login error or timeout:", netErr);
         }
 
+        // If the username does NOT exist in the live Google Sheet, deny access immediately and do NOT trigger progressive lockout
+        if (res && (res.userNotFound === true || res.userExists === false)) {
+          resetLoginLockoutState(cleanU);
+          triggerSideToast("Access Denied", res.message || `User @${cleanU} does not exist in the live Google Sheet.`, false);
+          return;
+        }
+
         if (res && (res.status === "blocked" || res.isPermanentlyBlocked)) {
           const state = getLoginLockoutState(cleanU);
+          state.stage = 4;
+          state.failedInStage = 0;
+          state.lockedUntil = 0;
           state.isPermanentlyBlocked = true;
           saveLoginLockoutState(cleanU, state);
           updateLoginLockoutUI(cleanU);
-          showAccountBlockedModal(res.message || `This user account (@${cleanU}) has been completely blocked.`);
+          showAccountBlockedModal(res.message || `This user account (@${cleanU}) has been permanently blocked.`);
           return;
         }
 
         if (res && (res.status === "locked" || res.locked === true)) {
           const lockedUntil = Number(res.lockedUntil || (Date.now() + (Number(res.remainingMinutes) || 1) * 60000));
           const state = getLoginLockoutState(cleanU);
+          state.stage = Number(res.tier) || state.stage || 1;
+          state.failedInStage = 0;
           state.lockedUntil = lockedUntil;
           state.lockedTierLabel = res.tierLabel || "1 minute";
           saveLoginLockoutState(cleanU, state);
@@ -14769,7 +14791,20 @@ function formatMonthLabel(rawVal) {
         }
 
         if (res && res.status === "success") {
+          // Reset Condition: On successful login at any stage, completely clear failed attempt history and reset stage/counter to zero
           resetLoginLockoutState(cleanU);
+          fetch("/api/gas-engine", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "resetUserLockout", username: cleanU })
+          }).catch(() => {});
+          fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "resetUserLockout", username: cleanU }),
+            redirect: "follow"
+          }).catch(() => {});
+
           try {
             localStorage.removeItem(EXPLICIT_LOGOUT_FLAG_KEY);
           } catch (e) {}
@@ -14814,7 +14849,7 @@ function formatMonthLabel(rawVal) {
           return;
         }
 
-        // Record failed attempt centrally on server & Google Sheet for this specific username
+        // Valid username with wrong password -> Record failed attempt centrally on server & Google Sheet (4-Stage Progressive Lockout)
         let serverOutcome = null;
         try {
           const failRes = await fetch("/api/gas-engine", {
@@ -14835,18 +14870,29 @@ function formatMonthLabel(rawVal) {
           redirect: "follow"
         }).catch(() => {});
 
+        if (serverOutcome && serverOutcome.userExists === false) {
+          resetLoginLockoutState(cleanU);
+          triggerSideToast("Access Denied", serverOutcome.message || `User @${cleanU} does not exist in the live Google Sheet.`, false);
+          return;
+        }
+
         if (serverOutcome && (serverOutcome.status === "blocked" || serverOutcome.isPermanentlyBlocked)) {
           const state = getLoginLockoutState(cleanU);
+          state.stage = 4;
+          state.failedInStage = 0;
+          state.lockedUntil = 0;
           state.isPermanentlyBlocked = true;
           saveLoginLockoutState(cleanU, state);
           updateLoginLockoutUI(cleanU);
-          showAccountBlockedModal(serverOutcome.message || `This user account (@${cleanU}) has been completely blocked after repeated failed attempts.`);
+          showAccountBlockedModal(serverOutcome.message || `This user account (@${cleanU}) has been permanently blocked after failing all 4 lockout stages.`);
           return;
         }
 
         if (serverOutcome && (serverOutcome.status === "locked" || serverOutcome.locked === true)) {
           const lockedUntil = Number(serverOutcome.lockedUntil || (Date.now() + (Number(serverOutcome.remainingMinutes) || 1) * 60000));
           const state = getLoginLockoutState(cleanU);
+          state.stage = Number(serverOutcome.tier) || (state.stage + 1);
+          state.failedInStage = 0;
           state.lockedUntil = lockedUntil;
           state.lockedTierLabel = serverOutcome.tierLabel || "1 minute";
           saveLoginLockoutState(cleanU, state);
@@ -14863,8 +14909,10 @@ function formatMonthLabel(rawVal) {
 
         if (serverOutcome && serverOutcome.status === "attempt_counted") {
           const state = getLoginLockoutState(cleanU);
-          state.failedInStage = 3 - serverOutcome.attemptsLeft;
+          state.stage = Number(serverOutcome.tier !== undefined ? serverOutcome.tier : state.stage) || 0;
+          state.failedInStage = Number(serverOutcome.attempts) || (3 - Number(serverOutcome.attemptsLeft || 0));
           saveLoginLockoutState(cleanU, state);
+          updateLoginLockoutUI(cleanU);
           triggerSideToast(
             "Login Failed",
             serverOutcome.message || `Invalid password. (${serverOutcome.attemptsLeft} attempt${serverOutcome.attemptsLeft === 1 ? "" : "s"} left before ${serverOutcome.nextTierLabel} lock).`,
@@ -14873,12 +14921,12 @@ function formatMonthLabel(rawVal) {
           return;
         }
 
-        // Fallback local 4-tier progressive policy if server was unreachable
+        // Fallback local 4-stage progressive policy if server was unreachable
         const lockOutcome = recordFailedLoginAttemptAndLockIfNeeded(cleanU);
-        const baseFailureMsg = (res && res.message) ? res.message : "Invalid username or password.";
+        const baseFailureMsg = (res && res.message) ? res.message : "Invalid password.";
 
         if (lockOutcome.completelyBlocked) {
-          showAccountBlockedModal(`This user account (@${cleanU}) has been completely blocked after repeated failed attempts. Login access is permanently locked.`);
+          showAccountBlockedModal(`This user account (@${cleanU}) has been permanently blocked after failing all 4 lockout stages.`);
         } else if (lockOutcome.justLocked) {
           triggerSideToast(
             `Locked for ${lockOutcome.tierLabel}`,
