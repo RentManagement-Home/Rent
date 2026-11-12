@@ -8466,6 +8466,13 @@
       return m ? Number(m[1]) || 0 : 0;
     }
 
+    function normalizeAadhaar12(val) {
+      if (val === null || val === undefined || val === "") return "";
+      const digits = String(val).replace(/\D/g, "").slice(0, 12);
+      if (!digits) return "";
+      return digits.padStart(12, "0");
+    }
+
     function initRealtimeSSE() {
       if (typeof EventSource !== "undefined") {
         if (realtimeEventSource) {
@@ -8569,13 +8576,23 @@
           const noticeRes = await fetch("/api/gas-engine/notices");
           if (noticeRes.ok) {
             const noticeData = await noticeRes.json();
-            if (noticeData && noticeData.status === "success" && Array.isArray(noticeData.broadcastNotices)) {
-              const prevStr = localStorage.getItem(PORTAL_NOTIFICATIONS_KEY) || "[]";
-              const newStr = JSON.stringify(noticeData.broadcastNotices);
-              if (prevStr !== newStr) {
-                localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, newStr);
-                if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
-                if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
+            if (noticeData && noticeData.status === "success") {
+              if (Array.isArray(noticeData.broadcastNotices) && noticeData.broadcastNotices.length > 0) {
+                const prevStr = localStorage.getItem(PORTAL_NOTIFICATIONS_KEY) || "[]";
+                const newStr = JSON.stringify(noticeData.broadcastNotices);
+                if (prevStr !== newStr) {
+                  localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, newStr);
+                  if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
+                  if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
+                }
+              }
+              if (noticeData.contactConfig && typeof noticeData.contactConfig === "object" && Object.keys(noticeData.contactConfig).length > 0) {
+                const prevContact = localStorage.getItem("portal_admin_contact_cfg") || "";
+                const newContact = JSON.stringify(noticeData.contactConfig);
+                if (prevContact !== newContact) {
+                  localStorage.setItem("portal_admin_contact_cfg", newContact);
+                  if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
+                }
               }
             }
           }
@@ -8736,7 +8753,7 @@
       if (!bypassPendingGuard && pendingWriteCount > 0 && lastGasSheetDataCache) {
         return lastGasSheetDataCache;
       }
-      if (lastGasSheetDataCache && lastGasSheetDataCache._liveSheetVerified && !gasCacheNeedsRefresh) {
+      if (!bypassPendingGuard && lastGasSheetDataCache && lastGasSheetDataCache._liveSheetVerified && !gasCacheNeedsRefresh) {
         const maxAgeMs = forceRefresh ? 1800 : 4000;
         if (now - lastGasFetchTimestamp < maxAgeMs) {
           return lastGasSheetDataCache;
@@ -8865,6 +8882,7 @@
                 return Object.assign({}, u, {
                   Status: normSt,
                   AccountStatus: normSt,
+                  AssignedAadhaar: normalizeAadhaar12(u.AssignedAadhaar ?? u.AadhaarNumber),
                   ActiveSessionToken: resolvedTok
                 });
               });
@@ -8886,7 +8904,18 @@
               saveLocalLoginHistoryMaster(json.loginHistory);
             }
             if (json.globalConfig && typeof json.globalConfig === "object" && Object.keys(json.globalConfig).length > 0) {
-              const mergedCfg = { ...loadLocalGlobalConfigMaster(), ...json.globalConfig };
+              const localCfg = loadLocalGlobalConfigMaster() || {};
+              const incCfg = json.globalConfig;
+              const mergedCfg = {
+                ...localCfg,
+                ...incCfg,
+                contactConfig: (incCfg.contactConfig && Object.keys(incCfg.contactConfig).length > 0) ? incCfg.contactConfig : (localCfg.contactConfig || {}),
+                privateChats: (incCfg.privateChats && Object.keys(incCfg.privateChats).length > 0) ? incCfg.privateChats : (localCfg.privateChats || {}),
+                broadcastNotices: (Array.isArray(incCfg.broadcastNotices) && incCfg.broadcastNotices.length > 0) ? incCfg.broadcastNotices : (localCfg.broadcastNotices || []),
+                paymentProofs: (Array.isArray(incCfg.paymentProofs) && incCfg.paymentProofs.length > 0) ? incCfg.paymentProofs : (localCfg.paymentProofs || []),
+                maintenanceTickets: (Array.isArray(incCfg.maintenanceTickets) && incCfg.maintenanceTickets.length > 0) ? incCfg.maintenanceTickets : (localCfg.maintenanceTickets || []),
+                auditLogs: (Array.isArray(incCfg.auditLogs) && incCfg.auditLogs.length > 0) ? incCfg.auditLogs.slice(0, 30) : (localCfg.auditLogs || [])
+              };
               saveLocalGlobalConfigMaster(mergedCfg);
             }
 
@@ -8933,13 +8962,15 @@
       return inFlightGasFetchPromise;
     }
 
+    let gasPostQueuePromise = Promise.resolve();
+
     async function sendGasSheetAction(data) {
       gasWriteEpoch++;
       inFlightGasFetchPromise = null;
       updateLocalGasSheetCacheFromDB();
       const bodyStr = JSON.stringify(data);
 
-      // Sync user/auth/config state with local GAS engine mirror
+      // Sync user/auth/config state immediately with local GAS engine mirror
       let bridgeResult = null;
       try {
         const bRes = await fetch("/api/gas-engine", {
@@ -8955,38 +8986,45 @@
         }
       } catch (e) {}
 
-      try {
-        const response = await fetch(GAS_WEB_APP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: bodyStr,
-          redirect: "follow"
-        });
-        const result = await response.json();
-        gasCacheNeedsRefresh = true;
-        lastGasFetchTimestamp = Date.now();
-        if (result && Array.isArray(result.users) && result.users.length > 0) {
-          saveLocalUsersMaster(result.users);
-        }
-        if (result && result.status === "error" && /not recognized|unknown action/i.test(String(result.message || ""))) {
-          if (bridgeResult) return bridgeResult;
-        }
-        return result || bridgeResult || { status: "success", message: "Saved to Google Sheet." };
-      } catch (err) {
+      // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
+      const runSheetPost = async function() {
         try {
-          await fetch(GAS_WEB_APP_URL, {
+          const response = await fetch(GAS_WEB_APP_URL, {
             method: "POST",
-            mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: bodyStr
+            body: bodyStr,
+            redirect: "follow"
           });
-        } catch (noCorsErr) {
-          console.warn("Google Apps Script fallback notice:", noCorsErr);
+          const result = await response.json();
+          gasCacheNeedsRefresh = true;
+          lastGasFetchTimestamp = Date.now();
+          if (result && Array.isArray(result.users) && result.users.length > 0) {
+            saveLocalUsersMaster(result.users);
+          }
+          if (result && result.status === "error" && /not recognized|unknown action/i.test(String(result.message || ""))) {
+            if (bridgeResult) return bridgeResult;
+          }
+          return result || bridgeResult || { status: "success", message: "Saved to Google Sheet." };
+        } catch (err) {
+          try {
+            await fetch(GAS_WEB_APP_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: bodyStr
+            });
+          } catch (noCorsErr) {
+            console.warn("Google Apps Script fallback notice:", noCorsErr);
+          }
+          gasCacheNeedsRefresh = true;
+          lastGasFetchTimestamp = Date.now();
+          return bridgeResult || { status: "success", message: "Saved directly to Google Sheet." };
         }
-        gasCacheNeedsRefresh = true;
-        lastGasFetchTimestamp = Date.now();
-        return bridgeResult || { status: "success", message: "Saved directly to Google Sheet." };
-      }
+      };
+
+      const nextTask = gasPostQueuePromise.then(runSheetPost, runSheetPost);
+      gasPostQueuePromise = nextTask.catch(function() {});
+      return nextTask;
     }
 
     function linkSheetEntities(rawSheetData) {
@@ -9138,8 +9176,8 @@
         globalConfig: globalConfig,
         bgLoginUrl: globalConfig.bgLoginUrl || matchedUser?.BgLogin || "",
         bgDashboardUrl: globalConfig.bgDashboardUrl || matchedUser?.BgDashboard || "",
-        userExists: matchedUser ? true : (cleanU ? false : true),
-        userDeleted: matchedUser ? false : Boolean(cleanU),
+        userExists: matchedUser ? true : ((cleanU && sheetData && sheetData._liveSheetVerified && hasSheetUsersArray) ? false : true),
+        userDeleted: matchedUser ? false : Boolean(cleanU && sheetData && sheetData._liveSheetVerified && hasSheetUsersArray),
         userStatus: matchedUser?.Status || matchedUser?.AccountStatus || "Active",
         accountStatus: matchedUser?.AccountStatus || matchedUser?.Status || "Active",
         activeSessionToken: matchedUser?.ActiveSessionToken || clientSessionToken || "",
@@ -9149,7 +9187,7 @@
         userTheme: matchedUser?.Theme || activeThemePref || "dark",
         userAssignedProperty: matchedUser?.AssignedProperty ?? activeAssignedProperty ?? "",
         userAssignedFlat: matchedUser?.AssignedFlat ?? activeAssignedFlat ?? "",
-        userAssignedAadhaar: matchedUser?.AssignedAadhaar ?? activeAssignedAadhaar ?? "",
+        userAssignedAadhaar: normalizeAadhaar12(matchedUser?.AssignedAadhaar ?? matchedUser?.AadhaarNumber ?? activeAssignedAadhaar),
         userManagerPermissions: matchedUser?.ManagerPermissions ?? activeManagerPermissions ?? []
       };
     }
@@ -9193,7 +9231,7 @@
         theme: userDocData.Theme || "dark",
         assignedProperty: userDocData.AssignedProperty || "",
         assignedFlat: userDocData.AssignedFlat || "",
-        assignedAadhaar: userDocData.AssignedAadhaar || "",
+        assignedAadhaar: normalizeAadhaar12(userDocData.AssignedAadhaar ?? userDocData.AadhaarNumber),
         managerPermissions: userDocData.ManagerPermissions || [],
         bgLoginUrl: globalConfig.bgLoginUrl || userDocData.BgLogin || "",
         bgDashboardUrl: globalConfig.bgDashboardUrl || userDocData.BgDashboard || "",
@@ -9456,9 +9494,6 @@
       const action = data.action;
 
       if (GAS_SHEET_ACTIONS.has(action)) {
-        if (typeof recordAdminAuditLog === "function") {
-          recordAdminAuditLog(action, `Executed ${action} on Google Sheet`, activeUser || "Admin");
-        }
         return await sendGasSheetAction(data);
       }
 
@@ -9592,9 +9627,6 @@
             });
             saveLocalUsersMaster(usersList);
             await sendGasSheetAction({ ...data, users: usersList });
-            if (typeof recordAdminAuditLog === "function") {
-              recordAdminAuditLog("BLOCK_TOGGLE", `Changed status of @${rawTarget} to ${newStatus}`, activeUser || "Admin");
-            }
             return { status: "success", message: `User status updated to ${newStatus}.` };
           }
 
@@ -12090,10 +12122,23 @@ function formatMonthLabel(rawVal) {
         activeUserMobile = restoredSession.mobile || "";
         activeAssignedProperty = restoredSession.assignedProperty || "";
         activeAssignedFlat = restoredSession.assignedFlat || "";
-        activeAssignedAadhaar = restoredSession.assignedAadhaar || "";
+        activeAssignedAadhaar = normalizeAadhaar12(restoredSession.assignedAadhaar);
         activeManagerPermissions = normalizeManagerPermissionsList(restoredSession.managerPermissions || []);
         activeSessionToken = restoredSession.sessionToken || "";
         selectedProperty = restoredSession.selectedProperty || null;
+
+        // Hydrate DB from last synced Google Sheet cache immediately so refresh has zero blank flash while live sync completes
+        if (lastGasSheetDataCache && typeof lastGasSheetDataCache === "object") {
+          const linkedBoot = linkSheetEntities(lastGasSheetDataCache);
+          DB.properties = Array.isArray(linkedBoot.properties) ? linkedBoot.properties : [];
+          DB.flats = Array.isArray(linkedBoot.flats) ? linkedBoot.flats : [];
+          DB.renters = Array.isArray(linkedBoot.renters) ? linkedBoot.renters : [];
+          DB.bills = sanitizeAllBillsMonths(Array.isArray(linkedBoot.bills) ? linkedBoot.bills : []);
+          DB.users = Array.isArray(lastGasSheetDataCache.users) ? lastGasSheetDataCache.users : loadLocalUsersMaster();
+          DB.fdRecords = Array.isArray(linkedBoot.fdRecords) ? linkedBoot.fdRecords : [];
+          DB.khetRecords = Array.isArray(linkedBoot.khetRecords) ? linkedBoot.khetRecords : [];
+          DB.kharchRecords = Array.isArray(linkedBoot.kharchRecords) ? linkedBoot.kharchRecords : [];
+        }
 
         applyRolePermissions(activeRole);
         unlockDashboardInstant(false);
@@ -12335,12 +12380,12 @@ function formatMonthLabel(rawVal) {
 
     // Requirement 1 & 6: Helper functions for strict individual Renter data isolation
     function getNormalizedActiveRenterAadhaar() {
-      let aadh = String(activeAssignedAadhaar || "").replace(/\D/g, "").slice(0, 12);
+      let aadh = normalizeAadhaar12(activeAssignedAadhaar);
       if (!aadh && activeUser) {
         const matchedU = (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase());
-        const rawUserAadh = matchedU?.AssignedAadhaar || matchedU?.AadhaarNumber || "";
-        if (rawUserAadh) {
-          aadh = String(rawUserAadh).replace(/\D/g, "").slice(0, 12);
+        const rawUserAadh = matchedU?.AssignedAadhaar ?? matchedU?.AadhaarNumber ?? "";
+        if (rawUserAadh !== "" && rawUserAadh !== null && rawUserAadh !== undefined) {
+          aadh = normalizeAadhaar12(rawUserAadh);
           activeAssignedAadhaar = aadh;
         }
       }
@@ -12351,7 +12396,7 @@ function formatMonthLabel(rawVal) {
       const aadh = getNormalizedActiveRenterAadhaar();
       if (aadh) {
         const byAadh = (DB.renters || []).filter(r => {
-          const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+          const rAadh = normalizeAadhaar12(r.IdentityDocNumber);
           return rAadh && rAadh === aadh;
         });
         if (byAadh.length > 0) return byAadh;
@@ -14358,7 +14403,7 @@ function formatMonthLabel(rawVal) {
       const matchedU = (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase());
       activeAssignedProperty = res.assignedProperty || res.userAssignedProperty || matchedU?.AssignedProperty || "";
       activeAssignedFlat = res.assignedFlat || res.userAssignedFlat || matchedU?.AssignedFlat || "";
-      activeAssignedAadhaar = String(res.assignedAadhaar || res.userAssignedAadhaar || matchedU?.AssignedAadhaar || "").replace(/\D/g, "").slice(0, 12);
+      activeAssignedAadhaar = normalizeAadhaar12(res.assignedAadhaar ?? res.userAssignedAadhaar ?? matchedU?.AssignedAadhaar ?? matchedU?.AadhaarNumber);
       activeManagerPermissions = normalizeManagerPermissionsList(res.managerPermissions || res.userManagerPermissions || matchedU?.ManagerPermissions || []);
       if (res.sessionToken || matchedU?.ActiveSessionToken) {
         activeSessionToken = String(res.sessionToken || matchedU?.ActiveSessionToken || activeSessionToken).trim();
@@ -14376,7 +14421,7 @@ function formatMonthLabel(rawVal) {
       DB.loginHistory = (String(activeRole).toLowerCase() === "admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"))) ? liveLogs : [];
 
       if (res.globalConfig && typeof res.globalConfig === "object") {
-        if (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") {
+        if (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object" && Object.keys(res.globalConfig.contactConfig).length > 0) {
           try {
             localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(res.globalConfig.contactConfig));
             if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
@@ -15187,7 +15232,7 @@ function formatMonthLabel(rawVal) {
 
           syncServerBackgroundsToLocal(res.globalConfig || res, res.bgLoginUrl || res.userBgLogin || "", res.bgDashboardUrl || res.userBgDashboard || "", Boolean(res.globalConfig));
           if (res.globalConfig && typeof res.globalConfig === "object") {
-            if (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") {
+            if (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object" && Object.keys(res.globalConfig.contactConfig).length > 0) {
               try {
                 const prevContactRaw = localStorage.getItem("portal_admin_contact_cfg") || "";
                 const nextContactRaw = JSON.stringify(res.globalConfig.contactConfig);
@@ -15201,29 +15246,29 @@ function formatMonthLabel(rawVal) {
                 }
               } catch (e) {}
             }
-            if (Array.isArray(res.globalConfig.broadcastNotices)) {
+            if (Array.isArray(res.globalConfig.broadcastNotices) && res.globalConfig.broadcastNotices.length > 0) {
               if (typeof syncServerBroadcastNoticesToLocal === "function") {
                 syncServerBroadcastNoticesToLocal(res.globalConfig.broadcastNotices, true);
               }
             }
-            if (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") {
+            if (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object" && Object.keys(res.globalConfig.privateChats).length > 0) {
               if (typeof syncServerPrivateChatsToLocal === "function") {
                 syncServerPrivateChatsToLocal(res.globalConfig.privateChats);
               }
             }
-            if (Array.isArray(res.globalConfig.paymentProofs)) {
+            if (Array.isArray(res.globalConfig.paymentProofs) && res.globalConfig.paymentProofs.length > 0) {
               try {
                 localStorage.setItem("portal_utr_payment_proofs_v1", JSON.stringify(res.globalConfig.paymentProofs));
               } catch (e) {}
             }
-            if (Array.isArray(res.globalConfig.maintenanceTickets)) {
+            if (Array.isArray(res.globalConfig.maintenanceTickets) && res.globalConfig.maintenanceTickets.length > 0) {
               try {
                 localStorage.setItem("portal_maintenance_tickets_v1", JSON.stringify(res.globalConfig.maintenanceTickets));
               } catch (e) {}
             }
-            if (Array.isArray(res.globalConfig.auditLogs)) {
+            if (Array.isArray(res.globalConfig.auditLogs) && res.globalConfig.auditLogs.length > 0) {
               try {
-                localStorage.setItem("portal_admin_audit_logs_v1", JSON.stringify(res.globalConfig.auditLogs));
+                localStorage.setItem("portal_admin_audit_logs_v1", JSON.stringify(res.globalConfig.auditLogs.slice(0, 30)));
               } catch (e) {}
             }
           }
@@ -15236,7 +15281,7 @@ function formatMonthLabel(rawVal) {
             sessionStorage.setItem("active_session_assigned_flat", activeAssignedFlat);
           }
           if (res.userAssignedAadhaar !== undefined || matchedServerUser?.AssignedAadhaar !== undefined) {
-            activeAssignedAadhaar = String(res.userAssignedAadhaar || matchedServerUser?.AssignedAadhaar || "").replace(/\D/g, "").slice(0, 12);
+            activeAssignedAadhaar = normalizeAadhaar12(res.userAssignedAadhaar ?? matchedServerUser?.AssignedAadhaar ?? matchedServerUser?.AadhaarNumber);
             sessionStorage.setItem("active_session_assigned_aadhaar", activeAssignedAadhaar);
           }
           if (res.userManagerPermissions !== undefined || matchedServerUser?.ManagerPermissions !== undefined) {
@@ -20243,16 +20288,17 @@ function formatMonthLabel(rawVal) {
       const currentTenantName = document.getElementById("renterName").value || activeFlatRenterObj?.RenterName || "Current Tenant";
 
       const existingBillIdx = DB.bills.findIndex(b => {
+        if (!isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) return false;
+        const sameMonth = normalizeMonthYear(b.MonthYear) === chosenMonth;
+        if (!sameMonth) return false;
         if (currentEditingBillId && String(b.BillID || "").trim() === currentEditingBillId) {
           return true;
         }
-        if (!isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) return false;
-        const sameMonth = normalizeMonthYear(b.MonthYear) === chosenMonth;
         const bRenterId = String(b.RenterID || "").trim();
         const sameRenter = (bRenterId && currentRenterId)
           ? (bRenterId === currentRenterId)
           : (String(b.TenantName || "").trim().toLowerCase() === String(currentTenantName).trim().toLowerCase());
-        return sameMonth && sameRenter;
+        return sameRenter;
       });
 
       if (existingBillIdx !== -1 && isCalculatorMonthLockedForEdits(chosenMonth)) {
@@ -22361,8 +22407,10 @@ function formatMonthLabel(rawVal) {
       // Requirement 6: Renter role can strictly only open their own Aadhaar-linked profile
       if (activeRole === "Renter") {
         const myAadhaar = getNormalizedActiveRenterAadhaar();
-        const targetAadhaar = String(targetRenter.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-        if (!myAadhaar || targetAadhaar !== myAadhaar) {
+        const targetAadhaar = normalizeAadhaar12(targetRenter.IdentityDocNumber);
+        const myAllowedProfiles = getRenterProfilesForLoggedInAadhaar();
+        const isAllowedById = myAllowedProfiles.some(p => String(p.RenterID || "") === String(targetRenter.RenterID || ""));
+        if (!isAllowedById && (!myAadhaar || targetAadhaar !== myAadhaar)) {
           return triggerSideToast("Access Denied", "You only have permission to view your own Aadhaar-linked profile.", false);
         }
       }
@@ -29607,7 +29655,12 @@ function formatMonthLabel(rawVal) {
           renderAdminAuditTrailList();
         }
       }
-      sendFirebaseAction({ action: "saveAuditLogs", auditLogs: trimmed }).catch(() => {});
+      if (window._auditLogSyncDebounceTimer) {
+        clearTimeout(window._auditLogSyncDebounceTimer);
+      }
+      window._auditLogSyncDebounceTimer = setTimeout(() => {
+        sendFirebaseAction({ action: "saveAuditLogs", auditLogs: getStoredAdminAuditLogs() }).catch(() => {});
+      }, 650);
     }
 
     function renderAdminAuditTrailList(optionalQuery = "") {
