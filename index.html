@@ -3078,6 +3078,88 @@
   .renter-action-btn.outline:hover {
     border-color: #38bdf8;
   }
+  .renter-quick-scroll-bar {
+    max-width: 1200px;
+    margin: 10px auto 2px auto;
+    padding: 0 18px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .renter-quick-scroll-track {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 2px 8px 2px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+  }
+  .renter-quick-scroll-track::-webkit-scrollbar {
+    height: 6px;
+  }
+  .renter-quick-scroll-track::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .renter-quick-scroll-track::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.35);
+    border-radius: 999px;
+  }
+  .renter-quick-box {
+    flex: 0 0 auto;
+    min-width: 142px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 9px 14px;
+    border-radius: 13px;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1.5px solid rgba(148, 163, 184, 0.24);
+    color: #f8fafc;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+  }
+  .renter-quick-box:hover {
+    border-color: #6366f1;
+    transform: translateY(-1px);
+  }
+  .renter-quick-box.active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.24) 0%, rgba(16, 185, 129, 0.16) 100%);
+    border-color: rgba(99, 102, 241, 0.72);
+    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.24);
+  }
+  body.theme-white .renter-quick-box {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #0f172a;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  }
+  body.theme-white .renter-quick-box.active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border-color: #6366f1;
+    color: #1e1b4b;
+  }
+  .renter-quick-box-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.86rem;
+    flex-shrink: 0;
+  }
+  .renter-quick-target-pulse {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.65), 0 12px 32px rgba(99, 102, 241, 0.35) !important;
+    transition: box-shadow 0.3s ease !important;
+  }
   .renter-kpi-bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -5518,6 +5600,36 @@
         </div>
       </div>
     </header>
+
+    <!-- Renter Quick Navigation Row (Manual Left-to-Right Scroll Only) -->
+    <section id="renterQuickScrollNavBar" class="renter-quick-scroll-bar" style="display:none;" aria-label="Renter Quick Navigation">
+      <div class="renter-quick-scroll-track" id="renterQuickScrollTrack">
+        <button type="button" class="renter-quick-box active" data-renter-nav="dashboard" onclick="navigateRenterQuickNav('dashboard')">
+          <span class="renter-quick-box-icon" style="background:rgba(99,102,241,0.18); color:#818cf8;"><i class="fa-solid fa-house"></i></span>
+          <span class="renter-quick-box-label">Dashboard</span>
+        </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="receipt" onclick="navigateRenterQuickNav('receipt')">
+          <span class="renter-quick-box-icon" style="background:rgba(56,189,248,0.18); color:#38bdf8;"><i class="fa-solid fa-file-invoice"></i></span>
+          <span class="renter-quick-box-label">Receipt</span>
+        </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="maintenance" onclick="navigateRenterQuickNav('maintenance')">
+          <span class="renter-quick-box-icon" style="background:rgba(245,158,11,0.18); color:#fbbf24;"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+          <span class="renter-quick-box-label">Maintenance</span>
+        </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="upload_photo" onclick="navigateRenterQuickNav('upload_photo')">
+          <span class="renter-quick-box-icon" style="background:rgba(16,185,129,0.18); color:#34d399;"><i class="fa-solid fa-camera"></i></span>
+          <span class="renter-quick-box-label">Upload Photo</span>
+        </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="payment" onclick="navigateRenterQuickNav('payment')">
+          <span class="renter-quick-box-icon" style="background:rgba(34,197,94,0.18); color:#4ade80;"><i class="fa-solid fa-qrcode"></i></span>
+          <span class="renter-quick-box-label">Payment</span>
+        </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="profile" onclick="navigateRenterQuickNav('profile')">
+          <span class="renter-quick-box-icon" style="background:rgba(168,85,247,0.18); color:#c084fc;"><i class="fa-solid fa-user-shield"></i></span>
+          <span class="renter-quick-box-label">Profile</span>
+        </button>
+      </div>
+    </section>
 
     <!-- Centered Horizontal Scrollable Properties -->
     <section class="properties-bar">
@@ -9661,7 +9773,7 @@
               return { status: "duplicate", message: "This username already exists." };
             }
             const roleVal = String(data.role || data.newRole || "Viewer").trim();
-            const cleanAadh = cleanPhoneStr(data.assignedAadhaar || "").replace(/\D/g, "").slice(0, 12);
+            const cleanAadh = normalizeAadhaar12(data.assignedAadhaar || "");
             if (roleVal === "Renter" && cleanAadh.length === 12) {
               const dupUser = usersList.find(function(u) {
                 return String(u.Username || "").trim().toLowerCase() !== lowerU &&
@@ -9682,6 +9794,7 @@
               AssignedProperty: String(data.assignedProperty || "").trim(),
               AssignedFlat: String(data.assignedFlat || "").trim(),
               AssignedAadhaar: cleanAadh,
+              AadhaarNumber: cleanAadh,
               ManagerPermissions: roleVal === "Manager" ? managerPerms : [],
               Status: "Active",
               AccountStatus: "Active",
@@ -9728,6 +9841,7 @@
               return { status: "error", message: "You cannot block your own currently logged-in account." };
             }
 
+            const normalizedUserAadhaar = normalizeAadhaar12(data.assignedAadhaar || "");
             const updateFields = {
               ...baseDoc,
               Username: newUsernameClean,
@@ -9737,7 +9851,8 @@
               AccountStatus: nextStatus,
               AssignedProperty: String(data.assignedProperty || "").trim(),
               AssignedFlat: String(data.assignedFlat || "").trim(),
-              AssignedAadhaar: cleanPhoneStr(data.assignedAadhaar || "").slice(0, 12),
+              AssignedAadhaar: normalizedUserAadhaar,
+              AadhaarNumber: normalizedUserAadhaar,
               ManagerPermissions: roleVal === "Manager" ? managerPerms : [],
               UpdatedAt: new Date().toISOString()
             };
@@ -10588,29 +10703,48 @@
       return Boolean(userObj.MovedOutAutoBlocked);
     }
 
-    function autoBlockRenterUserAccountOnMoveOut(aadhaarNumber, propertyName, flatName, renterName = "") {
-      const cleanAadhaar = String(aadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+    function autoBlockRenterUserAccountOnMoveOut(aadhaarNumber, propertyName, flatName, renterName = "", previousAadhaar = "") {
+      const cleanAadhaar = normalizeAadhaar12(aadhaarNumber);
+      const prevCleanAadhaar = normalizeAadhaar12(previousAadhaar);
       const renters = DB.renters || [];
-      if (cleanAadhaar.length === 12) {
-        const stillActiveSomewhere = renters.some(r =>
-          String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12) === cleanAadhaar &&
-          String(r.Status || "").trim().toLowerCase() === "active"
-        );
+      const candidateAadhaars = [cleanAadhaar, prevCleanAadhaar].filter(a => a && a.length === 12);
+      if (candidateAadhaars.length > 0) {
+        const stillActiveSomewhere = renters.some(r => {
+          const rAadh = normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber);
+          return rAadh && candidateAadhaars.includes(rAadh) && String(r.Status || "").trim().toLowerCase() === "active";
+        });
         if (stillActiveSomewhere) return;
       }
+
+      const hasOtherActiveInFlat = Boolean(
+        propertyName && flatName && renters.some(r =>
+          isSamePropAndFlat(r.PropertyName, r.FlatName, propertyName, flatName) &&
+          String(r.Status || "").trim().toLowerCase() === "active"
+        )
+      );
 
       let blockedList = [];
       try {
         blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
       } catch (e) {}
 
+      const usersSource = (Array.isArray(DB.users) && DB.users.length > 0) ? DB.users : loadLocalUsersMaster();
+      if (!Array.isArray(DB.users) || DB.users.length === 0) {
+        DB.users = usersSource;
+      }
+
       const affectedUsers = [];
       (DB.users || []).forEach(u => {
         if (String(u.Role || "").trim().toLowerCase() !== "renter") return;
-        const uAadhaar = String(u.AssignedAadhaar || u.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+        const uAadhaar = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber);
         const matchByAadhaar = cleanAadhaar.length === 12 && uAadhaar === cleanAadhaar;
-        const matchByFlat = (!cleanAadhaar || !uAadhaar) && propertyName && flatName && isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, propertyName, flatName);
-        if (matchByAadhaar || matchByFlat) {
+        const matchByPrevAadhaar = prevCleanAadhaar.length === 12 && uAadhaar === prevCleanAadhaar;
+        const matchByFlat = Boolean(propertyName && flatName && isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, propertyName, flatName) && !hasOtherActiveInFlat);
+        if (matchByAadhaar || matchByPrevAadhaar || matchByFlat) {
+          if (cleanAadhaar.length === 12) {
+            u.AssignedAadhaar = cleanAadhaar;
+            u.AadhaarNumber = cleanAadhaar;
+          }
           u.Status = "Blocked";
           u.AccountStatus = "Blocked";
           u.MovedOutAutoBlocked = true;
@@ -10910,6 +11044,57 @@
       return { merged, matchingStays: sortedStays };
     }
 
+    function syncLinkedUserAccountsAadhaar(newAadhaar, previousAadhaar = "", renterContext = null) {
+      const nextDigits = normalizeAadhaar12(newAadhaar);
+      const prevDigits = normalizeAadhaar12(previousAadhaar);
+      if (nextDigits.length !== 12 && prevDigits.length !== 12) return [];
+
+      const usersList = (Array.isArray(DB.users) && DB.users.length > 0) ? DB.users : loadLocalUsersMaster();
+      if (!Array.isArray(DB.users) || DB.users.length === 0) {
+        DB.users = usersList;
+      }
+
+      const ctxProp = String(renterContext?.PropertyName || "").trim();
+      const ctxFlat = String(renterContext?.FlatName || "").trim();
+      const ctxName = String(renterContext?.RenterName || "").trim();
+      const updatedUsers = [];
+
+      (DB.users || []).forEach(u => {
+        if (String(u.Role || "").trim().toLowerCase() !== "renter") return;
+        const uDigits = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber);
+        const matchPrev = prevDigits.length === 12 && uDigits === prevDigits;
+        const matchNext = nextDigits.length === 12 && uDigits === nextDigits;
+        const matchFlat = Boolean(!uDigits && ctxProp && ctxFlat && isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, ctxProp, ctxFlat));
+        if (!matchPrev && !matchNext && !matchFlat) return;
+
+        let changed = false;
+        if (nextDigits.length === 12 && (u.AssignedAadhaar !== nextDigits || u.AadhaarNumber !== nextDigits)) {
+          u.AssignedAadhaar = nextDigits;
+          u.AadhaarNumber = nextDigits;
+          changed = true;
+        }
+        if (ctxName && (!u.FullName || String(u.FullName).trim() === String(u.Username || "").trim())) {
+          u.FullName = ctxName;
+          changed = true;
+        }
+        if (changed) {
+          u.UpdatedAt = new Date().toISOString();
+          updatedUsers.push(u);
+          if (activeUser && String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase()) {
+            activeAssignedAadhaar = nextDigits;
+            try { sessionStorage.setItem("active_session_assigned_aadhaar", activeAssignedAadhaar); } catch (e) {}
+            if (typeof persistActiveAuthSession === "function") persistActiveAuthSession();
+          }
+        }
+      });
+
+      if (updatedUsers.length > 0) {
+        saveLocalUsersMaster(DB.users || []);
+        if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
+      }
+      return updatedUsers;
+    }
+
     // Cross-Location & Historical Record Synchronization by Aadhaar Number:
     // Whenever any update is made to a tenant's profile/documents (in either their current location or historical records),
     // seamlessly synchronize the updated personal & KYC fields across ALL stays (both historical and active locations) sharing that Aadhaar.
@@ -10965,6 +11150,10 @@
         syncedStays.push(r);
         if (r.RenterID) syncedRenterIds.add(String(r.RenterID).trim());
       });
+
+      // Keep any linked Renter user account Aadhaar number in sync automatically
+      const contextStay = syncedStays[0] || (typeof aadhaarOrRenterObj === "object" && aadhaarOrRenterObj !== null ? aadhaarOrRenterObj : activeFlatRenterObj) || updatedFields;
+      syncLinkedUserAccountsAadhaar(targetDigits, prevDigits, contextStay);
 
       // Also keep TenantName & TenantMobile updated on any linked bills so historical/current ledger views match
       if (syncedRenterIds.size > 0 && (updatedFields.RenterName || updatedFields.MobileNumber !== undefined)) {
@@ -12261,46 +12450,53 @@ function formatMonthLabel(rawVal) {
         }
       });
 
-      // Requirement 4: Auto-logout whenever anyone closes the browser tab, closes the entire browser, or opens from Browser History.
-      // Always start locked on the Login Screen and require User ID & Password.
-      try {
-        sessionStorage.clear();
-        localStorage.removeItem("portal_active_auth_session_v1");
-        localStorage.removeItem("active_session_user");
-        localStorage.removeItem("active_session_role");
-        localStorage.removeItem("active_session_token");
-      } catch (e) {}
+      // Restore saved session across browser page refreshes (only stay logged out if explicitly logged out)
+      const explicitLogoutFlag = (() => {
+        try { return localStorage.getItem(EXPLICIT_LOGOUT_FLAG_KEY) === "1"; } catch (e) { return false; }
+      })();
+      const restoredSession = !explicitLogoutFlag ? restoreSavedActiveSession() : null;
 
-      selectedProperty = null;
-      forceLockToLoginScreenForHistorySecurity(true);
-      prewarmServerInBackground();
+      if (restoredSession && restoredSession.username) {
+        activeUser = restoredSession.username;
+        activeRole = restoredSession.role || "Admin";
+        activeUserFullName = restoredSession.fullName || restoredSession.username;
+        activeUserMobile = restoredSession.mobile || "";
+        activeAssignedProperty = restoredSession.assignedProperty || "";
+        activeAssignedFlat = restoredSession.assignedFlat || "";
+        activeAssignedAadhaar = normalizeAadhaar12(restoredSession.assignedAadhaar || "");
+        activeManagerPermissions = normalizeManagerPermissionsList(restoredSession.managerPermissions || []);
+        activeSessionToken = restoredSession.sessionToken || "";
+        selectedProperty = (function() {
+          try {
+            return sessionStorage.getItem("active_selected_property") || restoredSession.selectedProperty || null;
+          } catch (e) {
+            return restoredSession.selectedProperty || null;
+          }
+        })();
+
+        try {
+          if (restoredSession.theme) applyVisualTheme(restoredSession.theme);
+          applyRolePermissions(activeRole);
+        } catch (e) {}
+
+        unlockDashboardInstant(false);
+      } else {
+        selectedProperty = null;
+        forceLockToLoginScreenForHistorySecurity(true);
+        prewarmServerInBackground();
+      }
 
       // Initialize Real-time SSE on page load
       try {
         if (typeof initRealtimeSSE === "function") initRealtimeSSE();
       } catch (e) {}
 
-      // Auto-logout immediately when tab is closed, browser is closed, or page is unloaded
-      const clearSessionOnTabOrBrowserClose = () => {
-        try {
-          if (activeUser) {
-            localStorage.removeItem("portal_device_session_" + String(activeUser).trim().toLowerCase());
-          }
-          sessionStorage.clear();
-          localStorage.removeItem("portal_active_auth_session_v1");
-          localStorage.removeItem("active_session_user");
-          localStorage.removeItem("active_session_role");
-          localStorage.removeItem("active_session_token");
-          localStorage.setItem("portal_explicit_logged_out_v1", "1");
-        } catch (e) {}
-      };
-      window.addEventListener("beforeunload", clearSessionOnTabOrBrowserClose);
-      window.addEventListener("pagehide", clearSessionOnTabOrBrowserClose);
-      window.addEventListener("unload", clearSessionOnTabOrBrowserClose);
-
-      // If someone tries to open from Browser History (bfcache or Back/Forward), always force Login screen
-      window.addEventListener("pageshow", (event) => {
-        if (event.persisted || !activeUser) {
+      // If someone navigates via Browser History after explicit logout (or without an active session), force Login screen
+      window.addEventListener("pageshow", () => {
+        const loggedOut = (() => {
+          try { return localStorage.getItem(EXPLICIT_LOGOUT_FLAG_KEY) === "1"; } catch (e) { return false; }
+        })();
+        if (loggedOut || !activeUser) {
           forceLockToLoginScreenForHistorySecurity(true);
         }
         try {
@@ -12321,21 +12517,69 @@ function formatMonthLabel(rawVal) {
     let hasCompletedInitialSync = false;
 
     function persistActiveAuthSession() {
-      // Requirement 4: Never persist credentials in sessionStorage or localStorage across tab closes, browser closes, or browser history restores
+      if (!activeUser) return;
       try {
-        sessionStorage.clear();
-        localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
-        localStorage.removeItem("active_session_user");
-        localStorage.removeItem("active_session_role");
-        localStorage.removeItem("active_session_token");
+        const sessionObj = {
+          username: String(activeUser || "").trim(),
+          role: String(activeRole || "Admin").trim(),
+          fullName: String(activeUserFullName || activeUser || "").trim(),
+          mobile: String(activeUserMobile || "").trim(),
+          assignedProperty: String(activeAssignedProperty || "").trim(),
+          assignedFlat: String(activeAssignedFlat || "").trim(),
+          assignedAadhaar: normalizeAadhaar12(activeAssignedAadhaar || ""),
+          managerPermissions: Array.isArray(activeManagerPermissions) ? activeManagerPermissions : [],
+          sessionToken: String(activeSessionToken || "").trim(),
+          selectedProperty: String(selectedProperty || sessionStorage.getItem("active_selected_property") || "").trim(),
+          theme: String(activeThemePref || localStorage.getItem("app_visual_theme") || "black").trim(),
+          savedAt: Date.now()
+        };
+        localStorage.removeItem(EXPLICIT_LOGOUT_FLAG_KEY);
+        localStorage.setItem(PERSISTED_AUTH_SESSION_KEY, JSON.stringify(sessionObj));
+        localStorage.setItem("active_session_user", sessionObj.username);
+        localStorage.setItem("active_session_role", sessionObj.role);
+        localStorage.setItem("active_session_token", sessionObj.sessionToken);
+
+        sessionStorage.setItem("active_session_user", sessionObj.username);
+        sessionStorage.setItem("active_session_role", sessionObj.role);
+        sessionStorage.setItem("active_session_fullname", sessionObj.fullName);
+        sessionStorage.setItem("active_session_mobile", sessionObj.mobile);
+        sessionStorage.setItem("active_session_assigned_prop", sessionObj.assignedProperty);
+        sessionStorage.setItem("active_session_assigned_flat", sessionObj.assignedFlat);
+        sessionStorage.setItem("active_session_assigned_aadhaar", sessionObj.assignedAadhaar);
+        sessionStorage.setItem("active_session_manager_perms", JSON.stringify(sessionObj.managerPermissions));
+        sessionStorage.setItem("active_session_token", sessionObj.sessionToken);
+        if (sessionObj.selectedProperty) {
+          sessionStorage.setItem("active_selected_property", sessionObj.selectedProperty);
+        }
       } catch (e) {}
     }
 
     function restoreSavedActiveSession() {
-      // Requirement 4: Always require User ID and Password on new tab, reopened history tab, or reopened browser
       try {
-        sessionStorage.clear();
-        localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
+        if (localStorage.getItem(EXPLICIT_LOGOUT_FLAG_KEY) === "1") return null;
+        const raw = localStorage.getItem(PERSISTED_AUTH_SESSION_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.username) {
+            return parsed;
+          }
+        }
+        const ssUser = sessionStorage.getItem("active_session_user") || localStorage.getItem("active_session_user");
+        if (ssUser) {
+          return {
+            username: ssUser,
+            role: sessionStorage.getItem("active_session_role") || localStorage.getItem("active_session_role") || "Admin",
+            fullName: sessionStorage.getItem("active_session_fullname") || ssUser,
+            mobile: sessionStorage.getItem("active_session_mobile") || "",
+            assignedProperty: sessionStorage.getItem("active_session_assigned_prop") || "",
+            assignedFlat: sessionStorage.getItem("active_session_assigned_flat") || "",
+            assignedAadhaar: sessionStorage.getItem("active_session_assigned_aadhaar") || "",
+            managerPermissions: JSON.parse(sessionStorage.getItem("active_session_manager_perms") || "[]"),
+            sessionToken: sessionStorage.getItem("active_session_token") || localStorage.getItem("active_session_token") || "",
+            selectedProperty: sessionStorage.getItem("active_selected_property") || "",
+            theme: localStorage.getItem("app_visual_theme") || "black"
+          };
+        }
       } catch (e) {}
       return null;
     }
@@ -12365,7 +12609,9 @@ function formatMonthLabel(rawVal) {
         localStorage.removeItem("active_session_token");
         localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
         if (prevUser) {
-          localStorage.removeItem("portal_device_session_" + String(prevUser).trim().toLowerCase());
+          const cleanPrev = String(prevUser).trim().toLowerCase();
+          localStorage.removeItem("portal_device_session_" + cleanPrev);
+          localStorage.removeItem("portal_session_pass_" + cleanPrev);
         }
       } catch (e) {}
 
@@ -12380,6 +12626,9 @@ function formatMonthLabel(rawVal) {
       document.getElementById("dashboardScreen")?.classList.remove("active");
       document.getElementById("loginScreen")?.classList.add("active");
       document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+
+      const renterQuickNavEl = document.getElementById("renterQuickScrollNavBar");
+      if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
 
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
@@ -13546,10 +13795,58 @@ function formatMonthLabel(rawVal) {
       });
     }
 
+    function navigateRenterQuickNav(sectionKey) {
+      const track = document.getElementById("renterQuickScrollTrack");
+      if (track) {
+        track.querySelectorAll(".renter-quick-box").forEach(btn => {
+          btn.classList.toggle("active", btn.getAttribute("data-renter-nav") === sectionKey);
+        });
+      }
+      if (sectionKey === "dashboard") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (sectionKey === "receipt") {
+        openRenterReceiptsModal();
+        return;
+      }
+      if (sectionKey === "maintenance") {
+        openRenterMaintenanceModal();
+        return;
+      }
+      if (sectionKey === "upload_photo") {
+        const card = document.getElementById("renterMonthlyDrivePhotoUploadsCard");
+        if (card) {
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+          card.classList.add("renter-quick-target-pulse");
+          setTimeout(() => card.classList.remove("renter-quick-target-pulse"), 1400);
+        } else {
+          triggerSideToast("Upload Photo", "Please link your flat profile first to upload monthly meter or payment photos.", false);
+        }
+        return;
+      }
+      if (sectionKey === "payment") {
+        const payCard = document.getElementById("renterInstantUpiPaymentCard");
+        if (payCard) {
+          payCard.scrollIntoView({ behavior: "smooth", block: "center" });
+          payCard.classList.add("renter-quick-target-pulse");
+          setTimeout(() => payCard.classList.remove("renter-quick-target-pulse"), 1400);
+        } else {
+          triggerSideToast("Payment", "Instant UPI payment options will appear once your flat profile is linked.", false);
+        }
+        return;
+      }
+      if (sectionKey === "profile") {
+        openRenterKycProfileOnlyModal();
+      }
+    }
+
     function renderAllDashboardUI() {
       const viewerScope = resolveViewerAssignedScope();
+      const renterQuickNavEl = document.getElementById("renterQuickScrollNavBar");
       if (String(activeRole || "").trim().toLowerCase() === "renter") {
         activeRole = "Renter";
+        if (renterQuickNavEl) renterQuickNavEl.style.display = "block";
         const flatsContainer = document.getElementById("flatsList");
         const propsBar = document.querySelector(".properties-bar");
         const khetContainer = document.getElementById("homeKhetSectionContainer");
@@ -13617,8 +13914,8 @@ function formatMonthLabel(rawVal) {
           .slice(0, 2)
           .map(w => w.charAt(0).toUpperCase())
           .join("") || "R";
-        const rawProfileImg = primaryRenter.ProfilePhotoUrl || primaryRenter.ProfileImage || primaryRenter.PhotoUrl || "";
-        const profileImgUrl = typeof getRenderablePhotoUrl === "function" ? getRenderablePhotoUrl(rawProfileImg) : String(rawProfileImg || "").trim();
+        const rawProfileImg = primaryRenter.ProfileImageURL || primaryRenter.DriveProfilePreviewUrl || primaryRenter.ProfilePhotoUrl || primaryRenter.ProfileImage || primaryRenter.PhotoUrl || "";
+        const profileImgUrl = normalizeGoogleDriveImageUrl(rawProfileImg);
         const safeProfileImgArg = String(profileImgUrl || "").replace(/'/g, "\\'");
         const effectiveAadhaar = normalizeAadhaar12(primaryRenter.IdentityDocNumber || primaryRenter.AadhaarNumber || renterAadhaar);
         const renterPhoneDisplay = sanitizeContactPhoneDisplay(primaryRenter.MobileNumber || primaryRenter.AltMobileNumber || activeUserMobile);
@@ -14049,7 +14346,7 @@ function formatMonthLabel(rawVal) {
           paymentRightHtml = `
             <div style="display:flex; flex-direction:column; gap:18px;">
               <!-- Box 1: Instant UPI QR Payment Hub -->
-              <div class="renter-payment-card">
+              <div class="renter-payment-card" id="renterInstantUpiPaymentCard">
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;">
                   <div>
                     <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
@@ -14164,7 +14461,7 @@ function formatMonthLabel(rawVal) {
           paymentRightHtml = `
             <div style="display:flex; flex-direction:column; gap:18px;">
               <!-- Box 1: Instant UPI Payment Hub -->
-              <div class="renter-payment-card" style="display:flex; flex-direction:column; justify-content:space-between; gap:14px;">
+              <div class="renter-payment-card" id="renterInstantUpiPaymentCard" style="display:flex; flex-direction:column; justify-content:space-between; gap:14px;">
                 <div>
                   <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;">
                     <div>
@@ -14729,10 +15026,12 @@ function formatMonthLabel(rawVal) {
         renderHomeKhetSection();
         return;
       }
+      if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
       if (propsBar) propsBar.style.display = "";
 
       if (
         selectedProperty &&
+        (hasCompletedInitialSync || (DB.properties && DB.properties.length > 0)) &&
         (!DB.properties.some(p => String(p.PropertyName).trim() === String(selectedProperty).trim()) ||
           (activeRole === "Manager" && viewerScope && !isPropertyAllowedForViewer(selectedProperty, viewerScope)))
       ) {
@@ -14747,6 +15046,11 @@ function formatMonthLabel(rawVal) {
       if (selectedProperty && DB.properties.some(p => String(p.PropertyName).trim() === String(selectedProperty).trim())) {
         if (flatsContainer) flatsContainer.style.display = "";
         renderFlatsGrid(selectedProperty);
+      } else if (selectedProperty && !hasCompletedInitialSync && (!DB.properties || DB.properties.length === 0)) {
+        if (flatsContainer) {
+          flatsContainer.innerHTML = "";
+          flatsContainer.style.display = "none";
+        }
       } else {
         // Requirement 2: Keep all flats hidden until the user explicitly taps on a property card
         selectedProperty = null;
@@ -19501,15 +19805,17 @@ function formatMonthLabel(rawVal) {
       const dlBtn = document.getElementById(isIdentity ? "btnDownloadLeftIdentityPic" : "btnDownloadLeftProfilePic");
       const fileInput = document.getElementById(isIdentity ? "fileEditLeftIdentityPic" : "fileEditLeftProfilePic");
 
-      const hasRealImage = !isPlaceholderImageUrl(imageUrl);
+      const normalizedUrl = normalizeGoogleDriveImageUrl(imageUrl);
+      const hasRealImage = !isPlaceholderImageUrl(normalizedUrl);
       if (imgEl) {
+        imgEl.dataset.rawSource = hasRealImage ? String(imageUrl || normalizedUrl).trim() : "";
         imgEl.src = hasRealImage
-          ? imageUrl
+          ? normalizedUrl
           : (isIdentity ? EMPTY_IDENTITY_PLACEHOLDER : EMPTY_PROFILE_PLACEHOLDER);
       }
       if (badgeEl) {
         badgeEl.innerText = hasRealImage
-          ? (isIdentity ? "Aadhaar photo saved to this Past Renter" : "Profile photo saved to this Past Renter")
+          ? (isIdentity ? "Aadhaar photo saved on Google Drive" : "Profile photo saved on Google Drive")
           : (isIdentity ? "No Aadhaar photo uploaded" : "No profile photo uploaded");
         badgeEl.style.color = hasRealImage ? "var(--accent-green)" : "var(--text-muted)";
       }
@@ -19577,10 +19883,8 @@ function formatMonthLabel(rawVal) {
           sheetSafeBase64: compressedDataUrl
         });
 
-        const returnedImg = res && res.status === "success" ? (res.imageUrl || res.previewUrl || res.url || "") : "";
-        const finalSavedImg = (returnedImg && returnedImg.startsWith("data:image"))
-          ? returnedImg
-          : (returnedImg ? normalizeGoogleDriveImageUrl(returnedImg) : compressedDataUrl);
+        const returnedImg = res && res.status === "success" ? (res.shareableUrl || res.driveUrl || res.imageUrl || res.previewUrl || res.url || "") : "";
+        const finalSavedImg = returnedImg ? String(returnedImg).trim() : compressedDataUrl;
         updateLeftRenterImageSlotUI(docType, finalSavedImg);
         if (isIdentity) {
           targetRenter.IdentityImageURL = finalSavedImg;
@@ -19744,8 +20048,10 @@ function formatMonthLabel(rawVal) {
       // Requirement 5: Status must remain unchanged (if left, stays Inactive; if active, stays Active)
       const preservedStatus = String(targetRenter.Status || "Inactive").trim().toLowerCase() === "active" ? "Active" : "Inactive";
 
-      const leftProfSrc = document.getElementById("editLeftProfilePreview")?.src || "";
-      const leftIdSrc = document.getElementById("editLeftIdentityPreview")?.src || "";
+      const leftProfImgEl = document.getElementById("editLeftProfilePreview");
+      const leftIdImgEl = document.getElementById("editLeftIdentityPreview");
+      const leftProfSrc = leftProfImgEl?.dataset?.rawSource || leftProfImgEl?.src || "";
+      const leftIdSrc = leftIdImgEl?.dataset?.rawSource || leftIdImgEl?.src || "";
 
       targetRenter.RenterName = newName;
       targetRenter.IdentityDocNumber = cleanAadhaar;
@@ -20928,12 +21234,10 @@ function formatMonthLabel(rawVal) {
         document.getElementById("renterStatus").value = String(renter.Status || "Active").trim().toLowerCase() === "active" ? "Active" : "Inactive";
         document.getElementById("renterJoinDate").value = resolvedMeta.joinDate;
         document.getElementById("renterEndDate").value = resolvedMeta.endDate;
-        const resolvedProfilePic = normalizeGoogleDriveImageUrl(renter.ProfileImageURL || "");
-        const resolvedIdentityPic = normalizeGoogleDriveImageUrl(renter.IdentityImageURL || "");
-        if (!renter.ProfileImageURL && resolvedProfilePic) renter.ProfileImageURL = resolvedProfilePic;
-        if (!renter.IdentityImageURL && resolvedIdentityPic) renter.IdentityImageURL = resolvedIdentityPic;
-        updateRenterImageSlotUI("profile", resolvedProfilePic);
-        updateRenterImageSlotUI("identity", resolvedIdentityPic);
+        const rawProfilePic = String(renter.ProfileImageURL || "").trim();
+        const rawIdentityPic = String(renter.IdentityImageURL || "").trim();
+        updateRenterImageSlotUI("profile", rawProfilePic);
+        updateRenterImageSlotUI("identity", rawIdentityPic);
         updateRenterTenureStatusUI(renter, renter.IdentityDocNumber);
         syncProfileReactivateButtonVisibility();
       } else {
@@ -23196,7 +23500,7 @@ function formatMonthLabel(rawVal) {
                   const statusBadge = isAct ? "Active Tenant" : "Left / Past Tenant";
                   const statusCls = isAct ? "badge-paid" : "badge-unpaid";
                   const avatarSrc = (!isPlaceholderImageUrl(r.ProfileImageURL))
-                    ? r.ProfileImageURL
+                    ? normalizeGoogleDriveImageUrl(r.ProfileImageURL)
                     : "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E";
                   return `
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px; padding:8px 12px; cursor:pointer;" onclick="event.stopPropagation(); openTenantProfileByHistorySearchIndex(${idx})">
@@ -23274,7 +23578,7 @@ function formatMonthLabel(rawVal) {
         const statusBadgeText = isAct ? "Active Tenant" : "Left / Past Tenant";
         const statusBadgeClass = isAct ? "badge-paid" : "badge-unpaid";
         const avatarSrc = (!isPlaceholderImageUrl(targetRenter.ProfileImageURL))
-          ? targetRenter.ProfileImageURL
+          ? normalizeGoogleDriveImageUrl(targetRenter.ProfileImageURL)
           : "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E";
 
         const allBills = getBillsForSpecificRenter(prop, flat, targetRenter);
@@ -23548,10 +23852,10 @@ function formatMonthLabel(rawVal) {
       const statusBadgeClass = isAct ? "badge-paid" : "badge-unpaid";
 
       const profileImgSrc = (!isPlaceholderImageUrl(targetRenter.ProfileImageURL))
-        ? targetRenter.ProfileImageURL
+        ? normalizeGoogleDriveImageUrl(targetRenter.ProfileImageURL)
         : EMPTY_PROFILE_PLACEHOLDER;
       const identityImgSrc = (!isPlaceholderImageUrl(targetRenter.IdentityImageURL))
-        ? targetRenter.IdentityImageURL
+        ? normalizeGoogleDriveImageUrl(targetRenter.IdentityImageURL)
         : EMPTY_IDENTITY_PLACEHOLDER;
 
       const bills = getBillsForSpecificRenter(prop, flat, targetRenter);
@@ -26359,7 +26663,7 @@ function formatMonthLabel(rawVal) {
       const pastBills = getBillsForSpecificRenter(pastRenter.PropertyName, pastRenter.FlatName, pastRenter);
       const safeRId = String(bestMatch.rId || "").replace(/'/g, "\\'");
       const avatarSrc = (!isPlaceholderImageUrl(consolidatedData.ProfileImageURL))
-        ? consolidatedData.ProfileImageURL
+        ? normalizeGoogleDriveImageUrl(consolidatedData.ProfileImageURL)
         : EMPTY_PROFILE_PLACEHOLDER;
       const staysLocationsSummary = matchingStays
         .map(s => `${s.PropertyName || '--'} (Flat ${s.FlatName || '--'})`)
@@ -26593,8 +26897,10 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
-      const currentProfileSrc = document.getElementById("profilePicturePreview").src;
-      const currentIdentitySrc = document.getElementById("identityPicturePreview").src;
+      const profPreviewEl = document.getElementById("profilePicturePreview");
+      const idPreviewEl = document.getElementById("identityPicturePreview");
+      const currentProfileSrc = profPreviewEl?.dataset?.rawSource || profPreviewEl?.src || "";
+      const currentIdentitySrc = idPreviewEl?.dataset?.rawSource || idPreviewEl?.src || "";
       const resolvedProfileUrl = !isPlaceholderImageUrl(currentProfileSrc)
         ? currentProfileSrc
         : (activeFlatRenterObj?.ProfileImageURL || "");
@@ -26745,7 +27051,8 @@ function formatMonthLabel(rawVal) {
           payload.identityDocNumber || previousAadhaarBeforeEdit,
           selectedFlat.PropertyName,
           selectedFlat.FlatName,
-          payload.renterName
+          payload.renterName,
+          previousAadhaarBeforeEdit
         );
 
         // Requirement 5: If we were editing a departed renter from history, keep their edited data visible and status 'Inactive'
@@ -27489,8 +27796,8 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: profUrl
         });
-        if (profRes && (profRes.imageUrl || profRes.url)) {
-          newRenterObj.ProfileImageURL = normalizeGoogleDriveImageUrl(profRes.imageUrl || profRes.url);
+        if (profRes && (profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.url)) {
+          newRenterObj.ProfileImageURL = String(profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.url).trim();
         }
       }
       if (idUrl && idUrl.startsWith("data:image")) {
@@ -27507,8 +27814,8 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: idUrl
         });
-        if (idRes && (idRes.imageUrl || idRes.url)) {
-          newRenterObj.IdentityImageURL = normalizeGoogleDriveImageUrl(idRes.imageUrl || idRes.url);
+        if (idRes && (idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.url)) {
+          newRenterObj.IdentityImageURL = String(idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.url).trim();
         }
       }
       lastWriteCompletedAt = Date.now();
@@ -27939,6 +28246,7 @@ function formatMonthLabel(rawVal) {
         localStorage.removeItem("active_session_token");
         if (prevUser) {
           localStorage.removeItem("portal_device_session_" + prevUser);
+          localStorage.removeItem("portal_session_pass_" + prevUser);
         }
       } catch (e) {}
 
@@ -27950,6 +28258,9 @@ function formatMonthLabel(rawVal) {
       document.getElementById("dashboardScreen")?.classList.remove("active");
       document.getElementById("loginScreen")?.classList.add("active");
       document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+
+      const renterQuickNavEl = document.getElementById("renterQuickScrollNavBar");
+      if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
 
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
@@ -28156,7 +28467,7 @@ function formatMonthLabel(rawVal) {
 
         triggerSideToast(
           "Uploading to Google Drive",
-          `Saving ${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} directly to Google Drive folder (not Google Sheets)...`,
+          `Uploading ${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} to Google Drive and saving the shareable link to the database...`,
           "warning"
         );
 
@@ -28174,10 +28485,10 @@ function formatMonthLabel(rawVal) {
           base64Data: compressedDataUrl
         });
 
-        const returnedUrl = res && res.status === "success" ? (res.imageUrl || res.previewUrl || res.url || "") : "";
-        const finalImageUrl = (returnedUrl && returnedUrl.startsWith("data:image"))
-          ? returnedUrl
-          : (returnedUrl ? normalizeGoogleDriveImageUrl(returnedUrl) : compressedDataUrl);
+        const returnedUrl = res && res.status === "success"
+          ? (res.shareableUrl || res.driveUrl || res.imageUrl || res.previewUrl || res.url || "")
+          : "";
+        const finalImageUrl = returnedUrl ? String(returnedUrl).trim() : compressedDataUrl;
 
         if (res && res.resolvedRenterId && activeFlatRenterObj) {
           activeFlatRenterObj.RenterID = res.resolvedRenterId;
@@ -28188,6 +28499,7 @@ function formatMonthLabel(rawVal) {
           else activeFlatRenterObj.ProfileImageURL = finalImageUrl;
         }
         if (targetR) {
+          if (res && res.resolvedRenterId) targetR.RenterID = res.resolvedRenterId;
           if (isIdentity) targetR.IdentityImageURL = finalImageUrl;
           else targetR.ProfileImageURL = finalImageUrl;
         }
@@ -28197,8 +28509,8 @@ function formatMonthLabel(rawVal) {
         populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
 
         triggerSideToast(
-          "Saved Directly to Google Drive",
-          `${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} saved directly in your Google Drive folder!`,
+          "Saved to Google Drive & Database",
+          `${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} uploaded to Google Drive and its shareable link is saved in the database!`,
           true
         );
       } catch (err) {
