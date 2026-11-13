@@ -8564,9 +8564,8 @@
               if (data.event === "CHAT_UPDATED") {
                 const incoming = payload.privateChats || payload;
                 if (incoming && typeof incoming === "object") {
-                  try {
-                    localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, JSON.stringify(incoming));
-                  } catch (e) {}
+                  if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+                  DB.globalConfig.privateChats = incoming;
                   if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
                   if (typeof renderAdminChatChannelsList === "function") renderAdminChatChannelsList();
                   if (typeof renderRenterAdminTargetList === "function") renderRenterAdminTargetList();
@@ -8575,18 +8574,16 @@
               } else if (data.event === "NOTICES_UPDATED") {
                 const incoming = payload.broadcastNotices || payload;
                 if (Array.isArray(incoming)) {
-                  try {
-                    localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(incoming));
-                  } catch (e) {}
+                  if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+                  DB.globalConfig.broadcastNotices = incoming;
                   if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
                   if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
                 }
               } else if (data.event === "CONTACT_UPDATED") {
                 const incoming = payload.contactConfig || payload;
                 if (incoming && typeof incoming === "object") {
-                  try {
-                    localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(incoming));
-                  } catch (e) {}
+                  if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+                  DB.globalConfig.contactConfig = incoming;
                   if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
                 }
               } else if (data.event === "USER_SESSION_REVOKED") {
@@ -8634,10 +8631,11 @@
           if (chatRes.ok) {
             const chatData = await chatRes.json();
             if (chatData && chatData.status === "success" && chatData.privateChats) {
-              const prevStr = localStorage.getItem(PRIVATE_CHAT_STORAGE_KEY) || "{}";
+              if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+              const prevStr = JSON.stringify(DB.globalConfig.privateChats || {});
               const newStr = JSON.stringify(chatData.privateChats);
               if (prevStr !== newStr) {
-                localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, newStr);
+                DB.globalConfig.privateChats = chatData.privateChats;
                 if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
                 if (typeof renderAdminChatChannelsList === "function") renderAdminChatChannelsList();
                 if (typeof renderRenterAdminTargetList === "function") renderRenterAdminTargetList();
@@ -8652,20 +8650,21 @@
           if (noticeRes.ok) {
             const noticeData = await noticeRes.json();
             if (noticeData && noticeData.status === "success") {
-              if (Array.isArray(noticeData.broadcastNotices) && noticeData.broadcastNotices.length > 0) {
-                const prevStr = localStorage.getItem(PORTAL_NOTIFICATIONS_KEY) || "[]";
+              if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+              if (Array.isArray(noticeData.broadcastNotices)) {
+                const prevStr = JSON.stringify(DB.globalConfig.broadcastNotices || []);
                 const newStr = JSON.stringify(noticeData.broadcastNotices);
                 if (prevStr !== newStr) {
-                  localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, newStr);
+                  DB.globalConfig.broadcastNotices = noticeData.broadcastNotices;
                   if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
                   if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
                 }
               }
-              if (noticeData.contactConfig && typeof noticeData.contactConfig === "object" && Object.keys(noticeData.contactConfig).length > 0) {
-                const prevContact = localStorage.getItem("portal_admin_contact_cfg") || "";
+              if (noticeData.contactConfig && typeof noticeData.contactConfig === "object") {
+                const prevContact = JSON.stringify(DB.globalConfig.contactConfig || {});
                 const newContact = JSON.stringify(noticeData.contactConfig);
                 if (prevContact !== newContact) {
-                  localStorage.setItem("portal_admin_contact_cfg", newContact);
+                  DB.globalConfig.contactConfig = noticeData.contactConfig;
                   if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
                 }
               }
@@ -8699,42 +8698,46 @@
       }, 2500);
     }
 
-    function loadLocalUsersMaster() {
+    function purgeAllPortalBrowserCaches() {
       try {
-        const raw = localStorage.getItem(GAS_USERS_STORE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
+        const keysToPurge = [
+          GAS_SHEET_CACHE_KEY,
+          GAS_USERS_STORE_KEY,
+          GAS_LOGIN_HIST_KEY,
+          GAS_GLOBAL_CFG_KEY,
+          "portal_maintenance_tickets_v1",
+          "portal_payment_proofs_v1",
+          "portal_utr_payment_proofs_v1",
+          "portal_admin_audit_logs_v1",
+          "portal_admin_contact_cfg",
+          "portal_blocked_users",
+          "portal_full_db_backup",
+          "cached_db_snapshot",
+          typeof PORTAL_NOTIFICATIONS_KEY !== "undefined" ? PORTAL_NOTIFICATIONS_KEY : "portal_broadcast_notifications_v2",
+          typeof PRIVATE_CHAT_STORAGE_KEY !== "undefined" ? PRIVATE_CHAT_STORAGE_KEY : "portal_private_chats_v3"
+        ];
+        keysToPurge.forEach(function(k) {
+          if (k) {
+            try { localStorage.removeItem(k); } catch (e) {}
+            try { sessionStorage.removeItem(k); } catch (e) {}
+          }
+        });
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (k && (k.indexOf("portal_checklist_") === 0 || k.indexOf("portal_session_pass_") === 0 || k.indexOf("portal_gas_") === 0)) {
+            localStorage.removeItem(k);
+          }
         }
       } catch (e) {}
-      return [];
+    }
+    purgeAllPortalBrowserCaches();
+
+    function loadLocalUsersMaster() {
+      return (typeof DB !== "undefined" && DB && Array.isArray(DB.users)) ? DB.users : [];
     }
 
     function saveLocalUsersMaster(usersArr) {
       const clean = Array.isArray(usersArr) ? usersArr : [];
-      try {
-        localStorage.setItem(GAS_USERS_STORE_KEY, JSON.stringify(clean));
-        // Purge cached passwords and device sessions for any user deleted from the Google Sheet
-        const validNames = new Set(
-          clean
-            .map(function(u) { return String(u.Username || "").trim().toLowerCase(); })
-            .filter(Boolean)
-        );
-        for (let i = localStorage.length - 1; i >= 0; i--) {
-          const k = localStorage.key(i);
-          if (!k) continue;
-          if (k.indexOf("portal_session_pass_") === 0) {
-            const uKey = k.substring("portal_session_pass_".length).toLowerCase();
-            if (!validNames.has(uKey)) localStorage.removeItem(k);
-          } else if (k.indexOf("portal_device_session_") === 0) {
-            const uKey = k.substring("portal_device_session_".length).toLowerCase();
-            if (!validNames.has(uKey)) localStorage.removeItem(k);
-          } else if (k.indexOf("portal_login_lockout_u_") === 0) {
-            const uKey = k.substring("portal_login_lockout_u_".length).toLowerCase();
-            if (uKey !== "default" && !validNames.has(uKey)) localStorage.removeItem(k);
-          }
-        }
-      } catch (e) {}
       if (typeof DB !== "undefined" && DB) {
         DB.users = clean;
       }
@@ -8742,21 +8745,11 @@
     }
 
     function loadLocalLoginHistoryMaster() {
-      try {
-        const raw = localStorage.getItem(GAS_LOGIN_HIST_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
-        }
-      } catch (e) {}
-      return [];
+      return (typeof DB !== "undefined" && DB && Array.isArray(DB.loginHistory)) ? DB.loginHistory : [];
     }
 
     function saveLocalLoginHistoryMaster(lhArr) {
       const clean = (Array.isArray(lhArr) ? lhArr : []).slice(0, 30);
-      try {
-        localStorage.setItem(GAS_LOGIN_HIST_KEY, JSON.stringify(clean));
-      } catch (e) {}
       if (typeof DB !== "undefined" && DB) {
         DB.loginHistory = clean;
       }
@@ -8764,21 +8757,14 @@
     }
 
     function loadLocalGlobalConfigMaster() {
-      try {
-        const raw = localStorage.getItem(GAS_GLOBAL_CFG_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === "object") return parsed;
-        }
-      } catch (e) {}
-      return {};
+      return (typeof DB !== "undefined" && DB && DB.globalConfig && typeof DB.globalConfig === "object") ? DB.globalConfig : {};
     }
 
     function saveLocalGlobalConfigMaster(cfgObj) {
       const clean = (cfgObj && typeof cfgObj === "object") ? cfgObj : {};
-      try {
-        localStorage.setItem(GAS_GLOBAL_CFG_KEY, JSON.stringify(clean));
-      } catch (e) {}
+      if (typeof DB !== "undefined" && DB) {
+        DB.globalConfig = clean;
+      }
       notifyCrossTabSync("globalConfig", clean);
     }
 
@@ -8788,52 +8774,20 @@
       });
     }
 
-    let lastGasSheetDataCache = (function() {
-      try {
-        const raw = localStorage.getItem(GAS_SHEET_CACHE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === "object") return parsed;
-        }
-      } catch (e) {}
-      return null;
-    })();
+    let lastGasSheetDataCache = null;
     let lastGasFetchTimestamp = 0;
     let gasCacheNeedsRefresh = true;
     let inFlightGasFetchPromise = null;
     let gasWriteEpoch = 0;
 
     function updateLocalGasSheetCacheFromDB() {
-      lastGasSheetDataCache = {
-        properties: Array.isArray(DB.properties) ? DB.properties : [],
-        flats: Array.isArray(DB.flats) ? DB.flats : [],
-        renters: Array.isArray(DB.renters) ? DB.renters : [],
-        bills: Array.isArray(DB.bills) ? DB.bills : [],
-        fdRecords: Array.isArray(DB.fdRecords) ? DB.fdRecords : [],
-        khetRecords: Array.isArray(DB.khetRecords) ? DB.khetRecords : [],
-        kharchRecords: Array.isArray(DB.kharchRecords) ? DB.kharchRecords : [],
-        users: Array.isArray(DB.users) && DB.users.length ? DB.users : loadLocalUsersMaster(),
-        loginHistory: Array.isArray(DB.loginHistory) && DB.loginHistory.length ? DB.loginHistory : loadLocalLoginHistoryMaster(),
-        globalConfig: loadLocalGlobalConfigMaster()
-      };
-      try {
-        localStorage.setItem(GAS_SHEET_CACHE_KEY, JSON.stringify(lastGasSheetDataCache));
-      } catch (e) {}
+      lastGasSheetDataCache = null;
     }
 
     let lastLoginCompletedAt = 0;
 
     async function fetchGasSheetData(forceRefresh = false, bypassPendingGuard = false) {
-      const now = Date.now();
-      if (!bypassPendingGuard && pendingWriteCount > 0 && lastGasSheetDataCache) {
-        return lastGasSheetDataCache;
-      }
-      if (!bypassPendingGuard && lastGasSheetDataCache && lastGasSheetDataCache._liveSheetVerified && !gasCacheNeedsRefresh) {
-        const maxAgeMs = forceRefresh ? 1800 : 4000;
-        if (now - lastGasFetchTimestamp < maxAgeMs) {
-          return lastGasSheetDataCache;
-        }
-      }
+      purgeAllPortalBrowserCaches();
       if (inFlightGasFetchPromise) {
         return inFlightGasFetchPromise;
       }
@@ -8867,7 +8821,7 @@
           }
           const json = await response.json();
           if (!bypassPendingGuard && (fetchEpochAtStart !== gasWriteEpoch || pendingWriteCount > 0)) {
-            return lastGasSheetDataCache || {
+            return {
               properties: DB.properties || [],
               flats: DB.flats || [],
               renters: DB.renters || [],
@@ -8887,7 +8841,6 @@
               : null;
 
             if (sheetReturnedUsersArray && remoteUsers.length === 0) {
-              // All users were manually deleted in Google Sheets -> request ONLY Google Apps Script to auto-generate the first Admin user ID in the sheet
               try {
                 const gasSeedRes = await fetch(GAS_WEB_APP_URL, {
                   method: "POST",
@@ -8904,12 +8857,6 @@
 
               if (remoteUsers && remoteUsers.length > 0) {
                 saveLocalUsersMaster(remoteUsers);
-                try {
-                  const blockedNames = remoteUsers
-                    .filter(function(u) { return String(u.Status || u.AccountStatus || "").toLowerCase() === "blocked"; })
-                    .map(function(u) { return String(u.Username || "").trim().toLowerCase(); });
-                  localStorage.setItem("portal_blocked_users", JSON.stringify(blockedNames));
-                } catch (e) {}
                 await fetch("/api/gas-engine", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -8942,12 +8889,6 @@
                   ActiveSessionToken: resolvedTok
                 });
               });
-              try {
-                const blockedNames = remoteUsers
-                  .filter(function(u) { return String(u.Status || "").toLowerCase() === "blocked"; })
-                  .map(function(u) { return String(u.Username || "").trim().toLowerCase(); });
-                localStorage.setItem("portal_blocked_users", JSON.stringify(blockedNames));
-              } catch (e) {}
               saveLocalUsersMaster(remoteUsers);
               fetch("/api/gas-engine", {
                 method: "POST",
@@ -8962,21 +8903,19 @@
               }
             }
 
-            if (Array.isArray(json.loginHistory) && json.loginHistory.length > 0) {
+            if (Array.isArray(json.loginHistory)) {
               saveLocalLoginHistoryMaster(json.loginHistory);
             }
-            if (json.globalConfig && typeof json.globalConfig === "object" && Object.keys(json.globalConfig).length > 0) {
-              const localCfg = loadLocalGlobalConfigMaster() || {};
+            if (json.globalConfig && typeof json.globalConfig === "object") {
               const incCfg = json.globalConfig;
               const mergedCfg = {
-                ...localCfg,
                 ...incCfg,
-                contactConfig: (incCfg.contactConfig && Object.keys(incCfg.contactConfig).length > 0) ? incCfg.contactConfig : (localCfg.contactConfig || {}),
-                privateChats: (incCfg.privateChats && Object.keys(incCfg.privateChats).length > 0) ? incCfg.privateChats : (localCfg.privateChats || {}),
-                broadcastNotices: (Array.isArray(incCfg.broadcastNotices) && incCfg.broadcastNotices.length > 0) ? incCfg.broadcastNotices : (localCfg.broadcastNotices || []),
-                paymentProofs: (Array.isArray(incCfg.paymentProofs) && incCfg.paymentProofs.length > 0) ? incCfg.paymentProofs : (localCfg.paymentProofs || []),
-                maintenanceTickets: (Array.isArray(incCfg.maintenanceTickets) && incCfg.maintenanceTickets.length > 0) ? incCfg.maintenanceTickets : (localCfg.maintenanceTickets || []),
-                auditLogs: (Array.isArray(incCfg.auditLogs) && incCfg.auditLogs.length > 0) ? incCfg.auditLogs.slice(0, 30) : (localCfg.auditLogs || [])
+                contactConfig: (incCfg.contactConfig && typeof incCfg.contactConfig === "object") ? incCfg.contactConfig : {},
+                privateChats: (incCfg.privateChats && typeof incCfg.privateChats === "object") ? incCfg.privateChats : {},
+                broadcastNotices: Array.isArray(incCfg.broadcastNotices) ? incCfg.broadcastNotices : [],
+                paymentProofs: Array.isArray(incCfg.paymentProofs) ? incCfg.paymentProofs : [],
+                maintenanceTickets: Array.isArray(incCfg.maintenanceTickets) ? incCfg.maintenanceTickets : [],
+                auditLogs: Array.isArray(incCfg.auditLogs) ? incCfg.auditLogs.slice(0, 30) : []
               };
               saveLocalGlobalConfigMaster(mergedCfg);
             }
@@ -8995,12 +8934,8 @@
               loginHistory: loadLocalLoginHistoryMaster(),
               globalConfig: loadLocalGlobalConfigMaster()
             };
-            lastGasSheetDataCache = sheetPayload;
             lastGasFetchTimestamp = Date.now();
             gasCacheNeedsRefresh = false;
-            try {
-              localStorage.setItem(GAS_SHEET_CACHE_KEY, JSON.stringify(sheetPayload));
-            } catch (e) {}
             return sheetPayload;
           }
         } catch (err) {
@@ -9010,7 +8945,7 @@
         }
         const mirrorFallback = await fetchFastMirrorInitialData();
         if (mirrorFallback) return mirrorFallback;
-        return lastGasSheetDataCache || {
+        return {
           properties: DB.properties || [],
           flats: DB.flats || [],
           renters: DB.renters || [],
@@ -12987,40 +12922,13 @@ function formatMonthLabel(rawVal) {
     }
 
     function getStoredBroadcastNotifications() {
-      try {
-        const raw = localStorage.getItem(PORTAL_NOTIFICATIONS_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
-        }
-      } catch (e) {}
-
-      // Default system welcome notice
-      const defaultNotices = [
-        {
-          id: "notice_welcome_01",
-          title: "Welcome to Rental Portal",
-          body: "You can view your monthly bills, pay rent via instant UPI QR, and chat directly with your administrators from your dashboard.",
-          target: "ALL",
-          targetProperties: ["ALL"],
-          sender: "Administrator",
-          timestamp: Date.now() - 3600000 * 24
-        }
-      ];
-      try {
-        localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(defaultNotices));
-      } catch (e) {}
-      return defaultNotices;
+      if (DB && DB.globalConfig && Array.isArray(DB.globalConfig.broadcastNotices)) {
+        return DB.globalConfig.broadcastNotices;
+      }
+      return [];
     }
 
     function getReadNotificationIds() {
-      try {
-        const raw = localStorage.getItem(PORTAL_READ_NOTIFICATIONS_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
-        }
-      } catch (e) {}
       return [];
     }
 
@@ -13045,9 +12953,8 @@ function formatMonthLabel(rawVal) {
       const nextRaw = JSON.stringify(serverNotices);
 
       if (prevRaw !== nextRaw) {
-        try {
-          localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, nextRaw);
-        } catch (e) {}
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig.broadcastNotices = serverNotices;
         syncNotificationsBadgeUI();
         renderNotificationsListUI();
 
@@ -13057,7 +12964,7 @@ function formatMonthLabel(rawVal) {
           newlyAdded.forEach(n => {
             const senderClean = String(n.sender || "").trim().toLowerCase();
             if (senderClean !== myCleanName && senderClean !== String(activeUser || "").trim().toLowerCase()) {
-              triggerSideToast(`New Notice: ${n.title || "Announcement"}`, String(n.body || "").slice(0, 90), true);
+              triggerSideToast(`New Notice: ${n.title || "Announcement"}`, String(n.body || n.message || "").slice(0, 90), true);
             }
           });
         }
@@ -13459,7 +13366,11 @@ function formatMonthLabel(rawVal) {
         // Resolve the latest generated bill or receipt for this individual renter
         const latestBill = myBills.length > 0 ? myBills[0] : null;
         const currentCalendarYM = getCurrentCalendarYearMonth();
-        const currentMonthBill = latestBill || null;
+        const selectedHomeBill = (window.selectedRenterHomeBillId && myBills.find(b => String(b.BillID || "") === String(window.selectedRenterHomeBillId)))
+          || (window.selectedRenterHomeBillMonth && myBills.find(b => normalizeMonthYear(b.MonthYear || b.BillDate) === normalizeMonthYear(window.selectedRenterHomeBillMonth)))
+          || latestBill
+          || null;
+        const currentMonthBill = selectedHomeBill || null;
         const currentMonthMetrics = computeCurrentMonthStandaloneAdvanceAndDue(currentMonthBill);
         const activeMonthLabel = currentMonthMetrics.monthLabel;
 
@@ -13598,18 +13509,61 @@ function formatMonthLabel(rawVal) {
             note: `Rent ${targetProp} Flat ${targetFlat} (${billMonthName})`
           };
 
+          const availableMonthsReceiptsListHtml = myBills.length > 0 ? `
+            <div style="margin-bottom:18px; padding-bottom:14px; border-bottom:1px dashed var(--glass-border);">
+              <div style="font-size:0.75rem; font-weight:800; color:#818cf8; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <span><i class="fa-solid fa-receipt" style="margin-right:6px;"></i>Available Month Receipts (${myBills.length})</span>
+                <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">Click any month to view receipt</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                ${myBills.map(bItem => {
+                  const mMetrics = computeCurrentMonthStandaloneAdvanceAndDue(bItem);
+                  const isSettled = mMetrics.dueAmt <= 0;
+                  const itemBillId = String(bItem.BillID || "").replace(/'/g, "\\'");
+                  const itemMonthYear = String(bItem.MonthYear || "").replace(/'/g, "\\'");
+                  const isSelectedMonth = String(bItem.BillID || "") === String(currentMonthBill.BillID || "") && String(bItem.MonthYear || "") === String(currentMonthBill.MonthYear || "");
+                  return `
+                    <div
+                      class="renter-history-row-item"
+                      style="${isSelectedMonth ? "border-color:#6366f1; background:rgba(99,102,241,0.12);" : ""}"
+                      onclick="selectRenterHomeAvailableReceipt('${itemBillId}', '${itemMonthYear}'); openBillReceiptModal('${itemBillId}', '${itemMonthYear}');"
+                      title="Click to view receipt for ${mMetrics.monthLabel}"
+                    >
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:34px; height:34px; border-radius:9px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.88rem; flex-shrink:0;">
+                          <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
+                        </div>
+                        <div>
+                          <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">${mMetrics.monthLabel} Receipt</div>
+                          <div style="font-size:0.71rem; color:var(--text-muted);">Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
+                        </div>
+                      </div>
+                      <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:0.71rem; font-weight:800; padding:4px 9px; border-radius:999px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; border:1px solid ${isSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
+                          ${mMetrics.advanceAmt > 0 ? `Adv ₹${mMetrics.advanceAmt.toLocaleString("en-IN")}` : (isSettled ? "Settled" : `Due ₹${mMetrics.dueAmt.toLocaleString("en-IN")}`)}
+                        </span>
+                        <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:var(--text-muted);"></i>
+                      </div>
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+          ` : "";
+
           statementLeftHtml = `
             <div class="renter-statement-card">
+              ${availableMonthsReceiptsListHtml}
               <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; padding-bottom:18px; margin-bottom:18px; border-bottom:1px solid var(--glass-border);">
                 <div>
                   <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#38bdf8; margin-bottom:5px;">
-                    <i class="fa-solid fa-file-invoice-dollar"></i> Official Monthly Statement
+                    <i class="fa-solid fa-receipt"></i> Available Monthly Receipt (${billMonthName})
                   </div>
                   <h3 style="margin:0; font-size:1.32rem; font-weight:900; color:var(--text-main); letter-spacing:-0.015em;">
-                    ${billMonthName} Billing Breakdown
+                    ${billMonthName} Official Receipt
                   </h3>
                   <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <span><i class="fa-regular fa-calendar" style="margin-right:4px; color:#818cf8;"></i>Issued ${billDateStr}</span>
+                    <span><i class="fa-regular fa-calendar" style="margin-right:4px; color:#818cf8;"></i>Billing Date: ${billDateStr}</span>
                     <span>•</span>
                     <span><i class="fa-solid fa-location-dot" style="margin-right:4px; color:#38bdf8;"></i>${currentMonthBill.PropertyName || targetProp} (Flat ${currentMonthBill.FlatName || targetFlat})</span>
                   </div>
@@ -13621,7 +13575,7 @@ function formatMonthLabel(rawVal) {
                     style="padding:8px 14px; font-size:0.78rem; border-radius:10px;"
                     onclick="event.stopPropagation(); openBillReceiptModal('${safeBillIdArg}', '${safeBillMonthArg}');"
                   >
-                    <i class="fa-solid fa-print" style="color:#38bdf8;"></i> View / Print Receipt
+                    <i class="fa-solid fa-receipt" style="color:#38bdf8;"></i> Open Full Receipt
                   </button>
                   <span class="${isBillFullyPaid ? "badge-paid" : "badge-unpaid"}" style="font-size:0.8rem; padding:8px 14px; font-weight:900; border-radius:10px; display:inline-flex; align-items:center; gap:6px;">
                     <i class="fa-solid ${isBillFullyPaid ? "fa-circle-check" : "fa-triangle-exclamation"}"></i>
@@ -13630,38 +13584,7 @@ function formatMonthLabel(rawVal) {
                 </div>
               </div>
 
-              ${!isBillFullyPaid ? `
-                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; background:rgba(239,68,68,0.11); border:1.5px solid rgba(239,68,68,0.42); border-radius:14px; padding:14px 16px; margin-bottom:18px;">
-                  <div style="display:flex; align-items:center; gap:12px;">
-                    <div style="width:40px; height:40px; border-radius:11px; background:rgba(239,68,68,0.2); color:#f87171; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0;">
-                      <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <div>
-                      <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#fca5a5;">Payment Action Needed</div>
-                      <div style="font-size:0.88rem; font-weight:700; color:var(--text-main);">Pending balance of <strong>₹${billDue.toLocaleString("en-IN")}</strong> for ${billMonthName}.</div>
-                    </div>
-                  <div style="font-size:0.82rem; font-weight:800; color:#f87171; display:flex; align-items:center; gap:6px;">
-                    <i class="fa-solid fa-arrow-down"></i> Pay via Instant UPI Payment below
-                  </div>
-                </div>
-              ` : `
-                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; background:rgba(16,185,129,0.1); border:1.5px solid rgba(16,185,129,0.35); border-radius:14px; padding:12px 16px; margin-bottom:18px;">
-                  <div style="display:flex; align-items:center; gap:12px;">
-                    <div style="width:36px; height:36px; border-radius:10px; background:rgba(16,185,129,0.2); color:#34d399; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">
-                      <i class="fa-solid fa-shield-check"></i>
-                    </div>
-                    <div>
-                      <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#34d399;">Statement Settled</div>
-                      <div style="font-size:0.84rem; font-weight:700; color:var(--text-main);">All dues for ${billMonthName} are cleared${billAdvance > 0 ? ` with ₹${billAdvance.toLocaleString("en-IN")} advance credit` : ""}.</div>
-                    </div>
-                  </div>
-                  <button type="button" class="renter-action-btn secondary" style="padding:7px 13px; font-size:0.76rem;" onclick="event.stopPropagation(); openBillReceiptModal('${safeBillIdArg}', '${safeBillMonthArg}');">
-                    <i class="fa-solid fa-download" style="color:#34d399;"></i> Official Receipt
-                  </button>
-                </div>
-              `}
-
-              <!-- Itemized Utility & Rent Breakdown List -->
+              <!-- Itemized Utility & Rent Receipt Breakdown List -->
               <div class="renter-utility-grid" style="margin-bottom:18px;">
                 <div class="renter-utility-item">
                   <div class="renter-utility-item-left">
@@ -13782,6 +13705,7 @@ function formatMonthLabel(rawVal) {
             </div>
           `;
 
+          // Right side: ONLY Instant UPI Payment Hub
           paymentRightHtml = `
             <div style="display:flex; flex-direction:column; gap:18px;">
               <!-- Instant UPI QR Payment Hub -->
@@ -13790,6 +13714,7 @@ function formatMonthLabel(rawVal) {
                   <div>
                     <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
                       <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
+                    </div>
                     <h4 style="margin:3px 0 0 0; font-size:1.1rem; font-weight:900; color:var(--text-main);">
                       Instant UPI Payment (${billMonthName})
                     </h4>
@@ -13825,53 +13750,6 @@ function formatMonthLabel(rawVal) {
                   </div>
                 </div>
               </div>
-
-              <!-- Recent Individual Statements Quick List -->
-              <div class="renter-recent-bills-card">
-                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;">
-                  <div style="font-size:0.88rem; font-weight:900; color:var(--text-main);">
-                    <i class="fa-solid fa-clock-rotate-left" style="color:#818cf8; margin-right:6px;"></i>My Billing History (${myBills.length})
-                  </div>
-                  <button
-                    type="button"
-                    style="background:none; border:none; color:#38bdf8; font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px;"
-                    onclick="openFlatDetailsModal(findFlatObject('${safePropArg}', '${safeFlatArg}') || {PropertyName:'${safePropArg}', FlatName:'${safeFlatArg}'});"
-                  >
-                    <span>All Statements</span> <i class="fa-solid fa-arrow-right"></i>
-                  </button>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                  ${myBills.slice(0, 4).map(bItem => {
-                    const mMetrics = computeCurrentMonthStandaloneAdvanceAndDue(bItem);
-                    const isSettled = mMetrics.dueAmt <= 0;
-                    const itemBillId = String(bItem.BillID || "").replace(/'/g, "\\'");
-                    const itemMonthYear = String(bItem.MonthYear || "").replace(/'/g, "\\'");
-                    return `
-                      <div
-                        class="renter-history-row-item"
-                        onclick="openBillReceiptModal('${itemBillId}', '${itemMonthYear}');"
-                        title="Click to view official receipt for ${mMetrics.monthLabel}"
-                      >
-                        <div style="display:flex; align-items:center; gap:10px;">
-                          <div style="width:34px; height:34px; border-radius:9px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.88rem; flex-shrink:0;">
-                            <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
-                          </div>
-                          <div>
-                            <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">${mMetrics.monthLabel}</div>
-                            <div style="font-size:0.71rem; color:var(--text-muted);">Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
-                          </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                          <span style="font-size:0.71rem; font-weight:800; padding:4px 9px; border-radius:999px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; border:1px solid ${isSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
-                            ${mMetrics.advanceAmt > 0 ? `Adv ₹${mMetrics.advanceAmt.toLocaleString("en-IN")}` : (isSettled ? "Settled" : `Due ₹${mMetrics.dueAmt.toLocaleString("en-IN")}`)}
-                          </span>
-                          <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:var(--text-muted);"></i>
-                        </div>
-                      </div>
-                    `;
-                  }).join("")}
-                </div>
-              </div>
             </div>
           `;
         } else {
@@ -13880,10 +13758,6 @@ function formatMonthLabel(rawVal) {
           const fallbackUpiName = String(propObjForUpi?.UPIName || resolvedContact.upiName || "").trim();
           const fallbackUpiId = String(propObjForUpi?.UPIID || resolvedContact.upiId || "").trim();
           const safeFallbackUpiIdArg = String(fallbackUpiId || "").replace(/'/g, "\\'");
-          const fallbackPhone =
-            sanitizeContactPhoneDisplay(propObjForUpi?.ContractNumber || propObjForUpi?.ContractMobile) ||
-            resolvedContact.contractMobile ||
-            "N/A";
 
           qrRenderData = {
             upiId: fallbackUpiId,
@@ -13898,10 +13772,10 @@ function formatMonthLabel(rawVal) {
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; padding-bottom:16px; margin-bottom:20px; border-bottom:1px solid var(--glass-border);">
                   <div>
                     <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#38bdf8; margin-bottom:4px;">
-                      <i class="fa-solid fa-file-invoice"></i> Active Residency Overview
+                      <i class="fa-solid fa-receipt"></i> Available Monthly Receipt
                     </div>
                     <h3 style="margin:0; font-size:1.28rem; font-weight:900; color:var(--text-main);">
-                      ${activeMonthLabel} Statement Status
+                      ${activeMonthLabel} Receipt Status
                     </h3>
                   </div>
                   <span class="badge-paid" style="font-size:0.78rem; padding:7px 13px; font-weight:900; border-radius:10px; display:inline-flex; align-items:center; gap:6px;">
@@ -13913,9 +13787,9 @@ function formatMonthLabel(rawVal) {
                   <div style="width:56px; height:56px; border-radius:16px; background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.35); color:#38bdf8; display:flex; align-items:center; justify-content:center; font-size:1.45rem; margin:0 auto 12px auto;">
                     <i class="fa-solid fa-file-circle-check"></i>
                   </div>
-                  <h4 style="font-size:1.08rem; font-weight:900; color:var(--text-main); margin:0 0 6px 0;">No Bill Issued for ${activeMonthLabel} Yet</h4>
+                  <h4 style="font-size:1.08rem; font-weight:900; color:var(--text-main); margin:0 0 6px 0;">No Receipt Available for ${activeMonthLabel} Yet</h4>
                   <p style="font-size:0.83rem; color:var(--text-muted); max-width:460px; margin:0 auto; line-height:1.6;">
-                    As soon as your property administrator generates the ${activeMonthLabel} utility and rent statement for <strong>${targetProp} (Flat ${targetFlat})</strong>, your itemized meter readings and receipt will appear right here.
+                    As soon as your property administrator generates a monthly receipt for <strong>${targetProp} (Flat ${targetFlat})</strong>, that month's receipt will automatically appear right here on the left side.
                   </p>
                 </div>
 
@@ -13934,23 +13808,6 @@ function formatMonthLabel(rawVal) {
                     <strong style="font-size:1rem; font-weight:900; color:var(--text-main);">₹${baseRentConfigured.toLocaleString("en-IN")}/mo</strong>
                   </div>
                 </div>
-              </div>
-
-              <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-                <button
-                  type="button"
-                  class="renter-action-btn primary"
-                  onclick="openFlatDetailsModal(findFlatObject('${safePropArg}', '${safeFlatArg}') || {PropertyName:'${safePropArg}', FlatName:'${safeFlatArg}'});"
-                >
-                  <i class="fa-solid fa-folder-open"></i> Open Flat Ledger &amp; Past Receipts
-                </button>
-                <button
-                  type="button"
-                  class="renter-action-btn secondary"
-                  onclick="openRenterKycProfileOnlyModal();"
-                >
-                  <i class="fa-solid fa-id-card"></i> View Registered KYC Profile
-                </button>
               </div>
             </div>
           `;
@@ -13995,15 +13852,50 @@ function formatMonthLabel(rawVal) {
                   </div>
                 </div>
               </div>
-
-              <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button type="button" class="renter-action-btn secondary" style="width:100%; justify-content:center;" onclick="openContactUsModal()">
-                  <i class="fa-solid fa-headset"></i> Help &amp; Support
-                </button>
-              </div>
             </div>
           `;
         }
+
+        const topHeroReceiptItemHtml = latestBill ? (() => {
+          const topMetrics = computeCurrentMonthStandaloneAdvanceAndDue(latestBill);
+          const isTopSettled = topMetrics.dueAmt <= 0;
+          const topBillId = String(latestBill.BillID || "").replace(/'/g, "\\'");
+          const topMonthYear = String(latestBill.MonthYear || "").replace(/'/g, "\\'");
+          return `
+            <div
+              class="renter-history-row-item"
+              onclick="openBillReceiptModal('${topBillId}', '${topMonthYear}');"
+              title="Click to display only the receipt for ${topMetrics.monthLabel}"
+              style="margin:0; padding:8px 13px; border-radius:12px; cursor:pointer; display:inline-flex; align-items:center; gap:10px; background:var(--bg-input); border:1.5px solid rgba(99,102,241,0.45); box-shadow:0 4px 14px rgba(0,0,0,0.15);"
+            >
+              <div style="width:32px; height:32px; border-radius:9px; background:${isTopSettled ? "rgba(16,185,129,0.16)" : "rgba(239,68,68,0.16)"}; color:${isTopSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                <i class="fa-solid ${isTopSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
+              </div>
+              <div style="text-align:left;">
+                <div style="font-size:0.8rem; font-weight:900; color:var(--text-main); line-height:1.15;">${topMetrics.monthLabel} Receipt</div>
+                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Billed: ₹${topMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${topMetrics.paidAmount.toLocaleString("en-IN")}</div>
+              </div>
+              <span style="font-size:0.69rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${isTopSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isTopSettled ? "#34d399" : "#f87171"}; border:1px solid ${isTopSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
+                ${topMetrics.advanceAmt > 0 ? `Adv ₹${topMetrics.advanceAmt.toLocaleString("en-IN")}` : (isTopSettled ? "Settled" : `Due ₹${topMetrics.dueAmt.toLocaleString("en-IN")}`)}
+              </span>
+            </div>
+          `;
+        })() : `
+          <div
+            class="renter-history-row-item"
+            onclick="openRenterReceiptsModal();"
+            title="Click to view receipt"
+            style="margin:0; padding:8px 13px; border-radius:12px; cursor:pointer; display:inline-flex; align-items:center; gap:10px; background:var(--bg-input); border:1.5px solid var(--glass-border);"
+          >
+            <div style="width:32px; height:32px; border-radius:9px; background:rgba(56,189,248,0.15); color:#38bdf8; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+              <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+            <div style="text-align:left;">
+              <div style="font-size:0.8rem; font-weight:900; color:var(--text-main); line-height:1.15;">My Receipt</div>
+              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">No Receipt Issued Yet</div>
+            </div>
+          </div>
+        `;
 
         // ====================================================================
         // REQUIREMENT 3: EXECUTIVE RESIDENT PORTAL HOMEPAGE
@@ -14053,15 +13945,8 @@ function formatMonthLabel(rawVal) {
                     </div>
                   </div>
 
-                  <div class="renter-hero-actions">
-                    <button
-                      type="button"
-                      class="renter-action-btn primary"
-                      onclick="openRenterReceiptsModal();"
-                    >
-                      <i class="fa-solid fa-receipt"></i>
-                      <span>My Receipts (${myBills.length})</span>
-                    </button>
+                  <div class="renter-hero-actions" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    ${topHeroReceiptItemHtml}
                     <button
                       type="button"
                       class="renter-action-btn secondary"
@@ -15422,44 +15307,34 @@ function formatMonthLabel(rawVal) {
 
           syncServerBackgroundsToLocal(res.globalConfig || res, res.bgLoginUrl || res.userBgLogin || "", res.bgDashboardUrl || res.userBgDashboard || "", Boolean(res.globalConfig));
           if (res.globalConfig && typeof res.globalConfig === "object") {
-            if (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object" && Object.keys(res.globalConfig.contactConfig).length > 0) {
-              try {
-                const prevContactRaw = localStorage.getItem("portal_admin_contact_cfg") || "";
-                const nextContactRaw = JSON.stringify(res.globalConfig.contactConfig);
-                if (prevContactRaw !== nextContactRaw) {
-                  localStorage.setItem("portal_admin_contact_cfg", nextContactRaw);
-                  if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
-                  const contactModalEl = document.getElementById("contactUsModal");
-                  if (contactModalEl && contactModalEl.classList.contains("active") && typeof renderContactUsDynamicBody === "function") {
-                    renderContactUsDynamicBody();
-                  }
-                }
-              } catch (e) {}
+            if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+            DB.globalConfig = {
+              ...DB.globalConfig,
+              ...res.globalConfig,
+              contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
+              broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
+              privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
+              paymentProofs: Array.isArray(res.globalConfig.paymentProofs) ? res.globalConfig.paymentProofs : [],
+              maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
+              auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
+            };
+            if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
+            const contactModalEl = document.getElementById("contactUsModal");
+            if (contactModalEl && contactModalEl.classList.contains("active") && typeof renderContactUsDynamicBody === "function") {
+              renderContactUsDynamicBody();
             }
-            if (Array.isArray(res.globalConfig.broadcastNotices) && res.globalConfig.broadcastNotices.length > 0) {
-              if (typeof syncServerBroadcastNoticesToLocal === "function") {
-                syncServerBroadcastNoticesToLocal(res.globalConfig.broadcastNotices, true);
-              }
+            if (typeof syncServerBroadcastNoticesToLocal === "function") {
+              syncServerBroadcastNoticesToLocal(DB.globalConfig.broadcastNotices, true);
             }
-            if (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object" && Object.keys(res.globalConfig.privateChats).length > 0) {
-              if (typeof syncServerPrivateChatsToLocal === "function") {
-                syncServerPrivateChatsToLocal(res.globalConfig.privateChats);
-              }
+            if (typeof syncServerPrivateChatsToLocal === "function") {
+              syncServerPrivateChatsToLocal(DB.globalConfig.privateChats);
             }
-            if (Array.isArray(res.globalConfig.paymentProofs) && res.globalConfig.paymentProofs.length > 0) {
-              try {
-                localStorage.setItem("portal_utr_payment_proofs_v1", JSON.stringify(res.globalConfig.paymentProofs));
-              } catch (e) {}
+            const maintModalEl = document.getElementById("renterMaintenanceModal");
+            if (maintModalEl && maintModalEl.classList.contains("active") && typeof renderRenterMaintenanceModalBody === "function") {
+              renderRenterMaintenanceModalBody();
             }
-            if (Array.isArray(res.globalConfig.maintenanceTickets) && res.globalConfig.maintenanceTickets.length > 0) {
-              try {
-                localStorage.setItem("portal_maintenance_tickets_v1", JSON.stringify(res.globalConfig.maintenanceTickets));
-              } catch (e) {}
-            }
-            if (Array.isArray(res.globalConfig.auditLogs) && res.globalConfig.auditLogs.length > 0) {
-              try {
-                localStorage.setItem("portal_admin_audit_logs_v1", JSON.stringify(res.globalConfig.auditLogs.slice(0, 30)));
-              } catch (e) {}
+            if (typeof renderAdminMaintenanceTickets === "function") {
+              renderAdminMaintenanceTickets();
             }
           }
           if (res.userAssignedProperty !== undefined) {
@@ -20331,37 +20206,35 @@ function formatMonthLabel(rawVal) {
       if (qrBtn) qrBtn.style.display = "none";
     }
 
+    function selectRenterHomeAvailableReceipt(billId, monthYear) {
+      window.selectedRenterHomeBillId = billId || "";
+      window.selectedRenterHomeBillMonth = monthYear || "";
+      if (typeof renderFlatsGrid === "function") {
+        renderFlatsGrid();
+      }
+    }
+
     function openRenterReceiptsModal() {
-      const targetProp = (typeof activeFlatRenterObj !== "undefined" && activeFlatRenterObj?.PropertyName) || (typeof selectedFlat !== "undefined" && selectedFlat?.PropertyName) || "";
-      const targetFlat = (typeof activeFlatRenterObj !== "undefined" && activeFlatRenterObj?.FlatName) || (typeof selectedFlat !== "undefined" && selectedFlat?.FlatName) || "";
-      const flatObj = (typeof findFlatObject === "function" ? findFlatObject(targetProp, targetFlat) : null) || selectedFlat || { PropertyName: targetProp, FlatName: targetFlat };
-      const matchedProfiles = typeof getRenterProfilesForLoggedInAadhaar === "function" ? getRenterProfilesForLoggedInAadhaar() : [];
-      const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || activeFlatRenterObj || null;
+      const myBills = (DB.bills || []).filter(b => isBillLinkedToLoggedInRenterAadhaar(b));
+      myBills.sort((a, b) => {
+        const mA = normalizeMonthYear(a.MonthYear || a.BillDate);
+        const mB = normalizeMonthYear(b.MonthYear || b.BillDate);
+        if (mA && mB && mA !== mB) return mB.localeCompare(mA);
+        return (new Date(b.BillDate || b.PaymentDate || 0).getTime()) - (new Date(a.BillDate || a.PaymentDate || 0).getTime());
+      });
 
-      openFlatDetailsModal(flatObj, primaryRenter);
+      const targetBill = (window.selectedRenterHomeBillId && myBills.find(b => String(b.BillID || "") === String(window.selectedRenterHomeBillId)))
+        || (window.selectedRenterHomeBillMonth && myBills.find(b => normalizeMonthYear(b.MonthYear || b.BillDate) === normalizeMonthYear(window.selectedRenterHomeBillMonth)))
+        || myBills[0]
+        || null;
 
-      const modal = document.getElementById("flatDetailsModal");
-      const navBar = document.getElementById("flatModalNavBar");
-      const tabHistoryNav = document.getElementById("flatNavTabHistory");
-      const tabProfileNav = document.getElementById("flatNavTabProfile");
-      const tabHistory = document.getElementById("tabHistory");
-      const tabProfile = document.getElementById("tabProfile");
-
-      if (navBar) navBar.style.display = "none";
-      if (tabHistoryNav) {
-        tabHistoryNav.style.display = "";
-        tabHistoryNav.classList.add("active");
+      if (targetBill) {
+        closeModal("flatDetailsModal");
+        openBillReceiptModal(targetBill.BillID || "", targetBill.MonthYear || "");
+        return;
       }
-      if (tabProfileNav) {
-        tabProfileNav.classList.remove("active");
-      }
-      if (tabHistory) tabHistory.classList.add("active");
-      if (tabProfile) tabProfile.classList.remove("active");
 
-      const titleEl = document.getElementById("modalHeaderTitle");
-      if (titleEl) titleEl.innerText = "My Receipts & Ledger";
-      const qrBtn = document.getElementById("btnFlatHeaderQrCollect");
-      if (qrBtn) qrBtn.style.display = "none";
+      triggerSideToast("No Receipt Available", "No monthly receipt has been generated for your flat yet.", false);
     }
 
     function switchFlatTabToProfile() {
@@ -21364,7 +21237,33 @@ function formatMonthLabel(rawVal) {
         sanitizeContactPhoneDisplay(bill.ContractMobile) ||
         "N/A";
 
+      const isRenterRoleForReceipt = String(activeRole || "").trim().toLowerCase() === "renter";
+      let renterAvailableMonthsBarHtml = "";
+      if (isRenterRoleForReceipt) {
+        const renterBillsForModal = (DB.bills || []).filter(b => isBillLinkedToLoggedInRenterAadhaar(b));
+        renterBillsForModal.sort((a, b) => {
+          const mA = normalizeMonthYear(a.MonthYear || a.BillDate);
+          const mB = normalizeMonthYear(b.MonthYear || b.BillDate);
+          if (mA && mB && mA !== mB) return mB.localeCompare(mA);
+          return (new Date(b.BillDate || b.PaymentDate || 0).getTime()) - (new Date(a.BillDate || a.PaymentDate || 0).getTime());
+        });
+        if (renterBillsForModal.length > 1) {
+          renterAvailableMonthsBarHtml = `
+            <div class="no-print" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
+              <span style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin-right:4px;">Available Receipts:</span>
+              ${renterBillsForModal.map(rb => {
+                const rbId = String(rb.BillID || "").replace(/'/g, "\\'");
+                const rbMonth = String(rb.MonthYear || "").replace(/'/g, "\\'");
+                const isCurr = String(rb.BillID || "") === String(bill.BillID || "") && String(rb.MonthYear || "") === String(bill.MonthYear || "");
+                return `<button type="button" onclick="openBillReceiptModal('${rbId}', '${rbMonth}')" style="padding:4px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; cursor:pointer; border:1px solid ${isCurr ? '#6366f1' : 'var(--glass-border)'}; background:${isCurr ? 'rgba(99,102,241,0.2)' : 'var(--bg-input)'}; color:${isCurr ? '#818cf8' : 'var(--text-main)'};">${formatMonthLabel(rb.MonthYear)}</button>`;
+              }).join("")}
+            </div>
+          `;
+        }
+      }
+
       document.getElementById("receiptBodyDetails").innerHTML = `
+        ${renterAvailableMonthsBarHtml}
         <!-- Clean Receipt Content (Requirement 4: Billing Date Clearly Displayed on Receipt) -->
         <div id="receiptItemsListContainer">
           <div class="receipt-line" id="row_rec_tenant">
@@ -21410,6 +21309,16 @@ function formatMonthLabel(rawVal) {
           <div class="receipt-total-box" id="row_rec_total">
             <span style="font-weight:800;">Total Billed Amount:</span>
             <span id="recDynamicTotalDisplay" style="color:var(--primary);">₹0</span>
+          </div>
+
+          <div class="receipt-line" id="row_rec_paid">
+            <span>Amount Paid (${payModeStr}):</span>
+            <strong style="color:var(--accent-green);">₹${paidAmtVal.toLocaleString('en-IN')}</strong>
+          </div>
+
+          <div class="receipt-line" id="row_rec_status">
+            <span>Payment Status / Balance:</span>
+            <strong id="recDynamicClosingStatusDisplay">--</strong>
           </div>
 
           <!-- Pay UPI Name -->
@@ -21476,6 +21385,8 @@ function formatMonthLabel(rawVal) {
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="additional" data-row="row_rec_additional" data-amount="${addAmtVal}" checked onchange="recalculateReceiptSelection()"> <span>Additional Charge</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="carry" data-row="row_rec_carry" data-amount="${carryVal}" checked onchange="recalculateReceiptSelection()"> <span>Carry-Forward</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="total" data-row="row_rec_total" checked onchange="recalculateReceiptSelection()"> <span>Total Billed</span></label>
+            <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="paid" data-row="row_rec_paid" checked onchange="recalculateReceiptSelection()"> <span>Amount Paid</span></label>
+            <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="status" data-row="row_rec_status" checked onchange="recalculateReceiptSelection()"> <span>Payment Status / Balance</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="balance" data-row="row_rec_balance" checked onchange="recalculateReceiptSelection()"> <span>Pay UPI Name</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="contact" data-row="row_rec_contact" checked onchange="recalculateReceiptSelection()"> <span>Contact Phone</span></label>
             <label class="wa-check-item"><input type="checkbox" class="rec-item-check" data-key="upi" data-row="row_rec_upi" checked onchange="recalculateReceiptSelection()"> <span>UPI &amp; QR Code</span></label>
@@ -21671,18 +21582,41 @@ function formatMonthLabel(rawVal) {
       recalculateReceiptSelection();
     }
 
-    // Helper: Wrap text into multiple lines that fit within maxWidth on a 2D canvas context
+    // Helper: Wrap text into multiple lines that fit within maxWidth on a 2D canvas context (breaking long single tokens so nothing ever clips horizontally)
     function wrapCanvasTextLines(ctx, text, maxWidth) {
       const rawStr = String(text ?? "").trim();
       if (!rawStr) return [""];
       const paragraphs = rawStr.split(/\r?\n/);
       const lines = [];
+      const breakLongWord = (word) => {
+        const chunks = [];
+        let cur = "";
+        for (let c = 0; c < word.length; c++) {
+          const next = cur + word[c];
+          if (ctx.measureText(next).width <= maxWidth || cur.length === 0) {
+            cur = next;
+          } else {
+            chunks.push(cur);
+            cur = word[c];
+          }
+        }
+        if (cur) chunks.push(cur);
+        return chunks.length > 0 ? chunks : [word];
+      };
       paragraphs.forEach(para => {
-        const words = para.split(/\s+/).filter(Boolean);
-        if (words.length === 0) {
+        const rawWords = para.split(/\s+/).filter(Boolean);
+        if (rawWords.length === 0) {
           lines.push("");
           return;
         }
+        const words = [];
+        rawWords.forEach(w => {
+          if (ctx.measureText(w).width > maxWidth) {
+            words.push(...breakLongWord(w));
+          } else {
+            words.push(w);
+          }
+        });
         let currentLine = words[0];
         for (let i = 1; i < words.length; i++) {
           const word = words[i];
@@ -21699,7 +21633,7 @@ function formatMonthLabel(rawVal) {
       return lines.length > 0 ? lines : [rawStr];
     }
 
-    // Helper: Deterministically draw the complete selected receipt onto a high-DPI 2D Canvas with dynamic multi-line wrapping so nothing is ever cut off
+    // Helper: Deterministically draw the complete selected receipt onto a high-DPI 2D Canvas with dynamic multi-line wrapping so nothing is ever cut off or cropped
     function drawDeterministicReceiptCanvas() {
       const bill = currentOpenedReceiptBill || {};
       const checkedKeys = new Set();
@@ -21715,16 +21649,8 @@ function formatMonthLabel(rawVal) {
       const { selectedTotal, paidAmt, rawDiff, qrPayableAmount } = recalculateReceiptSelection();
       const billDateFormatted = formatDateOnly(bill.BillDate || bill.PaymentDate);
       const paidDateFormatted = formatDateOnly(bill.PaymentDate || bill.BillDate);
-      let carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending);
-      if (isNaN(carryVal)) {
-        carryVal = (typeof getCarryForwardBalanceForMonth === "function")
-          ? (parseFloat(getCarryForwardBalanceForMonth(bill.PropertyName, bill.FlatName, bill.MonthYear, bill.RenterID, bill.TenantName)) || 0)
-          : 0;
-      }
-      const carryText = carryVal > 0
-        ? `+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)`
-        : (carryVal < 0 ? `- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)` : `₹0`);
 
+      const baseRentVal = parseFloat(bill.BaseRent) || 0;
       const elecPrev = parseFloat(bill.ElecPrev) || 0;
       const elecCurr = parseFloat(bill.ElecCurr) || 0;
       const elecUnits = bill.ElecUnits !== undefined && bill.ElecUnits !== "" ? (parseFloat(bill.ElecUnits) || 0) : Math.max(0, elecCurr - elecPrev);
@@ -21747,6 +21673,17 @@ function formatMonthLabel(rawVal) {
       const addAmtVal = parseFloat(bill.AdditionalAmount ?? bill.ExtraAmount) || 0;
       const payModeStr = bill.PaymentMode || "UPI";
 
+      const compSumForCarry = baseRentVal + elecTotal + pngTotal + waterTotal + addAmtVal;
+      const totalBilledVal = parseFloat(bill.TotalBilled !== undefined ? bill.TotalBilled : bill.TotalAmount) || 0;
+      let carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending);
+      if (isNaN(carryVal)) carryVal = 0;
+      if (carryVal === 0 && totalBilledVal > 0 && Math.abs(totalBilledVal - compSumForCarry) >= 1) {
+        carryVal = Math.round((totalBilledVal - compSumForCarry) * 100) / 100;
+      }
+      const carryText = carryVal > 0
+        ? `+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)`
+        : (carryVal < 0 ? `- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)` : `₹0`);
+
       const resolvedContact = resolveFlatUpiAndContact(bill.PropertyName, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
       const rawUpiId = (resolvedContact.upiId && String(resolvedContact.upiId).trim())
         ? String(resolvedContact.upiId).trim()
@@ -21768,7 +21705,7 @@ function formatMonthLabel(rawVal) {
         rows.push({ label: "Billing Date:", value: String(billDateFormatted || "--"), color: "#0f172a" });
       }
       if (checkedKeys.has("rent")) {
-        rows.push({ label: "Base Rent:", value: `₹${(parseFloat(bill.BaseRent) || 0).toLocaleString('en-IN')}`, color: "#0f172a" });
+        rows.push({ label: "Base Rent:", value: `₹${baseRentVal.toLocaleString('en-IN')}`, color: "#0f172a" });
       }
       if (checkedKeys.has("elec")) {
         rows.push({
@@ -21847,19 +21784,18 @@ function formatMonthLabel(rawVal) {
       const showQrBox = checkedKeys.has("upi") && Boolean(upiId && upiId.includes("@"));
 
       const scale = 2;
-      const outerMargin = 18;
-      const cardW = 580;
+      const outerMargin = 32;
+      const cardW = 600;
       const W = cardW + outerMargin * 2;
-      const innerPadX = 26;
+      const innerPadX = 28;
       const contentW = cardW - innerPadX * 2;
 
-      // Measure wrapped lines first using a scratch context so total height H is 100% exact and never clips
       const measureCanvas = document.createElement("canvas");
       const mCtx = measureCanvas.getContext("2d");
 
       mCtx.font = "800 20px 'Plus Jakarta Sans', Arial, sans-serif";
       const headerTitleLines = wrapCanvasTextLines(mCtx, `${bill.PropertyName || "Property"} — Flat ${bill.FlatName || ""}`, contentW);
-      const headerH = Math.max(106, 58 + headerTitleLines.length * 25);
+      const headerH = Math.max(110, 62 + headerTitleLines.length * 25);
 
       const measureRowLayout = (r) => {
         if (r.isFullWidthNote) {
@@ -21867,17 +21803,17 @@ function formatMonthLabel(rawVal) {
           const labelLines = wrapCanvasTextLines(mCtx, r.label, contentW);
           mCtx.font = "700 13px 'Plus Jakarta Sans', Arial, sans-serif";
           const valLines = wrapCanvasTextLines(mCtx, String(r.value), contentW);
-          const h = 16 + (labelLines.length * 19) + (valLines.length * 19) + 10;
-          return { ...r, labelLines, valLines, rowHeight: Math.max(42, h), stacked: true };
+          const h = 16 + (labelLines.length * 19) + (valLines.length * 19) + 12;
+          return { ...r, labelLines, valLines, rowHeight: Math.max(44, h), stacked: true };
         }
-        const labelMaxW = Math.floor(contentW * 0.58);
-        const valMaxW = Math.floor(contentW * 0.39);
+        const labelMaxW = Math.floor(contentW * 0.57);
+        const valMaxW = Math.floor(contentW * 0.40);
         mCtx.font = "600 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
         const labelLines = wrapCanvasTextLines(mCtx, r.label, labelMaxW);
         mCtx.font = "800 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
         const valLines = wrapCanvasTextLines(mCtx, String(r.value), valMaxW);
         const lineCount = Math.max(labelLines.length, valLines.length, 1);
-        const rowHeight = Math.max(38, 16 + lineCount * 20);
+        const rowHeight = Math.max(40, 18 + lineCount * 20);
         return { ...r, labelLines, valLines, rowHeight, stacked: false };
       };
 
@@ -21886,27 +21822,27 @@ function formatMonthLabel(rawVal) {
 
       const rowsTotalH = measuredRows.reduce((sum, r) => sum + r.rowHeight, 0);
       const postRowsTotalH = measuredPostRows.reduce((sum, r) => sum + r.rowHeight, 0);
-      const totalBoxH = showTotalBox ? 60 : 0;
-      const qrBoxH = showQrBox ? 266 : 0;
+      const totalBoxH = showTotalBox ? 58 : 0;
+      const qrBoxH = showQrBox ? 272 : 0;
 
       mCtx.font = "600 11px 'Plus Jakarta Sans', Arial, sans-serif";
       const disclaimerLines = wrapCanvasTextLines(
         mCtx,
-        "This receipt is generated by AI for personal use only, not for official or government use.",
+        "This receipt is for personal use only and is not valid for government or official purposes.",
         contentW - 24
       );
-      const disclaimerBoxH = Math.max(40, 16 + disclaimerLines.length * 16);
+      const disclaimerBoxH = Math.max(42, 18 + disclaimerLines.length * 16);
 
       const cardH =
         headerH +
-        16 +
+        14 +
         rowsTotalH +
-        (showTotalBox ? totalBoxH + 16 : 8) +
+        (showTotalBox ? totalBoxH + 8 : 0) +
         postRowsTotalH +
         (showQrBox ? qrBoxH + 16 : 0) +
         14 +
         disclaimerBoxH +
-        24;
+        28;
 
       const H = cardH + outerMargin * 2;
 
@@ -21916,7 +21852,7 @@ function formatMonthLabel(rawVal) {
       const ctx = canvas.getContext("2d");
       ctx.scale(scale, scale);
 
-      // Outer safe background so WhatsApp preview never crops card borders
+      // Generous outer safe margin on all 4 sides so WhatsApp never crops edges
       ctx.fillStyle = "#f1f5f9";
       ctx.fillRect(0, 0, W, H);
 
@@ -21957,7 +21893,6 @@ function formatMonthLabel(rawVal) {
       const leftX = cardX + innerPadX;
       const rightX = cardX + cardW - innerPadX;
 
-      // Helper to draw a multi-line key-value row
       const drawRow = (r) => {
         if (r.stacked) {
           let yPos = curY + 20;
@@ -21979,14 +21914,14 @@ function formatMonthLabel(rawVal) {
           ctx.textAlign = "left";
           ctx.font = "600 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
           r.labelLines.forEach((l, idx) => {
-            ctx.fillText(l, leftX, curY + 22 + idx * 20);
+            ctx.fillText(l, leftX, curY + 23 + idx * 20);
           });
 
           ctx.fillStyle = r.color || "#0f172a";
           ctx.textAlign = "right";
           ctx.font = "800 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
           r.valLines.forEach((v, idx) => {
-            ctx.fillText(v, rightX, curY + 22 + idx * 20);
+            ctx.fillText(v, rightX, curY + 23 + idx * 20);
           });
         }
 
@@ -22080,7 +22015,7 @@ function formatMonthLabel(rawVal) {
       }
 
       // 5. Personal-Use Footer Disclaimer
-      curY += 10;
+      curY += 14;
       ctx.fillStyle = "#fffbeb";
       ctx.fillRect(leftX, curY, contentW, disclaimerBoxH);
       ctx.strokeStyle = "#fde68a";
@@ -22091,108 +22026,13 @@ function formatMonthLabel(rawVal) {
       ctx.textAlign = "center";
       ctx.font = "600 11px 'Plus Jakarta Sans', Arial, sans-serif";
       disclaimerLines.forEach((line, idx) => {
-        ctx.fillText(line, cardX + cardW / 2, curY + 18 + idx * 16);
+        ctx.fillText(line, cardX + cardW / 2, curY + 19 + idx * 16);
       });
 
       return canvas;
     }
 
-    // Helper: Build complete plain-text summary of all selected receipt items so the entire selected receipt also goes through in WhatsApp text without truncation
-    function buildSelectedReceiptWhatsAppText() {
-      const bill = currentOpenedReceiptBill || {};
-      const checkedKeys = new Set();
-      const checkboxes = document.querySelectorAll("#waChecklistInputsContainer .rec-item-check");
-      if (checkboxes.length > 0) {
-        checkboxes.forEach(cb => {
-          if (cb.checked && cb.dataset.key) checkedKeys.add(cb.dataset.key);
-        });
-      } else {
-        ["tenant", "billdate", "rent", "elec", "png", "water", "additional", "carry", "total", "paid", "status", "balance", "contact", "upi", "notes"].forEach(k => checkedKeys.add(k));
-      }
-
-      const { selectedTotal, paidAmt, rawDiff } = recalculateReceiptSelection();
-      const billDateFormatted = formatDateOnly(bill.BillDate || bill.PaymentDate);
-      const paidDateFormatted = formatDateOnly(bill.PaymentDate || bill.BillDate);
-      let carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending);
-      if (isNaN(carryVal)) {
-        carryVal = (typeof getCarryForwardBalanceForMonth === "function")
-          ? (parseFloat(getCarryForwardBalanceForMonth(bill.PropertyName, bill.FlatName, bill.MonthYear, bill.RenterID, bill.TenantName)) || 0)
-          : 0;
-      }
-      const carryText = carryVal > 0
-        ? `+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)`
-        : (carryVal < 0 ? `- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)` : `₹0`);
-
-      const elecPrev = parseFloat(bill.ElecPrev) || 0;
-      const elecCurr = parseFloat(bill.ElecCurr) || 0;
-      const elecUnits = bill.ElecUnits !== undefined && bill.ElecUnits !== "" ? (parseFloat(bill.ElecUnits) || 0) : Math.max(0, elecCurr - elecPrev);
-      const elecRate = parseFloat(bill.ElecRate) || 0;
-      const elecTotal = bill.ElecTotal !== undefined && bill.ElecTotal !== "" ? (parseFloat(bill.ElecTotal) || 0) : (elecUnits * elecRate);
-
-      const pngPrev = parseFloat(bill.PNGPrev) || 0;
-      const pngCurr = parseFloat(bill.PNGCurr) || 0;
-      const pngUnits = bill.PNGUnits !== undefined && bill.PNGUnits !== "" ? (parseFloat(bill.PNGUnits) || 0) : Math.max(0, pngCurr - pngPrev);
-      const pngRate = parseFloat(bill.PNGRate) || 0;
-      const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : (pngUnits * pngRate);
-
-      const waterPrev = parseFloat(bill.WaterPrev) || 0;
-      const waterCurr = parseFloat(bill.WaterCurr) || 0;
-      const waterUnits = bill.WaterUnits !== undefined && bill.WaterUnits !== "" ? (parseFloat(bill.WaterUnits) || 0) : Math.max(0, waterCurr - waterPrev);
-      const waterRate = parseFloat(bill.WaterRate) || 0;
-      const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : (waterUnits * waterRate);
-
-      const addNameStr = bill.AdditionalName || bill.ExtraDesc || "None";
-      const addAmtVal = parseFloat(bill.AdditionalAmount ?? bill.ExtraAmount) || 0;
-      const payModeStr = bill.PaymentMode || "UPI";
-
-      const resolvedContact = resolveFlatUpiAndContact(bill.PropertyName, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
-      const rawUpiId = (resolvedContact.upiId && String(resolvedContact.upiId).trim())
-        ? String(resolvedContact.upiId).trim()
-        : ((bill.UPIID && String(bill.UPIID).trim()) ? String(bill.UPIID).trim() : "");
-      const upiId = String(rawUpiId || "").replace(/['"\s]/g, "").trim();
-      const upiName = (resolvedContact.upiName && String(resolvedContact.upiName).trim())
-        ? String(resolvedContact.upiName).trim()
-        : ((bill.UPIName && String(bill.UPIName).trim()) ? String(bill.UPIName).trim() : "");
-      const contactPhone =
-        resolvedContact.contractMobile ||
-        sanitizeContactPhoneDisplay(bill.ContractMobile) ||
-        "N/A";
-
-      const lines = [
-        `*${bill.PropertyName || "Property"} — Flat ${bill.FlatName || ""}*`,
-        `*Billing Month: ${formatMonthLabel(bill.MonthYear)}*`,
-        `--------------------------------`
-      ];
-      if (checkedKeys.has("tenant")) lines.push(`Tenant Name: *${bill.TenantName || "--"}*`);
-      if (checkedKeys.has("billdate")) lines.push(`Billing Date: *${billDateFormatted || "--"}*`);
-      if (checkedKeys.has("rent")) lines.push(`Base Rent: *₹${(parseFloat(bill.BaseRent) || 0).toLocaleString('en-IN')}*`);
-      if (checkedKeys.has("elec")) lines.push(`Electricity (${elecPrev} to ${elecCurr} = ${elecUnits}U @ ₹${elecRate}): *₹${elecTotal.toLocaleString('en-IN')}*`);
-      if (checkedKeys.has("png")) lines.push(`PNG Gas (${pngPrev} to ${pngCurr} = ${pngUnits}U @ ₹${pngRate}): *₹${pngTotal.toLocaleString('en-IN')}*`);
-      if (checkedKeys.has("water")) lines.push(`Water (${waterPrev} to ${waterCurr} = ${waterUnits}U @ ₹${waterRate}): *₹${waterTotal.toLocaleString('en-IN')}*`);
-      if (checkedKeys.has("additional")) lines.push(`Additional Charge (${addNameStr}): *₹${addAmtVal.toLocaleString('en-IN')}*`);
-      if (checkedKeys.has("carry")) lines.push(`Carry-Forward Balance: *${carryText}*`);
-      if (checkedKeys.has("total")) {
-        lines.push(`--------------------------------`);
-        lines.push(`*Total Billed Amount: ₹${selectedTotal.toLocaleString('en-IN')}*`);
-        lines.push(`--------------------------------`);
-      }
-      if (checkedKeys.has("paid")) {
-        lines.push(`Amount Paid (${payModeStr}${paidDateFormatted && paidDateFormatted !== '--' ? ' • ' + paidDateFormatted : ''}): *₹${(paidAmt || 0).toLocaleString('en-IN')}*`);
-      }
-      if (checkedKeys.has("status")) {
-        let statusValStr = "Fully Paid (₹0 Due)";
-        if (rawDiff < 0) statusValStr = `Due (₹${Math.abs(rawDiff).toLocaleString('en-IN')} Pending)`;
-        else if (rawDiff > 0) statusValStr = `Overpaid / Advance (+₹${rawDiff.toLocaleString('en-IN')})`;
-        lines.push(`Payment Status / Balance: *${statusValStr}*`);
-      }
-      if (checkedKeys.has("balance")) lines.push(`Pay UPI Name: *${upiName || "N/A"}*`);
-      if (checkedKeys.has("contact")) lines.push(`Contact Phone: *${contactPhone || "N/A"}*`);
-      if (checkedKeys.has("upi")) lines.push(`Pay via UPI (${upiName || "N/A"}): *${upiId || "N/A"}*`);
-      if (checkedKeys.has("notes") && bill.Notes) lines.push(`Notes: ${bill.Notes}`);
-      return lines.join("\n");
-    }
-
-    // Helper: capture receipt as a clean, untainted PNG Blob (guaranteed non-blank)
+    // Helper: capture receipt as a clean, untainted PNG Blob (guaranteed non-blank & uncropped)
     async function renderReceiptElementToPngBlob() {
       const canvas = drawDeterministicReceiptCanvas();
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png", 1.0));
@@ -22226,25 +22066,22 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    // Requirement 1, 7 & 8: Reliable Receipt Image Sending to WhatsApp (Clipboard Promise + Auto-Download + Mobile Share + Full Selected Receipt Text)
+    // Share ONLY the full uncropped receipt image on WhatsApp (zero extra text)
     async function shareSelectedReceiptOnWhatsApp() {
       if (!currentOpenedReceiptBill) return;
       const bill = currentOpenedReceiptBill;
 
-      // Requirement 8: Automatically fetch mobile number from active renter's profile
       const rawPhone = resolveReceiptTargetMobile(bill, currentOpenedReceiptRenter);
       const formattedPhone = formatWhatsAppPhone(rawPhone);
 
       recalculateReceiptSelection();
-      const fullReceiptText = buildSelectedReceiptWhatsAppText();
 
       const sendBtn = document.getElementById("btnConfirmSendWhatsApp");
       if (sendBtn) {
         sendBtn.disabled = true;
-        sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Preparing Full Receipt...`;
+        sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Preparing Full Receipt Image...`;
       }
 
-      // Start generating the PNG Blob immediately and bind ClipboardItem synchronously within the user click gesture
       const blobPromise = renderReceiptElementToPngBlob();
       let copiedToClipboard = false;
 
@@ -22286,17 +22123,15 @@ function formatMonthLabel(rawVal) {
       const fileName = `Receipt_Flat_${safeFlat}_${safeMonth}.png`;
       const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
 
-      // On Mobile devices, invoke native share sheet with the actual full-height PNG image file and full text
+      // On Mobile devices, invoke native share sheet with ONLY the PNG image file (no text or title)
       if (isMobileDevice && navigator.canShare && navigator.share) {
         const receiptFile = new File([receiptBlob], fileName, { type: "image/png" });
         if (navigator.canShare({ files: [receiptFile] })) {
           try {
             await navigator.share({
-              files: [receiptFile],
-              title: `Rent Receipt - Flat ${bill.FlatName}`,
-              text: fullReceiptText
+              files: [receiptFile]
             });
-            triggerSideToast("Receipt Image Sent", "Complete receipt shared directly to WhatsApp!", true);
+            triggerSideToast("Receipt Image Sent", "Receipt image shared directly to WhatsApp!", true);
             return;
           } catch (shareErr) {
             if (shareErr && shareErr.name === "AbortError") return;
@@ -22304,7 +22139,7 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      // Also save a clean PNG copy to the device so the user always has the complete image file ready
+      // Save a clean PNG copy to the device so the user always has the complete image file ready
       try {
         const blobUrl = URL.createObjectURL(receiptBlob);
         const dlLink = document.createElement("a");
@@ -22327,11 +22162,10 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
-      // Requirement 7 & 8: Open directly inside WhatsApp with the complete selected receipt details pre-filled and the full-height image on clipboard
-      const encodedText = encodeURIComponent(fullReceiptText);
+      // Open WhatsApp chat directly WITHOUT any text parameter so ONLY the pasted/attached receipt image is sent
       const whatsappUrl = isMobileDevice
-        ? `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodedText}`
-        : `https://web.whatsapp.com/send?phone=${formattedPhone}&text=${encodedText}`;
+        ? `https://api.whatsapp.com/send?phone=${formattedPhone}`
+        : `https://web.whatsapp.com/send?phone=${formattedPhone}`;
 
       try {
         window.open(whatsappUrl, "_blank", "noopener,noreferrer");
@@ -22343,10 +22177,10 @@ function formatMonthLabel(rawVal) {
         link.click();
       }
       triggerSideToast(
-        "Complete Receipt Ready for WhatsApp",
+        "Receipt Image Ready for WhatsApp",
         copiedToClipboard
-          ? `WhatsApp chat opened for +${formattedPhone} with complete receipt details! Full receipt image is also copied to clipboard (press Ctrl+V in chat) and downloaded.`
-          : `WhatsApp chat opened for +${formattedPhone} with complete receipt details! Full receipt image downloaded as ${fileName}.`,
+          ? `WhatsApp chat opened for +${formattedPhone} (image only, no extra text)! Full receipt image is copied to clipboard — press Ctrl+V in chat to send.`
+          : `WhatsApp chat opened for +${formattedPhone} (image only, no extra text)! Full receipt image downloaded as ${fileName}.`,
         true
       );
     }
@@ -27713,89 +27547,87 @@ function formatMonthLabel(rawVal) {
 
     function getAdminContactSettings(targetProperty = "") {
       try {
-        const raw = localStorage.getItem("portal_admin_contact_cfg");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === "object") {
-            const byProp = (parsed.byProperty && typeof parsed.byProperty === "object") ? parsed.byProperty : {};
+        const parsed = (DB && DB.globalConfig && DB.globalConfig.contactConfig && typeof DB.globalConfig.contactConfig === "object")
+          ? DB.globalConfig.contactConfig
+          : null;
+        if (parsed && typeof parsed === "object") {
+          const byProp = (parsed.byProperty && typeof parsed.byProperty === "object") ? parsed.byProperty : {};
 
-            if (targetProperty) {
-              const cleanTarget = targetProperty.trim().toLowerCase();
-              const matchedKey = Object.keys(byProp).find(k => k.trim().toLowerCase() === cleanTarget);
-              if (matchedKey && byProp[matchedKey]) {
-                const p = byProp[matchedKey];
-                const hasSpecific = Boolean(p.name || p.phone || p.mobile || p.whatsapp || p.email || p.address);
-                if (hasSpecific || cleanTarget === "all") {
-                  return {
-                    propertyName: matchedKey,
-                    name: String(p.name || "").trim(),
-                    phone: normalizeCleanContactPhone(p.phone),
-                    whatsapp: normalizeCleanContactPhone(p.whatsapp),
-                    mobile: normalizeCleanContactPhone(p.mobile),
-                    email: String(p.email || "").trim(),
-                    address: String(p.address || "").trim(),
-                    byProperty: byProp,
-                    isConfigured: hasSpecific
-                  };
-                }
-              }
-              // Fallback to "ALL" if configured for all properties
-              const allKey = Object.keys(byProp).find(k => k.trim().toLowerCase() === "all");
-              if (allKey && byProp[allKey]) {
-                const pAll = byProp[allKey];
-                const hasAll = Boolean(pAll.name || pAll.phone || pAll.mobile || pAll.whatsapp || pAll.email || pAll.address);
-                if (hasAll) {
-                  return {
-                    propertyName: targetProperty === "ALL" ? "ALL" : targetProperty,
-                    name: String(pAll.name || "").trim(),
-                    phone: normalizeCleanContactPhone(pAll.phone),
-                    whatsapp: normalizeCleanContactPhone(pAll.whatsapp),
-                    mobile: normalizeCleanContactPhone(pAll.mobile),
-                    email: String(pAll.email || "").trim(),
-                    address: String(pAll.address || "").trim(),
-                    byProperty: byProp,
-                    isConfigured: true
-                  };
-                }
-              }
-              if (parsed.propertyName && (parsed.propertyName.trim().toLowerCase() === cleanTarget || parsed.propertyName.trim().toLowerCase() === "all")) {
+          if (targetProperty) {
+            const cleanTarget = targetProperty.trim().toLowerCase();
+            const matchedKey = Object.keys(byProp).find(k => k.trim().toLowerCase() === cleanTarget);
+            if (matchedKey && byProp[matchedKey]) {
+              const p = byProp[matchedKey];
+              const hasSpecific = Boolean(p.name || p.phone || p.mobile || p.whatsapp || p.email || p.address);
+              if (hasSpecific || cleanTarget === "all") {
                 return {
-                  propertyName: parsed.propertyName,
-                  name: String(parsed.name || "").trim(),
-                  phone: normalizeCleanContactPhone(parsed.phone),
-                  whatsapp: normalizeCleanContactPhone(parsed.whatsapp),
-                  mobile: normalizeCleanContactPhone(parsed.mobile),
-                  email: String(parsed.email || "").trim(),
-                  address: String(parsed.address || "").trim(),
+                  propertyName: matchedKey,
+                  name: String(p.name || "").trim(),
+                  phone: normalizeCleanContactPhone(p.phone),
+                  whatsapp: normalizeCleanContactPhone(p.whatsapp),
+                  mobile: normalizeCleanContactPhone(p.mobile),
+                  email: String(p.email || "").trim(),
+                  address: String(p.address || "").trim(),
                   byProperty: byProp,
-                  isConfigured: Boolean(parsed.name || parsed.phone || parsed.mobile || parsed.whatsapp || parsed.email)
+                  isConfigured: hasSpecific
                 };
               }
+            }
+            const allKey = Object.keys(byProp).find(k => k.trim().toLowerCase() === "all");
+            if (allKey && byProp[allKey]) {
+              const pAll = byProp[allKey];
+              const hasAll = Boolean(pAll.name || pAll.phone || pAll.mobile || pAll.whatsapp || pAll.email || pAll.address);
+              if (hasAll) {
+                return {
+                  propertyName: targetProperty === "ALL" ? "ALL" : targetProperty,
+                  name: String(pAll.name || "").trim(),
+                  phone: normalizeCleanContactPhone(pAll.phone),
+                  whatsapp: normalizeCleanContactPhone(pAll.whatsapp),
+                  mobile: normalizeCleanContactPhone(pAll.mobile),
+                  email: String(pAll.email || "").trim(),
+                  address: String(pAll.address || "").trim(),
+                  byProperty: byProp,
+                  isConfigured: true
+                };
+              }
+            }
+            if (parsed.propertyName && (parsed.propertyName.trim().toLowerCase() === cleanTarget || parsed.propertyName.trim().toLowerCase() === "all")) {
               return {
-                propertyName: targetProperty,
-                name: "",
-                phone: "",
-                whatsapp: "",
-                mobile: "",
-                email: "",
-                address: "",
+                propertyName: parsed.propertyName,
+                name: String(parsed.name || "").trim(),
+                phone: normalizeCleanContactPhone(parsed.phone),
+                whatsapp: normalizeCleanContactPhone(parsed.whatsapp),
+                mobile: normalizeCleanContactPhone(parsed.mobile),
+                email: String(parsed.email || "").trim(),
+                address: String(parsed.address || "").trim(),
                 byProperty: byProp,
-                isConfigured: false
+                isConfigured: Boolean(parsed.name || parsed.phone || parsed.mobile || parsed.whatsapp || parsed.email)
               };
             }
-
             return {
-              propertyName: String(parsed.propertyName || "ALL").trim(),
-              name: String(parsed.name || "").trim(),
-              phone: normalizeCleanContactPhone(parsed.phone),
-              whatsapp: normalizeCleanContactPhone(parsed.whatsapp),
-              mobile: normalizeCleanContactPhone(parsed.mobile),
-              email: String(parsed.email || "").trim(),
-              address: String(parsed.address || "").trim(),
+              propertyName: targetProperty,
+              name: "",
+              phone: "",
+              whatsapp: "",
+              mobile: "",
+              email: "",
+              address: "",
               byProperty: byProp,
-              isConfigured: Boolean(parsed.name || parsed.phone || parsed.mobile || parsed.whatsapp || parsed.email)
+              isConfigured: false
             };
           }
+
+          return {
+            propertyName: String(parsed.propertyName || "ALL").trim(),
+            name: String(parsed.name || "").trim(),
+            phone: normalizeCleanContactPhone(parsed.phone),
+            whatsapp: normalizeCleanContactPhone(parsed.whatsapp),
+            mobile: normalizeCleanContactPhone(parsed.mobile),
+            email: String(parsed.email || "").trim(),
+            address: String(parsed.address || "").trim(),
+            byProperty: byProp,
+            isConfigured: Boolean(parsed.name || parsed.phone || parsed.mobile || parsed.whatsapp || parsed.email)
+          };
         }
       } catch (e) {}
       return {
@@ -27868,7 +27700,8 @@ function formatMonthLabel(rawVal) {
         byProperty,
         updatedAt: Date.now()
       };
-      localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(cfg));
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      DB.globalConfig.contactConfig = cfg;
 
       if (typeof recordAdminAuditLog === "function") {
         recordAdminAuditLog("SAVE_CONTACT_INFO", chosenProp === "ALL" ? "All Properties" : chosenProp, `Contact: ${name || "N/A"}, Phone: ${phone || mobile || "N/A"}`);
@@ -28033,35 +27866,53 @@ function formatMonthLabel(rawVal) {
       openModal("contactUsModal");
     }
 
-    function renderRenterMaintenanceModalBody() {
+    function renderRenterMaintenanceModalBody(isLoadingFromGas = false) {
       const body = document.getElementById("renterMaintenanceDynamicBody");
       if (!body) return;
 
+      const matchedProfiles = typeof getRenterProfilesForLoggedInAadhaar === "function" ? getRenterProfilesForLoggedInAadhaar() : [];
+      const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || activeFlatRenterObj || null;
+      const myProp = String(primaryRenter?.PropertyName || activeAssignedProperty || selectedFlat?.PropertyName || "").trim().toLowerCase();
+      const myFlat = String(primaryRenter?.FlatName || activeAssignedFlat || selectedFlat?.FlatName || "").trim().toLowerCase();
+
       const myTickets = (typeof getStoredMaintenanceTickets === "function" ? getStoredMaintenanceTickets() : []).filter(t => {
         if (activeRole === "Admin" || activeRole === "Manager") return true;
-        return String(t.username || "").toLowerCase() === String(activeUser || "").toLowerCase();
-      }).slice(0, 12);
+        const tUser = String(t.username || "").trim().toLowerCase();
+        const meUser = String(activeUser || "").trim().toLowerCase();
+        if (tUser && meUser && tUser === meUser) return true;
+        const tProp = String(t.propertyName || "").trim().toLowerCase();
+        const tFlat = String(t.flatName || "").trim().toLowerCase();
+        if (myProp && myFlat && tProp === myProp && tFlat === myFlat) return true;
+        return false;
+      }).slice(0, 20);
 
-      const myTicketsHtml = myTickets.length === 0
-        ? `<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:14px;">No maintenance tickets submitted yet.</div>`
-        : myTickets.map(t => {
-            const st = String(t.status || "Open");
-            const stColor = st === "Resolved" ? "#10b981" : (st === "In Progress" ? "#f59e0b" : "#ef4444");
-            return `
-              <div style="background:rgba(15,23,42,0.55); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px; font-size:0.76rem; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-                <div>
-                  <div><strong style="color:#f59e0b;">[${t.category || "Issue"}]</strong> ${t.description || ""}</div>
-                  <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">${t.id ? `${t.id} • ` : ""}${t.propertyName || ""} Flat ${t.flatName || "--"} • ${t.createdAt || ""}</div>
+      const myTicketsHtml = isLoadingFromGas
+        ? `<div style="font-size:0.78rem; color:#38bdf8; text-align:center; padding:16px;"><i class="fa-solid fa-spinner fa-spin" style="margin-right:6px;"></i>Fetching live complaints directly from Google Sheets...</div>`
+        : (myTickets.length === 0
+          ? `<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:14px;">No maintenance tickets found in Google Sheets.</div>`
+          : myTickets.map(t => {
+              const st = String(t.status || "Open");
+              const stColor = st === "Resolved" ? "#10b981" : (st === "In Progress" ? "#f59e0b" : "#ef4444");
+              return `
+                <div style="background:rgba(15,23,42,0.55); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px; font-size:0.76rem; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <div>
+                    <div><strong style="color:#f59e0b;">[${escapeHtml(t.category || "Issue")}]</strong> ${escapeHtml(t.description || "")}</div>
+                    <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">${t.id ? `${escapeHtml(t.id)} • ` : ""}${escapeHtml(t.propertyName || "")} Flat ${escapeHtml(t.flatName || "--")} • ${escapeHtml(t.createdAt || "")}</div>
+                  </div>
+                  <span style="padding:3px 9px; border-radius:999px; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor};">${escapeHtml(st)}</span>
                 </div>
-                <span style="padding:3px 9px; border-radius:999px; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor};">${st}</span>
-              </div>
-            `;
-          }).join("");
+              `;
+            }).join(""));
 
       body.innerHTML = `
         <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.35); border-radius:14px; padding:14px;">
-          <div style="font-size:0.84rem; font-weight:800; color:#f59e0b; margin-bottom:10px;">
-            <i class="fa-solid fa-screwdriver-wrench"></i> Raise a Maintenance Complaint
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+            <div style="font-size:0.84rem; font-weight:800; color:#f59e0b;">
+              <i class="fa-solid fa-screwdriver-wrench"></i> Raise a Maintenance Complaint
+            </div>
+            <span style="font-size:0.68rem; font-weight:700; color:#34d399; background:rgba(16,185,129,0.12); padding:2px 8px; border-radius:999px; border:1px solid rgba(16,185,129,0.3);">
+              <i class="fa-solid fa-cloud-arrow-down"></i> Live Google Sheets
+            </span>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
             <select id="renterTicketCategory" class="form-control" style="padding:8px 10px; font-size:0.8rem;">
@@ -28085,7 +27936,7 @@ function formatMonthLabel(rawVal) {
             </button>
           </div>
           <div style="font-size:0.76rem; font-weight:800; color:var(--text-muted); margin-bottom:6px;">
-            <i class="fa-solid fa-list-check" style="color:#38bdf8; margin-right:5px;"></i>Track Ticket &amp; Live Status:
+            <i class="fa-solid fa-list-check" style="color:#38bdf8; margin-right:5px;"></i>Track Ticket &amp; Live Status (Direct from Google Sheets):
           </div>
           <div style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;">
             ${myTicketsHtml}
@@ -28094,9 +27945,18 @@ function formatMonthLabel(rawVal) {
       `;
     }
 
-    function openRenterMaintenanceModal() {
-      renderRenterMaintenanceModalBody();
+    async function openRenterMaintenanceModal() {
+      try { localStorage.removeItem("portal_maintenance_tickets_v1"); } catch (e) {}
       openModal("renterMaintenanceModal");
+      renderRenterMaintenanceModalBody(true);
+      try {
+        const freshSheet = await fetchGasSheetData(true, true);
+        if (freshSheet && freshSheet.globalConfig && Array.isArray(freshSheet.globalConfig.maintenanceTickets)) {
+          if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+          DB.globalConfig.maintenanceTickets = freshSheet.globalConfig.maintenanceTickets;
+        }
+      } catch (e) {}
+      renderRenterMaintenanceModalBody(false);
     }
 
     // ==========================================================================
@@ -28105,28 +27965,22 @@ function formatMonthLabel(rawVal) {
     let hasLoadedInitialPrivateChats = false;
 
     function getPrivateChatStore() {
-      try {
-        const raw = localStorage.getItem(PRIVATE_CHAT_STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === "object") return parsed;
-        }
-      } catch (e) {}
+      if (DB && DB.globalConfig && DB.globalConfig.privateChats && typeof DB.globalConfig.privateChats === "object") {
+        return DB.globalConfig.privateChats;
+      }
       return {};
     }
 
     function savePrivateChatStore(store, syncToServer = true) {
-      try {
-        localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, JSON.stringify(store || {}));
-      } catch (e) {}
-      notifyCrossTabSync("chats", store);
+      const cleanStore = (store && typeof store === "object") ? store : {};
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      DB.globalConfig.privateChats = cleanStore;
+      notifyCrossTabSync("chats", cleanStore);
       if (syncToServer && activeUser) {
-        {
-          sendFirebaseAction({
-            action: "savePrivateChats",
-            privateChats: store || {}
-          }).catch(() => {});
-        }
+        sendFirebaseAction({
+          action: "savePrivateChats",
+          privateChats: cleanStore
+        }).catch(() => {});
       }
     }
 
@@ -29027,22 +28881,12 @@ function formatMonthLabel(rawVal) {
 
     // --- A2: PAYMENT PROOF UPLOAD & ADMIN VERIFICATION WORKFLOW ---
     function getStoredPaymentProofs() {
-      try {
-        const raw = localStorage.getItem("portal_payment_proofs_v1");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
-        }
-      } catch (e) {}
       if (Array.isArray(DB.globalConfig?.paymentProofs)) return DB.globalConfig.paymentProofs;
       return [];
     }
 
     function saveStoredPaymentProofs(list) {
       const clean = Array.isArray(list) ? list : [];
-      try {
-        localStorage.setItem("portal_payment_proofs_v1", JSON.stringify(clean));
-      } catch (e) {}
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.paymentProofs = clean;
       saveDbSnapshotToCache();
@@ -29616,15 +29460,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function loadFlatApplianceChecklist(prop, flat) {
-      const key = getFlatChecklistStorageKey(prop, flat);
-      let data = null;
-      try {
-        const raw = localStorage.getItem(key);
-        if (raw) data = JSON.parse(raw);
-      } catch (e) {}
-      if (!data && selectedFlat?.ApplianceChecklist) {
-        data = selectedFlat.ApplianceChecklist;
-      }
+      let data = selectedFlat?.ApplianceChecklist || null;
       const d = data || { fans: 2, bulbs: 4, geysers: 1, keys: 2, meter: "Working & Sealed", paint: "Freshly Painted", notes: "" };
       if (document.getElementById("invFansCount")) document.getElementById("invFansCount").value = d.fans ?? 2;
       if (document.getElementById("invBulbsCount")) document.getElementById("invBulbsCount").value = d.bulbs ?? 4;
@@ -29651,10 +29487,6 @@ function formatMonthLabel(rawVal) {
         notes: (notesEl?.value || "").trim(),
         updatedAt: new Date().toISOString()
       };
-      const key = getFlatChecklistStorageKey(selectedFlat.PropertyName, selectedFlat.FlatName);
-      try {
-        localStorage.setItem(key, JSON.stringify(checklist));
-      } catch (e) {}
       selectedFlat.ApplianceChecklist = checklist;
       saveDbSnapshotToCache();
       if (typeof recordAdminAuditLog === "function") {
@@ -29756,31 +29588,23 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    // --- GROUP G1: MAINTENANCE COMPLAINT / TICKET SYSTEM ---
+    // --- GROUP G1: MAINTENANCE COMPLAINT / TICKET SYSTEM (DIRECT GOOGLE APPS SCRIPT, ZERO CACHE) ---
     function getStoredMaintenanceTickets() {
-      try {
-        const raw = localStorage.getItem("portal_maintenance_tickets_v1");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
-        }
-      } catch (e) {}
+      try { localStorage.removeItem("portal_maintenance_tickets_v1"); } catch (e) {}
       if (Array.isArray(DB.globalConfig?.maintenanceTickets)) return DB.globalConfig.maintenanceTickets;
       return [];
     }
 
-    function saveStoredMaintenanceTickets(list) {
+    async function saveStoredMaintenanceTickets(list) {
       const clean = Array.isArray(list) ? list : [];
-      try {
-        localStorage.setItem("portal_maintenance_tickets_v1", JSON.stringify(clean));
-      } catch (e) {}
+      try { localStorage.removeItem("portal_maintenance_tickets_v1"); } catch (e) {}
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.maintenanceTickets = clean;
       saveDbSnapshotToCache();
-      sendFirebaseAction({ action: "saveMaintenanceTickets", maintenanceTickets: clean }).catch(() => {});
+      await sendFirebaseAction({ action: "saveMaintenanceTickets", maintenanceTickets: clean }).catch(() => {});
     }
 
-    function submitRenterMaintenanceTicket() {
+    async function submitRenterMaintenanceTicket() {
       const cat = document.getElementById("renterTicketCategory")?.value || "Plumbing";
       const prio = document.getElementById("renterTicketPriority")?.value || "Normal";
       const desc = (document.getElementById("renterTicketDesc")?.value || "").trim();
@@ -29788,8 +29612,8 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Description Required", "Please describe the maintenance issue briefly.", false);
       }
 
-      let propName = selectedProperty || "";
-      let flatName = selectedFlat?.FlatName || "";
+      let propName = selectedProperty || activeAssignedProperty || "";
+      let flatName = selectedFlat?.FlatName || activeAssignedFlat || "";
       if (activeRole === "Renter") {
         const myProfiles = getRenterProfilesForLoggedInAadhaar();
         if (myProfiles.length > 0) {
@@ -29798,7 +29622,15 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      const list = getStoredMaintenanceTickets();
+      try {
+        const freshSheet = await fetchGasSheetData(true, true);
+        if (freshSheet && freshSheet.globalConfig && Array.isArray(freshSheet.globalConfig.maintenanceTickets)) {
+          if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+          DB.globalConfig.maintenanceTickets = freshSheet.globalConfig.maintenanceTickets;
+        }
+      } catch (e) {}
+
+      const list = getStoredMaintenanceTickets().slice();
       const ticket = {
         id: "TKT-" + Date.now(),
         username: activeUser || "renter",
@@ -29812,12 +29644,12 @@ function formatMonthLabel(rawVal) {
         createdAt: new Date().toLocaleString("en-IN")
       };
       list.unshift(ticket);
-      saveStoredMaintenanceTickets(list);
       if (document.getElementById("renterTicketDesc")) document.getElementById("renterTicketDesc").value = "";
-      if (typeof renderRenterMaintenanceModalBody === "function") renderRenterMaintenanceModalBody();
+      await saveStoredMaintenanceTickets(list);
+      if (typeof renderRenterMaintenanceModalBody === "function") renderRenterMaintenanceModalBody(false);
       renderContactUsDynamicBody();
       renderAdminMaintenanceTickets();
-      triggerSideToast("Maintenance Ticket Raised", `Ticket ${ticket.id} (${cat}) submitted to Admin.`, true);
+      triggerSideToast("Maintenance Ticket Raised", `Ticket ${ticket.id} (${cat}) saved directly to Google Sheets.`, true);
     }
 
     function escapeHtml(str) {
@@ -30056,19 +29888,12 @@ function formatMonthLabel(rawVal) {
 
     // --- GROUP G3: DETAILED ADMIN AUDIT TRAIL & ACTIVITY LOG (MAX 30 RECORDS, AUTO-DELETES 31ST) ---
     function getStoredAdminAuditLogs() {
-      try {
-        const raw = localStorage.getItem("portal_admin_audit_logs_v1");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed.slice(0, 30);
-        }
-      } catch (e) {}
       if (Array.isArray(DB.globalConfig?.auditLogs)) return DB.globalConfig.auditLogs.slice(0, 30);
       return [];
     }
 
     function recordAdminAuditLog(actionType, targetLabel, detailsText) {
-      const list = getStoredAdminAuditLogs();
+      const list = getStoredAdminAuditLogs().slice();
       const entry = {
         id: "AUD-" + Date.now() + "-" + Math.random().toString(36).substring(2, 5),
         timestamp: new Date().toLocaleString("en-IN"),
@@ -30078,12 +29903,8 @@ function formatMonthLabel(rawVal) {
         target: String(targetLabel || ""),
         details: String(detailsText || "")
       };
-      // Add newest record at the top and automatically delete the 31st (oldest) record
       list.unshift(entry);
       const trimmed = list.slice(0, 30);
-      try {
-        localStorage.setItem("portal_admin_audit_logs_v1", JSON.stringify(trimmed));
-      } catch (e) {}
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.auditLogs = trimmed;
       if (typeof renderAdminAuditTrailList === "function") {
