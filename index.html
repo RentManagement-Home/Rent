@@ -4592,7 +4592,7 @@
   <!-- ==========================================================================
        MONTHLY BILL RECEIPT POPUP MODAL (OPENED FROM HISTORY "RECEIPT" BUTTON)
        ========================================================================== -->
-  <div id="receiptViewModal" class="modal-overlay">
+  <div id="receiptViewModal" class="modal-overlay" onclick="if(event.target===this) closeModal('receiptViewModal')">
     <div class="modal-window receipt-card" id="printableReceiptArea">
       <button class="modal-close-btn no-print" onclick="closeModal('receiptViewModal')"><i class="fa-solid fa-xmark"></i></button>
       <div class="receipt-header">
@@ -10160,8 +10160,8 @@
     }
 
     function isRestrictedRole(role = activeRole) {
-      const r = String(role || "").trim();
-      return r === "Viewer" || r === "Renter";
+      const r = String(role || "").trim().toLowerCase();
+      return r === "viewer" || r === "renter";
     }
 
     // Universal Google Drive Shared Link -> Direct Image Display URL Converter (Works Across All Devices)
@@ -12552,7 +12552,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function isBillLinkedToLoggedInRenterAadhaar(bill) {
-      if (activeRole !== "Renter") return true;
+      if (String(activeRole || "").trim().toLowerCase() !== "renter") return true;
       if (!bill) return false;
       const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
       if (matchedProfiles.length === 0) return false;
@@ -12562,18 +12562,18 @@ function formatMonthLabel(rawVal) {
         .filter(id => id && !id.startsWith("RENTER-SESSION-"));
       const allowedIds = new Set(realIds);
       const billRenterId = String(bill.RenterID || "").trim();
-      if (billRenterId && allowedIds.size > 0) {
-        return allowedIds.has(billRenterId);
+      if (billRenterId && allowedIds.size > 0 && allowedIds.has(billRenterId)) {
+        return true;
       }
 
-      // Fallback when older bill has no RenterID or session fallback profile is used: match TenantName + Property + Flat (or Property + Flat if assigned exclusively)
+      // Fallback when older bill has no RenterID or different RenterID for the same tenant + Property + Flat
       const bTenant = String(bill.TenantName || "").trim().toLowerCase();
       return matchedProfiles.some(r => {
         const sameUnit = isSamePropAndFlat(r.PropertyName, r.FlatName, bill.PropertyName, bill.FlatName);
         if (!sameUnit) return false;
         const rName = String(r.RenterName || "").trim().toLowerCase();
         if (bTenant && rName && bTenant === rName) return true;
-        if (!billRenterId && String(r.RenterID || "").startsWith("RENTER-SESSION-")) return true;
+        if (!billRenterId && (!bTenant || String(r.RenterID || "").startsWith("RENTER-SESSION-"))) return true;
         return false;
       });
     }
@@ -12929,6 +12929,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function getReadNotificationIds() {
+      if (Array.isArray(window._readNotificationIdsInMemory)) {
+        return window._readNotificationIdsInMemory;
+      }
       return [];
     }
 
@@ -13087,9 +13090,7 @@ function formatMonthLabel(rawVal) {
     function markAllVisibleNotificationsRead() {
       const allNotices = getStoredBroadcastNotifications();
       const allIds = allNotices.map(n => n.id).filter(Boolean);
-      try {
-        localStorage.setItem(PORTAL_READ_NOTIFICATIONS_KEY, JSON.stringify(allIds));
-      } catch (e) {}
+      window._readNotificationIdsInMemory = allIds;
       syncNotificationsBadgeUI();
     }
 
@@ -13174,7 +13175,7 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Select Target Property", "Please select at least one property for the target audience.", false);
       }
 
-      const existing = getStoredBroadcastNotifications();
+      const existing = getStoredBroadcastNotifications().slice();
 
       if (currentEditingNoticeId) {
         // Edit existing notification
@@ -13191,7 +13192,8 @@ function formatMonthLabel(rawVal) {
           };
         }
         cancelEditingAdminNotice();
-        localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(existing));
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig.broadcastNotices = existing;
         syncNotificationsBadgeUI();
         renderNotificationsListUI();
         triggerSideToast("Notice Updated", `Notice "${title}" updated live!`, true);
@@ -13207,7 +13209,8 @@ function formatMonthLabel(rawVal) {
           timestamp: Date.now()
         };
         existing.unshift(newNotice);
-        localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(existing));
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig.broadcastNotices = existing;
         if (titleInput) titleInput.value = "";
         if (bodyInput) bodyInput.value = "";
         const drawer = document.getElementById("noticeTargetPropertiesDrawer");
@@ -13221,16 +13224,14 @@ function formatMonthLabel(rawVal) {
         triggerSideToast("Broadcast Sent", `Notice "${title}" sent to ${audienceDesc}!`, true);
       }
 
-      // Sync immediately to Firestore config/app_config so all connected devices update live
+      // Sync immediately to Google Apps Script so all connected devices update live
       try {
-        {
-          await sendFirebaseAction({
-            action: "saveBroadcastNotices",
-            broadcastNotices: existing
-          });
-        }
+        await sendFirebaseAction({
+          action: "saveBroadcastNotices",
+          broadcastNotices: existing
+        });
       } catch (e) {
-        console.warn("Failed to push notice to Firestore:", e);
+        console.warn("Failed to push notice to Google Sheets:", e);
       }
     }
 
@@ -13241,22 +13242,21 @@ function formatMonthLabel(rawVal) {
       }
       let existing = getStoredBroadcastNotifications();
       existing = existing.filter(n => n.id !== noticeId);
-      localStorage.setItem(PORTAL_NOTIFICATIONS_KEY, JSON.stringify(existing));
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      DB.globalConfig.broadcastNotices = existing;
       syncNotificationsBadgeUI();
       renderNotificationsListUI();
       notifyCrossTabSync("notices", existing);
       triggerSideToast("Notice Deleted", "Broadcast notice removed everywhere.", true);
 
-      // Sync deletion live to Firestore so it is automatically removed everywhere
+      // Sync deletion live to Google Apps Script so it is automatically removed everywhere
       try {
-        {
-          await sendFirebaseAction({
-            action: "saveBroadcastNotices",
-            broadcastNotices: existing
-          });
-        }
+        await sendFirebaseAction({
+          action: "saveBroadcastNotices",
+          broadcastNotices: existing
+        });
       } catch (e) {
-        console.warn("Failed to sync notice deletion to Firestore:", e);
+        console.warn("Failed to sync notice deletion to Google Sheets:", e);
       }
     }
 
@@ -13279,7 +13279,8 @@ function formatMonthLabel(rawVal) {
 
     function renderAllDashboardUI() {
       const viewerScope = resolveViewerAssignedScope();
-      if (activeRole === "Renter") {
+      if (String(activeRole || "").trim().toLowerCase() === "renter") {
+        activeRole = "Renter";
         const flatsContainer = document.getElementById("flatsList");
         const propsBar = document.querySelector(".properties-bar");
         const khetContainer = document.getElementById("homeKhetSectionContainer");
@@ -14308,12 +14309,12 @@ function formatMonthLabel(rawVal) {
     }
 
     function applyRolePermissions(role) {
-      const cleanRole = String(role || "Admin").trim();
-      if (cleanRole === "Viewer") {
+      const cleanRole = String(role || "Admin").trim().toLowerCase();
+      if (cleanRole === "viewer") {
         activeRole = "Viewer";
-      } else if (cleanRole === "Renter") {
+      } else if (cleanRole === "renter") {
         activeRole = "Renter";
-      } else if (cleanRole === "Manager") {
+      } else if (cleanRole === "manager") {
         activeRole = "Manager";
       } else {
         activeRole = "Admin";
@@ -14495,22 +14496,29 @@ function formatMonthLabel(rawVal) {
       DB.loginHistory = (String(activeRole).toLowerCase() === "admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"))) ? liveLogs : [];
 
       if (res.globalConfig && typeof res.globalConfig === "object") {
-        if (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object" && Object.keys(res.globalConfig.contactConfig).length > 0) {
-          try {
-            localStorage.setItem("portal_admin_contact_cfg", JSON.stringify(res.globalConfig.contactConfig));
-            if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
-            if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
-          } catch (e) {}
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig = {
+          ...DB.globalConfig,
+          ...res.globalConfig,
+          contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
+          broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
+          privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
+          paymentProofs: Array.isArray(res.globalConfig.paymentProofs) ? res.globalConfig.paymentProofs : [],
+          maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
+          auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
+        };
+        try {
+          if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
+          if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
+        } catch (e) {}
+        if (typeof syncServerBroadcastNoticesToLocal === "function") {
+          syncServerBroadcastNoticesToLocal(DB.globalConfig.broadcastNotices, false);
         }
-        if (Array.isArray(res.globalConfig.broadcastNotices)) {
-          if (typeof syncServerBroadcastNoticesToLocal === "function") {
-            syncServerBroadcastNoticesToLocal(res.globalConfig.broadcastNotices, false);
-          }
+        if (typeof syncServerPrivateChatsToLocal === "function") {
+          syncServerPrivateChatsToLocal(DB.globalConfig.privateChats, true);
         }
-        if (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") {
-          if (typeof syncServerPrivateChatsToLocal === "function") {
-            syncServerPrivateChatsToLocal(res.globalConfig.privateChats, true);
-          }
+        if (typeof renderAdminMaintenanceTickets === "function") {
+          renderAdminMaintenanceTickets();
         }
       }
 
@@ -15691,6 +15699,10 @@ function formatMonthLabel(rawVal) {
 
     // 4. Render Flat Cards Strictly Filtered by Selected Property Only (Requirement 7: Directly show only the flats beneath the property without any summary banner row)
     function renderFlatsGrid(propertyName) {
+      if (String(activeRole || "").trim().toLowerCase() === "renter") {
+        if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
+        return;
+      }
       const container = document.getElementById("flatsList");
       container.innerHTML = "";
       const viewerScope = resolveViewerAssignedScope();
@@ -15802,6 +15814,10 @@ function formatMonthLabel(rawVal) {
     }
 
     function handleGlobalSearch(query) {
+      if (String(activeRole || "").trim().toLowerCase() === "renter") {
+        renderAllDashboardUI();
+        return;
+      }
       const q = String(query || "").trim().toLowerCase();
       const dropdown = document.getElementById("globalSearchResultsBox");
 
@@ -18992,26 +19008,24 @@ function formatMonthLabel(rawVal) {
     }
 
     function getLocalFlatUtilityMetaMap() {
-      try {
-        const raw = localStorage.getItem("portal_flat_utility_meta_v1");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === "object") return parsed;
-        }
-      } catch (e) {}
+      if (DB && DB._flatUtilityMetaMap && typeof DB._flatUtilityMetaMap === "object") {
+        return DB._flatUtilityMetaMap;
+      }
       return {};
     }
 
     function saveLocalFlatUtilityAndDateMeta(propName, flatName, renterId, dataObj) {
       try {
-        const map = getLocalFlatUtilityMetaMap();
+        if (!DB._flatUtilityMetaMap || typeof DB._flatUtilityMetaMap !== "object") {
+          DB._flatUtilityMetaMap = {};
+        }
+        const map = DB._flatUtilityMetaMap;
         const flatKey = "FLAT::" + String(propName || "").trim().toLowerCase() + "::" + String(flatName || "").trim().toLowerCase();
         map[flatKey] = { ...(map[flatKey] || {}), ...dataObj };
         if (renterId) {
           const renterKey = "RENTER::" + String(renterId).trim();
           map[renterKey] = { ...(map[renterKey] || {}), ...dataObj };
         }
-        localStorage.setItem("portal_flat_utility_meta_v1", JSON.stringify(map));
       } catch (e) {}
     }
 
@@ -20108,11 +20122,13 @@ function formatMonthLabel(rawVal) {
       if (qrHeaderBtn) {
         qrHeaderBtn.style.display = (activeRole === "Renter") ? "none" : "";
       }
-      if (activeRole === "Renter") {
-        // Requirement 6 & 10: Renter role only has access to their own Historical Receipts (Tab 2) and their own Profile (Tab 3) in strictly View-Only mode
-        if (navBar) navBar.style.gridTemplateColumns = "repeat(2, 1fr)";
-        modal.querySelectorAll(".flat-nav-item").forEach((el, idx) => el.classList.toggle("active", idx === 1));
-        modal.querySelectorAll(".tab-content").forEach((el, idx) => el.classList.toggle("active", idx === 1));
+      if (String(activeRole || "").trim().toLowerCase() === "renter") {
+        // Renter role inside flatDetailsModal only shows their own KYC Profile in strictly View-Only mode
+        if (navBar) navBar.style.display = "none";
+        modal.querySelectorAll(".flat-nav-item").forEach((el, idx) => el.classList.toggle("active", idx === 2));
+        modal.querySelectorAll(".tab-content").forEach((el, idx) => el.classList.toggle("active", idx === 2));
+        const titleEl = document.getElementById("modalHeaderTitle");
+        if (titleEl) titleEl.innerText = "My KYC Profile";
         modal.querySelectorAll("#tabProfile input, #tabProfile select, #tabProfile textarea").forEach(inp => {
           inp.setAttribute("readonly", "readonly");
           if (inp.tagName === "SELECT" || inp.type === "file" || inp.type === "date") {
@@ -20129,6 +20145,7 @@ function formatMonthLabel(rawVal) {
         }
         const defaultTabIdx = canBill ? 0 : 1;
         if (navBar) {
+          navBar.style.display = "";
           const visibleCount = canBill ? 5 : 4;
           navBar.style.gridTemplateColumns = window.innerWidth <= 768 ? "repeat(2, 1fr)" : `repeat(${visibleCount}, 1fr)`;
         }
@@ -20209,8 +20226,8 @@ function formatMonthLabel(rawVal) {
     function selectRenterHomeAvailableReceipt(billId, monthYear) {
       window.selectedRenterHomeBillId = billId || "";
       window.selectedRenterHomeBillMonth = monthYear || "";
-      if (typeof renderFlatsGrid === "function") {
-        renderFlatsGrid();
+      if (typeof renderAllDashboardUI === "function") {
+        renderAllDashboardUI();
       }
     }
 
@@ -21255,7 +21272,7 @@ function formatMonthLabel(rawVal) {
                 const rbId = String(rb.BillID || "").replace(/'/g, "\\'");
                 const rbMonth = String(rb.MonthYear || "").replace(/'/g, "\\'");
                 const isCurr = String(rb.BillID || "") === String(bill.BillID || "") && String(rb.MonthYear || "") === String(bill.MonthYear || "");
-                return `<button type="button" onclick="openBillReceiptModal('${rbId}', '${rbMonth}')" style="padding:4px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; cursor:pointer; border:1px solid ${isCurr ? '#6366f1' : 'var(--glass-border)'}; background:${isCurr ? 'rgba(99,102,241,0.2)' : 'var(--bg-input)'}; color:${isCurr ? '#818cf8' : 'var(--text-main)'};">${formatMonthLabel(rb.MonthYear)}</button>`;
+                return `<button type="button" onclick="selectRenterHomeAvailableReceipt('${rbId}', '${rbMonth}'); openBillReceiptModal('${rbId}', '${rbMonth}')" style="padding:4px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; cursor:pointer; border:1px solid ${isCurr ? '#6366f1' : 'var(--glass-border)'}; background:${isCurr ? 'rgba(99,102,241,0.2)' : 'var(--bg-input)'}; color:${isCurr ? '#818cf8' : 'var(--text-main)'};">${formatMonthLabel(rb.MonthYear)}</button>`;
               }).join("")}
             </div>
           `;
@@ -26109,6 +26126,19 @@ function formatMonthLabel(rawVal) {
           if (tabHistoryNav) tabHistoryNav.style.display = "";
           if (typeof syncFloatingCornerButtonsByRole === "function") syncFloatingCornerButtonsByRole();
         }
+        if (String(activeRole || "").trim().toLowerCase() === "renter") {
+          if (el.id === "receiptViewModal") {
+            const flatModalEl = document.getElementById("flatDetailsModal");
+            if (flatModalEl && flatModalEl.classList.contains("active")) {
+              flatModalEl.classList.remove("active");
+              document.body.classList.remove("flat-details-open");
+            }
+          }
+          const flatsContainer = document.getElementById("flatsList");
+          if (flatsContainer && !flatsContainer.querySelector(".renter-modern-portal") && typeof renderAllDashboardUI === "function") {
+            renderAllDashboardUI();
+          }
+        }
         const anyActiveModal = document.querySelector(".modal-overlay.active");
         if (!anyActiveModal) {
           document.body.classList.remove("modal-open-hide-chat");
@@ -28181,9 +28211,8 @@ function formatMonthLabel(rawVal) {
       });
 
       if (changed || forceImmediateUI) {
-        try {
-          localStorage.setItem(PRIVATE_CHAT_STORAGE_KEY, JSON.stringify(localStore));
-        } catch (e) {}
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig.privateChats = localStore;
         if (w && w.style.display === "flex") {
           const dirView = document.getElementById("chatDirectoryView");
           if (dirView && dirView.style.display !== "none") {
@@ -29730,7 +29759,7 @@ function formatMonthLabel(rawVal) {
         status: "Open",
         createdAt: new Date().toLocaleString("en-IN")
       };
-      const list = getStoredMaintenanceTickets();
+      const list = getStoredMaintenanceTickets().slice();
       list.unshift(ticket);
       saveStoredMaintenanceTickets(list);
       closeModal("adminCreateTicketModal");
@@ -29759,25 +29788,26 @@ function formatMonthLabel(rawVal) {
 
       box.innerHTML = filtered.map(t => {
         const stColor = t.status === "Resolved" ? "#10b981" : (t.status === "In Progress" ? "#f59e0b" : "#ef4444");
+        const safeId = escapeHtml(t.id);
         return `
           <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px; padding:11px 13px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
             <div style="flex:1; min-width:220px;">
               <div style="display:flex; align-items:center; gap:7px; flex-wrap:wrap;">
-                <span style="font-size:0.72rem; font-weight:800; color:#f59e0b;">[${t.category}]</span>
-                <strong style="font-size:0.85rem;">${t.description}</strong>
-                <span style="font-size:0.66rem; padding:2px 7px; border-radius:999px; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor}; font-weight:800;">${t.status}</span>
+                <span style="font-size:0.72rem; font-weight:800; color:#f59e0b;">[${escapeHtml(t.category)}]</span>
+                <strong style="font-size:0.85rem;">${escapeHtml(t.description)}</strong>
+                <span style="font-size:0.66rem; padding:2px 7px; border-radius:999px; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor}; font-weight:800;">${escapeHtml(t.status)}</span>
               </div>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
-                <strong>${t.propertyName} — Flat ${t.flatName}</strong> • Raised by: ${t.renterName} • Priority: <strong>${t.priority}</strong> • ${t.createdAt}
+                <strong>${escapeHtml(t.propertyName)} — Flat ${escapeHtml(t.flatName)}</strong> • Raised by: ${escapeHtml(t.renterName)} • Priority: <strong>${escapeHtml(t.priority)}</strong> • ${escapeHtml(t.createdAt)}
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
-              <select class="form-control" style="width:auto; padding:5px 8px; font-size:0.73rem;" onchange="updateMaintenanceTicketStatus('${t.id}', this.value)">
+              <select class="form-control" style="width:auto; padding:5px 8px; font-size:0.73rem;" onchange="updateMaintenanceTicketStatus('${safeId}', this.value)">
                 <option value="Open" ${t.status === 'Open' ? 'selected' : ''}>Open</option>
                 <option value="In Progress" ${t.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
                 <option value="Resolved" ${t.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
               </select>
-              <button type="button" class="btn-ledger-action" style="padding:5px 8px; color:#f87171;" onclick="deleteMaintenanceTicket('${t.id}')"><i class="fa-solid fa-trash"></i></button>
+              <button type="button" class="btn-ledger-action" style="padding:5px 8px; color:#f87171;" onclick="deleteMaintenanceTicket('${safeId}')"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
         `;
@@ -29785,7 +29815,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function updateMaintenanceTicketStatus(ticketId, newStatus) {
-      const list = getStoredMaintenanceTickets();
+      const list = getStoredMaintenanceTickets().slice();
       const t = list.find(x => x.id === ticketId);
       if (!t) return;
       t.status = newStatus;
