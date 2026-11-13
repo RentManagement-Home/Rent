@@ -3730,18 +3730,26 @@
     border: 1.5px solid #cbd5e1 !important;
   }
 
-  /* Universal Top-Level 2-Tab Navigation Bar for FD, Khet & Kharch Modals */
+  /* Universal Top-Level 3-Tab Navigation Bar for FD, Khet & Kharch Modals (Manual Horizontal Scroll Left <-> Right) */
   .kharch-top-tabs-nav,
   .module-top-tabs-nav {
     display: flex;
+    flex-wrap: nowrap;
     gap: 10px;
     margin-bottom: 16px;
     border-bottom: 1.5px solid var(--glass-border);
     padding-bottom: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
   }
   .kharch-nav-tab,
   .module-nav-tab {
-    flex: 1;
+    flex: 0 0 auto;
+    min-width: 245px;
+    white-space: nowrap;
     padding: 11px 16px;
     border-radius: 12px;
     font-weight: 800;
@@ -3778,6 +3786,20 @@
     color: #ffffff !important;
     border-color: #4f46e5 !important;
     box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+  }
+  /* Strict Admin-Only visibility for Aadhaar Renter Status Indicator */
+  body.role-renter #renterTenureTypeIndicatorBox,
+  body.role-viewer #renterTenureTypeIndicatorBox,
+  body.is-renter-mode #renterTenureTypeIndicatorBox {
+    display: none !important;
+  }
+  /* Manual Horizontal Scroll Containers for Kharch & FD Tabs */
+  .manual-horiz-scroll-container {
+    overflow-x: auto !important;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 6px;
   }
 
   /* Requirement 7: Squared Property Cards in Kharch (Expenses) Section */
@@ -4376,25 +4398,26 @@
     color: #0f172a;
   }
   .kharch-scroller-track-wrapper {
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
     position: relative;
-    padding: 6px 0;
-    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    padding: 6px 2px 10px 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
   .kharch-auto-scroller-track {
     display: flex;
+    flex-wrap: nowrap;
     gap: 12px;
     width: max-content;
-    animation: kharchScrollLeft 28s linear infinite;
+    animation: none !important;
+    transform: none !important;
   }
   .kharch-auto-scroller-track:hover {
     animation-play-state: paused;
-  }
-  @keyframes kharchScrollLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
   }
   .kharch-ticker-card {
     background: rgba(15, 23, 42, 0.85);
@@ -4663,32 +4686,33 @@
         </button>
       </div>
 
-      <!-- TAB 1: CALCULATE & ADD FD / PORTFOLIO -->
-      <div id="fdTabCalcContent" style="display:block;">
+      <!-- TAB 1: CALCULATE & ADD FD / PORTFOLIO (Manual Horizontal Scroll Left <-> Right) -->
+      <div id="fdTabCalcContent" class="manual-horiz-scroll-container" style="display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <div style="min-width: 720px;">
         <!-- Place-Wise Collection Summary & Portfolio KPI Banner -->
         <div id="fdTotalCollectionsBanner" style="margin-bottom:16px; background:var(--bg-input); border:1.5px solid var(--glass-border); border-radius:16px; padding:16px;">
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap:12px; margin-bottom:14px;">
-            <div style="background:rgba(16,185,129,0.08); border:1.5px solid #10b981; border-radius:14px; padding:12px 14px;">
+          <div style="display:flex; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; gap:12px; margin-bottom:14px; padding-bottom:6px;">
+            <div style="flex:0 0 auto; min-width:210px; background:rgba(16,185,129,0.08); border:1.5px solid #10b981; border-radius:14px; padding:12px 14px;">
               <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; color:#10b981; letter-spacing:0.4px;">
                 <i class="fa-solid fa-wallet"></i> Total Collected (All Places)
               </div>
               <div id="fdTotalAmountDisplay" style="font-size:1.3rem; font-weight:900; color:var(--text-main); margin-top:4px;">₹0</div>
             </div>
-            <div style="background:rgba(14,165,233,0.08); border:1.5px solid #0ea5e9; border-radius:14px; padding:12px 14px;">
+            <div style="flex:0 0 auto; min-width:210px; background:rgba(14,165,233,0.08); border:1.5px solid #0ea5e9; border-radius:14px; padding:12px 14px;">
               <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; color:#0ea5e9; letter-spacing:0.4px;">
                 <i class="fa-solid fa-piggy-bank"></i> Total in Saving / Future FD
               </div>
               <div id="fdTotalSavingFundedDisplay" style="font-size:1.25rem; font-weight:900; color:var(--text-main); margin-top:4px;">₹0</div>
               <div id="fdTotalMaturityValueDisplay" style="font-size:0.7rem; font-weight:700; color:#38bdf8; margin-top:2px;">Maturity Value: ₹0</div>
             </div>
-            <div style="background:rgba(245,158,11,0.08); border:1.5px solid #f59e0b; border-radius:14px; padding:12px 14px;">
+            <div style="flex:0 0 auto; min-width:210px; background:rgba(245,158,11,0.08); border:1.5px solid #f59e0b; border-radius:14px; padding:12px 14px;">
               <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; color:#f59e0b; letter-spacing:0.4px;">
                 <i class="fa-solid fa-screwdriver-wrench"></i> Used for Other Purposes
               </div>
               <div id="fdTotalOtherPurposeDisplay" style="font-size:1.25rem; font-weight:900; color:var(--text-main); margin-top:4px;">₹0</div>
               <div id="fdTotalAllocatedCountDisplay" style="font-size:0.7rem; font-weight:700; color:#f59e0b; margin-top:2px;">0 Portfolio Entries</div>
             </div>
-            <div style="background:rgba(139,92,246,0.08); border:1.5px solid #8b5cf6; border-radius:14px; padding:12px 14px;">
+            <div style="flex:0 0 auto; min-width:210px; background:rgba(139,92,246,0.08); border:1.5px solid #8b5cf6; border-radius:14px; padding:12px 14px;">
               <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; color:#8b5cf6; letter-spacing:0.4px;">
                 <i class="fa-solid fa-scale-balanced"></i> Remaining Unallocated Pool
               </div>
@@ -4698,10 +4722,10 @@
           </div>
 
           <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; color:var(--text-main); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
-            <span><i class="fa-solid fa-building-user" style="color:#6366f1;"></i> Place-Wise Collection, Used Purpose &amp; Remaining Balance (Click any Place to filter portfolio):</span>
+            <span><i class="fa-solid fa-building-user" style="color:#6366f1;"></i> Place-Wise Collection, Used Purpose &amp; Remaining Balance (Scroll Left &harr; Right or Click any Place):</span>
             <button type="button" class="btn-ledger-action" style="padding:4px 12px; font-size:0.7rem; font-weight:800;" onclick="setFdPlaceFilter('ALL')">Show All Places</button>
           </div>
-          <div id="fdPropertyBreakdownBadges" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap:10px; font-size:0.74rem;"></div>
+          <div id="fdPropertyBreakdownBadges" style="display:flex; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; gap:10px; padding-bottom:8px; font-size:0.74rem;"></div>
         </div>
 
         <!-- Portfolio / Saving / Utilization Entry Form -->
@@ -4805,10 +4829,11 @@
             <i class="fa-solid fa-check"></i> <span id="btnSubmitFdRecordText">Save Portfolio &amp; FD Entry to Google Sheet</span>
           </button>
         </div>
+        </div>
       </div>
 
       <!-- TAB 2: FD & PORTFOLIO HISTORY -->
-      <div id="fdTabHistoryContent" style="display:none;">
+      <div id="fdTabHistoryContent" class="manual-horiz-scroll-container" style="display:none; overflow-x:auto; -webkit-overflow-scrolling:touch;">
         <!-- Portfolio Filter & Search Bar -->
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; background:var(--bg-input); padding:10px 14px; border-radius:14px; border:1.5px solid var(--glass-border);">
           <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
@@ -4824,12 +4849,12 @@
           </div>
         </div>
 
-        <div id="fdRecordsList" style="max-height: 440px; overflow-y: auto; display:flex; flex-direction:column; gap:12px;"></div>
+        <div id="fdRecordsList" style="max-height: 440px; overflow-y: auto; overflow-x: auto; display:flex; flex-direction:column; gap:12px;"></div>
       </div>
 
-      <!-- TAB 3 (Feature E3): 5-YEAR COMPOUNDING VS. MONTHLY PAYOUT CASHFLOW PROJECTION -->
-      <div id="fdTabProjectionContent" style="display:none;">
-        <div id="fdCashflowProjectionContainer" style="background:var(--bg-input); border:1.5px solid var(--glass-border); border-radius:16px; padding:16px;"></div>
+      <!-- TAB 3 (Feature E3): 5-YEAR COMPOUNDING VS. MONTHLY PAYOUT CASHFLOW PROJECTION (Manual Horizontal Scroll Left <-> Right) -->
+      <div id="fdTabProjectionContent" class="manual-horiz-scroll-container" style="display:none; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <div id="fdCashflowProjectionContainer" style="min-width:740px; background:var(--bg-input); border:1.5px solid var(--glass-border); border-radius:16px; padding:16px;"></div>
       </div>
     </div>
   </div>
@@ -5134,13 +5159,13 @@
         </button>
       </div>
 
-      <!-- TAB 1: ADD & CALCULATION EXPENSE -->
-      <div id="kharchTabCalcContent" style="display:block;">
-        <!-- Step 1: Auto-Scrolling Right-to-Left Ticker & Utility Calculation Section (Strictly Excluding Rent) -->
+      <!-- TAB 1: ADD & CALCULATION EXPENSE (Manual Left-to-Right Scroll) -->
+      <div id="kharchTabCalcContent" class="manual-horiz-scroll-container" style="display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <!-- Step 1: Manual Left-to-Right Horizontal Scroll Flat Utilities Calculation Section (Strictly Excluding Rent) -->
         <div style="margin-bottom:12px; background:var(--bg-input); border:1.5px solid rgba(245,158,11,0.35); border-radius:14px; padding:12px 14px; overflow:hidden;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
             <div style="font-size:0.74rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:6px;">
-              <i class="fa-solid fa-angles-left" style="color:#f59e0b;"></i> Auto-Scrolling Flat Utilities Calculation (Right &rarr; Left Ticker)
+              <i class="fa-solid fa-arrows-left-right" style="color:#f59e0b;"></i> Flat Utilities Calculation (Manual Left &harr; Right Scroll)
             </div>
             <div style="font-size:0.7rem; font-weight:800; color:#10b981; background:rgba(16,185,129,0.12); padding:3px 10px; border-radius:20px; border:1px solid rgba(16,185,129,0.3); display:flex; align-items:center; gap:5px;">
               <i class="fa-solid fa-lock"></i> Regular Rent Amount Strictly Excluded
@@ -5148,7 +5173,7 @@
           </div>
           <div class="kharch-scroller-track-wrapper">
             <div id="kharchAutoScrollerTrack" class="kharch-auto-scroller-track">
-              <!-- Animated Flat utility cards auto-generated here -->
+              <!-- Manually scrollable flat utility cards generated here -->
             </div>
           </div>
         </div>
@@ -5272,29 +5297,31 @@
         </div>
       </div>
 
-      <!-- TAB 2: EXPENSE HISTORY & RECORDS -->
-      <div id="kharchTabHistoryContent" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; background:var(--bg-input); padding:10px 14px; border-radius:12px; border:1px solid var(--glass-border);">
-          <div style="display:flex; align-items:center; gap:8px; flex:1; flex-wrap:wrap;">
-            <input type="text" id="kharchSearchInput" class="form-control" style="max-width:280px; padding:7px 12px; font-size:0.78rem;" placeholder="Search kharch title, category, place..." oninput="renderKharchRecordsList()">
-            <select id="kharchFilterCategory" class="form-control" style="width:auto; min-width:190px; padding:7px 12px; font-size:0.78rem;" onchange="renderKharchRecordsList()">
-              <option value="ALL">All Categories</option>
-              <option value="Electricity / Water / Bill">Electricity / Water / Bill</option>
-              <option value="Maintenance & Repair">Maintenance &amp; Repair</option>
-              <option value="Construction / Renovation">Construction / Renovation</option>
-              <option value="Khet / Farmland Expense">Khet / Farmland Expense</option>
-              <option value="Tax / Government Fee">Tax / Government Fee</option>
-              <option value="Household / Personal">Household / Personal</option>
-              <option value="Other Kharch">Other Kharch</option>
-            </select>
+      <!-- TAB 2: EXPENSE HISTORY & RECORDS (Manual Horizontal Scroll Left <-> Right) -->
+      <div id="kharchTabHistoryContent" class="manual-horiz-scroll-container" style="display:none; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <div style="min-width: 680px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; background:var(--bg-input); padding:10px 14px; border-radius:12px; border:1px solid var(--glass-border);">
+            <div style="display:flex; align-items:center; gap:8px; flex:1; flex-wrap:wrap;">
+              <input type="text" id="kharchSearchInput" class="form-control" style="max-width:280px; padding:7px 12px; font-size:0.78rem;" placeholder="Search kharch title, category, place..." oninput="renderKharchRecordsList()">
+              <select id="kharchFilterCategory" class="form-control" style="width:auto; min-width:190px; padding:7px 12px; font-size:0.78rem;" onchange="renderKharchRecordsList()">
+                <option value="ALL">All Categories</option>
+                <option value="Electricity / Water / Bill">Electricity / Water / Bill</option>
+                <option value="Maintenance & Repair">Maintenance &amp; Repair</option>
+                <option value="Construction / Renovation">Construction / Renovation</option>
+                <option value="Khet / Farmland Expense">Khet / Farmland Expense</option>
+                <option value="Tax / Government Fee">Tax / Government Fee</option>
+                <option value="Household / Personal">Household / Personal</option>
+                <option value="Other Kharch">Other Kharch</option>
+              </select>
+            </div>
           </div>
+          <div id="kharchRecordsList" style="max-height: 480px; overflow-y: auto; overflow-x: auto; display:flex; flex-direction:column; gap:10px;"></div>
         </div>
-        <div id="kharchRecordsList" style="max-height: 480px; overflow-y: auto; display:flex; flex-direction:column; gap:10px;"></div>
       </div>
 
-      <!-- TAB 3 (Features F1 & F3): PROPERTY-WISE NET PROFIT / ROI STATEMENT & FINANCIAL YEAR (APRIL-MARCH) CA TAX SUMMARY -->
-      <div id="kharchTabRoiContent" style="display:none;">
-        <div id="kharchRoiAndTaxReportContainer" style="display:flex; flex-direction:column; gap:14px;">
+      <!-- TAB 3 (Features F1 & F3): PROPERTY-WISE NET PROFIT / ROI STATEMENT & FINANCIAL YEAR (APRIL-MARCH) CA TAX SUMMARY (Manual Horizontal Scroll Left <-> Right) -->
+      <div id="kharchTabRoiContent" class="manual-horiz-scroll-container" style="display:none; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <div id="kharchRoiAndTaxReportContainer" style="min-width: 720px; display:flex; flex-direction:column; gap:14px;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px; padding:10px 14px;">
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <label for="kharchFyFilterSelect" style="font-size:0.76rem; font-weight:800; color:var(--text-muted); margin:0;"><i class="fa-solid fa-calendar-check" style="color:#10b981;"></i> Financial Year (Apr–Mar):</label>
@@ -5314,8 +5341,8 @@
               </button>
             </div>
           </div>
-          <div id="kharchFyTaxSummaryGrid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(175px, 1fr)); gap:10px;"></div>
-          <div id="kharchPropertyRoiTableContainer"></div>
+          <div id="kharchFyTaxSummaryGrid" style="display:flex; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; gap:10px; padding-bottom:6px;"></div>
+          <div id="kharchPropertyRoiTableContainer" style="overflow-x:auto; -webkit-overflow-scrolling:touch;"></div>
         </div>
       </div>
     </div>
@@ -8170,8 +8197,8 @@
               </div>
             </div>
 
-            <!-- Requirement 3: Second Field / Indicator Right Under Aadhaar Card Photo (New Renter / Returning Renter / Shifted Renter) -->
-            <div id="renterTenureTypeIndicatorBox" style="background:var(--bg-input); border-radius:16px; padding:13px 14px; border:1.5px solid rgba(56, 189, 248, 0.42); box-shadow:0 4px 14px rgba(0,0,0,0.16); text-align:left;">
+            <!-- Requirement 3: Second Field / Indicator Right Under Aadhaar Card Photo (Strictly Admin-Only) -->
+            <div id="renterTenureTypeIndicatorBox" class="admin-only" style="background:var(--bg-input); border-radius:16px; padding:13px 14px; border:1.5px solid rgba(56, 189, 248, 0.42); box-shadow:0 4px 14px rgba(0,0,0,0.16); text-align:left;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
                 <span style="font-size:0.74rem; font-weight:800; text-transform:uppercase; letter-spacing:0.4px; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
                   <i class="fa-solid fa-fingerprint" style="color:#38bdf8;"></i> Aadhaar Renter Status Indicator
@@ -11110,6 +11137,14 @@
       const subEl = document.getElementById("renterTenureStatusSub");
       if (!box || !badgeEl || !titleEl || !subEl) return;
 
+      // Requirement 3: Only visible to Admin; strictly hidden from Renter / Lender / Viewer
+      const isAdminUser = String(activeRole || "").trim().toLowerCase() === "admin";
+      if (!isAdminUser) {
+        box.style.display = "none";
+        return;
+      }
+      box.style.display = "";
+
       const info = resolveRenterTenureStatus(renterObj !== undefined ? renterObj : activeFlatRenterObj, typedAadhaarRaw);
       box.style.borderColor = info.borderColor;
       box.style.background = info.bgGradient;
@@ -12198,57 +12233,57 @@ function formatMonthLabel(rawVal) {
         }
       });
 
-      // Requirement 5: When a user clicks the refresh button on any browser, stay logged in and fetch fresh data
-      const restoredSession = restoreSavedActiveSession();
-      if (restoredSession && restoredSession.username) {
-        activeUser = restoredSession.username;
-        activeRole = restoredSession.role || "Admin";
-        activeUserFullName = restoredSession.fullName || restoredSession.username;
-        activeUserMobile = restoredSession.mobile || "";
-        activeAssignedProperty = restoredSession.assignedProperty || "";
-        activeAssignedFlat = restoredSession.assignedFlat || "";
-        activeAssignedAadhaar = normalizeAadhaar12(restoredSession.assignedAadhaar);
-        activeManagerPermissions = normalizeManagerPermissionsList(restoredSession.managerPermissions || []);
-        activeSessionToken = restoredSession.sessionToken || "";
-        selectedProperty = restoredSession.selectedProperty || null;
+      // Requirement 4: Auto-logout whenever anyone closes the browser tab, closes the entire browser, or opens from Browser History.
+      // Always start locked on the Login Screen and require User ID & Password.
+      try {
+        sessionStorage.clear();
+        localStorage.removeItem("portal_active_auth_session_v1");
+        localStorage.removeItem("active_session_user");
+        localStorage.removeItem("active_session_role");
+        localStorage.removeItem("active_session_token");
+      } catch (e) {}
 
-        // Hydrate DB from last synced Google Sheet cache immediately so refresh has zero blank flash while live sync completes
-        if (lastGasSheetDataCache && typeof lastGasSheetDataCache === "object") {
-          const linkedBoot = linkSheetEntities(lastGasSheetDataCache);
-          DB.properties = Array.isArray(linkedBoot.properties) ? linkedBoot.properties : [];
-          DB.flats = Array.isArray(linkedBoot.flats) ? linkedBoot.flats : [];
-          DB.renters = Array.isArray(linkedBoot.renters) ? linkedBoot.renters : [];
-          DB.bills = sanitizeAllBillsMonths(Array.isArray(linkedBoot.bills) ? linkedBoot.bills : []);
-          DB.users = Array.isArray(lastGasSheetDataCache.users) ? lastGasSheetDataCache.users : loadLocalUsersMaster();
-          DB.fdRecords = Array.isArray(linkedBoot.fdRecords) ? linkedBoot.fdRecords : [];
-          DB.khetRecords = Array.isArray(linkedBoot.khetRecords) ? linkedBoot.khetRecords : [];
-          DB.kharchRecords = Array.isArray(linkedBoot.kharchRecords) ? linkedBoot.kharchRecords : [];
-        }
-
-        applyRolePermissions(activeRole);
-        unlockDashboardInstant(false);
-      } else {
-        selectedProperty = null;
-        forceLockToLoginScreenForHistorySecurity(true);
-        prewarmServerInBackground();
-      }
+      selectedProperty = null;
+      forceLockToLoginScreenForHistorySecurity(true);
+      prewarmServerInBackground();
 
       // Initialize Real-time SSE on page load
       try {
         if (typeof initRealtimeSSE === "function") initRealtimeSSE();
       } catch (e) {}
 
-      // If page is restored from bfcache after logout, keep locked; if logged in, fetch fresh data
+      // Auto-logout immediately when tab is closed, browser is closed, or page is unloaded
+      const clearSessionOnTabOrBrowserClose = () => {
+        try {
+          if (activeUser) {
+            localStorage.removeItem("portal_device_session_" + String(activeUser).trim().toLowerCase());
+          }
+          sessionStorage.clear();
+          localStorage.removeItem("portal_active_auth_session_v1");
+          localStorage.removeItem("active_session_user");
+          localStorage.removeItem("active_session_role");
+          localStorage.removeItem("active_session_token");
+          localStorage.setItem("portal_explicit_logged_out_v1", "1");
+        } catch (e) {}
+      };
+      window.addEventListener("beforeunload", clearSessionOnTabOrBrowserClose);
+      window.addEventListener("pagehide", clearSessionOnTabOrBrowserClose);
+      window.addEventListener("unload", clearSessionOnTabOrBrowserClose);
+
+      // If someone tries to open from Browser History (bfcache or Back/Forward), always force Login screen
       window.addEventListener("pageshow", (event) => {
-        const currentSaved = restoreSavedActiveSession();
-        if (!currentSaved || !currentSaved.username) {
+        if (event.persisted || !activeUser) {
           forceLockToLoginScreenForHistorySecurity(true);
-        } else if (event.persisted && activeUser) {
-          syncDataLive(true);
         }
         try {
           if (typeof initRealtimeSSE === "function") initRealtimeSSE();
         } catch (e) {}
+      });
+
+      window.addEventListener("popstate", () => {
+        if (!activeUser) {
+          forceLockToLoginScreenForHistorySecurity(true);
+        }
       });
     });
 
@@ -12258,78 +12293,21 @@ function formatMonthLabel(rawVal) {
     let hasCompletedInitialSync = false;
 
     function persistActiveAuthSession() {
-      if (!activeUser) return;
+      // Requirement 4: Never persist credentials in sessionStorage or localStorage across tab closes, browser closes, or browser history restores
       try {
-        if (localStorage.getItem(EXPLICIT_LOGOUT_FLAG_KEY) === "1") return;
-        const normalizedPerms = normalizeManagerPermissionsList(activeManagerPermissions);
-        sessionStorage.setItem("active_session_user", activeUser);
-        sessionStorage.setItem("active_session_fullname", activeUserFullName || activeUser);
-        sessionStorage.setItem("active_session_mobile", activeUserMobile || "");
-        sessionStorage.setItem("active_session_role", activeRole || "Admin");
-        sessionStorage.setItem("active_session_assigned_prop", activeAssignedProperty || "");
-        sessionStorage.setItem("active_session_assigned_flat", activeAssignedFlat || "");
-        sessionStorage.setItem("active_session_assigned_aadhaar", activeAssignedAadhaar || "");
-        sessionStorage.setItem("active_session_manager_perms", JSON.stringify(normalizedPerms));
-        sessionStorage.setItem("active_session_token", activeSessionToken || "");
-        // Requirement 2: Never store login credentials/session in localStorage so closing tab or browser window always logs out
+        sessionStorage.clear();
         localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
+        localStorage.removeItem("active_session_user");
+        localStorage.removeItem("active_session_role");
+        localStorage.removeItem("active_session_token");
       } catch (e) {}
     }
 
     function restoreSavedActiveSession() {
+      // Requirement 4: Always require User ID and Password on new tab, reopened history tab, or reopened browser
       try {
-        // Requirement 2: Strictly restore session ONLY from current tab sessionStorage
-        // If tab was closed, window was closed, or reopened from history, sessionStorage is empty -> prompts for credentials
-        if (localStorage.getItem(EXPLICIT_LOGOUT_FLAG_KEY) === "1") {
-          sessionStorage.clear();
-          localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
-          return null;
-        }
+        sessionStorage.clear();
         localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
-
-        const sUser = sessionStorage.getItem("active_session_user");
-        const sToken = sessionStorage.getItem("active_session_token");
-        if (!sUser) {
-          return null;
-        }
-
-        const knownUsers = loadLocalUsersMaster();
-        let blockedList = [];
-        try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
-
-        const cleanName = String(sUser || "").trim().toLowerCase();
-        if (blockedList.includes(cleanName)) {
-          sessionStorage.clear();
-          return null;
-        }
-        if (knownUsers.length > 0) {
-          const found = knownUsers.find(u => String(u.Username || "").trim().toLowerCase() === cleanName);
-          if (!found) {
-            sessionStorage.clear();
-            return null;
-          }
-          if (String(found.Status || found.AccountStatus || "Active").trim().toLowerCase() === "blocked") {
-            sessionStorage.clear();
-            return null;
-          }
-        }
-
-        let sPerms = [];
-        try {
-          sPerms = JSON.parse(sessionStorage.getItem("active_session_manager_perms") || "[]");
-        } catch (e) {}
-        return {
-          username: sUser,
-          fullName: sessionStorage.getItem("active_session_fullname") || sUser,
-          mobile: sessionStorage.getItem("active_session_mobile") || "",
-          role: sessionStorage.getItem("active_session_role") || "Admin",
-          assignedProperty: sessionStorage.getItem("active_session_assigned_prop") || "",
-          assignedFlat: sessionStorage.getItem("active_session_assigned_flat") || "",
-          assignedAadhaar: sessionStorage.getItem("active_session_assigned_aadhaar") || "",
-          managerPermissions: normalizeManagerPermissionsList(sPerms),
-          sessionToken: sToken || "",
-          selectedProperty: sessionStorage.getItem("active_selected_property") || null
-        };
       } catch (e) {}
       return null;
     }
@@ -13277,6 +13255,96 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    function toggleRenterUpiAppsDrawer(ev) {
+      if (ev && typeof ev.stopPropagation === "function") ev.stopPropagation();
+      const drawer = document.getElementById("renterUpiAppsDrawer");
+      const chevron = document.getElementById("renterUpiAppsDrawerChevron");
+      if (!drawer) return;
+      const isHidden = drawer.style.display === "none" || !drawer.style.display;
+      drawer.style.display = isHidden ? "block" : "none";
+      if (chevron) {
+        chevron.style.transform = isHidden ? "rotate(180deg)" : "rotate(0deg)";
+      }
+    }
+
+    function launchMobileUpiApp(appType, upiIdRaw, upiNameRaw, amountRaw, noteRaw) {
+      const cleanUpi = String(upiIdRaw || "").trim();
+      if (!cleanUpi || cleanUpi === "N/A" || cleanUpi === "Not Configured") {
+        triggerSideToast("UPI ID Not Configured", "Property Admin has not configured an official UPI ID yet.", false);
+        return;
+      }
+      const cleanName = String(upiNameRaw && upiNameRaw !== "N/A" ? upiNameRaw : "Property Rent Receiver").trim();
+      const numericAmt = parseFloat(amountRaw) || 0;
+      const cleanNote = String(noteRaw || "Monthly Rent Payment").trim();
+
+      // Copy UPI ID to clipboard automatically as a fallback convenience
+      try {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+          navigator.clipboard.writeText(cleanUpi).catch(() => {});
+        }
+      } catch (e) {}
+
+      const queryParams = new URLSearchParams();
+      queryParams.set("pa", cleanUpi);
+      queryParams.set("pn", cleanName);
+      if (numericAmt > 0) {
+        queryParams.set("am", numericAmt.toFixed(2));
+      }
+      queryParams.set("cu", "INR");
+      queryParams.set("tn", cleanNote);
+      const paramStr = queryParams.toString();
+
+      let targetUri = `upi://pay?${paramStr}`;
+      let appLabel = "Installed UPI App";
+
+      switch (String(appType || "all").toLowerCase()) {
+        case "gpay":
+          targetUri = `tez://upi/pay?${paramStr}`;
+          appLabel = "Google Pay (GPay)";
+          break;
+        case "phonepe":
+          targetUri = `phonepe://pay?${paramStr}`;
+          appLabel = "PhonePe";
+          break;
+        case "paytm":
+          targetUri = `paytmmp://pay?${paramStr}`;
+          appLabel = "Paytm UPI";
+          break;
+        case "bhim":
+          targetUri = `bhim://pay?${paramStr}`;
+          appLabel = "BHIM UPI";
+          break;
+        case "amazonpay":
+          targetUri = `amazonpay://upi/pay?${paramStr}`;
+          appLabel = "Amazon Pay UPI";
+          break;
+        case "cred":
+          targetUri = `credpay://upi/pay?${paramStr}`;
+          appLabel = "CRED UPI";
+          break;
+        default:
+          targetUri = `upi://pay?${paramStr}`;
+          appLabel = "Installed UPI Apps";
+          break;
+      }
+
+      triggerSideToast(
+        `Opening ${appLabel}`,
+        `Pre-filled UPI ID: ${cleanUpi}${numericAmt > 0 ? " • ₹" + numericAmt.toLocaleString("en-IN") : ""}`,
+        true
+      );
+
+      // Trigger mobile deep link / system UPI app chooser
+      const linkEl = document.createElement("a");
+      linkEl.href = targetUri;
+      linkEl.style.display = "none";
+      document.body.appendChild(linkEl);
+      linkEl.click();
+      setTimeout(() => {
+        try { document.body.removeChild(linkEl); } catch (e) {}
+      }, 600);
+    }
+
     function renderAllDashboardUI() {
       const viewerScope = resolveViewerAssignedScope();
       if (String(activeRole || "").trim().toLowerCase() === "renter") {
@@ -13510,51 +13578,121 @@ function formatMonthLabel(rawVal) {
             note: `Rent ${targetProp} Flat ${targetFlat} (${billMonthName})`
           };
 
-          const availableMonthsReceiptsListHtml = myBills.length > 0 ? `
-            <div style="margin-bottom:18px; padding-bottom:14px; border-bottom:1px dashed var(--glass-border);">
-              <div style="font-size:0.75rem; font-weight:800; color:#818cf8; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
-                <span><i class="fa-solid fa-receipt" style="margin-right:6px;"></i>Available Month Receipts (${myBills.length})</span>
-                <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">Click any month to view receipt</span>
+          const buildUpiAppsLauncherHtml = (uId, uName, amtVal, noteText) => {
+            const sUpi = String(uId || "").replace(/'/g, "\\'");
+            const sName = String(uName || "Rent Receiver").replace(/'/g, "\\'");
+            const sAmt = Number(amtVal) || 0;
+            const sNote = String(noteText || "Monthly Rent").replace(/'/g, "\\'");
+            return `
+              <div style="border-top:1px dashed var(--glass-border); padding-top:12px; margin-top:4px;">
+                <button
+                  type="button"
+                  onclick="toggleRenterUpiAppsDrawer(event);"
+                  style="width:100%; padding:11px 14px; border-radius:12px; background:linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(56,189,248,0.16) 100%); border:1.5px solid rgba(16,185,129,0.45); color:var(--text-main); font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;"
+                >
+                  <span style="display:inline-flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-mobile-screen-button" style="color:#10b981; font-size:1rem;"></i>
+                    <span>Pay via Installed Mobile UPI Apps</span>
+                  </span>
+                  <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; color:#34d399; font-weight:800;">
+                    <span>Select App</span>
+                    <i id="renterUpiAppsDrawerChevron" class="fa-solid fa-chevron-down" style="transition:transform 0.2s ease;"></i>
+                  </span>
+                </button>
+
+                <div id="renterUpiAppsDrawer" style="display:none; margin-top:10px; padding:12px; border-radius:12px; background:var(--bg-input); border:1px solid var(--glass-border);">
+                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:9px; display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                    <span><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Choose Installed UPI App (Auto Pre-Fills UPI ID &amp; ₹${sAmt.toLocaleString("en-IN")})</span>
+                  </div>
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; margin-bottom:8px;">
+                    <button type="button" onclick="launchMobileUpiApp('gpay', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(56,189,248,0.35); background:rgba(56,189,248,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                      <i class="fa-brands fa-google-pay" style="font-size:1.1rem; color:#38bdf8;"></i> Google Pay
+                    </button>
+                    <button type="button" onclick="launchMobileUpiApp('phonepe', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(168,85,247,0.35); background:rgba(168,85,247,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                      <i class="fa-solid fa-mobile-retro" style="font-size:0.95rem; color:#a855f7;"></i> PhonePe
+                    </button>
+                    <button type="button" onclick="launchMobileUpiApp('paytm', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(14,165,233,0.35); background:rgba(14,165,233,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                      <i class="fa-solid fa-wallet" style="font-size:0.95rem; color:#0ea5e9;"></i> Paytm UPI
+                    </button>
+                    <button type="button" onclick="launchMobileUpiApp('bhim', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(245,158,11,0.35); background:rgba(245,158,11,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                      <i class="fa-solid fa-indian-rupee-sign" style="font-size:0.95rem; color:#f59e0b;"></i> BHIM UPI
+                    </button>
+                    <button type="button" onclick="launchMobileUpiApp('amazonpay', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(234,179,8,0.35); background:rgba(234,179,8,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                      <i class="fa-brands fa-amazon-pay" style="font-size:1.05rem; color:#eab308;"></i> Amazon Pay
+                    </button>
+                    <button type="button" onclick="launchMobileUpiApp('cred', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(16,185,129,0.35); background:rgba(16,185,129,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                      <i class="fa-solid fa-shield-halved" style="font-size:0.95rem; color:#10b981;"></i> CRED UPI
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onclick="launchMobileUpiApp('all', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')"
+                    style="width:100%; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.78rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;"
+                  >
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Open System Chooser (All Installed UPI Apps)
+                  </button>
+                </div>
               </div>
-              <div style="display:flex; flex-direction:column; gap:8px;">
-                ${myBills.map(bItem => {
-                  const mMetrics = computeCurrentMonthStandaloneAdvanceAndDue(bItem);
-                  const isSettled = mMetrics.dueAmt <= 0;
-                  const itemBillId = String(bItem.BillID || "").replace(/'/g, "\\'");
-                  const itemMonthYear = String(bItem.MonthYear || "").replace(/'/g, "\\'");
-                  const isSelectedMonth = String(bItem.BillID || "") === String(currentMonthBill.BillID || "") && String(bItem.MonthYear || "") === String(currentMonthBill.MonthYear || "");
-                  return `
-                    <div
-                      class="renter-history-row-item"
-                      style="${isSelectedMonth ? "border-color:#6366f1; background:rgba(99,102,241,0.12);" : ""}"
-                      onclick="selectRenterHomeAvailableReceipt('${itemBillId}', '${itemMonthYear}'); openBillReceiptModal('${itemBillId}', '${itemMonthYear}');"
-                      title="Click to view receipt for ${mMetrics.monthLabel}"
-                    >
-                      <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:34px; height:34px; border-radius:9px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.88rem; flex-shrink:0;">
-                          <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
+            `;
+          };
+
+          const separateAadhaarLinkedReceiptsBoxHtml = `
+            <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+                <div>
+                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
+                    <i class="fa-solid fa-id-card" style="margin-right:5px;"></i> Aadhaar-Linked Receipts (${myBills.length})
+                  </div>
+                  <h4 style="margin:3px 0 0 0; font-size:1.02rem; font-weight:900; color:var(--text-main);">
+                    All Receipts Linked to Your Aadhaar Card
+                  </h4>
+                </div>
+                <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">Click any receipt to open</span>
+              </div>
+              ${myBills.length > 0 ? `
+                <div style="display:flex; flex-direction:column; gap:9px; max-height:340px; overflow-y:auto; padding-right:2px;">
+                  ${myBills.map((bItem, idx) => {
+                    const mMetrics = computeCurrentMonthStandaloneAdvanceAndDue(bItem);
+                    const isSettled = mMetrics.dueAmt <= 0;
+                    const itemBillId = String(bItem.BillID || "").replace(/'/g, "\\'");
+                    const itemMonthYear = String(bItem.MonthYear || "").replace(/'/g, "\\'");
+                    const isSelectedMonth = currentMonthBill && String(bItem.BillID || "") === String(currentMonthBill.BillID || "") && String(bItem.MonthYear || "") === String(currentMonthBill.MonthYear || "");
+                    return `
+                      <div
+                        class="renter-history-row-item"
+                        style="${isSelectedMonth ? "border-color:#6366f1; background:rgba(99,102,241,0.12);" : ""}"
+                        onclick="selectRenterHomeAvailableReceipt('${itemBillId}', '${itemMonthYear}'); openBillReceiptModal('${itemBillId}', '${itemMonthYear}');"
+                        title="Click to view receipt for ${mMetrics.monthLabel}"
+                      >
+                        <div style="display:flex; align-items:center; gap:10px;">
+                          <div style="width:34px; height:34px; border-radius:9px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.88rem; flex-shrink:0;">
+                            <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
+                          </div>
+                          <div>
+                            <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">#${idx + 1} • ${mMetrics.monthLabel} Receipt</div>
+                            <div style="font-size:0.71rem; color:var(--text-muted);">Flat ${bItem.FlatName || targetFlat} (${bItem.PropertyName || targetProp}) • Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
+                          </div>
                         </div>
-                        <div>
-                          <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">${mMetrics.monthLabel} Receipt</div>
-                          <div style="font-size:0.71rem; color:var(--text-muted);">Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                          <span style="font-size:0.71rem; font-weight:800; padding:4px 9px; border-radius:999px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; border:1px solid ${isSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
+                            ${mMetrics.advanceAmt > 0 ? `Adv ₹${mMetrics.advanceAmt.toLocaleString("en-IN")}` : (isSettled ? "Settled" : `Due ₹${mMetrics.dueAmt.toLocaleString("en-IN")}`)}
+                          </span>
+                          <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:var(--text-muted);"></i>
                         </div>
                       </div>
-                      <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:0.71rem; font-weight:800; padding:4px 9px; border-radius:999px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; border:1px solid ${isSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
-                          ${mMetrics.advanceAmt > 0 ? `Adv ₹${mMetrics.advanceAmt.toLocaleString("en-IN")}` : (isSettled ? "Settled" : `Due ₹${mMetrics.dueAmt.toLocaleString("en-IN")}`)}
-                        </span>
-                        <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:var(--text-muted);"></i>
-                      </div>
-                    </div>
-                  `;
-                }).join("")}
-              </div>
+                    `;
+                  }).join("")}
+                </div>
+              ` : `
+                <div style="text-align:center; padding:18px 12px; color:var(--text-muted); font-size:0.8rem; border:1px dashed var(--glass-border); border-radius:12px;">
+                  No receipts linked to your Aadhaar card have been generated yet.
+                </div>
+              `}
             </div>
-          ` : "";
+          `;
 
           statementLeftHtml = `
             <div class="renter-statement-card">
-              ${availableMonthsReceiptsListHtml}
               <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; padding-bottom:18px; margin-bottom:18px; border-bottom:1px solid var(--glass-border);">
                 <div>
                   <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#38bdf8; margin-bottom:5px;">
@@ -13706,10 +13844,10 @@ function formatMonthLabel(rawVal) {
             </div>
           `;
 
-          // Right side: ONLY Instant UPI Payment Hub
+          // Right side: Box 1 = Instant UPI Payment Hub (+ UPI Apps Selector), Box 2 = Separate Box for All Aadhaar-Linked Receipts
           paymentRightHtml = `
             <div style="display:flex; flex-direction:column; gap:18px;">
-              <!-- Instant UPI QR Payment Hub -->
+              <!-- Box 1: Instant UPI QR Payment Hub -->
               <div class="renter-payment-card">
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;">
                   <div>
@@ -13725,7 +13863,7 @@ function formatMonthLabel(rawVal) {
                   </span>
                 </div>
 
-                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:12px;">
                   <div
                     style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
                   >
@@ -13750,7 +13888,12 @@ function formatMonthLabel(rawVal) {
                     </div>
                   </div>
                 </div>
+
+                ${buildUpiAppsLauncherHtml(upiId, upiName, payableAmt, qrRenderData.note)}
               </div>
+
+              <!-- Box 2: Separate Box Below Instant UPI Payment Section for All Aadhaar-Linked Receipts -->
+              ${separateAadhaarLinkedReceiptsBoxHtml}
             </div>
           `;
         } else {
@@ -13766,6 +13909,10 @@ function formatMonthLabel(rawVal) {
             amount: baseRentConfigured,
             note: `Rent ${targetProp} Flat ${targetFlat} (${activeMonthLabel})`
           };
+
+          const sFallbackName = String(fallbackUpiName || "Rent Receiver").replace(/'/g, "\\'");
+          const sFallbackNote = String(qrRenderData.note || "Monthly Rent").replace(/'/g, "\\'");
+          const sFallbackAmt = Number(baseRentConfigured) || 0;
 
           statementLeftHtml = `
             <div class="renter-statement-card" style="display:flex; flex-direction:column; justify-content:space-between;">
@@ -13814,43 +13961,107 @@ function formatMonthLabel(rawVal) {
           `;
 
           paymentRightHtml = `
-            <div class="renter-payment-card" style="display:flex; flex-direction:column; justify-content:space-between; gap:16px;">
-              <div>
-                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;">
-                  <div>
-                    <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
-                      <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
+            <div style="display:flex; flex-direction:column; gap:18px;">
+              <!-- Box 1: Instant UPI Payment Hub -->
+              <div class="renter-payment-card" style="display:flex; flex-direction:column; justify-content:space-between; gap:14px;">
+                <div>
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;">
+                    <div>
+                      <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
+                        <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
+                      </div>
+                      <h4 style="margin:3px 0 0 0; font-size:1.08rem; font-weight:900; color:var(--text-main);">
+                        Instant UPI Payment (${activeMonthLabel})
+                      </h4>
                     </div>
-                    <h4 style="margin:3px 0 0 0; font-size:1.08rem; font-weight:900; color:var(--text-main);">
-                      Instant UPI Payment (${activeMonthLabel})
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:12px;">
+                    <div
+                      style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
+                    >
+                      <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
+                    </div>
+                    <div style="flex:1; min-width:165px;">
+                      <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
+                      <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${fallbackUpiName || "N/A"}</div>
+                      <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
+                      <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${fallbackUpiId || "N/A"}</span>
+                        ${fallbackUpiId ? `
+                          <button
+                            type="button"
+                            onclick="event.stopPropagation(); copyRenterHomeUpiId('${safeFallbackUpiIdArg}');"
+                            style="background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.35); color:#818cf8; border-radius:6px; padding:2px 7px; font-size:0.68rem; font-weight:800; cursor:pointer;"
+                            title="Copy UPI ID"
+                          >
+                            <i class="fa-regular fa-copy"></i> Copy
+                          </button>
+                        ` : ""}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="border-top:1px dashed var(--glass-border); padding-top:12px; margin-top:4px;">
+                    <button
+                      type="button"
+                      onclick="toggleRenterUpiAppsDrawer(event);"
+                      style="width:100%; padding:11px 14px; border-radius:12px; background:linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(56,189,248,0.16) 100%); border:1.5px solid rgba(16,185,129,0.45); color:var(--text-main); font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px;"
+                    >
+                      <span style="display:inline-flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-mobile-screen-button" style="color:#10b981; font-size:1rem;"></i>
+                        <span>Pay via Installed Mobile UPI Apps</span>
+                      </span>
+                      <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; color:#34d399; font-weight:800;">
+                        <span>Select App</span>
+                        <i id="renterUpiAppsDrawerChevron" class="fa-solid fa-chevron-down" style="transition:transform 0.2s ease;"></i>
+                      </span>
+                    </button>
+
+                    <div id="renterUpiAppsDrawer" style="display:none; margin-top:10px; padding:12px; border-radius:12px; background:var(--bg-input); border:1px solid var(--glass-border);">
+                      <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:9px;">
+                        <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Choose Installed UPI App (Auto Pre-Fills UPI ID)
+                      </div>
+                      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; margin-bottom:8px;">
+                        <button type="button" onclick="launchMobileUpiApp('gpay', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(56,189,248,0.35); background:rgba(56,189,248,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                          <i class="fa-brands fa-google-pay" style="font-size:1.1rem; color:#38bdf8;"></i> Google Pay
+                        </button>
+                        <button type="button" onclick="launchMobileUpiApp('phonepe', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(168,85,247,0.35); background:rgba(168,85,247,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                          <i class="fa-solid fa-mobile-retro" style="font-size:0.95rem; color:#a855f7;"></i> PhonePe
+                        </button>
+                        <button type="button" onclick="launchMobileUpiApp('paytm', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(14,165,233,0.35); background:rgba(14,165,233,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                          <i class="fa-solid fa-wallet" style="font-size:0.95rem; color:#0ea5e9;"></i> Paytm UPI
+                        </button>
+                        <button type="button" onclick="launchMobileUpiApp('bhim', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(245,158,11,0.35); background:rgba(245,158,11,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
+                          <i class="fa-solid fa-indian-rupee-sign" style="font-size:0.95rem; color:#f59e0b;"></i> BHIM UPI
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        onclick="launchMobileUpiApp('all', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')"
+                        style="width:100%; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.78rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;"
+                      >
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open System Chooser (All Installed UPI Apps)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Box 2: Separate Box Below Instant UPI Payment Section for All Aadhaar-Linked Receipts -->
+              <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+                  <div>
+                    <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
+                      <i class="fa-solid fa-id-card" style="margin-right:5px;"></i> Aadhaar-Linked Receipts (0)
+                    </div>
+                    <h4 style="margin:3px 0 0 0; font-size:1.02rem; font-weight:900; color:var(--text-main);">
+                      All Receipts Linked to Your Aadhaar Card
                     </h4>
                   </div>
                 </div>
-
-                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:14px;">
-                  <div
-                    style="background:#ffffff; width:144px; height:144px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;"
-                  >
-                    <canvas id="renterHomeInlineQrCanvas" width="128" height="128" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
-                  </div>
-                  <div style="flex:1; min-width:165px;">
-                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
-                    <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${fallbackUpiName || "N/A"}</div>
-                    <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
-                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                      <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${fallbackUpiId || "N/A"}</span>
-                      ${fallbackUpiId ? `
-                        <button
-                          type="button"
-                          onclick="event.stopPropagation(); copyRenterHomeUpiId('${safeFallbackUpiIdArg}');"
-                          style="background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.35); color:#818cf8; border-radius:6px; padding:2px 7px; font-size:0.68rem; font-weight:800; cursor:pointer;"
-                          title="Copy UPI ID"
-                        >
-                          <i class="fa-regular fa-copy"></i> Copy
-                        </button>
-                      ` : ""}
-                    </div>
-                  </div>
+                <div style="text-align:center; padding:18px 12px; color:var(--text-muted); font-size:0.8rem; border:1px dashed var(--glass-border); border-radius:12px;">
+                  No receipts linked to your Aadhaar card have been generated yet.
                 </div>
               </div>
             </div>
@@ -18605,7 +18816,7 @@ function formatMonthLabel(rawVal) {
             const safeP = String(pName).replace(/'/g, "\\'");
             const isSelected = typeof activeFdPlaceFilter !== "undefined" && activeFdPlaceFilter === pName;
             return `
-              <div onclick="setFdPlaceFilter('${safeP}')" style="cursor:pointer; background:var(--bg-input); padding:11px 13px; border-radius:12px; border:${isSelected ? '2px solid #6366f1' : '1.5px solid var(--glass-border)'}; transition:0.2s;">
+              <div onclick="setFdPlaceFilter('${safeP}')" style="flex:0 0 auto; min-width:255px; cursor:pointer; background:var(--bg-input); padding:11px 13px; border-radius:12px; border:${isSelected ? '2px solid #6366f1' : '1.5px solid var(--glass-border)'}; transition:0.2s;">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:6px;">
                   <strong style="color:var(--text-main); font-size:0.82rem;"><i class="fa-solid fa-building" style="color:#6366f1;"></i> ${pName}</strong>
                   <span style="font-size:0.68rem; background:rgba(16,185,129,0.12); color:#10b981; border:1px solid #10b981; padding:2px 8px; border-radius:10px; font-weight:800;">Collected: ₹${collected.toLocaleString('en-IN')}</span>
@@ -23149,26 +23360,26 @@ function formatMonthLabel(rawVal) {
       }).join("");
 
       container.innerHTML =
-        '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px; margin-bottom:12px;">' +
-          '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
+        '<div style="display:flex; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; gap:10px; margin-bottom:12px; padding-bottom:6px;">' +
+          '<div style="flex:0 0 auto; min-width:205px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
             '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Active FD Principal</div>' +
             '<div style="font-size:1.08rem; font-weight:900; color:#0ea5e9;">₹' + totalPrincipal.toLocaleString("en-IN") + '</div>' +
           '</div>' +
-          '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
+          '<div style="flex:0 0 auto; min-width:205px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
             '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Est. Annual Passive Interest</div>' +
             '<div style="font-size:1.08rem; font-weight:900; color:#10b981;">₹' + totalAnnualInterest.toLocaleString("en-IN") + '/yr</div>' +
           '</div>' +
-          '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
+          '<div style="flex:0 0 auto; min-width:205px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
             '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Monthly Passive Equivalent</div>' +
             '<div style="font-size:1.08rem; font-weight:900; color:#f59e0b;">₹' + Math.round(totalAnnualInterest / 12).toLocaleString("en-IN") + '/mo</div>' +
           '</div>' +
-          '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
+          '<div style="flex:0 0 auto; min-width:205px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
             '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Est. Annual TDS Deductible</div>' +
             '<div style="font-size:1.08rem; font-weight:900; color:' + (totalTdsAnnual > 0 ? '#ef4444' : '#10b981') + ';">₹' + totalTdsAnnual.toLocaleString("en-IN") + '</div>' +
           '</div>' +
         '</div>' +
-        '<div style="overflow-x:auto; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
-          '<table style="width:100%; border-collapse:collapse; min-width:620px; text-align:left;">' +
+        '<div style="overflow-x:auto; -webkit-overflow-scrolling:touch; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px;">' +
+          '<table style="width:100%; border-collapse:collapse; min-width:740px; text-align:left;">' +
             '<thead>' +
               '<tr style="background:rgba(168,85,247,0.14); color:#c084fc; font-size:0.7rem; text-transform:uppercase;">' +
                 '<th style="padding:9px 10px;">Projection Horizon</th>' +
@@ -23837,32 +24048,32 @@ function formatMonthLabel(rawVal) {
       const netTaxableHouseProperty = Math.max(0, Math.round(totalRentBilled - stdDeduction30Pct - totalKharchSpent));
 
       taxGrid.innerHTML =
-        '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
+        '<div style="flex:0 0 auto; min-width:210px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
           '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800;">1. Gross Annual Rent (GAV)</div>' +
           '<div style="font-size:1rem; font-weight:900; color:#0ea5e9;">₹' + Math.round(totalRentBilled).toLocaleString("en-IN") + '</div>' +
           '<div style="font-size:0.66rem; color:var(--text-muted);">Sec 24(a) 30% Std Deduction: -₹' + stdDeduction30Pct.toLocaleString("en-IN") + '</div>' +
         '</div>' +
-        '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
+        '<div style="flex:0 0 auto; min-width:210px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
           '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800;">2. Utility Reimbursements</div>' +
           '<div style="font-size:1rem; font-weight:900; color:#f59e0b;">₹' + Math.round(totalUtilityBilled).toLocaleString("en-IN") + '</div>' +
           '<div style="font-size:0.66rem; color:var(--text-muted);">Pass-through Elec / PNG / Water</div>' +
         '</div>' +
-        '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
+        '<div style="flex:0 0 auto; min-width:210px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
           '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800;">3. Deductible Maintenance (Kharch)</div>' +
           '<div style="font-size:1rem; font-weight:900; color:#ef4444;">-₹' + Math.round(totalKharchSpent).toLocaleString("en-IN") + '</div>' +
           '<div style="font-size:0.66rem; color:var(--text-muted);">' + kharchInFy.length + ' Recorded Voucher(s)</div>' +
         '</div>' +
-        '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
+        '<div style="flex:0 0 auto; min-width:210px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
           '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800;">4. Net House Property Income</div>' +
           '<div style="font-size:1rem; font-weight:900; color:#10b981;">₹' + netTaxableHouseProperty.toLocaleString("en-IN") + '</div>' +
           '<div style="font-size:0.66rem; color:var(--text-muted);">Est. Net Taxable Rental Head</div>' +
         '</div>' +
-        '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
+        '<div style="flex:0 0 auto; min-width:210px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
           '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800;">5. Agricultural Income (Khet)</div>' +
           '<div style="font-size:1rem; font-weight:900; color:#34d399;">₹' + Math.round(khetAgriIncome).toLocaleString("en-IN") + '</div>' +
           '<div style="font-size:0.66rem; color:var(--text-muted);">Exempt u/s 10(1) of IT Act</div>' +
         '</div>' +
-        '<div style="padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
+        '<div style="flex:0 0 auto; min-width:210px; padding:10px 12px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px;">' +
           '<div style="font-size:0.68rem; color:var(--text-muted); font-weight:800;">6. FD Interest &amp; Est. TDS</div>' +
           '<div style="font-size:1rem; font-weight:900; color:#a855f7;">₹' + Math.round(fdInterestTotal).toLocaleString("en-IN") + '</div>' +
           '<div style="font-size:0.66rem; color:var(--text-muted);">Est. TDS (26AS): ₹' + Math.round(fdTdsTotal).toLocaleString("en-IN") + '</div>' +
@@ -24113,8 +24324,8 @@ function formatMonthLabel(rawVal) {
         if (cards.length === 0) {
           track.innerHTML = '<div style="padding:14px; color:var(--text-muted); font-size:0.8rem; text-align:center;">No flats recorded for this property.</div>';
         } else {
-          // Duplicate items once to create continuous infinite loop
-          track.innerHTML = cards.join("") + cards.join("");
+          // Requirement 5: Manual horizontal left-to-right scroll (no auto-scroll duplication)
+          track.innerHTML = cards.join("");
         }
       }
     }
