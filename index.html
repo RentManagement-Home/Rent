@@ -8917,7 +8917,7 @@
                 }).catch(function() {});
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
-              const withinRecentLoginGrace = (Date.now() - lastLoginCompletedAt) < 4500;
+              const withinRecentLoginGrace = (Date.now() - lastLoginCompletedAt) < 15000;
               let detectedRemoteConflict = Boolean(json.sessionConflict);
 
               remoteUsers = remoteUsers.map(function(u) {
@@ -8927,9 +8927,11 @@
                 if (activeUser && activeSessionToken && String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase()) {
                   const localTs = extractSessionTokenTimestamp(activeSessionToken);
                   const sheetTs = extractSessionTokenTimestamp(resolvedTok);
-                  if (withinRecentLoginGrace && localTs > sheetTs) {
+                  if (localTs > 0 && sheetTs > 0 && localTs > sheetTs) {
                     resolvedTok = activeSessionToken;
-                  } else if (resolvedTok && resolvedTok !== String(activeSessionToken).trim() && (sheetTs === 0 || localTs === 0 || sheetTs >= localTs)) {
+                  } else if (withinRecentLoginGrace && (sheetTs === 0 || localTs >= sheetTs)) {
+                    resolvedTok = activeSessionToken;
+                  } else if (resolvedTok && resolvedTok !== String(activeSessionToken).trim() && (sheetTs === 0 || localTs === 0 || sheetTs > localTs)) {
                     detectedRemoteConflict = true;
                   }
                 }
@@ -9006,6 +9008,8 @@
         } finally {
           inFlightGasFetchPromise = null;
         }
+        const mirrorFallback = await fetchFastMirrorInitialData();
+        if (mirrorFallback) return mirrorFallback;
         return lastGasSheetDataCache || {
           properties: DB.properties || [],
           flats: DB.flats || [],
@@ -9313,6 +9317,24 @@
       };
     }
 
+    async function fetchFastMirrorInitialData() {
+      try {
+        const res = await Promise.race([
+          fetch("/api/gas-engine", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "getInitialData" })
+          }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }),
+          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 1500); })
+        ]);
+        if (res && res.status === "success" && Array.isArray(res.users) && res.users.length > 0) {
+          saveLocalUsersMaster(res.users);
+          return res;
+        }
+      } catch (e) {}
+      return null;
+    }
+
     async function portalLogin(username, password, sessionToken) {
       const cleanUser = String(username || "").trim();
       const cleanPass = String(password || "").trim();
@@ -9321,16 +9343,63 @@
         return { status: "error", message: "Username and password are required." };
       }
 
-      // STEP 1: Always fetch the live Google Sheet first (bypassing any local cache)
-      // If the Google Sheet Users tab was manually emptied, fetchGasSheetData(true, true)
-      // automatically triggers Google Apps Script to generate the first Admin user.
-      const liveSheetData = await fetchGasSheetData(true, true);
-      const liveUsers = Array.isArray(liveSheetData?.users) ? liveSheetData.users : [];
+      // STEP 1: Fetch Google Sheet data.
+      // Start live GAS fetch AND fast mirror check in parallel so slow Apps Script cold starts (20-40s) never cause Login to time out!
+      const liveGasPromise = fetchGasSheetData(true, true);
+      const mirrorSnapshot = await fetchFastMirrorInitialData();
+
+      const hasFallbackUsers =
+        (mirrorSnapshot && Array.isArray(mirrorSnapshot.users) && mirrorSnapshot.users.length > 0) ||
+        (lastGasSheetDataCache && Array.isArray(lastGasSheetDataCache.users) && lastGasSheetDataCache.users.length > 0) ||
+        (getKnownUsersList().length > 0);
+
+      let liveSheetData = null;
+      if (hasFallbackUsers) {
+        const isRecentlyVerified = lastGasSheetDataCache && (Date.now() - lastGasFetchTimestamp) < 10000 && !gasCacheNeedsRefresh;
+        const maxGasWaitMs = isRecentlyVerified ? 250 : 1800;
+        liveSheetData = await Promise.race([
+          liveGasPromise,
+          new Promise(function(resolve) {
+            setTimeout(function() {
+              resolve(mirrorSnapshot || lastGasSheetDataCache || {
+                properties: DB.properties || [],
+                flats: DB.flats || [],
+                renters: DB.renters || [],
+                bills: DB.bills || [],
+                fdRecords: DB.fdRecords || [],
+                khetRecords: DB.khetRecords || [],
+                kharchRecords: DB.kharchRecords || [],
+                users: getKnownUsersList(),
+                loginHistory: loadLocalLoginHistoryMaster(),
+                globalConfig: loadLocalGlobalConfigMaster()
+              });
+            }, maxGasWaitMs);
+          })
+        ]);
+      } else {
+        liveSheetData = await liveGasPromise;
+      }
+
+      let liveUsers = Array.isArray(liveSheetData?.users) ? liveSheetData.users : [];
 
       // STEP 2: Verify the user exists in the live Google Sheet
-      const liveMatch = liveUsers.find(function(u) {
+      let liveMatch = liveUsers.find(function(u) {
         return String(u.Username || "").trim().toLowerCase() === cleanUKey;
       });
+
+      if (!liveMatch && hasFallbackUsers) {
+        const freshGasData = await Promise.race([
+          liveGasPromise,
+          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 6000); })
+        ]);
+        if (freshGasData && Array.isArray(freshGasData.users)) {
+          liveSheetData = freshGasData;
+          liveUsers = freshGasData.users;
+          liveMatch = liveUsers.find(function(u) {
+            return String(u.Username || "").trim().toLowerCase() === cleanUKey;
+          });
+        }
+      }
 
       if (!liveMatch) {
         // User does NOT exist in the live Google Sheet -> purge any stale browser cache and deny access immediately!
@@ -9475,33 +9544,30 @@
       };
       const bodyStr = JSON.stringify(loginPayloadObj);
 
-      await Promise.all([
-        Promise.race([
-          fetch("/api/gas-engine", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: bodyStr
-          }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
-            if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
-              saveLocalLoginHistoryMaster(engineRes.loginHistory);
-            }
-          }).catch(function() {}),
-          new Promise(function(resolve) { setTimeout(resolve, 1200); })
-        ]),
-        Promise.race([
-          fetch(GAS_WEB_APP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: bodyStr,
-            redirect: "follow"
-          }).then(function(r) { return r.ok ? r.json() : null; }).then(function(gasRes) {
-            if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
-              saveLocalLoginHistoryMaster(gasRes.loginHistory);
-            }
-          }).catch(function() {}),
-          new Promise(function(resolve) { setTimeout(resolve, 2500); })
-        ])
+      await Promise.race([
+        fetch("/api/gas-engine", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: bodyStr
+        }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
+          if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
+            saveLocalLoginHistoryMaster(engineRes.loginHistory);
+          }
+        }).catch(function() {}),
+        new Promise(function(resolve) { setTimeout(resolve, 800); })
       ]);
+
+      // Non-blocking background sync to Google Apps Script so login completes immediately
+      fetch(GAS_WEB_APP_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: bodyStr,
+        redirect: "follow"
+      }).then(function(r) { return r.ok ? r.json() : null; }).then(function(gasRes) {
+        if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
+          saveLocalLoginHistoryMaster(gasRes.loginHistory);
+        }
+      }).catch(function() {});
 
       return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, liveSheetData);
     }
@@ -14850,8 +14916,8 @@ function formatMonthLabel(rawVal) {
       }
 
       try {
-        // Refresh from live Google Sheet in background so deleted users are immediately pruned
-        fetchGasSheetData(true).catch(() => {});
+        // Refresh from live Google Sheet in background without forcing redundant requests on every keystroke
+        fetchGasSheetData(false).catch(() => {});
 
         const res = await fetch("/api/gas-engine", {
           method: "POST",
@@ -15016,7 +15082,7 @@ function formatMonthLabel(rawVal) {
         try {
           const loginPromise = firebaseLogin(user, pass, newSessionToken);
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Server connection timed out")), 35000)
+            setTimeout(() => reject(new Error("Server connection timed out")), 60000)
           );
           res = await Promise.race([loginPromise, timeoutPromise]);
         } catch (netErr) {
@@ -21826,7 +21892,7 @@ function formatMonthLabel(rawVal) {
       mCtx.font = "600 11px 'Plus Jakarta Sans', Arial, sans-serif";
       const disclaimerLines = wrapCanvasTextLines(
         mCtx,
-        "This receipt is for personal use only and is not valid for government or official purposes.",
+        "This receipt is generated by AI for personal use only, not for official or government use.",
         contentW - 24
       );
       const disclaimerBoxH = Math.max(40, 16 + disclaimerLines.length * 16);
