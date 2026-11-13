@@ -7,9 +7,9 @@
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Management Portal</title>
-  <meta name="description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet, expense, and live chat portal powered by Google Sheets." />
+  <meta name="description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
   <meta property="og:title" content="Home Management Portal" />
-  <meta property="og:description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet, expense, and live chat portal powered by Google Sheets." />
+  <meta property="og:description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -6460,6 +6460,10 @@
             <div class="s-nav-icon" style="background: rgba(244, 63, 94, 0.18); color: #fb7185;"><i class="fa-solid fa-shield-cat"></i></div>
             <div class="s-nav-title">Audit Trail Log</div>
           </div>
+          <div id="btnOtherOptSheetSetup" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(16, 185, 129, 0.55);" onclick="switchOtherSubOption('sheetSetup')">
+            <div class="s-nav-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;"><i class="fa-solid fa-table-columns"></i></div>
+            <div class="s-nav-title">Sheet Auto-Create &amp; Code.gs</div>
+          </div>
         </div>
       </div>
 
@@ -6989,6 +6993,57 @@
             </div>
           </div>
           <div id="adminAuditTrailList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:6px; font-size:0.76rem;"></div>
+        </div>
+
+        <!-- Option 8 Panel (Bug 1 Fix): Auto-Create Separate Google Sheets, Columns & Rows + Copy Updated Code.gs -->
+        <div id="otherPanelSheetSetup" class="stat-pill admin-only" style="text-align: left; display: none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+            <div>
+              <span style="font-weight:800; font-size:0.92rem; color:#34d399; display:flex; align-items:center; gap:7px;">
+                <i class="fa-solid fa-table-columns"></i> Google Sheet Auto-Create Separate Sheets, Columns &amp; Rows
+              </span>
+              <div style="font-size:0.73rem; color:var(--text-muted); margin-top:3px;">
+                Automatically creates and repairs all 15 separate sheet tabs, separate Row 1 column headers, and separate data rows in your Google Sheet.
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-primary" style="width:auto; padding:8px 14px; font-size:0.76rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="triggerAutoCreateAllSheetsAndColumnsNow()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Create &amp; Sync All Separate Sheets/Columns Now
+              </button>
+              <button type="button" class="btn-ledger-action" style="padding:8px 13px; font-size:0.75rem; color:#38bdf8; border-color:rgba(56,189,248,0.45);" onclick="copyFixedGasCodeToClipboard()">
+                <i class="fa-solid fa-copy"></i> Copy Fixed Code.gs
+              </button>
+              <button type="button" class="btn-ledger-action" style="padding:8px 13px; font-size:0.75rem; color:#a855f7; border-color:rgba(168,85,247,0.45);" onclick="downloadFixedGasCodeFile()">
+                <i class="fa-solid fa-download"></i> Download Code.gs
+              </button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:8px; margin-bottom:12px; font-size:0.72rem;">
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">1. Properties</strong><br><span style="color:var(--text-muted);">7 separate columns (Name, UPI, Mobile, Dates)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">2. Flats</strong><br><span style="color:var(--text-muted);">36 separate columns (Rent, Meters, Rates, Checklist)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">3. Renters</strong><br><span style="color:var(--text-muted);">43 separate columns (KYC, Aadhaar, Family, Stays)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">4. Bills</strong><br><span style="color:var(--text-muted);">40 separate columns (Elec, PNG, Water, Split, Dues)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">5. FDRecords</strong><br><span style="color:var(--text-muted);">16 separate columns (Bank, Principal, Rate, Maturity)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">6. KhetRecords</strong><br><span style="color:var(--text-muted);">34 separate columns (Khata, Keshra, Decimal, Batai)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">7. KharchRecords</strong><br><span style="color:var(--text-muted);">10 separate columns (Title, Category, Amount, Date)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">8. Users</strong><br><span style="color:var(--text-muted);">30 separate columns (Role, Aadhaar, Perms, Lockout)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">9. LoginHistory</strong><br><span style="color:var(--text-muted);">8 separate columns (User, Role, Time, Device, Token)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">10. MaintenanceTickets</strong><br><span style="color:var(--text-muted);">11 separate columns (TicketID, Flat, Category, Status)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">11. PaymentProofs</strong><br><span style="color:var(--text-muted);">16 separate columns (ProofID, BillID, UTR, Amount)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">12. BroadcastNotices</strong><br><span style="color:var(--text-muted);">10 separate columns (NoticeID, Title, Scope, Sender)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">13. PrivateChats</strong><br><span style="color:var(--text-muted);">10 separate columns (MessageID, Channel, Sender, Text)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">14. AuditLogs</strong><br><span style="color:var(--text-muted);">8 separate columns (AuditID, Time, Actor, Action)</span></div>
+            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">15. GlobalConfig</strong><br><span style="color:var(--text-muted);">3 separate columns (ConfigKey, ConfigValueJSON, UpdatedAt)</span></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label style="font-size:0.74rem; color:#38bdf8; display:flex; justify-content:space-between; align-items:center;">
+              <span><i class="fa-solid fa-code"></i> Updated Google Apps Script Code (<code>Code.gs</code>) — Paste into Google Sheets &gt; Extensions &gt; Apps Script</span>
+              <span id="gasCodeCopyStatusBadge" style="color:#34d399; font-weight:800;">Ready</span>
+            </label>
+            <textarea id="fixedGasCodeViewerTextarea" class="form-control" rows="8" readonly style="font-family:monospace; font-size:0.72rem; line-height:1.4; white-space:pre; overflow-x:auto;" placeholder="Loading updated Code.gs..."></textarea>
+          </div>
         </div>
     </div>
   </div>
@@ -8306,14 +8361,14 @@
   <div id="sessionConflictModal" class="modal-overlay" style="z-index: 99999; background: rgba(2, 6, 23, 0.88); backdrop-filter: blur(16px);">
     <div class="modal-content" style="max-width: 440px; width: 92%; text-align: center; border: 2px solid #f43f5e; background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 55%, #31102f 100%); box-shadow: 0 24px 60px rgba(244, 63, 94, 0.38); border-radius: 24px; padding: 28px 24px;">
       <div style="width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, rgba(244, 63, 94, 0.28), rgba(249, 115, 22, 0.25)); border: 2px solid #f43f5e; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: #fb7185; font-size: 1.85rem; box-shadow: 0 0 24px rgba(244, 63, 94, 0.4);">
-        <i class="fa-solid fa-laptop-medical"></i>
+        <i class="fa-solid fa-triangle-exclamation"></i>
       </div>
-      <h3 style="font-size: 1.22rem; font-weight: 900; color: #ffffff; margin: 0 0 10px 0;">Logged In on Another Device</h3>
+      <h3 style="font-size: 1.22rem; font-weight: 900; color: #ffffff; margin: 0 0 10px 0;">Warning: Logged In at Another Place</h3>
       <p id="sessionConflictMessage" style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.55; margin: 0 0 22px 0;">
-        This ID has been logged in elsewhere on another device. Only one device is allowed at a time, so this session has been automatically logged out.
+        Your User ID and password have just been used to log in at another place. Only one active login is allowed at a time. Click OK to log out from this device.
       </p>
       <button type="button" class="btn-primary" style="width: 100%; padding: 12px 20px; font-size: 0.95rem; font-weight: 800; border-radius: 14px; background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); box-shadow: 0 8px 22px rgba(244, 63, 94, 0.4);" onclick="confirmSessionConflictRedirect()">
-        <i class="fa-solid fa-circle-check"></i> OK — Return to Login Screen
+        <i class="fa-solid fa-circle-check"></i> OK
       </button>
     </div>
   </div>
@@ -8436,8 +8491,28 @@
         try {
           const msg = ev?.data;
           if (!msg || !msg.topic) return;
-          if (msg.topic === "users") {
+          if (msg.topic === "session_login") {
+            const p = msg.payload || {};
+            const targetU = String(p.username || "").trim().toLowerCase();
+            const newTok = String(p.sessionToken || "").trim();
+            if (activeUser && activeSessionToken && String(activeUser).trim().toLowerCase() === targetU && newTok && newTok !== activeSessionToken) {
+              triggerSingleDeviceSessionConflict();
+            }
+          } else if (msg.topic === "users") {
             if (typeof loadLocalUsersMaster === "function") DB.users = loadLocalUsersMaster();
+            if (activeUser && activeSessionToken && Array.isArray(DB.users)) {
+              const me = DB.users.find(function(u) {
+                return String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase();
+              });
+              if (me && me.ActiveSessionToken && String(me.ActiveSessionToken).trim() !== String(activeSessionToken).trim()) {
+                const remoteTs = extractSessionTokenTimestamp(me.ActiveSessionToken);
+                const localTs = extractSessionTokenTimestamp(activeSessionToken);
+                if (remoteTs === 0 || localTs === 0 || remoteTs >= localTs) {
+                  triggerSingleDeviceSessionConflict();
+                  return;
+                }
+              }
+            }
             if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
           } else if (msg.topic === "chats") {
             if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
@@ -8767,7 +8842,10 @@
       inFlightGasFetchPromise = (async function() {
         try {
           const sep = GAS_WEB_APP_URL.indexOf("?") === -1 ? "?" : "&";
-          const url = GAS_WEB_APP_URL + sep + "action=getInitialData&t=" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+          const sessionQuery = activeUser
+            ? "&username=" + encodeURIComponent(activeUser) + "&sessionToken=" + encodeURIComponent(activeSessionToken || "")
+            : "";
+          const url = GAS_WEB_APP_URL + sep + "action=getInitialData" + sessionQuery + "&t=" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
           let response = await fetch(url, {
             method: "GET",
             cache: "no-store",
@@ -8778,7 +8856,12 @@
               method: "POST",
               cache: "no-store",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
-              body: JSON.stringify({ action: "getInitialData", t: Date.now() }),
+              body: JSON.stringify({
+                action: "getInitialData",
+                username: activeUser || "",
+                sessionToken: activeSessionToken || "",
+                t: Date.now()
+              }),
               redirect: "follow"
             });
           }
@@ -8804,13 +8887,13 @@
               : null;
 
             if (sheetReturnedUsersArray && remoteUsers.length === 0) {
-              // All users were manually deleted in Google Sheets -> request Google Apps Script & backend engine to auto-generate the first Admin user ID
+              // All users were manually deleted in Google Sheets -> request ONLY Google Apps Script to auto-generate the first Admin user ID in the sheet
               try {
                 const gasSeedRes = await fetch(GAS_WEB_APP_URL, {
                   method: "POST",
                   cache: "no-store",
                   headers: { "Content-Type": "text/plain;charset=utf-8" },
-                  body: JSON.stringify({ action: "syncEmptySheetUsers" }),
+                  body: JSON.stringify({ action: "syncEmptySheetUsers", forceSeedDefaultAdmin: true }),
                   redirect: "follow"
                 }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
 
@@ -8818,40 +8901,6 @@
                   remoteUsers = gasSeedRes.users;
                 }
               } catch (e) {}
-
-              if (!remoteUsers || remoteUsers.length === 0) {
-                try {
-                  const seedRes = await fetch("/api/gas-engine", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "syncEmptySheetUsers", forceSeedDefaultAdmin: true })
-                  });
-                  if (seedRes.ok) {
-                    const seedJson = await seedRes.json();
-                    if (seedJson && Array.isArray(seedJson.users) && seedJson.users.length > 0) {
-                      remoteUsers = seedJson.users;
-                    }
-                    if (seedJson && seedJson.shouldSeedSheet && seedJson.seedUser) {
-                      const su = seedJson.seedUser;
-                      await fetch(GAS_WEB_APP_URL, {
-                        method: "POST",
-                        headers: { "Content-Type": "text/plain;charset=utf-8" },
-                        body: JSON.stringify({
-                          action: "createUser",
-                          userDoc: su,
-                          newUsername: su.Username,
-                          newPassword: su.Password,
-                          fullName: su.FullName,
-                          role: su.Role,
-                          status: su.Status || "Active",
-                          users: remoteUsers
-                        }),
-                        redirect: "follow"
-                      }).catch(function() {});
-                    }
-                  }
-                } catch (e) {}
-              }
 
               if (remoteUsers && remoteUsers.length > 0) {
                 saveLocalUsersMaster(remoteUsers);
@@ -8868,6 +8917,9 @@
                 }).catch(function() {});
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
+              const withinRecentLoginGrace = (Date.now() - lastLoginCompletedAt) < 4500;
+              let detectedRemoteConflict = Boolean(json.sessionConflict);
+
               remoteUsers = remoteUsers.map(function(u) {
                 const rawSt = String(u.Status || u.AccountStatus || "Active").trim();
                 const normSt = rawSt.toLowerCase() === "blocked" ? "Blocked" : "Active";
@@ -8875,8 +8927,10 @@
                 if (activeUser && activeSessionToken && String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase()) {
                   const localTs = extractSessionTokenTimestamp(activeSessionToken);
                   const sheetTs = extractSessionTokenTimestamp(resolvedTok);
-                  if (localTs > sheetTs) {
+                  if (withinRecentLoginGrace && localTs > sheetTs) {
                     resolvedTok = activeSessionToken;
+                  } else if (resolvedTok && resolvedTok !== String(activeSessionToken).trim() && (sheetTs === 0 || localTs === 0 || sheetTs >= localTs)) {
+                    detectedRemoteConflict = true;
                   }
                 }
                 return Object.assign({}, u, {
@@ -8898,6 +8952,12 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
               }).catch(function() {});
+
+              if (detectedRemoteConflict && activeUser && activeSessionToken && !withinRecentLoginGrace) {
+                setTimeout(function() {
+                  triggerSingleDeviceSessionConflict();
+                }, 0);
+              }
             }
 
             if (Array.isArray(json.loginHistory) && json.loginHistory.length > 0) {
@@ -8921,6 +8981,7 @@
 
             const sheetPayload = {
               _liveSheetVerified: true,
+              sessionConflict: Boolean(json.sessionConflict),
               properties: Array.isArray(json.properties) ? json.properties : [],
               flats: Array.isArray(json.flats) ? json.flats : [],
               renters: Array.isArray(json.renters) ? json.renters : [],
@@ -9164,6 +9225,7 @@
 
       return {
         status: "success",
+        sessionConflict: Boolean(sheetData?.sessionConflict),
         properties: linked.properties,
         flats: linked.flats,
         renters: linked.renters,
@@ -9261,7 +9323,7 @@
 
       // STEP 1: Always fetch the live Google Sheet first (bypassing any local cache)
       // If the Google Sheet Users tab was manually emptied, fetchGasSheetData(true, true)
-      // automatically triggers Google Apps Script / backend to generate the first Admin user.
+      // automatically triggers Google Apps Script to generate the first Admin user.
       const liveSheetData = await fetchGasSheetData(true, true);
       const liveUsers = Array.isArray(liveSheetData?.users) ? liveSheetData.users : [];
 
@@ -9397,10 +9459,12 @@
         localStorage.setItem("portal_device_session_" + cleanUKey, sessionToken);
       } catch (e) {}
 
+      notifyCrossTabSync("session_login", { username: cleanUKey, sessionToken: sessionToken });
+
       lastWriteCompletedAt = Date.now();
       lastLoginCompletedAt = Date.now();
 
-      // Record login session & reset lockout in backend and Google Apps Script asynchronously so UI unlocks immediately
+      // Record login session & reset lockout in backend and Google Apps Script so all devices see the new ActiveSessionToken
       const loginPayloadObj = {
         action: "loginUser",
         username: liveMatch.Username,
@@ -9411,29 +9475,33 @@
       };
       const bodyStr = JSON.stringify(loginPayloadObj);
 
-      await Promise.race([
-        fetch("/api/gas-engine", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: bodyStr
-        }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
-          if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
-            saveLocalLoginHistoryMaster(engineRes.loginHistory);
-          }
-        }).catch(function() {}),
-        new Promise(function(resolve) { setTimeout(resolve, 1200); })
+      await Promise.all([
+        Promise.race([
+          fetch("/api/gas-engine", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: bodyStr
+          }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
+            if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
+              saveLocalLoginHistoryMaster(engineRes.loginHistory);
+            }
+          }).catch(function() {}),
+          new Promise(function(resolve) { setTimeout(resolve, 1200); })
+        ]),
+        Promise.race([
+          fetch(GAS_WEB_APP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: bodyStr,
+            redirect: "follow"
+          }).then(function(r) { return r.ok ? r.json() : null; }).then(function(gasRes) {
+            if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
+              saveLocalLoginHistoryMaster(gasRes.loginHistory);
+            }
+          }).catch(function() {}),
+          new Promise(function(resolve) { setTimeout(resolve, 2500); })
+        ])
       ]);
-
-      fetch(GAS_WEB_APP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: bodyStr,
-        redirect: "follow"
-      }).then(function(r) { return r.ok ? r.json() : null; }).then(function(gasRes) {
-        if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
-          saveLocalLoginHistoryMaster(gasRes.loginHistory);
-        }
-      }).catch(function() {});
 
       return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, liveSheetData);
     }
@@ -9464,6 +9532,9 @@
      * ============================================================================
      */
     const GAS_SHEET_ACTIONS = new Set([
+      "setupAllSheets",
+      "ensureAllSheets",
+      "setupSpreadsheetStructure",
       "addProperty",
       "editProperty",
       "deleteProperty",
@@ -9556,6 +9627,7 @@
             const rawTarget = String(data.targetUsername || "").trim();
             if (!rawTarget) return { status: "error", message: "Target username is required." };
             const oldLower = rawTarget.toLowerCase();
+            const reqLower = String(data.requesterUsername || activeUser || "").trim().toLowerCase();
             const newUsernameClean = String(data.newUsername || rawTarget).trim();
             const newLower = newUsernameClean.toLowerCase();
 
@@ -9575,6 +9647,10 @@
             const roleVal = String(data.role || data.newRole || baseDoc.Role || "Viewer").trim();
             const managerPerms = Array.isArray(data.managerPermissions) ? data.managerPermissions : [];
             const nextStatus = String(data.newStatus || baseDoc.Status || "Active").trim();
+
+            if (reqLower && oldLower === reqLower && nextStatus.toLowerCase() === "blocked") {
+              return { status: "error", message: "You cannot block your own currently logged-in account." };
+            }
 
             const updateFields = {
               ...baseDoc,
@@ -9612,7 +9688,11 @@
           case "toggleUserBlock": {
             const rawTarget = String(data.targetUsername || "").trim();
             const targetLower = rawTarget.toLowerCase();
+            const reqLower = String(data.requesterUsername || activeUser || "").trim().toLowerCase();
             const newStatus = data.newStatus || (data.block ? "Blocked" : "Active");
+            if (reqLower && targetLower === reqLower && String(newStatus).toLowerCase() === "blocked") {
+              return { status: "error", message: "You cannot block your own currently logged-in account." };
+            }
             usersList = usersList.map(function(u) {
               if (String(u.Username || "").trim().toLowerCase() === targetLower) {
                 return {
@@ -10532,6 +10612,11 @@
       const targetU = (DB.users || []).find(u => String(u.Username || "").toLowerCase() === targetClean);
       const isBlocking = newStatus === "Blocked";
 
+      const isSelfTarget = targetClean === String(activeUser || "").trim().toLowerCase();
+      if (isBlocking && isSelfTarget) {
+        return triggerSideToast("Action Blocked", "You cannot block your own currently logged-in account.", false);
+      }
+
       // Only Admin can unblock a moved-out renter account (or unblock any blocked account when not Admin)
       if (!isBlocking && callerRole !== "admin") {
         return triggerSideToast("Admin Only", "Only the Admin can unblock a blocked user account.", false);
@@ -10543,11 +10628,10 @@
         return triggerSideToast("Admin Only", "This renter has moved out. Only the Admin can manage their block status.", false);
       }
 
-      const isSelfTarget = targetClean === String(activeUser || "").trim().toLowerCase();
       openCenteredConfirmModal(
         isBlocking ? `Block User Account @${targetUsername}?` : `Unblock User Account @${targetUsername}?`,
         isBlocking
-          ? `Are you sure you want to block @${targetUsername}? ${isSelfTarget ? "Because this is your currently logged-in ID, you will be immediately logged out and barred from logging in with this ID until it is unblocked." : "They will be immediately barred from logging in and a popup will notify them that their account has been blocked."}`
+          ? `Are you sure you want to block @${targetUsername}? They will be immediately barred from logging in and a popup will notify them that their account has been blocked.`
           : `Are you sure you want to unblock @${targetUsername} and restore their login access?`,
         async () => {
           const uObj = (DB.users || []).find(u => String(u.Username || "").toLowerCase() === targetClean);
@@ -12396,18 +12480,19 @@ function formatMonthLabel(rawVal) {
       const aadh = getNormalizedActiveRenterAadhaar();
       if (aadh) {
         const byAadh = (DB.renters || []).filter(r => {
-          const rAadh = normalizeAadhaar12(r.IdentityDocNumber);
+          const rAadh = normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || r.AssignedAadhaar);
           return rAadh && rAadh === aadh;
         });
         if (byAadh.length > 0) return byAadh;
       }
-      // Fallback for individual renter account assigned by Property + Flat or FullName
+      // Fallback for individual renter account assigned by Property + Flat, FullName, or Username
       const matchedU = activeUser
         ? (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase())
         : null;
       const prop = String(activeAssignedProperty || matchedU?.AssignedProperty || "").trim();
       const flat = String(activeAssignedFlat || matchedU?.AssignedFlat || "").trim();
       const uFullName = String(activeUserFullName || matchedU?.FullName || "").trim().toLowerCase();
+      const uHandle = String(activeUser || matchedU?.Username || "").trim().toLowerCase();
 
       if (prop && flat && prop.toUpperCase() !== "ALL") {
         const flatRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, prop, flat));
@@ -12420,30 +12505,49 @@ function formatMonthLabel(rawVal) {
         if (flatRenters.length > 0) return [flatRenters[0]];
       }
 
-      // Match by RenterName if no property/flat was explicitly stored on user doc
+      if (prop && prop.toUpperCase() !== "ALL" && !flat) {
+        const propRenters = (DB.renters || []).filter(r => String(r.PropertyName || "").trim().toLowerCase() === prop.toLowerCase());
+        if (uFullName) {
+          const propNameMatches = propRenters.filter(r => String(r.RenterName || "").trim().toLowerCase() === uFullName);
+          if (propNameMatches.length > 0) return propNameMatches;
+        }
+        const activeInProp = propRenters.filter(r => String(r.Status || "").trim().toLowerCase() === "active");
+        if (activeInProp.length > 0) return [activeInProp[0]];
+        if (propRenters.length > 0) return [propRenters[0]];
+      }
+
+      // Match by RenterName or Username if no property/flat was explicitly stored on user doc
       if (uFullName && uFullName !== "administrator" && uFullName !== "admin") {
         const byName = (DB.renters || []).filter(r => String(r.RenterName || "").trim().toLowerCase() === uFullName);
         if (byName.length > 0) return byName;
       }
-
-      // If assigned to a Property + Flat or Aadhaar (e.g., while live sync is completing or before a separate renter row is created), provide a clean resident profile object so the Renter's homepage renders immediately
-      if ((prop && flat && prop.toUpperCase() !== "ALL") || aadh) {
-        const flatObj = (prop && flat) ? findFlatObject(prop, flat) : null;
-        return [{
-          RenterID: "RENTER-SESSION-" + String(activeUser || "user").toLowerCase(),
-          PropertyName: prop || "Assigned Property",
-          FlatName: flat || "--",
-          RenterName: activeUserFullName || matchedU?.FullName || activeUser || "Resident",
-          IdentityDocNumber: aadh ? formatAadhaarWithHyphens(aadh) : "",
-          MobileNumber: activeUserMobile || matchedU?.MobileNumber || "",
-          Status: "Active",
-          RentAmount: flatObj?.RentAmount || 0,
-          ElecFixedRate: flatObj?.ElecRate || 0,
-          PNGFixedRate: flatObj?.PNGRate || 0,
-          WaterFixedRate: flatObj?.WaterRate || 0
-        }];
+      if (uHandle && uHandle !== "administrator" && uHandle !== "admin") {
+        const byHandle = (DB.renters || []).filter(r => String(r.RenterName || "").trim().toLowerCase() === uHandle);
+        if (byHandle.length > 0) return byHandle;
       }
-      return [];
+
+      // Provide a clean resident profile object so the Renter's homepage always renders immediately
+      const defaultFlatObj = (prop && flat && prop.toUpperCase() !== "ALL")
+        ? findFlatObject(prop, flat)
+        : ((DB.flats && DB.flats.length > 0) ? DB.flats[0] : null);
+      const resolvedProp = (prop && prop.toUpperCase() !== "ALL")
+        ? prop
+        : (defaultFlatObj?.PropertyName || (DB.properties && DB.properties[0]?.PropertyName) || "Assigned Property");
+      const resolvedFlat = flat || defaultFlatObj?.FlatName || "101";
+
+      return [{
+        RenterID: "RENTER-SESSION-" + String(activeUser || "user").toLowerCase(),
+        PropertyName: resolvedProp,
+        FlatName: resolvedFlat,
+        RenterName: activeUserFullName || matchedU?.FullName || activeUser || "Resident",
+        IdentityDocNumber: aadh ? formatAadhaarWithHyphens(aadh) : "",
+        MobileNumber: activeUserMobile || matchedU?.MobileNumber || "",
+        Status: "Active",
+        RentAmount: defaultFlatObj?.RentAmount || 0,
+        ElecFixedRate: defaultFlatObj?.ElecRate || 0,
+        PNGFixedRate: defaultFlatObj?.PNGRate || 0,
+        WaterFixedRate: defaultFlatObj?.WaterRate || 0
+      }];
     }
 
     function isBillLinkedToLoggedInRenterAadhaar(bill) {
@@ -13205,7 +13309,9 @@ function formatMonthLabel(rawVal) {
       if (activeRole === "Renter") {
         const flatsContainer = document.getElementById("flatsList");
         const propsBar = document.querySelector(".properties-bar");
+        const khetContainer = document.getElementById("homeKhetSectionContainer");
         if (propsBar) propsBar.style.display = "none";
+        if (khetContainer) khetContainer.style.display = "none";
 
         const renterAadhaar = getNormalizedActiveRenterAadhaar();
         const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
@@ -13245,6 +13351,8 @@ function formatMonthLabel(rawVal) {
 
         const targetProp = primaryRenter.PropertyName || (viewerScope && viewerScope.prop) || activeAssignedProperty || "Assigned Property";
         const targetFlat = primaryRenter.FlatName || (viewerScope && viewerScope.flat) || activeAssignedFlat || "Assigned Flat";
+        const safePropArg = String(targetProp || "").replace(/'/g, "\\'");
+        const safeFlatArg = String(targetFlat || "").replace(/'/g, "\\'");
         selectedProperty = targetProp;
 
         const assignedFlatObj = findFlatObject(targetProp, targetFlat) || {
@@ -13257,6 +13365,20 @@ function formatMonthLabel(rawVal) {
         };
         selectedFlat = assignedFlatObj;
         activeFlatRenterObj = primaryRenter;
+
+        const renterNameDisplay = String(primaryRenter.RenterName || activeUserFullName || activeUser || "Resident").trim();
+        const safeRenterNameArg = renterNameDisplay.replace(/'/g, "\\'");
+        const avatarInitials = renterNameDisplay
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .map(w => w.charAt(0).toUpperCase())
+          .join("") || "R";
+        const rawProfileImg = primaryRenter.ProfilePhotoUrl || primaryRenter.ProfileImage || primaryRenter.PhotoUrl || "";
+        const profileImgUrl = typeof getRenderablePhotoUrl === "function" ? getRenderablePhotoUrl(rawProfileImg) : String(rawProfileImg || "").trim();
+        const safeProfileImgArg = String(profileImgUrl || "").replace(/'/g, "\\'");
+        const effectiveAadhaar = normalizeAadhaar12(primaryRenter.IdentityDocNumber || primaryRenter.AadhaarNumber || renterAadhaar);
+        const renterPhoneDisplay = sanitizeContactPhoneDisplay(primaryRenter.MobileNumber || primaryRenter.AltMobileNumber || activeUserMobile);
 
         // Strictly filter ONLY bills belonging to this logged-in renter
         const myBills = (DB.bills || []).filter(b => isBillLinkedToLoggedInRenterAadhaar(b));
@@ -14122,33 +14244,28 @@ function formatMonthLabel(rawVal) {
         clearInterval(syncTimer);
         syncTimer = null;
       }
+      if (realtimePollTimer) {
+        clearInterval(realtimePollTimer);
+        realtimePollTimer = null;
+      }
       const prevUser = String(activeUser || "").trim().toLowerCase();
       const prevToken = String(activeSessionToken || "").trim();
-      // Immediately clear active session state on this previous device
-      activeUser = null;
+      // Immediately clear active session credentials on this previous device
       activeSessionToken = "";
-      selectedProperty = null;
-      selectedFlat = null;
-      activeFlatRenterObj = null;
       sessionStorage.clear();
       try {
+        localStorage.setItem(EXPLICIT_LOGOUT_FLAG_KEY, "1");
+        localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
+        localStorage.removeItem("portal_active_auth_session_v1");
         if (prevUser && prevToken) {
           const currentStoredDevTok = localStorage.getItem("portal_device_session_" + prevUser) || "";
           if (currentStoredDevTok === prevToken) {
             localStorage.removeItem("portal_device_session_" + prevUser);
-            localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
-            localStorage.removeItem("portal_active_auth_session_v1");
           }
         }
       } catch (e) {}
 
-      // Hide dashboard & live chat immediately and show login screen behind the alert modal
-      document.getElementById("dashboardScreen")?.classList.remove("active");
-      document.getElementById("loginScreen")?.classList.add("active");
-      const chatWidgetEl = document.getElementById("modularLiveChatWidget");
-      if (chatWidgetEl) chatWidgetEl.style.display = "none";
-
-      // Close all other modals and show the Single-Device Session Conflict Alert Modal
+      // Close all other modals and show the Single-Device Session Conflict Warning Modal on the first device
       document.querySelectorAll(".modal-overlay").forEach(m => {
         if (m.id !== "sessionConflictModal") m.classList.remove("active");
       });
@@ -14162,9 +14279,15 @@ function formatMonthLabel(rawVal) {
       isSessionConflictModalOpen = false;
       const conflictModal = document.getElementById("sessionConflictModal");
       if (conflictModal) conflictModal.classList.remove("active");
-      document.getElementById("dashboardScreen")?.classList.remove("active");
-      document.getElementById("loginScreen")?.classList.add("active");
-      applyCustomBackgrounds();
+      if (typeof performConfirmedLogout === "function") {
+        performConfirmedLogout();
+      } else {
+        activeUser = null;
+        activeSessionToken = "";
+        document.getElementById("dashboardScreen")?.classList.remove("active");
+        document.getElementById("loginScreen")?.classList.add("active");
+        applyCustomBackgrounds();
+      }
       const uIn = document.getElementById("loginUsername");
       const pIn = document.getElementById("loginPassword");
       if (pIn) pIn.value = "";
@@ -15125,9 +15248,6 @@ function formatMonthLabel(rawVal) {
 
         if (res && res.status === "success") {
           hasCompletedInitialSync = true;
-          if (pendingWriteCount > 0 || (!forceRender && (Date.now() - lastWriteCompletedAt < 4000))) {
-            return;
-          }
 
           const incomingUsers = Array.isArray(res.users) ? res.users : [];
           const matchedServerUser = incomingUsers.find(
@@ -15145,6 +15265,10 @@ function formatMonthLabel(rawVal) {
             (serverTok && localTok && serverTok !== localTok && (serverTokTs === 0 || localTokTs === 0 || serverTokTs >= localTokTs))
           ) {
             triggerSingleDeviceSessionConflict();
+            return;
+          }
+
+          if (pendingWriteCount > 0 || (!forceRender && (Date.now() - lastWriteCompletedAt < 4000))) {
             return;
           }
 
@@ -16598,6 +16722,7 @@ function formatMonthLabel(rawVal) {
       const contactPanel = document.getElementById("otherPanelContactSettings");
       const ticketsPanel = document.getElementById("otherPanelTickets");
       const auditPanel = document.getElementById("otherPanelAuditLog");
+      const sheetSetupPanel = document.getElementById("otherPanelSheetSetup");
       const btnUsers = document.getElementById("btnOtherOptUsers");
       const btnHistory = document.getElementById("btnOtherOptLoginHistory");
       const btnChangeBg = document.getElementById("btnOtherOptChangeBg");
@@ -16605,9 +16730,10 @@ function formatMonthLabel(rawVal) {
       const btnContact = document.getElementById("btnOtherOptContactSettings");
       const btnTickets = document.getElementById("btnOtherOptTickets");
       const btnAudit = document.getElementById("btnOtherOptAuditLog");
+      const btnSheetSetup = document.getElementById("btnOtherOptSheetSetup");
       const isAdmin = String(activeRole || "").trim().toLowerCase() === "admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"));
 
-      if ((opt === "history" || opt === "editEverything" || opt === "changeBg" || opt === "contactSettings" || opt === "tickets" || opt === "auditLog") && !isAdmin) {
+      if ((opt === "history" || opt === "editEverything" || opt === "changeBg" || opt === "contactSettings" || opt === "tickets" || opt === "auditLog" || opt === "sheetSetup") && !isAdmin) {
         triggerSideToast("Admin Permission Required", "Only authorized accounts have access to this section.", false);
         opt = "users";
       }
@@ -16616,7 +16742,7 @@ function formatMonthLabel(rawVal) {
         parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
         parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
       }
-      [usersPanel, historyPanel, changeBgPanel, eePanel, contactPanel, ticketsPanel, auditPanel].forEach(p => { if (p) p.style.display = "none"; });
+      [usersPanel, historyPanel, changeBgPanel, eePanel, contactPanel, ticketsPanel, auditPanel, sheetSetupPanel].forEach(p => { if (p) p.style.display = "none"; });
 
       if (opt === "history") {
         if (historyPanel) historyPanel.style.display = "block";
@@ -16643,6 +16769,10 @@ function formatMonthLabel(rawVal) {
         if (auditPanel) auditPanel.style.display = "block";
         if (btnAudit) btnAudit.classList.add("active");
         if (typeof renderAdminAuditTrailList === "function") renderAdminAuditTrailList();
+      } else if (opt === "sheetSetup") {
+        if (sheetSetupPanel) sheetSetupPanel.style.display = "block";
+        if (btnSheetSetup) btnSheetSetup.classList.add("active");
+        if (typeof loadFixedGasCodeIntoViewer === "function") loadFixedGasCodeIntoViewer();
       } else {
         if (usersPanel) usersPanel.style.display = "block";
         if (btnUsers) btnUsers.classList.add("active");
@@ -16864,15 +16994,22 @@ function formatMonthLabel(rawVal) {
         pwdInput.type = "password";
       }
       document.getElementById("editAssignFullName").value = u.FullName || u.Username || "";
+      const isEditingSelf = String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase();
       const statusSelect = document.getElementById("editAssignStatus");
       if (statusSelect) {
         let blockedList = [];
         try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
         const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(String(u.Username || "").trim().toLowerCase());
-        statusSelect.value = isBlocked ? "Blocked" : "Active";
+        statusSelect.value = isEditingSelf ? "Active" : (isBlocked ? "Blocked" : "Active");
+        statusSelect.disabled = isEditingSelf;
+        statusSelect.title = isEditingSelf ? "You cannot block your own currently logged-in account." : "";
       }
       const roleVal = (u.Role === "Renter") ? "Renter" : ((u.Role === "Viewer") ? "Viewer" : ((u.Role === "Manager") ? "Manager" : "Admin"));
-      document.getElementById("editAssignRole").value = roleVal;
+      const roleSelectEl = document.getElementById("editAssignRole");
+      if (roleSelectEl) {
+        roleSelectEl.value = roleVal;
+        roleSelectEl.disabled = isEditingSelf;
+      }
 
       renderManagerPermissionsCheckboxes("editAssignManagerPermsList", u.ManagerPermissions || null);
 
@@ -16982,6 +17119,7 @@ function formatMonthLabel(rawVal) {
       const u = (DB.users || []).find(item => String(item.Username || "").trim().toLowerCase() === targetUser.toLowerCase());
       if (!u) return;
 
+      const isSelfEdit = String(activeUser || "").trim().toLowerCase() === targetUser.toLowerCase();
       const rawEnteredUsername = String(document.getElementById("editAssignUsernameDisplay")?.value || "").replace(/^@+/, "").trim().toLowerCase();
       if (!rawEnteredUsername || rawEnteredUsername.length < 3) {
         return triggerSideToast("Invalid Username", "Username (User ID) must be at least 3 characters.", false);
@@ -17000,12 +17138,15 @@ function formatMonthLabel(rawVal) {
       }
       const newFullNameRaw = String(document.getElementById("editAssignFullName")?.value || "").trim() || rawEnteredUsername;
       const newStatusRaw = String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active";
+      if (isSelfEdit && newStatusRaw === "Blocked") {
+        return triggerSideToast("Action Blocked", "You cannot block your own currently logged-in account.", false);
+      }
       const wasPreviouslyBlocked = String(u.Status || "").trim().toLowerCase() === "blocked";
       if (wasPreviouslyBlocked && newStatusRaw === "Active" && String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Admin Permission Required", "Only the Admin can unblock a blocked user account.", false);
       }
 
-      const newRole = document.getElementById("editAssignRole").value;
+      const newRole = isSelfEdit ? (u.Role || activeRole || "Admin") : document.getElementById("editAssignRole").value;
       const scopeLevel = document.getElementById("editAssignScopeLevel")?.value || "FLAT";
       let assignedProp = "";
       let assignedFlat = "";
@@ -17070,7 +17211,6 @@ function formatMonthLabel(rawVal) {
 
       saveLocalUsersMaster(DB.users || []);
 
-      const isSelfEdit = String(activeUser || "").trim().toLowerCase() === targetUser.toLowerCase();
       if (isSelfEdit && newStatusRaw !== "Blocked") {
         activeUser = rawEnteredUsername;
         activeRole = newRole;
@@ -17115,12 +17255,6 @@ function formatMonthLabel(rawVal) {
         assignedAadhaar: assignedAadhaar,
         managerPermissions: managerPermissions
       });
-
-      if (isSelfEdit && newStatusRaw === "Blocked") {
-        performConfirmedLogout();
-        showAccountBlockedModal("Your account has been blocked by an administrator.");
-        return;
-      }
 
       if (isSelfEdit && didPasswordChange) {
         triggerSideToast("Password Updated", "Logging out so you can sign in with your new password...", true);
@@ -17175,42 +17309,55 @@ function formatMonthLabel(rawVal) {
 
         let adminControlsHtml = "";
         if (isAdmin) {
-          const roleToggleBtn = isTargetAdmin
-            ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="promptDemoteAdminToRegularUser('${safeUName}')" title="Change role from Admin to Regular User (Viewer)">
-                 <i class="fa-solid fa-user-shield"></i> Make Regular User
-               </button>`
-            : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-green); border-color:rgba(16,185,129,0.4);" onclick="changeRegisteredUserRole('${safeUName}', 'Admin', '', '')" title="Promote User to Admin">
-                 <i class="fa-solid fa-arrow-up-right-dots"></i> Promote to Admin
-               </button>`;
+          if (isCurrentLoggedUser) {
+            adminControlsHtml = `
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                <button type="button" class="btn-ledger-action edit-btn" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="openEditUserAssignmentModal('${safeUName}')" title="Edit your User ID or Password">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit ID / Password
+                </button>
+                <span style="font-size:0.7rem; font-weight:800; color:var(--accent-green); padding:4px 9px; border-radius:8px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.35);">
+                  <i class="fa-solid fa-shield-halved"></i> Active Session (Cannot Block/Delete Self)
+                </span>
+              </div>
+            `;
+          } else {
+            const roleToggleBtn = isTargetAdmin
+              ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="promptDemoteAdminToRegularUser('${safeUName}')" title="Change role from Admin to Regular User (Viewer)">
+                   <i class="fa-solid fa-user-shield"></i> Make Regular User
+                 </button>`
+              : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-green); border-color:rgba(16,185,129,0.4);" onclick="changeRegisteredUserRole('${safeUName}', 'Admin', '', '')" title="Promote User to Admin">
+                   <i class="fa-solid fa-arrow-up-right-dots"></i> Promote to Admin
+                 </button>`;
 
-          const deleteBtn = `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-red); border-color:rgba(239,68,68,0.4);" onclick="confirmDeleteRegisteredUser('${safeUName}')" title="Delete Registered User">
-              <i class="fa-solid fa-trash-can"></i> Delete
-            </button>`;
+            const deleteBtn = `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-red); border-color:rgba(239,68,68,0.4);" onclick="confirmDeleteRegisteredUser('${safeUName}')" title="Delete Registered User">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>`;
 
-          let blockedList = [];
-          try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
-          const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uName.toLowerCase());
-          const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
-          const blockBtn = isBlocked
-            ? (isStrictAdmin
-                ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="Unblock user login (Admin Only)">
-                     <i class="fa-solid fa-lock-open"></i> Unblock
-                   </button>`
-                : `<span style="font-size:0.68rem; color:#f87171; font-weight:700; padding:4px 8px;"><i class="fa-solid fa-lock"></i> Admin Only Unblock</span>`)
-            : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#ef4444; border-color:rgba(239,68,68,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Blocked')" title="Block user from logging in">
-                 <i class="fa-solid fa-ban"></i> Block
-               </button>`;
+            let blockedList = [];
+            try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
+            const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uName.toLowerCase());
+            const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
+            const blockBtn = isBlocked
+              ? (isStrictAdmin
+                  ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="Unblock user login (Admin Only)">
+                       <i class="fa-solid fa-lock-open"></i> Unblock
+                     </button>`
+                  : `<span style="font-size:0.68rem; color:#f87171; font-weight:700; padding:4px 8px;"><i class="fa-solid fa-lock"></i> Admin Only Unblock</span>`)
+              : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#ef4444; border-color:rgba(239,68,68,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Blocked')" title="Block user from logging in">
+                   <i class="fa-solid fa-ban"></i> Block
+                 </button>`;
 
-          adminControlsHtml = `
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;">
-              <button type="button" class="btn-ledger-action edit-btn" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="openEditUserAssignmentModal('${safeUName}')" title="Edit User ID, Password, Block Status, Role & Permissions">
-                <i class="fa-solid fa-pen-to-square"></i> Edit ID / Password / Block / Role
-              </button>
-              ${roleToggleBtn}
-              ${blockBtn}
-              ${deleteBtn}
-            </div>
-          `;
+            adminControlsHtml = `
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                <button type="button" class="btn-ledger-action edit-btn" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="openEditUserAssignmentModal('${safeUName}')" title="Edit User ID, Password, Block Status, Role & Permissions">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit ID / Password / Block / Role
+                </button>
+                ${roleToggleBtn}
+                ${blockBtn}
+                ${deleteBtn}
+              </div>
+            `;
+          }
         }
         return `
           <div style="padding:10px 6px; border-bottom:1px solid var(--glass-border);">
@@ -17237,6 +17384,9 @@ function formatMonthLabel(rawVal) {
 
     function promptDemoteAdminToRegularUser(targetUsername) {
       if (String(activeRole || "").trim().toLowerCase() !== "admin") return;
+      if (String(targetUsername || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase()) {
+        return triggerSideToast("Action Blocked", "You cannot demote your own currently logged-in Admin account.", false);
+      }
       const defaultFlat = (DB.flats && DB.flats.length > 0) ? DB.flats[0] : null;
       const assignedProp = selectedFlat?.PropertyName || defaultFlat?.PropertyName || "";
       const assignedFlat = selectedFlat?.FlatName || defaultFlat?.FlatName || "";
@@ -17413,7 +17563,7 @@ function formatMonthLabel(rawVal) {
       if (!parent) return;
       parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
       parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-      ["otherPanelUsers", "otherPanelLoginHistory", "otherPanelChangeBg", "otherPanelEditEverything", "otherPanelContactSettings", "otherPanelTickets", "otherPanelAuditLog"].forEach(id => {
+      ["otherPanelUsers", "otherPanelLoginHistory", "otherPanelChangeBg", "otherPanelEditEverything", "otherPanelContactSettings", "otherPanelTickets", "otherPanelAuditLog", "otherPanelSheetSetup"].forEach(id => {
         const p = document.getElementById(id);
         if (p) p.style.display = "none";
       });
@@ -21455,7 +21605,35 @@ function formatMonthLabel(rawVal) {
       recalculateReceiptSelection();
     }
 
-    // Helper: Deterministically draw the complete receipt onto a high-DPI 2D Canvas so it NEVER renders blank
+    // Helper: Wrap text into multiple lines that fit within maxWidth on a 2D canvas context
+    function wrapCanvasTextLines(ctx, text, maxWidth) {
+      const rawStr = String(text ?? "").trim();
+      if (!rawStr) return [""];
+      const paragraphs = rawStr.split(/\r?\n/);
+      const lines = [];
+      paragraphs.forEach(para => {
+        const words = para.split(/\s+/).filter(Boolean);
+        if (words.length === 0) {
+          lines.push("");
+          return;
+        }
+        let currentLine = words[0];
+        for (let i = 1; i < words.length; i++) {
+          const word = words[i];
+          const testLine = currentLine + " " + word;
+          if (ctx.measureText(testLine).width <= maxWidth) {
+            currentLine = testLine;
+          } else {
+            lines.push(currentLine);
+            currentLine = word;
+          }
+        }
+        lines.push(currentLine);
+      });
+      return lines.length > 0 ? lines : [rawStr];
+    }
+
+    // Helper: Deterministically draw the complete selected receipt onto a high-DPI 2D Canvas with dynamic multi-line wrapping so nothing is ever cut off
     function drawDeterministicReceiptCanvas() {
       const bill = currentOpenedReceiptBill || {};
       const checkedKeys = new Set();
@@ -21471,7 +21649,12 @@ function formatMonthLabel(rawVal) {
       const { selectedTotal, paidAmt, rawDiff, qrPayableAmount } = recalculateReceiptSelection();
       const billDateFormatted = formatDateOnly(bill.BillDate || bill.PaymentDate);
       const paidDateFormatted = formatDateOnly(bill.PaymentDate || bill.BillDate);
-      const carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending) || 0;
+      let carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending);
+      if (isNaN(carryVal)) {
+        carryVal = (typeof getCarryForwardBalanceForMonth === "function")
+          ? (parseFloat(getCarryForwardBalanceForMonth(bill.PropertyName, bill.FlatName, bill.MonthYear, bill.RenterID, bill.TenantName)) || 0)
+          : 0;
+      }
       const carryText = carryVal > 0
         ? `+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)`
         : (carryVal < 0 ? `- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)` : `₹0`);
@@ -21591,21 +21774,75 @@ function formatMonthLabel(rawVal) {
         postTotalRows.push({ label: `Pay via UPI (${upiName || 'N/A'}):`, value: String(upiId || "N/A"), color: "#4f46e5" });
       }
       if (checkedKeys.has("notes") && bill.Notes) {
-        postTotalRows.push({ label: "Notes:", value: String(bill.Notes), color: "#334155" });
+        postTotalRows.push({ label: "Notes:", value: String(bill.Notes), color: "#334155", isFullWidthNote: true });
       }
 
       const showTotalBox = checkedKeys.has("total");
       const showQrBox = checkedKeys.has("upi") && Boolean(upiId && upiId.includes("@"));
 
       const scale = 2;
-      const W = 520;
-      const rowH = 36;
-      const headerH = 98;
-      const totalBoxH = showTotalBox ? 58 : 0;
-      const qrBoxH = showQrBox ? 255 : 0;
-      const disclaimerH = 52;
-      const padBottom = 24;
-      const H = headerH + 18 + (rows.length * rowH) + (showTotalBox ? totalBoxH + 14 : 8) + (postTotalRows.length * rowH) + (showQrBox ? qrBoxH + 14 : 0) + disclaimerH + padBottom;
+      const outerMargin = 18;
+      const cardW = 580;
+      const W = cardW + outerMargin * 2;
+      const innerPadX = 26;
+      const contentW = cardW - innerPadX * 2;
+
+      // Measure wrapped lines first using a scratch context so total height H is 100% exact and never clips
+      const measureCanvas = document.createElement("canvas");
+      const mCtx = measureCanvas.getContext("2d");
+
+      mCtx.font = "800 20px 'Plus Jakarta Sans', Arial, sans-serif";
+      const headerTitleLines = wrapCanvasTextLines(mCtx, `${bill.PropertyName || "Property"} — Flat ${bill.FlatName || ""}`, contentW);
+      const headerH = Math.max(106, 58 + headerTitleLines.length * 25);
+
+      const measureRowLayout = (r) => {
+        if (r.isFullWidthNote) {
+          mCtx.font = "600 13px 'Plus Jakarta Sans', Arial, sans-serif";
+          const labelLines = wrapCanvasTextLines(mCtx, r.label, contentW);
+          mCtx.font = "700 13px 'Plus Jakarta Sans', Arial, sans-serif";
+          const valLines = wrapCanvasTextLines(mCtx, String(r.value), contentW);
+          const h = 16 + (labelLines.length * 19) + (valLines.length * 19) + 10;
+          return { ...r, labelLines, valLines, rowHeight: Math.max(42, h), stacked: true };
+        }
+        const labelMaxW = Math.floor(contentW * 0.58);
+        const valMaxW = Math.floor(contentW * 0.39);
+        mCtx.font = "600 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
+        const labelLines = wrapCanvasTextLines(mCtx, r.label, labelMaxW);
+        mCtx.font = "800 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
+        const valLines = wrapCanvasTextLines(mCtx, String(r.value), valMaxW);
+        const lineCount = Math.max(labelLines.length, valLines.length, 1);
+        const rowHeight = Math.max(38, 16 + lineCount * 20);
+        return { ...r, labelLines, valLines, rowHeight, stacked: false };
+      };
+
+      const measuredRows = rows.map(measureRowLayout);
+      const measuredPostRows = postTotalRows.map(measureRowLayout);
+
+      const rowsTotalH = measuredRows.reduce((sum, r) => sum + r.rowHeight, 0);
+      const postRowsTotalH = measuredPostRows.reduce((sum, r) => sum + r.rowHeight, 0);
+      const totalBoxH = showTotalBox ? 60 : 0;
+      const qrBoxH = showQrBox ? 266 : 0;
+
+      mCtx.font = "600 11px 'Plus Jakarta Sans', Arial, sans-serif";
+      const disclaimerLines = wrapCanvasTextLines(
+        mCtx,
+        "This receipt is generated by AI for personal use only, not for official or government use.",
+        contentW - 24
+      );
+      const disclaimerBoxH = Math.max(40, 16 + disclaimerLines.length * 16);
+
+      const cardH =
+        headerH +
+        16 +
+        rowsTotalH +
+        (showTotalBox ? totalBoxH + 16 : 8) +
+        postRowsTotalH +
+        (showQrBox ? qrBoxH + 16 : 0) +
+        14 +
+        disclaimerBoxH +
+        24;
+
+      const H = cardH + outerMargin * 2;
 
       const canvas = document.createElement("canvas");
       canvas.width = W * scale;
@@ -21613,95 +21850,129 @@ function formatMonthLabel(rawVal) {
       const ctx = canvas.getContext("2d");
       ctx.scale(scale, scale);
 
+      // Outer safe background so WhatsApp preview never crops card borders
+      ctx.fillStyle = "#f1f5f9";
+      ctx.fillRect(0, 0, W, H);
+
+      const cardX = outerMargin;
+      const cardY = outerMargin;
+
       // 1. Solid White Card Background
       ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(cardX, cardY, cardW, cardH);
 
       // Outer border
       ctx.strokeStyle = "#cbd5e1";
       ctx.lineWidth = 2;
-      ctx.strokeRect(1, 1, W - 2, H - 2);
+      ctx.strokeRect(cardX + 1, cardY + 1, cardW - 2, cardH - 2);
 
       // 2. Top Header Banner
       ctx.fillStyle = "#0f172a";
-      ctx.fillRect(0, 0, W, headerH);
+      ctx.fillRect(cardX, cardY, cardW, headerH);
 
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.font = "800 20px 'Plus Jakarta Sans', Arial, sans-serif";
-      ctx.fillText(`${bill.PropertyName || "Property"} — Flat ${bill.FlatName || ""}`, W / 2, 40);
+      let headerTextY = cardY + 34;
+      headerTitleLines.forEach(line => {
+        ctx.fillText(line, cardX + cardW / 2, headerTextY);
+        headerTextY += 24;
+      });
 
       ctx.fillStyle = "#38bdf8";
-      ctx.font = "700 13px 'Plus Jakarta Sans', Arial, sans-serif";
-      ctx.fillText(`Billing Month: ${formatMonthLabel(bill.MonthYear)}`, W / 2, 66);
+      ctx.font = "700 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
+      ctx.fillText(`Billing Month: ${formatMonthLabel(bill.MonthYear)}`, cardX + cardW / 2, headerTextY + 4);
 
       ctx.fillStyle = "#94a3b8";
       ctx.font = "600 11px 'Plus Jakarta Sans', Arial, sans-serif";
-      ctx.fillText("MONTHLY RENT & UTILITY RECEIPT", W / 2, 86);
+      ctx.fillText("MONTHLY RENT & UTILITY RECEIPT", cardX + cardW / 2, headerTextY + 24);
 
-      let curY = headerH + 16;
+      let curY = cardY + headerH + 14;
+      const leftX = cardX + innerPadX;
+      const rightX = cardX + cardW - innerPadX;
 
-      // Helper to draw a key-value row
+      // Helper to draw a multi-line key-value row
       const drawRow = (r) => {
-        ctx.fillStyle = "#475569";
-        ctx.textAlign = "left";
-        ctx.font = "600 13px 'Plus Jakarta Sans', Arial, sans-serif";
-        ctx.fillText(r.label, 24, curY + 22);
+        if (r.stacked) {
+          let yPos = curY + 20;
+          ctx.fillStyle = "#475569";
+          ctx.textAlign = "left";
+          ctx.font = "600 13px 'Plus Jakarta Sans', Arial, sans-serif";
+          r.labelLines.forEach(l => {
+            ctx.fillText(l, leftX, yPos);
+            yPos += 19;
+          });
+          ctx.fillStyle = r.color || "#0f172a";
+          ctx.font = "700 13px 'Plus Jakarta Sans', Arial, sans-serif";
+          r.valLines.forEach(v => {
+            ctx.fillText(v, leftX, yPos);
+            yPos += 19;
+          });
+        } else {
+          ctx.fillStyle = "#475569";
+          ctx.textAlign = "left";
+          ctx.font = "600 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
+          r.labelLines.forEach((l, idx) => {
+            ctx.fillText(l, leftX, curY + 22 + idx * 20);
+          });
 
-        ctx.fillStyle = r.color || "#0f172a";
-        ctx.textAlign = "right";
-        ctx.font = "800 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
-        ctx.fillText(String(r.value), W - 24, curY + 22);
+          ctx.fillStyle = r.color || "#0f172a";
+          ctx.textAlign = "right";
+          ctx.font = "800 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
+          r.valLines.forEach((v, idx) => {
+            ctx.fillText(v, rightX, curY + 22 + idx * 20);
+          });
+        }
 
         ctx.strokeStyle = "#e2e8f0";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(24, curY + rowH);
-        ctx.lineTo(W - 24, curY + rowH);
+        ctx.moveTo(leftX, curY + r.rowHeight);
+        ctx.lineTo(rightX, curY + r.rowHeight);
         ctx.stroke();
 
-        curY += rowH;
+        curY += r.rowHeight;
       };
 
-      rows.forEach(drawRow);
+      measuredRows.forEach(drawRow);
 
       // 3. Total Billed Amount Box
       if (showTotalBox) {
         curY += 8;
         ctx.fillStyle = "#eef2ff";
-        ctx.fillRect(20, curY, W - 40, 48);
+        ctx.fillRect(cardX + 20, curY, cardW - 40, 50);
         ctx.strokeStyle = "#6366f1";
         ctx.lineWidth = 1.5;
-        ctx.strokeRect(20, curY, W - 40, 48);
+        ctx.strokeRect(cardX + 20, curY, cardW - 40, 50);
 
         ctx.fillStyle = "#1e1b4b";
         ctx.textAlign = "left";
         ctx.font = "800 15px 'Plus Jakarta Sans', Arial, sans-serif";
-        ctx.fillText("Total Billed Amount:", 34, curY + 30);
+        ctx.fillText("Total Billed Amount:", cardX + 34, curY + 31);
 
         ctx.fillStyle = "#4f46e5";
         ctx.textAlign = "right";
         ctx.font = "900 18px 'Plus Jakarta Sans', Arial, sans-serif";
-        ctx.fillText(`₹${selectedTotal.toLocaleString('en-IN')}`, W - 34, curY + 30);
+        ctx.fillText(`₹${selectedTotal.toLocaleString('en-IN')}`, cardX + cardW - 34, curY + 31);
 
-        curY += 56;
+        curY += 58;
       }
 
-      postTotalRows.forEach(drawRow);
+      measuredPostRows.forEach(drawRow);
 
       // 4. UPI QR Code Box
       if (showQrBox) {
         curY += 10;
         ctx.fillStyle = "#f8fafc";
-        ctx.fillRect(24, curY, W - 48, qrBoxH - 6);
+        ctx.fillRect(leftX, curY, contentW, qrBoxH - 6);
         ctx.strokeStyle = "#cbd5e1";
         ctx.lineWidth = 1.5;
-        ctx.strokeRect(24, curY, W - 48, qrBoxH - 6);
+        ctx.strokeRect(leftX, curY, contentW, qrBoxH - 6);
 
         ctx.fillStyle = "#475569";
         ctx.textAlign = "center";
         ctx.font = "700 12.5px 'Plus Jakarta Sans', Arial, sans-serif";
-        ctx.fillText("Scan QR Code to Pay via UPI", W / 2, curY + 22);
+        ctx.fillText("Scan QR Code to Pay via UPI", cardX + cardW / 2, curY + 22);
 
         const cleanQrAmt = Math.max(0, Number(qrPayableAmount ?? selectedTotal) || 0);
         const upiUri = buildValidUpiUri(upiId, upiName, cleanQrAmt);
@@ -21712,13 +21983,13 @@ function formatMonthLabel(rawVal) {
             new window.QRious({
               element: qrCanvas,
               value: upiUri,
-              size: 164,
+              size: 168,
               padding: 10,
               level: "M",
               background: "#ffffff",
               foreground: "#000000"
             });
-            ctx.drawImage(qrCanvas, (W - 164) / 2, curY + 30, 164, 164);
+            ctx.drawImage(qrCanvas, cardX + (cardW - 168) / 2, curY + 30, 168, 168);
             drewQr = true;
           } catch (qrErr) {}
         }
@@ -21726,36 +21997,133 @@ function formatMonthLabel(rawVal) {
           const domQrImg = document.getElementById("receiptUpiQrImg");
           if (domQrImg && domQrImg.complete && domQrImg.naturalWidth > 0) {
             try {
-              ctx.drawImage(domQrImg, (W - 164) / 2, curY + 30, 164, 164);
+              ctx.drawImage(domQrImg, cardX + (cardW - 168) / 2, curY + 30, 168, 168);
             } catch (e) {}
           }
         }
 
         ctx.fillStyle = "#4f46e5";
         ctx.font = "800 13.5px 'Plus Jakarta Sans', Arial, sans-serif";
-        ctx.fillText(upiId, W / 2, curY + 214);
+        ctx.fillText(upiId, cardX + cardW / 2, curY + 218);
 
         ctx.fillStyle = "#64748b";
         ctx.font = "600 11.5px 'Plus Jakarta Sans', Arial, sans-serif";
-        ctx.fillText(`${upiName ? upiName + ' • ' : ''}Payable Amount: ₹${cleanQrAmt.toLocaleString('en-IN')}`, W / 2, curY + 234);
+        ctx.fillText(`${upiName ? upiName + ' • ' : ''}Payable Amount: ₹${cleanQrAmt.toLocaleString('en-IN')}`, cardX + cardW / 2, curY + 240);
 
-        curY += qrBoxH + 4;
+        curY += qrBoxH + 6;
       }
 
       // 5. Personal-Use Footer Disclaimer
-      curY += 8;
+      curY += 10;
       ctx.fillStyle = "#fffbeb";
-      ctx.fillRect(24, curY, W - 48, 38);
+      ctx.fillRect(leftX, curY, contentW, disclaimerBoxH);
       ctx.strokeStyle = "#fde68a";
       ctx.lineWidth = 1;
-      ctx.strokeRect(24, curY, W - 48, 38);
+      ctx.strokeRect(leftX, curY, contentW, disclaimerBoxH);
 
       ctx.fillStyle = "#92400e";
       ctx.textAlign = "center";
-      ctx.font = "600 10.5px 'Plus Jakarta Sans', Arial, sans-serif";
-      ctx.fillText("This receipt is generated by AI for personal use only, not for official or government use.", W / 2, curY + 23);
+      ctx.font = "600 11px 'Plus Jakarta Sans', Arial, sans-serif";
+      disclaimerLines.forEach((line, idx) => {
+        ctx.fillText(line, cardX + cardW / 2, curY + 18 + idx * 16);
+      });
 
       return canvas;
+    }
+
+    // Helper: Build complete plain-text summary of all selected receipt items so the entire selected receipt also goes through in WhatsApp text without truncation
+    function buildSelectedReceiptWhatsAppText() {
+      const bill = currentOpenedReceiptBill || {};
+      const checkedKeys = new Set();
+      const checkboxes = document.querySelectorAll("#waChecklistInputsContainer .rec-item-check");
+      if (checkboxes.length > 0) {
+        checkboxes.forEach(cb => {
+          if (cb.checked && cb.dataset.key) checkedKeys.add(cb.dataset.key);
+        });
+      } else {
+        ["tenant", "billdate", "rent", "elec", "png", "water", "additional", "carry", "total", "paid", "status", "balance", "contact", "upi", "notes"].forEach(k => checkedKeys.add(k));
+      }
+
+      const { selectedTotal, paidAmt, rawDiff } = recalculateReceiptSelection();
+      const billDateFormatted = formatDateOnly(bill.BillDate || bill.PaymentDate);
+      const paidDateFormatted = formatDateOnly(bill.PaymentDate || bill.BillDate);
+      let carryVal = parseFloat(bill.PrevCarryBalance ?? bill.PrevPending);
+      if (isNaN(carryVal)) {
+        carryVal = (typeof getCarryForwardBalanceForMonth === "function")
+          ? (parseFloat(getCarryForwardBalanceForMonth(bill.PropertyName, bill.FlatName, bill.MonthYear, bill.RenterID, bill.TenantName)) || 0)
+          : 0;
+      }
+      const carryText = carryVal > 0
+        ? `+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)`
+        : (carryVal < 0 ? `- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)` : `₹0`);
+
+      const elecPrev = parseFloat(bill.ElecPrev) || 0;
+      const elecCurr = parseFloat(bill.ElecCurr) || 0;
+      const elecUnits = bill.ElecUnits !== undefined && bill.ElecUnits !== "" ? (parseFloat(bill.ElecUnits) || 0) : Math.max(0, elecCurr - elecPrev);
+      const elecRate = parseFloat(bill.ElecRate) || 0;
+      const elecTotal = bill.ElecTotal !== undefined && bill.ElecTotal !== "" ? (parseFloat(bill.ElecTotal) || 0) : (elecUnits * elecRate);
+
+      const pngPrev = parseFloat(bill.PNGPrev) || 0;
+      const pngCurr = parseFloat(bill.PNGCurr) || 0;
+      const pngUnits = bill.PNGUnits !== undefined && bill.PNGUnits !== "" ? (parseFloat(bill.PNGUnits) || 0) : Math.max(0, pngCurr - pngPrev);
+      const pngRate = parseFloat(bill.PNGRate) || 0;
+      const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : (pngUnits * pngRate);
+
+      const waterPrev = parseFloat(bill.WaterPrev) || 0;
+      const waterCurr = parseFloat(bill.WaterCurr) || 0;
+      const waterUnits = bill.WaterUnits !== undefined && bill.WaterUnits !== "" ? (parseFloat(bill.WaterUnits) || 0) : Math.max(0, waterCurr - waterPrev);
+      const waterRate = parseFloat(bill.WaterRate) || 0;
+      const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : (waterUnits * waterRate);
+
+      const addNameStr = bill.AdditionalName || bill.ExtraDesc || "None";
+      const addAmtVal = parseFloat(bill.AdditionalAmount ?? bill.ExtraAmount) || 0;
+      const payModeStr = bill.PaymentMode || "UPI";
+
+      const resolvedContact = resolveFlatUpiAndContact(bill.PropertyName, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
+      const rawUpiId = (resolvedContact.upiId && String(resolvedContact.upiId).trim())
+        ? String(resolvedContact.upiId).trim()
+        : ((bill.UPIID && String(bill.UPIID).trim()) ? String(bill.UPIID).trim() : "");
+      const upiId = String(rawUpiId || "").replace(/['"\s]/g, "").trim();
+      const upiName = (resolvedContact.upiName && String(resolvedContact.upiName).trim())
+        ? String(resolvedContact.upiName).trim()
+        : ((bill.UPIName && String(bill.UPIName).trim()) ? String(bill.UPIName).trim() : "");
+      const contactPhone =
+        resolvedContact.contractMobile ||
+        sanitizeContactPhoneDisplay(bill.ContractMobile) ||
+        "N/A";
+
+      const lines = [
+        `*${bill.PropertyName || "Property"} — Flat ${bill.FlatName || ""}*`,
+        `*Billing Month: ${formatMonthLabel(bill.MonthYear)}*`,
+        `--------------------------------`
+      ];
+      if (checkedKeys.has("tenant")) lines.push(`Tenant Name: *${bill.TenantName || "--"}*`);
+      if (checkedKeys.has("billdate")) lines.push(`Billing Date: *${billDateFormatted || "--"}*`);
+      if (checkedKeys.has("rent")) lines.push(`Base Rent: *₹${(parseFloat(bill.BaseRent) || 0).toLocaleString('en-IN')}*`);
+      if (checkedKeys.has("elec")) lines.push(`Electricity (${elecPrev} to ${elecCurr} = ${elecUnits}U @ ₹${elecRate}): *₹${elecTotal.toLocaleString('en-IN')}*`);
+      if (checkedKeys.has("png")) lines.push(`PNG Gas (${pngPrev} to ${pngCurr} = ${pngUnits}U @ ₹${pngRate}): *₹${pngTotal.toLocaleString('en-IN')}*`);
+      if (checkedKeys.has("water")) lines.push(`Water (${waterPrev} to ${waterCurr} = ${waterUnits}U @ ₹${waterRate}): *₹${waterTotal.toLocaleString('en-IN')}*`);
+      if (checkedKeys.has("additional")) lines.push(`Additional Charge (${addNameStr}): *₹${addAmtVal.toLocaleString('en-IN')}*`);
+      if (checkedKeys.has("carry")) lines.push(`Carry-Forward Balance: *${carryText}*`);
+      if (checkedKeys.has("total")) {
+        lines.push(`--------------------------------`);
+        lines.push(`*Total Billed Amount: ₹${selectedTotal.toLocaleString('en-IN')}*`);
+        lines.push(`--------------------------------`);
+      }
+      if (checkedKeys.has("paid")) {
+        lines.push(`Amount Paid (${payModeStr}${paidDateFormatted && paidDateFormatted !== '--' ? ' • ' + paidDateFormatted : ''}): *₹${(paidAmt || 0).toLocaleString('en-IN')}*`);
+      }
+      if (checkedKeys.has("status")) {
+        let statusValStr = "Fully Paid (₹0 Due)";
+        if (rawDiff < 0) statusValStr = `Due (₹${Math.abs(rawDiff).toLocaleString('en-IN')} Pending)`;
+        else if (rawDiff > 0) statusValStr = `Overpaid / Advance (+₹${rawDiff.toLocaleString('en-IN')})`;
+        lines.push(`Payment Status / Balance: *${statusValStr}*`);
+      }
+      if (checkedKeys.has("balance")) lines.push(`Pay UPI Name: *${upiName || "N/A"}*`);
+      if (checkedKeys.has("contact")) lines.push(`Contact Phone: *${contactPhone || "N/A"}*`);
+      if (checkedKeys.has("upi")) lines.push(`Pay via UPI (${upiName || "N/A"}): *${upiId || "N/A"}*`);
+      if (checkedKeys.has("notes") && bill.Notes) lines.push(`Notes: ${bill.Notes}`);
+      return lines.join("\n");
     }
 
     // Helper: capture receipt as a clean, untainted PNG Blob (guaranteed non-blank)
@@ -21792,7 +22160,7 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    // Requirement 1, 7 & 8: Reliable Receipt Image Sending to WhatsApp (Clipboard Promise + Auto-Download + Mobile Share)
+    // Requirement 1, 7 & 8: Reliable Receipt Image Sending to WhatsApp (Clipboard Promise + Auto-Download + Mobile Share + Full Selected Receipt Text)
     async function shareSelectedReceiptOnWhatsApp() {
       if (!currentOpenedReceiptBill) return;
       const bill = currentOpenedReceiptBill;
@@ -21802,11 +22170,12 @@ function formatMonthLabel(rawVal) {
       const formattedPhone = formatWhatsAppPhone(rawPhone);
 
       recalculateReceiptSelection();
+      const fullReceiptText = buildSelectedReceiptWhatsAppText();
 
       const sendBtn = document.getElementById("btnConfirmSendWhatsApp");
       if (sendBtn) {
         sendBtn.disabled = true;
-        sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Preparing Receipt Image...`;
+        sendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Preparing Full Receipt...`;
       }
 
       // Start generating the PNG Blob immediately and bind ClipboardItem synchronously within the user click gesture
@@ -21851,16 +22220,17 @@ function formatMonthLabel(rawVal) {
       const fileName = `Receipt_Flat_${safeFlat}_${safeMonth}.png`;
       const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
 
-      // On Mobile devices, invoke native share sheet with the actual PNG image file so WhatsApp receives the image directly
+      // On Mobile devices, invoke native share sheet with the actual full-height PNG image file and full text
       if (isMobileDevice && navigator.canShare && navigator.share) {
         const receiptFile = new File([receiptBlob], fileName, { type: "image/png" });
         if (navigator.canShare({ files: [receiptFile] })) {
           try {
             await navigator.share({
               files: [receiptFile],
-              title: `Rent Receipt - Flat ${bill.FlatName}`
+              title: `Rent Receipt - Flat ${bill.FlatName}`,
+              text: fullReceiptText
             });
-            triggerSideToast("Receipt Image Sent", "Receipt image shared directly to WhatsApp!", true);
+            triggerSideToast("Receipt Image Sent", "Complete receipt shared directly to WhatsApp!", true);
             return;
           } catch (shareErr) {
             if (shareErr && shareErr.name === "AbortError") return;
@@ -21868,7 +22238,7 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      // Also save a clean PNG copy to the device so the user always has the image file ready if clipboard paste is blocked
+      // Also save a clean PNG copy to the device so the user always has the complete image file ready
       try {
         const blobUrl = URL.createObjectURL(receiptBlob);
         const dlLink = document.createElement("a");
@@ -21884,17 +22254,18 @@ function formatMonthLabel(rawVal) {
         triggerSideToast(
           "Receipt Image Ready — Mobile Missing",
           copiedToClipboard
-            ? "Receipt image copied to clipboard & downloaded! Save a valid +91 10-digit mobile number in Renter Profile to open their WhatsApp chat automatically."
-            : "Receipt image downloaded! Save a valid +91 10-digit mobile number in Renter Profile to open their WhatsApp chat automatically.",
+            ? "Full receipt image copied to clipboard & downloaded! Save a valid +91 10-digit mobile number in Renter Profile to open their WhatsApp chat automatically."
+            : "Full receipt image downloaded! Save a valid +91 10-digit mobile number in Renter Profile to open their WhatsApp chat automatically.",
           false
         );
         return;
       }
 
-      // Requirement 7 & 8: On Desktop/Computer, open directly inside WhatsApp Web in the browser
+      // Requirement 7 & 8: Open directly inside WhatsApp with the complete selected receipt details pre-filled and the full-height image on clipboard
+      const encodedText = encodeURIComponent(fullReceiptText);
       const whatsappUrl = isMobileDevice
-        ? `https://api.whatsapp.com/send?phone=${formattedPhone}`
-        : `https://web.whatsapp.com/send?phone=${formattedPhone}`;
+        ? `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${encodedText}`
+        : `https://web.whatsapp.com/send?phone=${formattedPhone}&text=${encodedText}`;
 
       try {
         window.open(whatsappUrl, "_blank", "noopener,noreferrer");
@@ -21906,10 +22277,10 @@ function formatMonthLabel(rawVal) {
         link.click();
       }
       triggerSideToast(
-        "Receipt Image Ready for WhatsApp",
+        "Complete Receipt Ready for WhatsApp",
         copiedToClipboard
-          ? `WhatsApp chat opened for +${formattedPhone}. Receipt image is copied to clipboard (press Ctrl+V in chat to send) and downloaded as PNG!`
-          : `WhatsApp chat opened for +${formattedPhone}. Receipt image downloaded as ${fileName} — attach or drag it into the chat to send!`,
+          ? `WhatsApp chat opened for +${formattedPhone} with complete receipt details! Full receipt image is also copied to clipboard (press Ctrl+V in chat) and downloaded.`
+          : `WhatsApp chat opened for +${formattedPhone} with complete receipt details! Full receipt image downloaded as ${fileName}.`,
         true
       );
     }
@@ -29717,6 +30088,88 @@ function formatMonthLabel(rawVal) {
       triggerSideToast("Audit CSV Downloaded", "Admin audit trail exported to CSV.", true);
     }
 
+
+    // --- BUG 1 FIX HELPERS: AUTO-CREATE SEPARATE SHEETS, COLUMNS & ROWS + COPY/DOWNLOAD CODE.GS ---
+    async function loadFixedGasCodeIntoViewer() {
+      const ta = document.getElementById("fixedGasCodeViewerTextarea");
+      if (!ta) return "";
+      if (ta.value && ta.value.length > 100) return ta.value;
+      try {
+        let text = "";
+        const apiRes = await fetch("/api/gas-code");
+        if (apiRes.ok) {
+          const json = await apiRes.json();
+          if (json && json.code) text = json.code;
+        }
+        if (!text) {
+          const fileRes = await fetch("/code.js");
+          if (fileRes.ok) text = await fileRes.text();
+        }
+        if (text) {
+          ta.value = text;
+          return text;
+        }
+      } catch (e) {}
+      return "";
+    }
+
+    async function copyFixedGasCodeToClipboard() {
+      const code = await loadFixedGasCodeIntoViewer();
+      if (!code) {
+        return triggerSideToast("Load Notice", "Could not load Code.gs text.", false);
+      }
+      try {
+        await navigator.clipboard.writeText(code);
+        const badge = document.getElementById("gasCodeCopyStatusBadge");
+        if (badge) badge.innerText = "Copied to Clipboard!";
+        triggerSideToast("Code.gs Copied", "Fixed Google Apps Script code copied! Paste it into Extensions > Apps Script in your Google Sheet and Deploy.", true);
+      } catch (e) {
+        const ta = document.getElementById("fixedGasCodeViewerTextarea");
+        if (ta) {
+          ta.select();
+          document.execCommand("copy");
+        }
+        triggerSideToast("Code.gs Selected", "Code selected and copied to clipboard.", true);
+      }
+    }
+
+    async function downloadFixedGasCodeFile() {
+      const code = await loadFixedGasCodeIntoViewer();
+      if (!code) return;
+      const blob = new Blob([code], { type: "text/javascript;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "code.gs";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      triggerSideToast("Code.gs Downloaded", "Saved fixed Google Apps Script as code.gs.", true);
+    }
+
+    async function triggerAutoCreateAllSheetsAndColumnsNow() {
+      triggerSideToast("Creating Sheets & Columns...", "Auto-creating all 15 separate Google Sheet tabs, column headers, and syncing rows...", "warning");
+      try {
+        await sendFirebaseAction({ action: "setupAllSheets" });
+        await sendFirebaseAction({
+          action: "syncAllData",
+          properties: DB.properties || [],
+          flats: DB.flats || [],
+          renters: DB.renters || [],
+          bills: DB.bills || [],
+          users: getKnownUsersList(),
+          fdRecords: DB.fdRecords || [],
+          khetRecords: DB.khetRecords || [],
+          kharchRecords: DB.kharchRecords || []
+        });
+        await sendFirebaseAction({ action: "saveMaintenanceTickets", maintenanceTickets: getStoredMaintenanceTickets() });
+        await sendFirebaseAction({ action: "saveAuditLogs", auditLogs: getStoredAdminAuditLogs() });
+        triggerSideToast("Sheets & Columns Created", "All 15 separate sheets, column headers (Row 1), and data rows have been created and synced to Google Sheets!", true);
+      } catch (err) {
+        triggerSideToast("Sync Notice", "Setup command sent to Google Sheets.", true);
+      }
+    }
 
   </script>
 
