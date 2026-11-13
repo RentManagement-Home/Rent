@@ -13356,19 +13356,25 @@ function formatMonthLabel(rawVal) {
         const normProp = String(propName || "").trim().toLowerCase();
         const normFlat = String(flatName || "").trim().toLowerCase();
         const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+        const monthlySlotKey = `MONTHLY__${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
         const flatSlotKey = `${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
         const aadhaarSlotKey = normAadhaar.length === 12 ? `${normAadhaar}__${cleanMonth}__${cleanCat}` : "";
 
         const optimisticSlot = {
+          slotKey: monthlySlotKey,
           imageUrl: compressedDataUrl,
+          previewUrl: compressedDataUrl,
           category: cleanCat,
+          categoryLabel: categoryLabel,
           monthYear: cleanMonth,
           propertyName: propName,
           flatName: flatName,
           renterId: renterId,
+          aadhaar: normAadhaar,
           identityDocNumber: normAadhaar,
           uploadedAt: new Date().toISOString()
         };
+        DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] = optimisticSlot;
         DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = optimisticSlot;
         if (aadhaarSlotKey) {
           DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = optimisticSlot;
@@ -13380,24 +13386,31 @@ function formatMonthLabel(rawVal) {
           propertyName: propName,
           flatName: flatName,
           renterId: renterId,
+          aadhaar: normAadhaar,
           identityDocNumber: normAadhaar,
           renterName: renterName,
           monthYear: cleanMonth,
           category: cleanCat,
+          categoryLabel: categoryLabel,
           fileName: file.name,
           mimeType: "image/jpeg",
           base64Data: compressedDataUrl
         });
 
-        const driveUrl = res && (res.imageUrl || res.url)
-          ? normalizeGoogleDriveImageUrl(res.imageUrl || res.url)
+        const rawReturnedUrl = res && (res.imageUrl || res.previewUrl || res.url)
+          ? (res.imageUrl || res.previewUrl || res.url)
+          : "";
+        const driveUrl = rawReturnedUrl
+          ? (rawReturnedUrl.startsWith("data:image") ? rawReturnedUrl : normalizeGoogleDriveImageUrl(rawReturnedUrl))
           : compressedDataUrl;
 
         const savedSlot = {
           ...optimisticSlot,
           imageUrl: driveUrl,
-          fileId: res?.fileId || ""
+          previewUrl: driveUrl,
+          fileId: res?.fileId || res?.driveFileId || ""
         };
+        DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] = savedSlot;
         DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = savedSlot;
         if (aadhaarSlotKey) {
           DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = savedSlot;
@@ -13419,11 +13432,13 @@ function formatMonthLabel(rawVal) {
     async function deleteRenterMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum) {
       const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
       const cleanCat = String(categoryKey || "").trim().toLowerCase();
+      const normProp = String(propName || "").trim().toLowerCase();
+      const normFlat = String(flatName || "").trim().toLowerCase();
+      const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+      const monthlySlotKey = `MONTHLY__${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
 
       if (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos) {
-        const normProp = String(propName || "").trim().toLowerCase();
-        const normFlat = String(flatName || "").trim().toLowerCase();
-        const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+        delete DB.globalConfig.renterMonthlyPhotos[monthlySlotKey];
         delete DB.globalConfig.renterMonthlyPhotos[`${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`];
         if (normAadhaar.length === 12) {
           delete DB.globalConfig.renterMonthlyPhotos[`${normAadhaar}__${cleanMonth}__${cleanCat}`];
@@ -13434,10 +13449,12 @@ function formatMonthLabel(rawVal) {
 
       await sendFirebaseAction({
         action: "deleteRenterMonthlyPhoto",
+        slotKey: monthlySlotKey,
         propertyName: propName,
         flatName: flatName,
         renterId: renterId,
-        identityDocNumber: aadhaarNum,
+        aadhaar: normAadhaar,
+        identityDocNumber: normAadhaar,
         monthYear: cleanMonth,
         category: cleanCat
       });
@@ -13617,6 +13634,100 @@ function formatMonthLabel(rawVal) {
         let paymentRightHtml = "";
         let qrRenderData = null;
 
+        const aadhaarPageSize = 6;
+        const totalAadhaarReceipts = myBills.length;
+        const totalAadhaarPages = Math.max(1, Math.ceil(totalAadhaarReceipts / aadhaarPageSize));
+        if (typeof window.renterAadhaarReceiptsPage !== "number" || isNaN(window.renterAadhaarReceiptsPage)) {
+          window.renterAadhaarReceiptsPage = 0;
+        }
+        if (window.renterAadhaarReceiptsPage < 0) window.renterAadhaarReceiptsPage = 0;
+        if (window.renterAadhaarReceiptsPage >= totalAadhaarPages) {
+          window.renterAadhaarReceiptsPage = totalAadhaarPages - 1;
+        }
+        const pageStartIdx = window.renterAadhaarReceiptsPage * aadhaarPageSize;
+        const paginatedAadhaarBills = myBills.slice(pageStartIdx, pageStartIdx + aadhaarPageSize);
+
+        const separateAadhaarLinkedReceiptsBoxHtml = `
+          <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+              <div>
+                <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
+                  <i class="fa-solid fa-id-card" style="margin-right:5px;"></i> Aadhaar-Linked Receipts (${totalAadhaarReceipts})
+                </div>
+                <h4 style="margin:3px 0 0 0; font-size:1.02rem; font-weight:900; color:var(--text-main);">
+                  All Receipts Linked to Your Aadhaar Card
+                </h4>
+              </div>
+              <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">
+                ${totalAadhaarReceipts > 0 ? `Showing ${pageStartIdx + 1}–${Math.min(pageStartIdx + aadhaarPageSize, totalAadhaarReceipts)} of ${totalAadhaarReceipts}` : "Click any receipt to open"}
+              </span>
+            </div>
+            ${paginatedAadhaarBills.length > 0 ? `
+              <div style="display:flex; flex-direction:column; gap:9px;">
+                ${paginatedAadhaarBills.map((bItem, idx) => {
+                  const globalIdx = pageStartIdx + idx;
+                  const mMetrics = computeCurrentMonthStandaloneAdvanceAndDue(bItem);
+                  const isSettled = mMetrics.dueAmt <= 0;
+                  const itemBillId = String(bItem.BillID || "").replace(/'/g, "\\'");
+                  const itemMonthYear = String(bItem.MonthYear || "").replace(/'/g, "\\'");
+                  const isSelectedMonth = currentMonthBill && String(bItem.BillID || "") === String(currentMonthBill.BillID || "") && String(bItem.MonthYear || "") === String(currentMonthBill.MonthYear || "");
+                  return `
+                    <div
+                      class="renter-history-row-item"
+                      style="${isSelectedMonth ? "border-color:#6366f1; background:rgba(99,102,241,0.12);" : ""}"
+                      onclick="selectRenterHomeAvailableReceipt('${itemBillId}', '${itemMonthYear}'); openBillReceiptModal('${itemBillId}', '${itemMonthYear}');"
+                      title="Click to view receipt for ${mMetrics.monthLabel}"
+                    >
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:34px; height:34px; border-radius:9px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.88rem; flex-shrink:0;">
+                          <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
+                        </div>
+                        <div>
+                          <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">#${globalIdx + 1} • ${mMetrics.monthLabel} Receipt</div>
+                          <div style="font-size:0.71rem; color:var(--text-muted);">Flat ${bItem.FlatName || targetFlat} (${bItem.PropertyName || targetProp}) • Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
+                        </div>
+                      </div>
+                      <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:0.71rem; font-weight:800; padding:4px 9px; border-radius:999px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; border:1px solid ${isSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
+                          ${mMetrics.advanceAmt > 0 ? `Adv ₹${mMetrics.advanceAmt.toLocaleString("en-IN")}` : (isSettled ? "Settled" : `Due ₹${mMetrics.dueAmt.toLocaleString("en-IN")}`)}
+                        </span>
+                        <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:var(--text-muted);"></i>
+                      </div>
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+              ${totalAadhaarReceipts > aadhaarPageSize ? `
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding-top:10px; border-top:1px dashed var(--glass-border);">
+                  <button
+                    type="button"
+                    onclick="event.stopPropagation(); changeRenterAadhaarReceiptsPage(-1);"
+                    ${window.renterAadhaarReceiptsPage <= 0 ? "disabled" : ""}
+                    style="padding:7px 14px; border-radius:9px; border:1px solid var(--glass-border); background:${window.renterAadhaarReceiptsPage <= 0 ? "rgba(148,163,184,0.08)" : "rgba(99,102,241,0.16)"}; color:${window.renterAadhaarReceiptsPage <= 0 ? "var(--text-muted)" : "#818cf8"}; font-size:0.76rem; font-weight:800; cursor:${window.renterAadhaarReceiptsPage <= 0 ? "not-allowed" : "pointer"}; display:inline-flex; align-items:center; gap:6px; opacity:${window.renterAadhaarReceiptsPage <= 0 ? "0.55" : "1"};"
+                  >
+                    <i class="fa-solid fa-chevron-left"></i> Previous
+                  </button>
+                  <span style="font-size:0.73rem; font-weight:800; color:var(--text-muted);">
+                    Page ${window.renterAadhaarReceiptsPage + 1} of ${totalAadhaarPages}
+                  </span>
+                  <button
+                    type="button"
+                    onclick="event.stopPropagation(); changeRenterAadhaarReceiptsPage(1);"
+                    ${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "disabled" : ""}
+                    style="padding:7px 14px; border-radius:9px; border:1px solid var(--glass-border); background:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "rgba(148,163,184,0.08)" : "rgba(99,102,241,0.16)"}; color:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "var(--text-muted)" : "#818cf8"}; font-size:0.76rem; font-weight:800; cursor:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "not-allowed" : "pointer"}; display:inline-flex; align-items:center; gap:6px; opacity:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "0.55" : "1"};"
+                  >
+                    Next <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+              ` : ""}
+            ` : `
+              <div style="text-align:center; padding:18px 12px; color:var(--text-muted); font-size:0.8rem; border:1px dashed var(--glass-border); border-radius:12px;">
+                No receipts linked to your Aadhaar card have been generated yet.
+              </div>
+            `}
+          </div>
+        `;
+
         if (currentMonthBill) {
           const billTotal = currentMonthMetrics.standaloneCharge;
           const billPaid = currentMonthMetrics.paidAmount;
@@ -13694,100 +13805,6 @@ function formatMonthLabel(rawVal) {
               </div>
             `;
           };
-
-          const aadhaarPageSize = 6;
-          const totalAadhaarReceipts = myBills.length;
-          const totalAadhaarPages = Math.max(1, Math.ceil(totalAadhaarReceipts / aadhaarPageSize));
-          if (typeof window.renterAadhaarReceiptsPage !== "number" || isNaN(window.renterAadhaarReceiptsPage)) {
-            window.renterAadhaarReceiptsPage = 0;
-          }
-          if (window.renterAadhaarReceiptsPage < 0) window.renterAadhaarReceiptsPage = 0;
-          if (window.renterAadhaarReceiptsPage >= totalAadhaarPages) {
-            window.renterAadhaarReceiptsPage = totalAadhaarPages - 1;
-          }
-          const pageStartIdx = window.renterAadhaarReceiptsPage * aadhaarPageSize;
-          const paginatedAadhaarBills = myBills.slice(pageStartIdx, pageStartIdx + aadhaarPageSize);
-
-          const separateAadhaarLinkedReceiptsBoxHtml = `
-            <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
-              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
-                <div>
-                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
-                    <i class="fa-solid fa-id-card" style="margin-right:5px;"></i> Aadhaar-Linked Receipts (${totalAadhaarReceipts})
-                  </div>
-                  <h4 style="margin:3px 0 0 0; font-size:1.02rem; font-weight:900; color:var(--text-main);">
-                    All Receipts Linked to Your Aadhaar Card
-                  </h4>
-                </div>
-                <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">
-                  ${totalAadhaarReceipts > 0 ? `Showing ${pageStartIdx + 1}–${Math.min(pageStartIdx + aadhaarPageSize, totalAadhaarReceipts)} of ${totalAadhaarReceipts}` : "Click any receipt to open"}
-                </span>
-              </div>
-              ${paginatedAadhaarBills.length > 0 ? `
-                <div style="display:flex; flex-direction:column; gap:9px;">
-                  ${paginatedAadhaarBills.map((bItem, idx) => {
-                    const globalIdx = pageStartIdx + idx;
-                    const mMetrics = computeCurrentMonthStandaloneAdvanceAndDue(bItem);
-                    const isSettled = mMetrics.dueAmt <= 0;
-                    const itemBillId = String(bItem.BillID || "").replace(/'/g, "\\'");
-                    const itemMonthYear = String(bItem.MonthYear || "").replace(/'/g, "\\'");
-                    const isSelectedMonth = currentMonthBill && String(bItem.BillID || "") === String(currentMonthBill.BillID || "") && String(bItem.MonthYear || "") === String(currentMonthBill.MonthYear || "");
-                    return `
-                      <div
-                        class="renter-history-row-item"
-                        style="${isSelectedMonth ? "border-color:#6366f1; background:rgba(99,102,241,0.12);" : ""}"
-                        onclick="selectRenterHomeAvailableReceipt('${itemBillId}', '${itemMonthYear}'); openBillReceiptModal('${itemBillId}', '${itemMonthYear}');"
-                        title="Click to view receipt for ${mMetrics.monthLabel}"
-                      >
-                        <div style="display:flex; align-items:center; gap:10px;">
-                          <div style="width:34px; height:34px; border-radius:9px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.88rem; flex-shrink:0;">
-                            <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
-                          </div>
-                          <div>
-                            <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">#${globalIdx + 1} • ${mMetrics.monthLabel} Receipt</div>
-                            <div style="font-size:0.71rem; color:var(--text-muted);">Flat ${bItem.FlatName || targetFlat} (${bItem.PropertyName || targetProp}) • Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
-                          </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                          <span style="font-size:0.71rem; font-weight:800; padding:4px 9px; border-radius:999px; background:${isSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isSettled ? "#34d399" : "#f87171"}; border:1px solid ${isSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
-                            ${mMetrics.advanceAmt > 0 ? `Adv ₹${mMetrics.advanceAmt.toLocaleString("en-IN")}` : (isSettled ? "Settled" : `Due ₹${mMetrics.dueAmt.toLocaleString("en-IN")}`)}
-                          </span>
-                          <i class="fa-solid fa-chevron-right" style="font-size:0.7rem; color:var(--text-muted);"></i>
-                        </div>
-                      </div>
-                    `;
-                  }).join("")}
-                </div>
-                ${totalAadhaarReceipts > aadhaarPageSize ? `
-                  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding-top:10px; border-top:1px dashed var(--glass-border);">
-                    <button
-                      type="button"
-                      onclick="event.stopPropagation(); changeRenterAadhaarReceiptsPage(-1);"
-                      ${window.renterAadhaarReceiptsPage <= 0 ? "disabled" : ""}
-                      style="padding:7px 14px; border-radius:9px; border:1px solid var(--glass-border); background:${window.renterAadhaarReceiptsPage <= 0 ? "rgba(148,163,184,0.08)" : "rgba(99,102,241,0.16)"}; color:${window.renterAadhaarReceiptsPage <= 0 ? "var(--text-muted)" : "#818cf8"}; font-size:0.76rem; font-weight:800; cursor:${window.renterAadhaarReceiptsPage <= 0 ? "not-allowed" : "pointer"}; display:inline-flex; align-items:center; gap:6px; opacity:${window.renterAadhaarReceiptsPage <= 0 ? "0.55" : "1"};"
-                    >
-                      <i class="fa-solid fa-chevron-left"></i> Previous
-                    </button>
-                    <span style="font-size:0.73rem; font-weight:800; color:var(--text-muted);">
-                      Page ${window.renterAadhaarReceiptsPage + 1} of ${totalAadhaarPages}
-                    </span>
-                    <button
-                      type="button"
-                      onclick="event.stopPropagation(); changeRenterAadhaarReceiptsPage(1);"
-                      ${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "disabled" : ""}
-                      style="padding:7px 14px; border-radius:9px; border:1px solid var(--glass-border); background:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "rgba(148,163,184,0.08)" : "rgba(99,102,241,0.16)"}; color:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "var(--text-muted)" : "#818cf8"}; font-size:0.76rem; font-weight:800; cursor:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "not-allowed" : "pointer"}; display:inline-flex; align-items:center; gap:6px; opacity:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "0.55" : "1"};"
-                    >
-                      Next <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                  </div>
-                ` : ""}
-              ` : `
-                <div style="text-align:center; padding:18px 12px; color:var(--text-muted); font-size:0.8rem; border:1px dashed var(--glass-border); border-radius:12px;">
-                  No receipts linked to your Aadhaar card have been generated yet.
-                </div>
-              `}
-            </div>
-          `;
 
           statementLeftHtml = `
             <div class="renter-statement-card">
@@ -14114,21 +14131,7 @@ function formatMonthLabel(rawVal) {
               </div>
 
               <!-- Box 2: Separate Box Below Instant UPI Payment Section for All Aadhaar-Linked Receipts -->
-              <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
-                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
-                  <div>
-                    <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
-                      <i class="fa-solid fa-id-card" style="margin-right:5px;"></i> Aadhaar-Linked Receipts (0)
-                    </div>
-                    <h4 style="margin:3px 0 0 0; font-size:1.02rem; font-weight:900; color:var(--text-main);">
-                      All Receipts Linked to Your Aadhaar Card
-                    </h4>
-                  </div>
-                </div>
-                <div style="text-align:center; padding:18px 12px; color:var(--text-muted); font-size:0.8rem; border:1px dashed var(--glass-border); border-radius:12px;">
-                  No receipts linked to your Aadhaar card have been generated yet.
-                </div>
-              </div>
+              ${separateAadhaarLinkedReceiptsBoxHtml}
             </div>
           `;
         }
@@ -14151,12 +14154,20 @@ function formatMonthLabel(rawVal) {
 
         const resolveRenterMonthlyPhotoSlot = (catKey) => {
           const cleanCat = String(catKey || "").trim().toLowerCase();
+          const candidateKeys = [];
           if (normAadhaarKey.length === 12) {
-            const byAadh = monthlyPhotosMap[`${normAadhaarKey}__${defaultMonthlyUploadMonth}__${cleanCat}`];
-            if (byAadh && byAadh.imageUrl) return byAadh;
+            candidateKeys.push(`${normAadhaarKey}__${defaultMonthlyUploadMonth}__${cleanCat}`);
           }
-          const byFlat = monthlyPhotosMap[`${normPropKey}__${normFlatKey}__${defaultMonthlyUploadMonth}__${cleanCat}`];
-          if (byFlat && byFlat.imageUrl) return byFlat;
+          candidateKeys.push(`${normPropKey}__${normFlatKey}__${defaultMonthlyUploadMonth}__${cleanCat}`);
+          candidateKeys.push(`MONTHLY__${normPropKey}__${normFlatKey}__${defaultMonthlyUploadMonth}__${cleanCat}`);
+          for (const k of candidateKeys) {
+            const slot = monthlyPhotosMap[k];
+            if (slot && (slot.imageUrl || slot.previewUrl)) {
+              const rawImg = slot.imageUrl || slot.previewUrl;
+              slot.imageUrl = rawImg.startsWith("data:image") ? rawImg : normalizeGoogleDriveImageUrl(rawImg);
+              return slot;
+            }
+          }
           return null;
         };
 
@@ -14925,16 +14936,32 @@ function formatMonthLabel(rawVal) {
       // Strictly use the live arrays from Google Sheets
       DB.properties = Array.isArray(res.properties) ? res.properties : (Array.isArray(dbObj.properties) ? dbObj.properties : []);
       DB.flats = Array.isArray(res.flats) ? res.flats : (Array.isArray(dbObj.flats) ? dbObj.flats : []);
+      const prevRentersSnapshot = Array.isArray(DB.renters) ? DB.renters : [];
       const rawRenters = Array.isArray(res.renters) ? res.renters : (Array.isArray(dbObj.renters) ? dbObj.renters : []);
       DB.renters = rawRenters.map(r => {
-        if (r.ProfileImageURL) r.ProfileImageURL = normalizeGoogleDriveImageUrl(r.ProfileImageURL);
-        if (r.IdentityImageURL) r.IdentityImageURL = normalizeGoogleDriveImageUrl(r.IdentityImageURL);
+        const prevMatch = prevRentersSnapshot.find(pr =>
+          (r.RenterID && pr.RenterID && String(r.RenterID) === String(pr.RenterID)) ||
+          (String(r.PropertyName || "").trim().toLowerCase() === String(pr.PropertyName || "").trim().toLowerCase() &&
+            String(r.FlatName || "").trim().toLowerCase() === String(pr.FlatName || "").trim().toLowerCase() &&
+            String(r.Status || "Active") === String(pr.Status || "Active"))
+        );
+        const rawProf = r.DriveProfilePreviewUrl || r.ProfileImageURL || prevMatch?.ProfileImageURL || "";
+        const rawId = r.DriveIdentityPreviewUrl || r.IdentityImageURL || prevMatch?.IdentityImageURL || "";
+        if (rawProf) r.ProfileImageURL = rawProf.startsWith("data:image") ? rawProf : normalizeGoogleDriveImageUrl(rawProf);
+        if (rawId) r.IdentityImageURL = rawId.startsWith("data:image") ? rawId : normalizeGoogleDriveImageUrl(rawId);
         if (r.IdentityDocNumber) r.IdentityDocNumber = formatAadhaarWithHyphens(r.IdentityDocNumber);
         if (r.MobileNumber) r.MobileNumber = sanitizeContactPhoneDisplay(r.MobileNumber);
         if (r.AltMobileNumber) r.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
         return r;
       });
       const rawBills = Array.isArray(res.bills) ? res.bills : (Array.isArray(dbObj.bills) ? dbObj.bills : []);
+      rawBills.forEach(b => {
+        if (!b.MeterProofUrl && b.DriveMeterProofPreviewUrl) {
+          b.MeterProofUrl = b.DriveMeterProofPreviewUrl.startsWith("data:image")
+            ? b.DriveMeterProofPreviewUrl
+            : normalizeGoogleDriveImageUrl(b.DriveMeterProofPreviewUrl);
+        }
+      });
       DB.bills = sanitizeAllBillsMonths(rawBills);
       const rawUsers = Array.isArray(res.users) ? res.users : (Array.isArray(dbObj.users) ? dbObj.users : loadLocalUsersMaster());
       DB.users = rawUsers.map(u => {
@@ -14967,9 +14994,14 @@ function formatMonthLabel(rawVal) {
 
       if (res.globalConfig && typeof res.globalConfig === "object") {
         if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        const mergedMonthlyPhotos = {
+          ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
+          ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
+        };
         DB.globalConfig = {
           ...DB.globalConfig,
           ...res.globalConfig,
+          renterMonthlyPhotos: mergedMonthlyPhotos,
           contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
           broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
           privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
@@ -15735,15 +15767,32 @@ function formatMonthLabel(rawVal) {
 
           const incomingProperties = Array.isArray(res.properties) ? res.properties : [];
           const incomingFlats = Array.isArray(res.flats) ? res.flats : [];
+          const prevRentersSnapshot = Array.isArray(DB.renters) ? DB.renters : [];
           const incomingRenters = (Array.isArray(res.renters) ? res.renters : []).map(r => {
-            if (r.ProfileImageURL) r.ProfileImageURL = normalizeGoogleDriveImageUrl(r.ProfileImageURL);
-            if (r.IdentityImageURL) r.IdentityImageURL = normalizeGoogleDriveImageUrl(r.IdentityImageURL);
+            const prevMatch = prevRentersSnapshot.find(pr =>
+              (r.RenterID && pr.RenterID && String(r.RenterID) === String(pr.RenterID)) ||
+              (String(r.PropertyName || "").trim().toLowerCase() === String(pr.PropertyName || "").trim().toLowerCase() &&
+                String(r.FlatName || "").trim().toLowerCase() === String(pr.FlatName || "").trim().toLowerCase() &&
+                String(r.Status || "Active") === String(pr.Status || "Active"))
+            );
+            const rawProf = r.DriveProfilePreviewUrl || r.ProfileImageURL || prevMatch?.ProfileImageURL || "";
+            const rawId = r.DriveIdentityPreviewUrl || r.IdentityImageURL || prevMatch?.IdentityImageURL || "";
+            if (rawProf) r.ProfileImageURL = rawProf.startsWith("data:image") ? rawProf : normalizeGoogleDriveImageUrl(rawProf);
+            if (rawId) r.IdentityImageURL = rawId.startsWith("data:image") ? rawId : normalizeGoogleDriveImageUrl(rawId);
             if (r.IdentityDocNumber) r.IdentityDocNumber = formatAadhaarWithHyphens(r.IdentityDocNumber);
             if (r.MobileNumber) r.MobileNumber = sanitizeContactPhoneDisplay(r.MobileNumber);
             if (r.AltMobileNumber) r.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
             return r;
           });
-          const incomingBills = sanitizeAllBillsMonths(Array.isArray(res.bills) ? res.bills : []);
+          const rawIncomingBills = Array.isArray(res.bills) ? res.bills : [];
+          rawIncomingBills.forEach(b => {
+            if (!b.MeterProofUrl && b.DriveMeterProofPreviewUrl) {
+              b.MeterProofUrl = b.DriveMeterProofPreviewUrl.startsWith("data:image")
+                ? b.DriveMeterProofPreviewUrl
+                : normalizeGoogleDriveImageUrl(b.DriveMeterProofPreviewUrl);
+            }
+          });
+          const incomingBills = sanitizeAllBillsMonths(rawIncomingBills);
           const incomingFdRecords = Array.isArray(res.fdRecords) ? res.fdRecords : [];
           const incomingKhetRecords = Array.isArray(res.khetRecords) ? res.khetRecords : [];
           const incomingKharchRecords = Array.isArray(res.kharchRecords) ? res.kharchRecords : [];
@@ -15786,9 +15835,14 @@ function formatMonthLabel(rawVal) {
           syncServerBackgroundsToLocal(res.globalConfig || res, res.bgLoginUrl || res.userBgLogin || "", res.bgDashboardUrl || res.userBgDashboard || "", Boolean(res.globalConfig));
           if (res.globalConfig && typeof res.globalConfig === "object") {
             if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+            const mergedMonthlyPhotos = {
+              ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
+              ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
+            };
             DB.globalConfig = {
               ...DB.globalConfig,
               ...res.globalConfig,
+              renterMonthlyPhotos: mergedMonthlyPhotos,
               contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
               broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
               privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
@@ -19208,7 +19262,7 @@ function formatMonthLabel(rawVal) {
           sheetSafeBase64: compressedDataUrl
         });
 
-        const returnedImg = res && res.status === "success" ? (res.imageUrl || res.url || "") : "";
+        const returnedImg = res && res.status === "success" ? (res.imageUrl || res.previewUrl || res.url || "") : "";
         const finalSavedImg = (returnedImg && returnedImg.startsWith("data:image"))
           ? returnedImg
           : (returnedImg ? normalizeGoogleDriveImageUrl(returnedImg) : compressedDataUrl);
@@ -27787,7 +27841,7 @@ function formatMonthLabel(rawVal) {
           base64Data: compressedDataUrl
         });
 
-        const returnedUrl = res && res.status === "success" ? (res.imageUrl || res.url || "") : "";
+        const returnedUrl = res && res.status === "success" ? (res.imageUrl || res.previewUrl || res.url || "") : "";
         const finalImageUrl = (returnedUrl && returnedUrl.startsWith("data:image"))
           ? returnedUrl
           : (returnedUrl ? normalizeGoogleDriveImageUrl(returnedUrl) : compressedDataUrl);
