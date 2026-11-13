@@ -14522,7 +14522,7 @@ function formatMonthLabel(rawVal) {
                       onclick="openRenterKycProfileOnlyModal();"
                     >
                       <i class="fa-solid fa-user-shield"></i>
-                      <span>My Profile</span>
+                      <span>My KYC Profile</span>
                     </button>
                   </div>
                 </div>
@@ -20967,7 +20967,7 @@ function formatMonthLabel(rawVal) {
         modal.querySelectorAll(".flat-nav-item").forEach((el, idx) => el.classList.toggle("active", idx === 2));
         modal.querySelectorAll(".tab-content").forEach((el, idx) => el.classList.toggle("active", idx === 2));
         const titleEl = document.getElementById("modalHeaderTitle");
-        if (titleEl) titleEl.innerText = "My Profile";
+        if (titleEl) titleEl.innerText = "My KYC Profile";
         modal.querySelectorAll("#tabProfile input, #tabProfile select, #tabProfile textarea").forEach(inp => {
           inp.setAttribute("readonly", "readonly");
           if (inp.tagName === "SELECT" || inp.type === "file" || inp.type === "date") {
@@ -21057,7 +21057,7 @@ function formatMonthLabel(rawVal) {
       }
 
       const titleEl = document.getElementById("modalHeaderTitle");
-      if (titleEl) titleEl.innerText = "My Profile";
+      if (titleEl) titleEl.innerText = "My KYC Profile";
       const qrBtn = document.getElementById("btnFlatHeaderQrCollect");
       if (qrBtn) qrBtn.style.display = "none";
     }
