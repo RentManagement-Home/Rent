@@ -9559,6 +9559,9 @@
      * Routes all actions to Google Apps Script (GAS_WEB_APP_URL) + Local Mirror
      * ============================================================================
      */
+    const GOOGLE_DRIVE_FOLDER_ID = "1-l3eRY0TuWSb-4RfJvkVZ-gnPbB6R2VW";
+    const GOOGLE_DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1-l3eRY0TuWSb-4RfJvkVZ-gnPbB6R2VW?usp=drive_link";
+
     const GAS_SHEET_ACTIONS = new Set([
       "setupAllSheets",
       "ensureAllSheets",
@@ -9574,6 +9577,9 @@
       "updateRenterProfile",
       "uploadRenterDocument",
       "deleteRenterDocument",
+      "uploadRenterMonthlyPhoto",
+      "deleteRenterMonthlyPhoto",
+      "uploadPhotoToDriveOnly",
       "recordBill",
       "updateSingleBill",
       "deleteBill",
@@ -9885,62 +9891,51 @@
           case "saveBackgrounds":
           case "saveGlobalAppConfig": {
             const isExplicitClear = Boolean(data.explicitClear);
-            const bgLogin = isExplicitClear ? DEFAULT_PORTAL_BACKGROUND_IMAGE : (data.bgLogin || data.bgLoginUrl || "");
-            const bgDash = isExplicitClear ? DEFAULT_PORTAL_BACKGROUND_IMAGE : (data.bgDashboard || data.bgDashboardUrl || "");
-            const customBgs = isExplicitClear ? [] : (data.customBackgrounds || []);
-
             globalConfig = {
               ...globalConfig,
-              bgLoginUrl: bgLogin,
-              bgDashboardUrl: bgDash,
+              bgLoginUrl: "",
+              bgDashboardUrl: "",
               bgCleared: isExplicitClear,
               bgClearedAt: isExplicitClear ? Date.now() : 0,
-              customBackgrounds: customBgs,
+              customBackgrounds: [],
               updatedAt: new Date().toISOString()
             };
             saveLocalGlobalConfigMaster(globalConfig);
 
-            if (isExplicitClear) {
-              usersList = usersList.map(function(u) {
-                return { ...u, BgLogin: "", BgDashboard: "", BgLoginUrl: "", BgDashboardUrl: "", BackgroundURL: "" };
-              });
-              saveLocalUsersMaster(usersList);
-            } else if (data.username) {
-              const lowerU = String(data.username).trim().toLowerCase();
-              usersList = usersList.map(function(u) {
-                if (String(u.Username || "").trim().toLowerCase() === lowerU) {
-                  return {
-                    ...u,
-                    BgLogin: bgLogin,
-                    BgDashboard: bgDash,
-                    BgLoginUrl: bgLogin,
-                    BgDashboardUrl: bgDash,
-                    BackgroundURL: bgDash || bgLogin
-                  };
-                }
-                return u;
-              });
-              saveLocalUsersMaster(usersList);
-            }
+            usersList = usersList.map(function(u) {
+              return { ...u, BgLogin: "", BgDashboard: "", BgLoginUrl: "", BgDashboardUrl: "", BackgroundURL: "" };
+            });
+            saveLocalUsersMaster(usersList);
 
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Backgrounds saved to Google Sheet." };
+            await sendGasSheetAction({ ...data, bgLogin: "", bgDashboard: "", bgLoginUrl: "", bgDashboardUrl: "", customBackgrounds: [], globalConfig: globalConfig });
+            return { status: "success", driveFolderId: GOOGLE_DRIVE_FOLDER_ID, driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL, message: "Saved to Google Drive folder (not saved in Google Sheets)." };
           }
 
           case "uploadBackgroundPhoto": {
-            const photoUrl = data.sheetSafeBase64 || data.base64Data || data.imageUrl || "";
-            const slot = data.slot || data.type || "dashboard";
-            const field = slot === "login" ? "bgLoginUrl" : "bgDashboardUrl";
-
+            const photoData = data.sheetSafeBase64 || data.base64Data || data.imageUrl || "";
             globalConfig = {
               ...globalConfig,
-              [field]: photoUrl,
+              bgLoginUrl: "",
+              bgDashboardUrl: "",
               bgCleared: false,
+              customBackgrounds: [],
               updatedAt: new Date().toISOString()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", url: photoUrl, imageUrl: photoUrl, message: "Background photo uploaded." };
+            const res = await sendGasSheetAction({
+              action: "uploadBackgroundPhoto",
+              base64Data: photoData,
+              driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
+              driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
+              globalConfig: globalConfig
+            });
+            return {
+              status: "success",
+              driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
+              driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
+              previewUrl: res?.previewUrl || photoData,
+              message: "Background photo saved directly to Google Drive folder (not saved in Google Sheets)."
+            };
           }
 
           case "saveContactConfig": {
@@ -10493,53 +10488,25 @@
       }
       const file = inputEl.files && inputEl.files[0];
       if (!file) return;
-      triggerSideToast("Uploading Full HD Background", "Processing crystal-clear Full HD background photo for the Home Page...", "warning");
+      triggerSideToast("Uploading Photo to Google Drive", "Saving photo directly to your Google Drive folder...", "warning");
       try {
-        const hdDataUrl = await readHdBackgroundFileToDataUrl(file, 3840, 0.98);
-        const sheetSafeBase64 = await compressImageFileToDataUrl(file, 460, 0.7);
-
-        try {
-          localStorage.setItem("portal_custom_bg_hd_cache", hdDataUrl);
-          localStorage.setItem("portal_custom_bg_dashboard", hdDataUrl);
-          localStorage.setItem("portal_custom_bg_login", hdDataUrl);
-          localStorage.setItem("portal_custom_bg_sheet_safe", sheetSafeBase64);
-        } catch (storageErr) {
-          try {
-            const highResFallback = await readHdBackgroundFileToDataUrl(file, 2560, 0.92);
-            localStorage.setItem("portal_custom_bg_hd_cache", highResFallback);
-            localStorage.setItem("portal_custom_bg_dashboard", highResFallback);
-            localStorage.setItem("portal_custom_bg_login", highResFallback);
-          } catch (e2) {}
-        }
-        applyCustomBackgrounds();
-        initCustomBgInputs();
-
-        const res = await sendFirebaseAction({
+        const hdDataUrl = await readHdBackgroundFileToDataUrl(file, 1600, 0.85);
+        applyBgImages(hdDataUrl, hdDataUrl);
+        await sendFirebaseAction({
           action: "uploadBackgroundPhoto",
           username: activeUser || "admin",
           type: "dashboard",
           fileName: file.name,
           mimeType: file.type || "image/jpeg",
           base64Data: hdDataUrl,
-          sheetSafeBase64: sheetSafeBase64
+          driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
+          driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL
         });
-        const rawImgUrl = (res && res.status === "success") ? (res.imageUrl || res.url || "") : "";
-        const serverUrl = (rawImgUrl && !rawImgUrl.startsWith("data:image/"))
-          ? normalizeGoogleDriveBgUrl(rawImgUrl)
-          : "";
         const el = document.getElementById("bgUrlLoginScreen");
-        if (serverUrl) {
-          if (el) el.value = serverUrl;
-          localStorage.setItem("portal_custom_bg_dashboard", serverUrl);
-          localStorage.setItem("portal_custom_bg_login", serverUrl);
-        } else {
-          if (el) el.value = "Full HD Photo Uploaded & Active (Home Page Only)";
-        }
-        applyCustomBackgrounds();
-        initCustomBgInputs();
-        triggerSideToast("Full HD Background Applied", "Crystal-clear HD background is now locked on the Home Page!", true);
+        if (el) el.value = "Saved directly to Google Drive (No Sheet Link)";
+        triggerSideToast("Saved to Google Drive", "Photo saved directly to Google Drive folder (not saved in Google Sheets)!", true);
       } catch (err) {
-        triggerSideToast("Upload Failed", "Could not process background photo. Please try another image.", false);
+        triggerSideToast("Upload Failed", "Could not upload photo to Google Drive.", false);
       }
     }
 
@@ -13345,6 +13312,137 @@ function formatMonthLabel(rawVal) {
       }, 600);
     }
 
+    function changeRenterAadhaarReceiptsPage(delta) {
+      const current = typeof window.renterAadhaarReceiptsPage === "number" && !isNaN(window.renterAadhaarReceiptsPage)
+        ? window.renterAadhaarReceiptsPage
+        : 0;
+      window.renterAadhaarReceiptsPage = Math.max(0, current + (Number(delta) || 0));
+      renderAllDashboardUI();
+    }
+
+    function changeRenterMonthlyUploadMonth(newMonthStr) {
+      const cleanMonth = normalizeMonthYear(newMonthStr) || new Date().toISOString().slice(0, 7);
+      window.selectedRenterMonthlyUploadMonth = cleanMonth;
+      renderAllDashboardUI();
+    }
+
+    async function handleRenterMonthlyPhotoUpload(inputEl, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+      const file = inputEl && inputEl.files && inputEl.files[0];
+      if (!file) return;
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
+      const cleanCat = String(categoryKey || "").trim().toLowerCase();
+      const btnEl = document.getElementById("btnRenterMonthlyUpload_" + cleanCat);
+
+      try {
+        if (btnEl) {
+          btnEl.disabled = true;
+          btnEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Uploading to Google Drive...</span>`;
+        }
+        triggerSideToast(
+          "Uploading to Google Drive",
+          `Saving ${categoryLabel} (${formatMonthLabel(cleanMonth)}) directly to Google Drive folder...`,
+          "warning"
+        );
+
+        const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
+
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") {
+          DB.globalConfig = {};
+        }
+        if (!DB.globalConfig.renterMonthlyPhotos || typeof DB.globalConfig.renterMonthlyPhotos !== "object") {
+          DB.globalConfig.renterMonthlyPhotos = {};
+        }
+
+        const normProp = String(propName || "").trim().toLowerCase();
+        const normFlat = String(flatName || "").trim().toLowerCase();
+        const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+        const flatSlotKey = `${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
+        const aadhaarSlotKey = normAadhaar.length === 12 ? `${normAadhaar}__${cleanMonth}__${cleanCat}` : "";
+
+        const optimisticSlot = {
+          imageUrl: compressedDataUrl,
+          category: cleanCat,
+          monthYear: cleanMonth,
+          propertyName: propName,
+          flatName: flatName,
+          renterId: renterId,
+          identityDocNumber: normAadhaar,
+          uploadedAt: new Date().toISOString()
+        };
+        DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = optimisticSlot;
+        if (aadhaarSlotKey) {
+          DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = optimisticSlot;
+        }
+        renderAllDashboardUI();
+
+        const res = await sendFirebaseAction({
+          action: "uploadRenterMonthlyPhoto",
+          propertyName: propName,
+          flatName: flatName,
+          renterId: renterId,
+          identityDocNumber: normAadhaar,
+          renterName: renterName,
+          monthYear: cleanMonth,
+          category: cleanCat,
+          fileName: file.name,
+          mimeType: "image/jpeg",
+          base64Data: compressedDataUrl
+        });
+
+        const driveUrl = res && (res.imageUrl || res.url)
+          ? normalizeGoogleDriveImageUrl(res.imageUrl || res.url)
+          : compressedDataUrl;
+
+        const savedSlot = {
+          ...optimisticSlot,
+          imageUrl: driveUrl,
+          fileId: res?.fileId || ""
+        };
+        DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = savedSlot;
+        if (aadhaarSlotKey) {
+          DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = savedSlot;
+        }
+        renderAllDashboardUI();
+
+        triggerSideToast(
+          "Saved to Google Drive",
+          `${categoryLabel} for ${formatMonthLabel(cleanMonth)} saved directly on Google Drive!`,
+          true
+        );
+      } catch (err) {
+        console.error("Monthly photo upload error:", err);
+        triggerSideToast("Upload Failed", `Could not upload ${categoryLabel}. Please try again.`, false);
+        renderAllDashboardUI();
+      }
+    }
+
+    async function deleteRenterMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum) {
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
+      const cleanCat = String(categoryKey || "").trim().toLowerCase();
+
+      if (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos) {
+        const normProp = String(propName || "").trim().toLowerCase();
+        const normFlat = String(flatName || "").trim().toLowerCase();
+        const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+        delete DB.globalConfig.renterMonthlyPhotos[`${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`];
+        if (normAadhaar.length === 12) {
+          delete DB.globalConfig.renterMonthlyPhotos[`${normAadhaar}__${cleanMonth}__${cleanCat}`];
+        }
+      }
+      renderAllDashboardUI();
+      triggerSideToast("Photo Removed", `Removing ${categoryLabel} (${formatMonthLabel(cleanMonth)}) from Google Drive...`, "warning");
+
+      await sendFirebaseAction({
+        action: "deleteRenterMonthlyPhoto",
+        propertyName: propName,
+        flatName: flatName,
+        renterId: renterId,
+        identityDocNumber: aadhaarNum,
+        monthYear: cleanMonth,
+        category: cleanCat
+      });
+    }
+
     function renderAllDashboardUI() {
       const viewerScope = resolveViewerAssignedScope();
       if (String(activeRole || "").trim().toLowerCase() === "renter") {
@@ -13587,71 +13685,48 @@ function formatMonthLabel(rawVal) {
               <div style="border-top:1px dashed var(--glass-border); padding-top:12px; margin-top:4px;">
                 <button
                   type="button"
-                  onclick="toggleRenterUpiAppsDrawer(event);"
-                  style="width:100%; padding:11px 14px; border-radius:12px; background:linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(56,189,248,0.16) 100%); border:1.5px solid rgba(16,185,129,0.45); color:var(--text-main); font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px; transition:all 0.2s ease;"
+                  onclick="event.stopPropagation(); launchMobileUpiApp('all', '${sUpi}', '${sName}', ${sAmt}, '${sNote}');"
+                  style="width:100%; padding:11px 14px; border-radius:12px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 16px rgba(16,185,129,0.28); transition:all 0.2s ease;"
                 >
-                  <span style="display:inline-flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-mobile-screen-button" style="color:#10b981; font-size:1rem;"></i>
-                    <span>Pay via Installed Mobile UPI Apps</span>
-                  </span>
-                  <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; color:#34d399; font-weight:800;">
-                    <span>Select App</span>
-                    <i id="renterUpiAppsDrawerChevron" class="fa-solid fa-chevron-down" style="transition:transform 0.2s ease;"></i>
-                  </span>
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  <span>Open System Chooser</span>
                 </button>
-
-                <div id="renterUpiAppsDrawer" style="display:none; margin-top:10px; padding:12px; border-radius:12px; background:var(--bg-input); border:1px solid var(--glass-border);">
-                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:9px; display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                    <span><i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Choose Installed UPI App (Auto Pre-Fills UPI ID &amp; ₹${sAmt.toLocaleString("en-IN")})</span>
-                  </div>
-                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; margin-bottom:8px;">
-                    <button type="button" onclick="launchMobileUpiApp('gpay', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(56,189,248,0.35); background:rgba(56,189,248,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                      <i class="fa-brands fa-google-pay" style="font-size:1.1rem; color:#38bdf8;"></i> Google Pay
-                    </button>
-                    <button type="button" onclick="launchMobileUpiApp('phonepe', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(168,85,247,0.35); background:rgba(168,85,247,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                      <i class="fa-solid fa-mobile-retro" style="font-size:0.95rem; color:#a855f7;"></i> PhonePe
-                    </button>
-                    <button type="button" onclick="launchMobileUpiApp('paytm', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(14,165,233,0.35); background:rgba(14,165,233,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                      <i class="fa-solid fa-wallet" style="font-size:0.95rem; color:#0ea5e9;"></i> Paytm UPI
-                    </button>
-                    <button type="button" onclick="launchMobileUpiApp('bhim', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(245,158,11,0.35); background:rgba(245,158,11,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                      <i class="fa-solid fa-indian-rupee-sign" style="font-size:0.95rem; color:#f59e0b;"></i> BHIM UPI
-                    </button>
-                    <button type="button" onclick="launchMobileUpiApp('amazonpay', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(234,179,8,0.35); background:rgba(234,179,8,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                      <i class="fa-brands fa-amazon-pay" style="font-size:1.05rem; color:#eab308;"></i> Amazon Pay
-                    </button>
-                    <button type="button" onclick="launchMobileUpiApp('cred', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(16,185,129,0.35); background:rgba(16,185,129,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                      <i class="fa-solid fa-shield-halved" style="font-size:0.95rem; color:#10b981;"></i> CRED UPI
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    onclick="launchMobileUpiApp('all', '${sUpi}', '${sName}', ${sAmt}, '${sNote}')"
-                    style="width:100%; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.78rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;"
-                  >
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Open System Chooser (All Installed UPI Apps)
-                  </button>
-                </div>
               </div>
             `;
           };
+
+          const aadhaarPageSize = 6;
+          const totalAadhaarReceipts = myBills.length;
+          const totalAadhaarPages = Math.max(1, Math.ceil(totalAadhaarReceipts / aadhaarPageSize));
+          if (typeof window.renterAadhaarReceiptsPage !== "number" || isNaN(window.renterAadhaarReceiptsPage)) {
+            window.renterAadhaarReceiptsPage = 0;
+          }
+          if (window.renterAadhaarReceiptsPage < 0) window.renterAadhaarReceiptsPage = 0;
+          if (window.renterAadhaarReceiptsPage >= totalAadhaarPages) {
+            window.renterAadhaarReceiptsPage = totalAadhaarPages - 1;
+          }
+          const pageStartIdx = window.renterAadhaarReceiptsPage * aadhaarPageSize;
+          const paginatedAadhaarBills = myBills.slice(pageStartIdx, pageStartIdx + aadhaarPageSize);
 
           const separateAadhaarLinkedReceiptsBoxHtml = `
             <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                 <div>
                   <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
-                    <i class="fa-solid fa-id-card" style="margin-right:5px;"></i> Aadhaar-Linked Receipts (${myBills.length})
+                    <i class="fa-solid fa-id-card" style="margin-right:5px;"></i> Aadhaar-Linked Receipts (${totalAadhaarReceipts})
                   </div>
                   <h4 style="margin:3px 0 0 0; font-size:1.02rem; font-weight:900; color:var(--text-main);">
                     All Receipts Linked to Your Aadhaar Card
                   </h4>
                 </div>
-                <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">Click any receipt to open</span>
+                <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">
+                  ${totalAadhaarReceipts > 0 ? `Showing ${pageStartIdx + 1}–${Math.min(pageStartIdx + aadhaarPageSize, totalAadhaarReceipts)} of ${totalAadhaarReceipts}` : "Click any receipt to open"}
+                </span>
               </div>
-              ${myBills.length > 0 ? `
-                <div style="display:flex; flex-direction:column; gap:9px; max-height:340px; overflow-y:auto; padding-right:2px;">
-                  ${myBills.map((bItem, idx) => {
+              ${paginatedAadhaarBills.length > 0 ? `
+                <div style="display:flex; flex-direction:column; gap:9px;">
+                  ${paginatedAadhaarBills.map((bItem, idx) => {
+                    const globalIdx = pageStartIdx + idx;
                     const mMetrics = computeCurrentMonthStandaloneAdvanceAndDue(bItem);
                     const isSettled = mMetrics.dueAmt <= 0;
                     const itemBillId = String(bItem.BillID || "").replace(/'/g, "\\'");
@@ -13669,7 +13744,7 @@ function formatMonthLabel(rawVal) {
                             <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
                           </div>
                           <div>
-                            <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">#${idx + 1} • ${mMetrics.monthLabel} Receipt</div>
+                            <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">#${globalIdx + 1} • ${mMetrics.monthLabel} Receipt</div>
                             <div style="font-size:0.71rem; color:var(--text-muted);">Flat ${bItem.FlatName || targetFlat} (${bItem.PropertyName || targetProp}) • Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
                           </div>
                         </div>
@@ -13683,6 +13758,29 @@ function formatMonthLabel(rawVal) {
                     `;
                   }).join("")}
                 </div>
+                ${totalAadhaarReceipts > aadhaarPageSize ? `
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; padding-top:10px; border-top:1px dashed var(--glass-border);">
+                    <button
+                      type="button"
+                      onclick="event.stopPropagation(); changeRenterAadhaarReceiptsPage(-1);"
+                      ${window.renterAadhaarReceiptsPage <= 0 ? "disabled" : ""}
+                      style="padding:7px 14px; border-radius:9px; border:1px solid var(--glass-border); background:${window.renterAadhaarReceiptsPage <= 0 ? "rgba(148,163,184,0.08)" : "rgba(99,102,241,0.16)"}; color:${window.renterAadhaarReceiptsPage <= 0 ? "var(--text-muted)" : "#818cf8"}; font-size:0.76rem; font-weight:800; cursor:${window.renterAadhaarReceiptsPage <= 0 ? "not-allowed" : "pointer"}; display:inline-flex; align-items:center; gap:6px; opacity:${window.renterAadhaarReceiptsPage <= 0 ? "0.55" : "1"};"
+                    >
+                      <i class="fa-solid fa-chevron-left"></i> Previous
+                    </button>
+                    <span style="font-size:0.73rem; font-weight:800; color:var(--text-muted);">
+                      Page ${window.renterAadhaarReceiptsPage + 1} of ${totalAadhaarPages}
+                    </span>
+                    <button
+                      type="button"
+                      onclick="event.stopPropagation(); changeRenterAadhaarReceiptsPage(1);"
+                      ${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "disabled" : ""}
+                      style="padding:7px 14px; border-radius:9px; border:1px solid var(--glass-border); background:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "rgba(148,163,184,0.08)" : "rgba(99,102,241,0.16)"}; color:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "var(--text-muted)" : "#818cf8"}; font-size:0.76rem; font-weight:800; cursor:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "not-allowed" : "pointer"}; display:inline-flex; align-items:center; gap:6px; opacity:${window.renterAadhaarReceiptsPage >= totalAadhaarPages - 1 ? "0.55" : "1"};"
+                    >
+                      Next <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                  </div>
+                ` : ""}
               ` : `
                 <div style="text-align:center; padding:18px 12px; color:var(--text-muted); font-size:0.8rem; border:1px dashed var(--glass-border); border-radius:12px;">
                   No receipts linked to your Aadhaar card have been generated yet.
@@ -13844,7 +13942,7 @@ function formatMonthLabel(rawVal) {
             </div>
           `;
 
-          // Right side: Box 1 = Instant UPI Payment Hub (+ UPI Apps Selector), Box 2 = Separate Box for All Aadhaar-Linked Receipts
+          // Right side: Box 1 = Instant UPI Payment Hub (+ Direct Open System Chooser), Box 2 = Separate Box for All Aadhaar-Linked Receipts (6 per page)
           paymentRightHtml = `
             <div style="display:flex; flex-direction:column; gap:18px;">
               <!-- Box 1: Instant UPI QR Payment Hub -->
@@ -14005,45 +14103,12 @@ function formatMonthLabel(rawVal) {
                   <div style="border-top:1px dashed var(--glass-border); padding-top:12px; margin-top:4px;">
                     <button
                       type="button"
-                      onclick="toggleRenterUpiAppsDrawer(event);"
-                      style="width:100%; padding:11px 14px; border-radius:12px; background:linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(56,189,248,0.16) 100%); border:1.5px solid rgba(16,185,129,0.45); color:var(--text-main); font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px;"
+                      onclick="event.stopPropagation(); launchMobileUpiApp('all', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}');"
+                      style="width:100%; padding:11px 14px; border-radius:12px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 16px rgba(16,185,129,0.28);"
                     >
-                      <span style="display:inline-flex; align-items:center; gap:8px;">
-                        <i class="fa-solid fa-mobile-screen-button" style="color:#10b981; font-size:1rem;"></i>
-                        <span>Pay via Installed Mobile UPI Apps</span>
-                      </span>
-                      <span style="display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; color:#34d399; font-weight:800;">
-                        <span>Select App</span>
-                        <i id="renterUpiAppsDrawerChevron" class="fa-solid fa-chevron-down" style="transition:transform 0.2s ease;"></i>
-                      </span>
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                      <span>Open System Chooser</span>
                     </button>
-
-                    <div id="renterUpiAppsDrawer" style="display:none; margin-top:10px; padding:12px; border-radius:12px; background:var(--bg-input); border:1px solid var(--glass-border);">
-                      <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:9px;">
-                        <i class="fa-solid fa-bolt" style="color:#f59e0b;"></i> Choose Installed UPI App (Auto Pre-Fills UPI ID)
-                      </div>
-                      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; margin-bottom:8px;">
-                        <button type="button" onclick="launchMobileUpiApp('gpay', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(56,189,248,0.35); background:rgba(56,189,248,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                          <i class="fa-brands fa-google-pay" style="font-size:1.1rem; color:#38bdf8;"></i> Google Pay
-                        </button>
-                        <button type="button" onclick="launchMobileUpiApp('phonepe', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(168,85,247,0.35); background:rgba(168,85,247,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                          <i class="fa-solid fa-mobile-retro" style="font-size:0.95rem; color:#a855f7;"></i> PhonePe
-                        </button>
-                        <button type="button" onclick="launchMobileUpiApp('paytm', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(14,165,233,0.35); background:rgba(14,165,233,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                          <i class="fa-solid fa-wallet" style="font-size:0.95rem; color:#0ea5e9;"></i> Paytm UPI
-                        </button>
-                        <button type="button" onclick="launchMobileUpiApp('bhim', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')" style="padding:9px 10px; border-radius:10px; border:1px solid rgba(245,158,11,0.35); background:rgba(245,158,11,0.1); color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px;">
-                          <i class="fa-solid fa-indian-rupee-sign" style="font-size:0.95rem; color:#f59e0b;"></i> BHIM UPI
-                        </button>
-                      </div>
-                      <button
-                        type="button"
-                        onclick="launchMobileUpiApp('all', '${safeFallbackUpiIdArg}', '${sFallbackName}', ${sFallbackAmt}, '${sFallbackNote}')"
-                        style="width:100%; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.78rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;"
-                      >
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open System Chooser (All Installed UPI Apps)
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -14067,6 +14132,197 @@ function formatMonthLabel(rawVal) {
             </div>
           `;
         }
+
+        // Requirement 5: 4 Monthly Photo Upload Options on Renter's Home Page (Electricity Meter, Completed Payment, Water Meter/Bill, PNG Gas Meter) — Saved Directly to Google Drive Folder Only
+        const defaultMonthlyUploadMonth = normalizeMonthYear(
+          window.selectedRenterMonthlyUploadMonth ||
+          (currentMonthBill && currentMonthBill.MonthYear) ||
+          (latestBill && latestBill.MonthYear) ||
+          new Date().toISOString().slice(0, 7)
+        ) || new Date().toISOString().slice(0, 7);
+        window.selectedRenterMonthlyUploadMonth = defaultMonthlyUploadMonth;
+        const activeUploadMonthLabel = formatMonthLabel(defaultMonthlyUploadMonth);
+        const monthlyPhotosMap = (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object")
+          ? DB.globalConfig.renterMonthlyPhotos
+          : {};
+        const normPropKey = String(targetProp || "").trim().toLowerCase();
+        const normFlatKey = String(targetFlat || "").trim().toLowerCase();
+        const normAadhaarKey = String(effectiveAadhaar || "").replace(/\D/g, "").slice(0, 12);
+
+        const resolveRenterMonthlyPhotoSlot = (catKey) => {
+          const cleanCat = String(catKey || "").trim().toLowerCase();
+          if (normAadhaarKey.length === 12) {
+            const byAadh = monthlyPhotosMap[`${normAadhaarKey}__${defaultMonthlyUploadMonth}__${cleanCat}`];
+            if (byAadh && byAadh.imageUrl) return byAadh;
+          }
+          const byFlat = monthlyPhotosMap[`${normPropKey}__${normFlatKey}__${defaultMonthlyUploadMonth}__${cleanCat}`];
+          if (byFlat && byFlat.imageUrl) return byFlat;
+          return null;
+        };
+
+        const monthlyUploadCategories = [
+          {
+            key: "electricity_meter",
+            title: "Electricity Meter Photo",
+            subtitle: "Upload monthly sub-meter reading photo",
+            icon: "fa-solid fa-bolt",
+            accent: "#38bdf8",
+            bg: "rgba(56,189,248,0.14)",
+            border: "rgba(56,189,248,0.35)"
+          },
+          {
+            key: "completed_payment",
+            title: "Completed Payment Photo",
+            subtitle: "Upload monthly rent/utility payment screenshot",
+            icon: "fa-solid fa-receipt",
+            accent: "#10b981",
+            bg: "rgba(16,185,129,0.14)",
+            border: "rgba(16,185,129,0.35)"
+          },
+          {
+            key: "water_meter_bill",
+            title: "Water Meter / Bill Photo",
+            subtitle: "Upload monthly water meter or bill photo",
+            icon: "fa-solid fa-faucet-drip",
+            accent: "#06b6d4",
+            bg: "rgba(6,182,212,0.14)",
+            border: "rgba(6,182,212,0.35)"
+          },
+          {
+            key: "png_gas_meter",
+            title: "PNG Gas Meter Photo",
+            subtitle: "Upload monthly PNG gas meter reading photo",
+            icon: "fa-solid fa-fire-flame-simple",
+            accent: "#f59e0b",
+            bg: "rgba(245,158,11,0.14)",
+            border: "rgba(245,158,11,0.35)"
+          }
+        ];
+
+        const renterMonthlyPhotoUploadsSectionHtml = `
+          <div class="renter-kpi-summary-box" id="renterMonthlyDrivePhotoUploadsCard" style="margin-top: 22px; padding: 22px; border-radius: 18px; background: var(--bg-card); border: 1.5px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.18);">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px; height:40px; border-radius:12px; background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+                  <i class="fa-brands fa-google-drive"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#34d399;">
+                    Monthly Utility &amp; Payment Photo Submissions • Direct Google Drive Storage
+                  </div>
+                  <h3 style="margin:3px 0 0 0; font-size:1.12rem; font-weight:900; color:var(--text-main);">
+                    Upload Monthly Meter &amp; Payment Photos (${activeUploadMonthLabel})
+                  </h3>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <label for="renterMonthlyUploadMonthPicker" style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">
+                  <i class="fa-regular fa-calendar-days" style="color:#38bdf8; margin-right:4px;"></i>Select Month:
+                </label>
+                <input
+                  type="month"
+                  id="renterMonthlyUploadMonthPicker"
+                  value="${defaultMonthlyUploadMonth}"
+                  onchange="changeRenterMonthlyUploadMonth(this.value)"
+                  class="form-control"
+                  style="width:auto; min-width:155px; padding:7px 12px; font-size:0.82rem; font-weight:800; border-radius:10px; background:var(--bg-input); color:var(--text-main); border:1.5px solid rgba(56,189,248,0.4); cursor:pointer;"
+                />
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(235px, 1fr)); gap:16px;">
+              ${monthlyUploadCategories.map(cat => {
+                const slotObj = resolveRenterMonthlyPhotoSlot(cat.key);
+                const rawImgUrl = slotObj && slotObj.imageUrl ? String(slotObj.imageUrl) : "";
+                const displayImgUrl = rawImgUrl ? normalizeGoogleDriveImageUrl(rawImgUrl) : "";
+                const safeZoomUrl = displayImgUrl.replace(/'/g, "\\'");
+                const safeTitleArg = `${cat.title} (${activeUploadMonthLabel})`.replace(/'/g, "\\'");
+                const safePropArg = String(targetProp || "").replace(/'/g, "\\'");
+                const safeFlatArg = String(targetFlat || "").replace(/'/g, "\\'");
+                const safeRenterIdArg = String(primaryRenter.RenterID || "").replace(/'/g, "\\'");
+                const safeAadhaarArg = String(effectiveAadhaar || "").replace(/'/g, "\\'");
+                const safeRenterNameArg2 = String(renterNameDisplay || "").replace(/'/g, "\\'");
+                const uploadedTimeStr = slotObj && slotObj.uploadedAt
+                  ? new Date(slotObj.uploadedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+                  : "";
+
+                return `
+                  <div style="padding:15px; border-radius:15px; background:var(--bg-input); border:1.5px solid ${displayImgUrl ? cat.border : "var(--glass-border)"}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                    <div>
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+                        <div style="display:flex; align-items:center; gap:9px;">
+                          <div style="width:34px; height:34px; border-radius:10px; background:${cat.bg}; color:${cat.accent}; border:1px solid ${cat.border}; display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0;">
+                            <i class="${cat.icon}"></i>
+                          </div>
+                          <div>
+                            <div style="font-size:0.86rem; font-weight:900; color:var(--text-main); line-height:1.2;">${cat.title}</div>
+                            <div style="font-size:0.69rem; color:var(--text-muted); margin-top:2px;">${cat.subtitle}</div>
+                          </div>
+                        </div>
+                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${displayImgUrl ? "rgba(16,185,129,0.16)" : "rgba(148,163,184,0.12)"}; color:${displayImgUrl ? "#34d399" : "var(--text-muted)"}; border:1px solid ${displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"}; white-space:nowrap;">
+                          ${displayImgUrl ? "Uploaded" : activeUploadMonthLabel}
+                        </span>
+                      </div>
+
+                      ${displayImgUrl ? `
+                        <div
+                          onclick="openPhotoZoomModal('${safeZoomUrl}', '${safeTitleArg}')"
+                          title="Click to view full photo"
+                          style="width:100%; height:148px; border-radius:11px; overflow:hidden; border:1px solid ${cat.border}; background:#0f172a; cursor:zoom-in; position:relative; margin-bottom:8px;"
+                        >
+                          <img src="${displayImgUrl}" alt="${cat.title}" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                          <div style="position:absolute; bottom:6px; right:6px; background:rgba(15,23,42,0.82); color:#fff; font-size:0.65rem; font-weight:800; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i> View Photo
+                          </div>
+                        </div>
+                        <div style="font-size:0.68rem; color:#34d399; font-weight:700; display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                          <span><i class="fa-brands fa-google-drive"></i> Saved on Google Drive (${activeUploadMonthLabel})</span>
+                          ${uploadedTimeStr ? `<span style="color:var(--text-muted);">${uploadedTimeStr}</span>` : ""}
+                        </div>
+                      ` : `
+                        <div style="width:100%; height:148px; border-radius:11px; border:1.5px dashed var(--glass-border); background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); padding:12px; text-align:center; margin-bottom:8px;">
+                          <i class="${cat.icon}" style="font-size:1.5rem; color:${cat.accent}; opacity:0.8;"></i>
+                          <div style="font-size:0.74rem; font-weight:800; color:var(--text-main);">No ${cat.title} for ${activeUploadMonthLabel}</div>
+                          <div style="font-size:0.67rem; color:var(--text-muted);">Saves directly to Google Drive folder</div>
+                        </div>
+                      `}
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <input
+                        type="file"
+                        id="renterMonthlyFile_${cat.key}"
+                        accept="image/*"
+                        style="display:none;"
+                        onchange="handleRenterMonthlyPhotoUpload(this, '${cat.key}', '${cat.title.replace(/'/g, "\\'")}', '${defaultMonthlyUploadMonth}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}', '${safeRenterNameArg2}')"
+                      />
+                      <button
+                        type="button"
+                        id="btnRenterMonthlyUpload_${cat.key}"
+                        onclick="document.getElementById('renterMonthlyFile_${cat.key}').click()"
+                        style="flex:1; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, ${cat.accent}26 0%, ${cat.accent}14 100%); border:1.5px solid ${cat.border}; color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
+                      >
+                        <i class="fa-solid fa-cloud-arrow-up" style="color:${cat.accent};"></i>
+                        <span>${displayImgUrl ? "Replace Photo" : "Upload Photo"}</span>
+                      </button>
+                      ${displayImgUrl ? `
+                        <button
+                          type="button"
+                          onclick="deleteRenterMonthlyPhotoSlot('${cat.key}', '${cat.title.replace(/'/g, "\\'")}', '${defaultMonthlyUploadMonth}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}')"
+                          title="Delete ${cat.title} for ${activeUploadMonthLabel}"
+                          style="padding:9px 11px; border-radius:10px; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.38); color:#f87171; font-size:0.76rem; font-weight:800; cursor:pointer;"
+                        >
+                          <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                      ` : ""}
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
 
         const topHeroReceiptItemHtml = latestBill ? (() => {
           const topMetrics = computeCurrentMonthStandaloneAdvanceAndDue(latestBill);
@@ -14261,6 +14517,9 @@ function formatMonthLabel(rawVal) {
                 ${statementLeftHtml}
                 ${paymentRightHtml}
               </div>
+
+              <!-- 4. MONTHLY UTILITY & PAYMENT PHOTO UPLOADS (DIRECT TO GOOGLE DRIVE FOLDER) -->
+              ${renterMonthlyPhotoUploadsSectionHtml}
 
             </div>
           `;
@@ -18533,11 +18792,11 @@ function formatMonthLabel(rawVal) {
           : (isIdentity ? EMPTY_IDENTITY_PLACEHOLDER : EMPTY_PROFILE_PLACEHOLDER);
       }
       if (urlInput) {
-        urlInput.value = (hasRealImage && !String(normalizedUrl).startsWith("data:image/")) ? normalizedUrl : "";
+        urlInput.value = "";
       }
       if (badgeEl) {
         badgeEl.innerText = hasRealImage
-          ? (isIdentity ? "Aadhaar Card synced across all devices (Click photo to Zoom)" : "Profile photo synced across all devices (Click photo to Zoom)")
+          ? (isIdentity ? "Aadhaar Card saved on Google Drive (Click photo to Zoom)" : "Profile photo saved on Google Drive (Click photo to Zoom)")
           : (isIdentity ? "No Aadhaar / ID uploaded" : "No profile photo uploaded");
         badgeEl.style.color = hasRealImage ? "var(--accent-green)" : "var(--text-muted)";
       }
@@ -21465,33 +21724,7 @@ function formatMonthLabel(rawVal) {
         sanitizeContactPhoneDisplay(bill.ContractMobile) ||
         "N/A";
 
-      const isRenterRoleForReceipt = String(activeRole || "").trim().toLowerCase() === "renter";
-      let renterAvailableMonthsBarHtml = "";
-      if (isRenterRoleForReceipt) {
-        const renterBillsForModal = (DB.bills || []).filter(b => isBillLinkedToLoggedInRenterAadhaar(b));
-        renterBillsForModal.sort((a, b) => {
-          const mA = normalizeMonthYear(a.MonthYear || a.BillDate);
-          const mB = normalizeMonthYear(b.MonthYear || b.BillDate);
-          if (mA && mB && mA !== mB) return mB.localeCompare(mA);
-          return (new Date(b.BillDate || b.PaymentDate || 0).getTime()) - (new Date(a.BillDate || a.PaymentDate || 0).getTime());
-        });
-        if (renterBillsForModal.length > 1) {
-          renterAvailableMonthsBarHtml = `
-            <div class="no-print" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-              <span style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin-right:4px;">Available Receipts:</span>
-              ${renterBillsForModal.map(rb => {
-                const rbId = String(rb.BillID || "").replace(/'/g, "\\'");
-                const rbMonth = String(rb.MonthYear || "").replace(/'/g, "\\'");
-                const isCurr = String(rb.BillID || "") === String(bill.BillID || "") && String(rb.MonthYear || "") === String(bill.MonthYear || "");
-                return `<button type="button" onclick="selectRenterHomeAvailableReceipt('${rbId}', '${rbMonth}'); openBillReceiptModal('${rbId}', '${rbMonth}')" style="padding:4px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; cursor:pointer; border:1px solid ${isCurr ? '#6366f1' : 'var(--glass-border)'}; background:${isCurr ? 'rgba(99,102,241,0.2)' : 'var(--bg-input)'}; color:${isCurr ? '#818cf8' : 'var(--text-main)'};">${formatMonthLabel(rb.MonthYear)}</button>`;
-              }).join("")}
-            </div>
-          `;
-        }
-      }
-
       document.getElementById("receiptBodyDetails").innerHTML = `
-        ${renterAvailableMonthsBarHtml}
         <!-- Clean Receipt Content (Requirement 4: Billing Date Clearly Displayed on Receipt) -->
         <div id="receiptItemsListContainer">
           <div class="receipt-line" id="row_rec_tenant">
@@ -26851,10 +27084,10 @@ function formatMonthLabel(rawVal) {
         status: statusVal,
         identityDocNumber: formattedAadhaar || rawAadhaar,
         identityNumber: rawAadhaar,
-        profileImageUrl: profUrl,
-        profileImg: profUrl,
-        identityImageUrl: idUrl,
-        identityImg: idUrl,
+        profileImageUrl: "",
+        profileImg: "",
+        identityImageUrl: "",
+        identityImg: "",
         mobileNumber: newRenterObj.MobileNumber,
         mobile: newRenterObj.MobileNumber,
         altMobileNumber: altMob,
@@ -26863,6 +27096,36 @@ function formatMonthLabel(rawVal) {
         familyMembers: famCount,
         forceCreateNewRow: true
       });
+      if (profUrl && profUrl.startsWith("data:image")) {
+        await sendFirebaseAction({
+          action: "uploadRenterDocument",
+          propertyName: targetProp,
+          flatName: targetFlat,
+          renterId: newRenterId,
+          identityDocNumber: formattedAadhaar || rawAadhaar,
+          renterName: rName,
+          rentAmount: finalRentAmount,
+          docType: "profile",
+          fileName: "Profile_Photo.jpg",
+          mimeType: "image/jpeg",
+          base64Data: profUrl
+        });
+      }
+      if (idUrl && idUrl.startsWith("data:image")) {
+        await sendFirebaseAction({
+          action: "uploadRenterDocument",
+          propertyName: targetProp,
+          flatName: targetFlat,
+          renterId: newRenterId,
+          identityDocNumber: formattedAadhaar || rawAadhaar,
+          renterName: rName,
+          rentAmount: finalRentAmount,
+          docType: "identity",
+          fileName: "Aadhaar_Card.jpg",
+          mimeType: "image/jpeg",
+          base64Data: idUrl
+        });
+      }
       syncDataLive();
     }
 
@@ -27437,13 +27700,14 @@ function formatMonthLabel(rawVal) {
       const inputEl = document.getElementById(isIdentity ? "inputIdentityPicUrl" : "inputProfilePicUrl");
       const rawLink = inputEl ? inputEl.value.trim() : "";
       if (!rawLink) {
-        return triggerSideToast("Enter Photo Link", "Please paste a Google Drive shared file link or direct image URL first.", false);
+        return triggerSideToast("Upload Photo File", "Please use the Upload File button above to save photos directly to Google Drive.", false);
       }
       if (rawLink.includes("/folders/")) {
-        return triggerSideToast("Folder Link Detected", "That is a Google Drive Folder link. Please paste a specific Image File link or use the Upload File button above.", false);
+        if (inputEl) inputEl.value = "";
+        return triggerSideToast("Google Drive Folder Configured", "All uploaded photos are automatically saved directly in your Google Drive folder.", true);
       }
       const directImageUrl = normalizeGoogleDriveImageUrl(rawLink);
-      if (inputEl) inputEl.value = directImageUrl;
+      if (inputEl) inputEl.value = "";
 
       updateRenterImageSlotUI(docType, directImageUrl);
       ensureActiveRenterRecordExistsForFlat();
@@ -27451,7 +27715,6 @@ function formatMonthLabel(rawVal) {
       if (activeFlatRenterObj) {
         if (isIdentity) activeFlatRenterObj.IdentityImageURL = directImageUrl;
         else activeFlatRenterObj.ProfileImageURL = directImageUrl;
-        
       }
       let matchedRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName));
       let targetR = matchedRenters.find(r => activeFlatRenterObj?.RenterID && String(r.RenterID) === String(activeFlatRenterObj.RenterID)) ||
@@ -27465,28 +27728,7 @@ function formatMonthLabel(rawVal) {
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
-
-      triggerSideToast("Syncing Photo Link", "Saving direct photo link to Google Sheet so it loads across all devices...", "warning");
-      try {
-        const res = await sendFirebaseAction({
-          action: "uploadRenterDocument",
-          propertyName: selectedFlat.PropertyName,
-          flatName: selectedFlat.FlatName,
-          renterId: activeFlatRenterObj?.RenterID || "",
-          identityDocNumber: currentAadhaarVal,
-          renterName: document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Current Tenant",
-          rentAmount: selectedFlat.RentAmount || 0,
-          docType: docType,
-          directImageUrl: directImageUrl
-        });
-        if (res && res.resolvedRenterId && activeFlatRenterObj) {
-          activeFlatRenterObj.RenterID = res.resolvedRenterId;
-          saveDbSnapshotToCache();
-        }
-        triggerSideToast("Photo Link Synced", "Photo link saved to Google Sheet and synced across all stays & devices!", true);
-      } catch (e) {
-        triggerSideToast("Sync Warning", "Could not reach Google Apps Script server.", false);
-      }
+      triggerSideToast("Photo Preview Updated", "Use the Upload button to save photos directly into your Google Drive folder (no links are stored in Google Sheets).", true);
     }
 
     async function handleRenterDocumentUpload(input, docType) {
@@ -27499,40 +27741,35 @@ function formatMonthLabel(rawVal) {
 
       try {
         if (badgeEl) {
-          badgeEl.innerText = "Uploading to Shared Google Drive & Sheet...";
+          badgeEl.innerText = "Uploading directly to Google Drive folder...";
           badgeEl.style.color = "var(--primary)";
         }
 
-        // Guaranteed <= 38,000 chars so both Aadhaar Card and Profile Photo save directly in Google Sheets
-        const compressedDataUrl = await compressImageFileToDataUrl(file, isIdentity ? 780 : 620, 0.78);
-        const sheetSafeBase64 = compressedDataUrl.length <= 38000
-          ? compressedDataUrl
-          : await compressImageFileToDataUrl(file, 480, 0.68);
+        const compressedDataUrl = await compressImageFileToDataUrl(file, isIdentity ? 1080 : 800, 0.82);
 
         // Immediately display inside its respective profile render / Aadhaar section
-        updateRenterImageSlotUI(docType, sheetSafeBase64);
+        updateRenterImageSlotUI(docType, compressedDataUrl);
         ensureActiveRenterRecordExistsForFlat();
 
         if (activeFlatRenterObj) {
-          if (isIdentity) activeFlatRenterObj.IdentityImageURL = sheetSafeBase64;
-          else activeFlatRenterObj.ProfileImageURL = sheetSafeBase64;
-          
+          if (isIdentity) activeFlatRenterObj.IdentityImageURL = compressedDataUrl;
+          else activeFlatRenterObj.ProfileImageURL = compressedDataUrl;
         }
         let matchedRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName));
         let targetR = matchedRenters.find(r => activeFlatRenterObj?.RenterID && String(r.RenterID) === String(activeFlatRenterObj.RenterID)) ||
                       matchedRenters.find(r => String(r.Status || "").toLowerCase() === "active");
         if (targetR) {
-          if (isIdentity) targetR.IdentityImageURL = sheetSafeBase64;
-          else targetR.ProfileImageURL = sheetSafeBase64;
+          if (isIdentity) targetR.IdentityImageURL = compressedDataUrl;
+          else targetR.ProfileImageURL = compressedDataUrl;
         }
         const currentAadhaarVal = document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || targetR?.IdentityDocNumber || "";
-        syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentity ? { IdentityImageURL: sheetSafeBase64 } : { ProfileImageURL: sheetSafeBase64 });
+        syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentity ? { IdentityImageURL: compressedDataUrl } : { ProfileImageURL: compressedDataUrl });
         saveDbSnapshotToCache();
         renderAllDashboardUI();
 
         triggerSideToast(
-          "Uploading to Shared Drive",
-          `Saving ${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} to Google Drive & Google Sheet for all devices...`,
+          "Uploading to Google Drive",
+          `Saving ${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} directly to Google Drive folder (not Google Sheets)...`,
           "warning"
         );
 
@@ -27547,15 +27784,13 @@ function formatMonthLabel(rawVal) {
           docType: docType,
           fileName: file.name,
           mimeType: "image/jpeg",
-          base64Data: sheetSafeBase64,
-          sheetSafeBase64: sheetSafeBase64
+          base64Data: compressedDataUrl
         });
 
-        // Always prefer the Sheet-safe data URL or verified imageUrl so mobile browsers never fail on third-party Drive cookies
         const returnedUrl = res && res.status === "success" ? (res.imageUrl || res.url || "") : "";
         const finalImageUrl = (returnedUrl && returnedUrl.startsWith("data:image"))
           ? returnedUrl
-          : (returnedUrl ? normalizeGoogleDriveImageUrl(returnedUrl) : sheetSafeBase64);
+          : (returnedUrl ? normalizeGoogleDriveImageUrl(returnedUrl) : compressedDataUrl);
 
         if (res && res.resolvedRenterId && activeFlatRenterObj) {
           activeFlatRenterObj.RenterID = res.resolvedRenterId;
@@ -27564,7 +27799,6 @@ function formatMonthLabel(rawVal) {
         if (activeFlatRenterObj) {
           if (isIdentity) activeFlatRenterObj.IdentityImageURL = finalImageUrl;
           else activeFlatRenterObj.ProfileImageURL = finalImageUrl;
-          
         }
         if (targetR) {
           if (isIdentity) targetR.IdentityImageURL = finalImageUrl;
@@ -27576,8 +27810,8 @@ function formatMonthLabel(rawVal) {
         populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
 
         triggerSideToast(
-          "Synced Across All Stays & Devices",
-          `${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} saved & synced across all historical and active locations!`,
+          "Saved Directly to Google Drive",
+          `${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} saved directly in your Google Drive folder!`,
           true
         );
       } catch (err) {
@@ -29214,14 +29448,15 @@ function formatMonthLabel(rawVal) {
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function (ev) {
+        window.pendingPaymentProofDataUrl = String(ev.target?.result || "");
         const urlInput = document.getElementById("proofScreenshotUrl");
-        if (urlInput) urlInput.value = String(ev.target?.result || "");
-        triggerSideToast("Screenshot Attached", "Payment screenshot attached to proof form.", true);
+        if (urlInput) urlInput.value = "";
+        triggerSideToast("Screenshot Attached", "Payment screenshot ready to upload directly to Google Drive.", true);
       };
       reader.readAsDataURL(file);
     }
 
-    function submitRenterPaymentProofRecord() {
+    async function submitRenterPaymentProofRecord() {
       const billId = document.getElementById("proofTargetBillId")?.value || "";
       const propName = document.getElementById("proofTargetProp")?.value || "";
       const flatName = document.getElementById("proofTargetFlat")?.value || "";
@@ -29230,15 +29465,17 @@ function formatMonthLabel(rawVal) {
       const amount = parseFloat(document.getElementById("proofPaidAmount")?.value) || 0;
       const utr = (document.getElementById("proofUtrNumber")?.value || "").trim();
       const mode = document.getElementById("proofPaymentMode")?.value || "UPI";
-      const screenshotUrl = (document.getElementById("proofScreenshotUrl")?.value || "").trim();
+      const attachedScreenshot = window.pendingPaymentProofDataUrl || (document.getElementById("proofScreenshotUrl")?.value || "").trim();
+      window.pendingPaymentProofDataUrl = "";
 
       if (amount <= 0 || !utr) {
         return triggerSideToast("Details Required", "Please enter both Paid Amount and UTR / Transaction ID.", false);
       }
 
+      const proofId = "PROOF-" + Date.now();
       const list = getStoredPaymentProofs();
       const newProof = {
-        id: "PROOF-" + Date.now(),
+        id: proofId,
         billId,
         propertyName: propName,
         flatName: flatName,
@@ -29248,17 +29485,31 @@ function formatMonthLabel(rawVal) {
         amount: amount,
         utr: utr,
         mode: mode,
-        screenshotUrl: screenshotUrl,
+        screenshotUrl: attachedScreenshot,
         status: "Pending",
         submittedAt: new Date().toLocaleString("en-IN")
       };
       list.unshift(newProof);
       saveStoredPaymentProofs(list);
 
+      if (attachedScreenshot && attachedScreenshot.startsWith("data:image")) {
+        sendFirebaseAction({
+          action: "uploadRenterMonthlyPhoto",
+          propertyName: propName,
+          flatName: flatName,
+          renterName: tenantName,
+          monthYear: normalizeMonthYear(monthYear) || new Date().toISOString().slice(0, 7),
+          category: "completed_payment",
+          fileName: `PaymentProof_${propName}_Flat_${flatName}_${utr}.jpg`,
+          mimeType: "image/jpeg",
+          base64Data: attachedScreenshot
+        });
+      }
+
       const overlay = document.getElementById("submitPaymentProofModalOverlay");
       if (overlay) overlay.classList.remove("active");
       renderAdminPaymentProofQueue();
-      triggerSideToast("Payment Proof Submitted", `UTR ${utr} (₹${amount.toLocaleString("en-IN")}) sent to Admin Verification Queue!`, true);
+      triggerSideToast("Payment Proof Submitted", `UTR ${utr} (₹${amount.toLocaleString("en-IN")}) saved to Google Drive & sent to Admin Verification Queue!`, true);
     }
 
     function renderAdminPaymentProofQueue() {
@@ -29742,22 +29993,44 @@ function formatMonthLabel(rawVal) {
     }
 
     // --- GROUP C1 & C3: METER READING PHOTO PROOF & MASTER METER RECONCILIATION ---
-    function handleMeterProofUpload(inputEl) {
+    async function handleMeterProofUpload(inputEl) {
       const file = inputEl?.files?.[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (ev) {
+      try {
+        const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
+        window.currentMeterProofPreviewDataUrl = compressedDataUrl;
         const urlEl = document.getElementById("calcMeterProofUrl");
-        if (urlEl) urlEl.value = String(ev.target?.result || "");
+        if (urlEl) urlEl.value = "";
         const prevBtn = document.getElementById("btnPreviewMeterProof");
         if (prevBtn) prevBtn.style.display = "inline-flex";
-        triggerSideToast("Meter Photo Attached", "Sub-meter reading photo attached to this month's bill.", true);
-      };
-      reader.readAsDataURL(file);
+        triggerSideToast("Uploading Meter Photo", "Saving sub-meter reading photo directly to Google Drive folder...", "warning");
+        if (selectedFlat) {
+          const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "") || new Date().toISOString().slice(0, 7);
+          const res = await sendFirebaseAction({
+            action: "uploadRenterMonthlyPhoto",
+            propertyName: selectedFlat.PropertyName,
+            flatName: selectedFlat.FlatName,
+            renterId: activeFlatRenterObj?.RenterID || "",
+            identityDocNumber: activeFlatRenterObj?.IdentityDocNumber || "",
+            renterName: document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Tenant",
+            monthYear: chosenMonth,
+            category: "electricity_meter",
+            fileName: `MeterProof_${selectedFlat.PropertyName}_Flat_${selectedFlat.FlatName}_${chosenMonth}.jpg`,
+            mimeType: "image/jpeg",
+            base64Data: compressedDataUrl
+          });
+          if (res && (res.imageUrl || res.url)) {
+            window.currentMeterProofPreviewDataUrl = normalizeGoogleDriveImageUrl(res.imageUrl || res.url);
+          }
+          triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder!", true);
+        }
+      } catch (e) {
+        triggerSideToast("Upload Error", "Could not process meter photo.", false);
+      }
     }
 
     function previewCurrentMeterProof() {
-      const val = (document.getElementById("calcMeterProofUrl")?.value || "").trim();
+      const val = window.currentMeterProofPreviewDataUrl || (document.getElementById("calcMeterProofUrl")?.value || "").trim();
       if (!val) return triggerSideToast("No Meter Proof", "Attach a meter photo or paste a proof note first.", false);
       if (val.startsWith("data:image") || val.startsWith("http")) {
         openPhotoZoomModal(val, "Sub-Meter Reading Proof");
