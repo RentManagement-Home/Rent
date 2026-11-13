@@ -6444,6 +6444,10 @@
       <!-- Horizontal Left-to-Right Options Box (Notifications, Create User ID, Delete Center + All 7 Modules One by One to the Right Side) -->
       <div class="settings-horizontal-options-box">
         <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid">
+          <div id="settingsTabBtnScreenshotVerify" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(16, 185, 129, 0.45);" onclick="switchSettingsSubTab(event, 'setSubScreenshotVerification')">
+            <div class="s-nav-icon" style="background: rgba(16, 185, 129, 0.18); color: #34d399;"><i class="fa-solid fa-images"></i></div>
+            <div class="s-nav-title">Screenshot Verification</div>
+          </div>
           <div id="settingsTabBtnNotifications" class="flat-nav-item settings-nav-card nav-notify active" onclick="switchSettingsSubTab(event, 'setSubNotifications')">
             <div class="s-nav-icon" style="position:relative;">
               <i class="fa-solid fa-bell"></i>
@@ -6494,95 +6498,119 @@
         </div>
       </div>
 
-      <!-- Settings Tab 1 (First Option per Requirement 4): Notifications -->
+      <!-- Settings Tab: Screenshot Verification (Right Before Notifications) -->
+      <div id="setSubScreenshotVerification" class="tab-content">
+        <div class="exec-field-card" style="border:1.5px solid rgba(16,185,129,0.45); background:linear-gradient(145deg, rgba(16,185,129,0.08), rgba(15,23,42,0.55)); margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+            <div>
+              <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#34d399; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-images"></i> Renter Screenshot &amp; Photo Verification (4x4 Grid)
+              </h4>
+              <p style="margin:3px 0 0; font-size:0.74rem; color:var(--text-muted);">
+                Displays each renter's name, Aadhaar card number, and their uploaded photos in a 4x4 grid. Click any photo to zoom in full screen.
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="text" id="screenshotVerifySearchInput" class="form-control" style="width:210px; padding:6px 11px; font-size:0.75rem;" placeholder="Search Renter / Aadhaar..." oninput="renderAdminScreenshotVerificationGrid(this.value)">
+              <button type="button" class="btn-ledger-action" style="padding:6px 11px; font-size:0.74rem; color:#34d399;" onclick="syncDataLive().then(() => renderAdminScreenshotVerificationGrid(document.getElementById('screenshotVerifySearchInput')?.value || ''))">
+                <i class="fa-solid fa-rotate"></i> Refresh
+              </button>
+            </div>
+          </div>
+          <div id="adminScreenshotVerificationContainer" style="max-height:470px; overflow-y:auto; padding-right:4px;"></div>
+        </div>
+      </div>
+
+      <!-- Settings Tab 1: Notifications -->
       <div id="setSubNotifications" class="tab-content active">
         <div id="sharedNotificationsWorkspace">
-          <!-- Admin/Manager Compose Box -->
-          <div id="adminNotificationComposeCard" class="exec-field-card" style="border:1.5px solid rgba(245,158,11,0.4); background:rgba(245,158,11,0.06); margin-bottom:14px;">
-            <div class="exec-field-label-row">
-              <label id="adminNoticeComposeLabel" class="exec-field-label" style="color:#f59e0b;">
-                <i class="fa-solid fa-paper-plane"></i> Send New Notification to Renters
-              </label>
-              <span class="exec-field-tag tag-required">Official Broadcast</span>
-            </div>
-            <input type="text" id="adminNoticeTitleInput" class="form-control" style="margin-bottom:8px;" placeholder="Notice Title (e.g. Water Tank Cleaning / Rent Due Reminder)">
-            <textarea id="adminNoticeBodyInput" class="form-control" rows="3" style="margin-bottom:8px;" placeholder="Type complete announcement message details here..."></textarea>
-
-            <!-- Target Audience Property Selector Button (Merged Active Selection) & Drawer (Selected Options Displayed at Top) -->
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; align-items:center; width:100%; margin-bottom:6px;">
-                <button type="button" id="btnToggleNoticeTargetProps" class="btn-ledger-action" style="width:100%; justify-content:space-between; padding:9px 13px; font-size:0.77rem; font-weight:800; color:#38bdf8; border:1.5px solid rgba(56,189,248,0.48); background:rgba(56,189,248,0.1); border-radius:10px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; text-align:left;" onclick="toggleNoticeTargetPropertiesDrawer()">
-                  <span style="display:inline-flex; align-items:center; gap:7px; min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                    <i class="fa-solid fa-building-circle-check" style="flex-shrink:0;"></i>
-                    <span id="btnToggleNoticeTargetPropsText" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Select Target Audience: <strong style="color:#34d399;">All Properties</strong></span>
-                  </span>
-                  <i id="btnToggleNoticeTargetPropsChevron" class="fa-solid fa-chevron-down" style="font-size:0.72rem; flex-shrink:0; transition:transform 0.2s ease;"></i>
-                </button>
-              </div>
-              <div id="noticeTargetPropertiesDrawer" style="display:none; background:rgba(15,23,42,0.92); border:1.5px solid rgba(56,189,248,0.45); border-radius:10px; padding:10px; max-height:215px; overflow-y:auto;">
-                <!-- Active Selection Displayed Right at the Top of the Drawer -->
-                <div id="noticeActiveSelectionTopBar" style="margin-bottom:8px; padding:7px 10px; border-radius:8px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.38); font-size:0.73rem; font-weight:800; color:#34d399; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                  <i class="fa-solid fa-circle-check"></i>
-                  <span id="noticeDrawerTopSelectedText">Selected at Top: All Properties</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.12); flex-wrap:wrap; gap:6px;">
-                  <label style="font-size:0.74rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
-                    <input type="checkbox" id="noticeTargetAllPropsCheckbox" checked onchange="toggleAllNoticeTargetProperties(this.checked)">
-                    <span>Select All Properties</span>
+          <!-- Side-by-Side (Left & Right) Stylish Notification Boxes -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; align-items:stretch; margin-bottom:16px;">
+            <!-- LEFT BOX: Admin/Manager Compose Box -->
+            <div id="adminNotificationComposeCard" class="exec-field-card" style="border:1.5px solid rgba(245,158,11,0.5); background:linear-gradient(145deg, rgba(245,158,11,0.10), rgba(15,23,42,0.75)); box-shadow:0 10px 26px rgba(245,158,11,0.08); margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; border-radius:14px; padding:14px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid rgba(245,158,11,0.25);">
+                  <label id="adminNoticeComposeLabel" class="exec-field-label" style="color:#fbbf24; font-size:0.84rem; font-weight:800; margin:0; display:flex; align-items:center; gap:7px;">
+                    <span style="width:28px; height:28px; border-radius:8px; background:rgba(245,158,11,0.2); display:inline-flex; align-items:center; justify-content:center; color:#f59e0b;"><i class="fa-solid fa-paper-plane"></i></span>
+                    <span>Box 1: Send New Notification to Renters</span>
                   </label>
-                  <span style="font-size:0.68rem; color:var(--text-muted);">Selected options appear at top</span>
+                  <span class="exec-field-tag tag-required" style="font-size:0.66rem;">Custom Notice</span>
                 </div>
-                <div id="noticeTargetPropertiesChecklist" style="display:flex; flex-direction:column; gap:6px;">
-                  <!-- Populated dynamically from DB.properties with selected items sorted at the top -->
+                <input type="text" id="adminNoticeTitleInput" class="form-control" style="margin-bottom:8px;" placeholder="Notice Title (e.g. Water Tank Cleaning / Rent Due Reminder)">
+                <textarea id="adminNoticeBodyInput" class="form-control" rows="3" style="margin-bottom:8px;" placeholder="Type complete announcement message details here..."></textarea>
+
+                <!-- Target Audience Property Selector Button & Drawer -->
+                <div style="margin-bottom:10px;">
+                  <div style="display:flex; align-items:center; width:100%; margin-bottom:6px;">
+                    <button type="button" id="btnToggleNoticeTargetProps" class="btn-ledger-action" style="width:100%; justify-content:space-between; padding:9px 13px; font-size:0.77rem; font-weight:800; color:#38bdf8; border:1.5px solid rgba(56,189,248,0.48); background:rgba(56,189,248,0.1); border-radius:10px; display:inline-flex; align-items:center; gap:8px; cursor:pointer; text-align:left;" onclick="toggleNoticeTargetPropertiesDrawer()">
+                      <span style="display:inline-flex; align-items:center; gap:7px; min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        <i class="fa-solid fa-building-circle-check" style="flex-shrink:0;"></i>
+                        <span id="btnToggleNoticeTargetPropsText" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Select Target Audience: <strong style="color:#34d399;">All Properties</strong></span>
+                      </span>
+                      <i id="btnToggleNoticeTargetPropsChevron" class="fa-solid fa-chevron-down" style="font-size:0.72rem; flex-shrink:0; transition:transform 0.2s ease;"></i>
+                    </button>
+                  </div>
+                  <div id="noticeTargetPropertiesDrawer" style="display:none; background:rgba(15,23,42,0.92); border:1.5px solid rgba(56,189,248,0.45); border-radius:10px; padding:10px; max-height:215px; overflow-y:auto;">
+                    <div id="noticeActiveSelectionTopBar" style="margin-bottom:8px; padding:7px 10px; border-radius:8px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.38); font-size:0.73rem; font-weight:800; color:#34d399; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                      <i class="fa-solid fa-circle-check"></i>
+                      <span id="noticeDrawerTopSelectedText">Selected at Top: All Properties</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,0.12); flex-wrap:wrap; gap:6px;">
+                      <label style="font-size:0.74rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:6px; cursor:pointer; margin:0;">
+                        <input type="checkbox" id="noticeTargetAllPropsCheckbox" checked onchange="toggleAllNoticeTargetProperties(this.checked)">
+                        <span>Select All Properties</span>
+                      </label>
+                      <span style="font-size:0.68rem; color:var(--text-muted);">Selected options appear at top</span>
+                    </div>
+                    <div id="noticeTargetPropertiesChecklist" style="display:flex; flex-direction:column; gap:6px;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08);">
+                <select id="adminNoticeTargetSelect" class="form-control" style="width:auto; flex:1 1 180px; padding:7px 10px; font-size:0.75rem;">
+                  <option value="ALL">All Renters &amp; Users in Selected Properties</option>
+                  <option value="RENTERS">Active Renters Only in Selected Properties</option>
+                </select>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <button type="button" id="btnCancelAdminNotice" class="btn-ledger-action" style="display:none; padding:7px 12px; font-size:0.75rem; color:#ef4444;" onclick="cancelEditingAdminNotice()">
+                    <i class="fa-solid fa-xmark"></i> Cancel
+                  </button>
+                  <button type="button" id="btnSubmitAdminNotice" class="btn-primary" style="background:linear-gradient(135deg, #f59e0b, #d97706); width:auto; padding:8px 16px; font-size:0.78rem;" onclick="submitAdminBroadcastNotification()">
+                    <i class="fa-solid fa-broadcast-tower"></i> Broadcast Notice
+                  </button>
                 </div>
               </div>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-              <select id="adminNoticeTargetSelect" class="form-control" style="width:auto; flex:1 1 210px; padding:7px 10px; font-size:0.75rem;">
-                <option value="ALL">All Renters &amp; Users in Selected Properties</option>
-                <option value="RENTERS">Active Renters Only in Selected Properties</option>
-              </select>
-              <div style="display:flex; align-items:center; gap:6px;">
-                <button type="button" id="btnCancelAdminNotice" class="btn-ledger-action" style="display:none; padding:7px 12px; font-size:0.75rem; color:#ef4444;" onclick="cancelEditingAdminNotice()">
-                  <i class="fa-solid fa-xmark"></i> Cancel
+            <!-- RIGHT BOX: One-Click Bulk Monthly Bill Broadcast & WhatsApp Queue -->
+            <div class="exec-field-card admin-only" style="border:1.5px solid rgba(16,185,129,0.5); background:linear-gradient(145deg, rgba(16,185,129,0.10), rgba(15,23,42,0.75)); box-shadow:0 10px 26px rgba(16,185,129,0.08); margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between; border-radius:14px; padding:14px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid rgba(16,185,129,0.25);">
+                  <label style="font-size:0.84rem; font-weight:800; color:#34d399; margin:0; display:flex; align-items:center; gap:7px;">
+                    <span style="width:28px; height:28px; border-radius:8px; background:rgba(16,185,129,0.2); display:inline-flex; align-items:center; justify-content:center; color:#10b981;"><i class="fa-brands fa-whatsapp" style="font-size:1rem;"></i></span>
+                    <span>Box 2: Bulk Monthly Bill Broadcast &amp; WhatsApp Queue</span>
+                  </label>
+                  <span class="badge-paid" style="font-size:0.66rem;">Auto Unpaid Reminder</span>
+                </div>
+                <p style="font-size:0.74rem; color:var(--text-muted); margin:0 0 12px; line-height:1.45;">
+                  Select a billing month to automatically find all unpaid or partial renters and dispatch instant portal reminders or WhatsApp messages.
+                </p>
+                <div style="margin-bottom:10px;">
+                  <label style="font-size:0.72rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Select Billing Month</label>
+                  <input type="month" id="bulkBroadcastMonthInput" class="form-control" style="width:100%; padding:8px 10px; font-size:0.78rem;" onchange="renderBulkBillBroadcastQueue()">
+                </div>
+                <div id="bulkWhatsAppQueueDrawer" style="display:none; margin-top:10px; max-height:195px; overflow-y:auto; padding:8px; border-radius:10px; background:var(--bg-input); border:1px solid var(--glass-border);"></div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08);">
+                <button type="button" class="btn-primary" style="width:100%; padding:8px 14px; font-size:0.77rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="triggerBulkMonthlyBillBroadcast()">
+                  <i class="fa-solid fa-paper-plane"></i> Broadcast Live Alert to All Unpaid Renters
                 </button>
-                <button type="button" id="btnSubmitAdminNotice" class="btn-primary" style="background:linear-gradient(135deg, #f59e0b, #d97706); width:auto; padding:8px 16px; font-size:0.78rem;" onclick="submitAdminBroadcastNotification()">
-                  <i class="fa-solid fa-broadcast-tower"></i> Broadcast Notice
+                <button type="button" class="btn-ledger-action" style="width:100%; justify-content:center; padding:8px 12px; font-size:0.75rem; color:#38bdf8;" onclick="toggleBulkWhatsAppQueueDrawer()">
+                  <i class="fa-brands fa-whatsapp"></i> Open WhatsApp Dispatch Queue (<span id="bulkUnpaidCountBadge">0</span>)
                 </button>
               </div>
             </div>
-          </div>
-
-          <!-- Feature G2: One-Click Bulk Monthly Bill Broadcast (Live Notification + WhatsApp Queue) -->
-          <div class="exec-field-card admin-only" style="border:1.5px solid rgba(16,185,129,0.45); background:rgba(16,185,129,0.07); margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-              <label style="font-size:0.82rem; font-weight:800; color:#10b981; margin:0; display:flex; align-items:center; gap:6px;">
-                <i class="fa-brands fa-whatsapp" style="font-size:1rem;"></i> One-Click Bulk Monthly Bill Broadcast &amp; WhatsApp Queue
-              </label>
-              <span class="badge-paid" style="font-size:0.68rem;">Auto Unpaid Reminder</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <input type="month" id="bulkBroadcastMonthInput" class="form-control" style="width:auto; min-width:155px; padding:6px 10px; font-size:0.76rem;" onchange="renderBulkBillBroadcastQueue()">
-              <button type="button" class="btn-primary" style="width:auto; padding:7px 14px; font-size:0.76rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="triggerBulkMonthlyBillBroadcast()">
-                <i class="fa-solid fa-paper-plane"></i> Broadcast Live Alert to All Unpaid Renters
-              </button>
-              <button type="button" class="btn-ledger-action" style="padding:7px 12px; font-size:0.74rem; color:#38bdf8;" onclick="toggleBulkWhatsAppQueueDrawer()">
-                <i class="fa-brands fa-whatsapp"></i> Open WhatsApp Dispatch Queue (<span id="bulkUnpaidCountBadge">0</span>)
-              </button>
-            </div>
-            <div id="bulkWhatsAppQueueDrawer" style="display:none; margin-top:10px; max-height:195px; overflow-y:auto; padding:8px; border-radius:10px; background:var(--bg-input); border:1px solid var(--glass-border);"></div>
-          </div>
-
-          <!-- Feature A2: Payment Proof (UTR / Screenshot) Admin Verification Queue -->
-          <div id="adminPaymentProofQueueCard" class="exec-field-card admin-only" style="border:1.5px solid rgba(56,189,248,0.45); background:rgba(56,189,248,0.06); margin-bottom:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-              <label style="font-size:0.82rem; font-weight:800; color:#38bdf8; margin:0; display:flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-file-shield"></i> Renter Payment Proof (UTR / Screenshot) Verification Queue
-              </label>
-              <span id="pendingProofCountBadge" class="badge-partial" style="font-size:0.68rem;">0 Pending</span>
-            </div>
-            <div id="adminPaymentProofQueueList" style="display:flex; flex-direction:column; gap:8px; max-height:185px; overflow-y:auto;"></div>
           </div>
 
           <div id="notificationsListContainer" style="display:flex; flex-direction:column; gap:10px; max-height:310px; min-height:150px; overflow-y:auto; padding-right:4px;">
@@ -7014,8 +7042,8 @@
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
               <input type="text" id="auditLogSearchInput" class="form-control" style="width:170px; padding:5px 10px; font-size:0.74rem;" placeholder="Filter actor / action..." oninput="renderAdminAuditTrailList(this.value)">
-              <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.72rem; color:#38bdf8;" onclick="exportAdminAuditLogCsv()">
-                <i class="fa-solid fa-file-csv"></i> Export CSV
+              <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.72rem; color:#f43f5e; border-color:rgba(244,63,94,0.45);" onclick="downloadAdminAuditLogPdf()">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF
               </button>
             </div>
           </div>
@@ -8891,7 +8919,7 @@
                 }).catch(function() {});
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
-              const withinRecentLoginGrace = (Date.now() - lastLoginCompletedAt) < 15000;
+              const withinRecentLoginGrace = (Date.now() - lastLoginCompletedAt) < 2500;
               let detectedRemoteConflict = Boolean(json.sessionConflict);
 
               remoteUsers = remoteUsers.map(function(u) {
@@ -8899,13 +8927,9 @@
                 const normSt = rawSt.toLowerCase() === "blocked" ? "Blocked" : "Active";
                 let resolvedTok = String(u.ActiveSessionToken || "").trim();
                 if (activeUser && activeSessionToken && String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase()) {
-                  const localTs = extractSessionTokenTimestamp(activeSessionToken);
-                  const sheetTs = extractSessionTokenTimestamp(resolvedTok);
-                  if (localTs > 0 && sheetTs > 0 && localTs > sheetTs) {
+                  if (withinRecentLoginGrace) {
                     resolvedTok = activeSessionToken;
-                  } else if (withinRecentLoginGrace && (sheetTs === 0 || localTs >= sheetTs)) {
-                    resolvedTok = activeSessionToken;
-                  } else if (resolvedTok && resolvedTok !== String(activeSessionToken).trim() && (sheetTs === 0 || localTs === 0 || sheetTs > localTs)) {
+                  } else if (resolvedTok && resolvedTok !== String(activeSessionToken).trim()) {
                     detectedRemoteConflict = true;
                   }
                 }
@@ -8917,11 +8941,13 @@
                 });
               });
               saveLocalUsersMaster(remoteUsers);
-              fetch("/api/gas-engine", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
-              }).catch(function() {});
+              if (!detectedRemoteConflict) {
+                fetch("/api/gas-engine", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
+                }).catch(function() {});
+              }
 
               if (detectedRemoteConflict && activeUser && activeSessionToken && !withinRecentLoginGrace) {
                 setTimeout(function() {
@@ -9115,25 +9141,41 @@
           if (!f.ElecMeterNumber && fallbackRenter.ElecMeterNumber) f.ElecMeterNumber = String(fallbackRenter.ElecMeterNumber);
         }
         if (actRenter) {
-          if (f.RentAmount !== undefined && f.RentAmount !== "") {
-            actRenter.RentAmount = f.RentAmount;
-          } else if (actRenter.RentAmount !== undefined && actRenter.RentAmount !== "") {
-            f.RentAmount = actRenter.RentAmount;
+          const flatRentNum = parseFloat(f.RentAmount) || 0;
+          const renterRentNum = parseFloat(actRenter.RentAmount) || 0;
+          if (renterRentNum > 0) {
+            f.RentAmount = renterRentNum;
+            actRenter.RentAmount = renterRentNum;
+          } else if (flatRentNum > 0) {
+            actRenter.RentAmount = flatRentNum;
+            f.RentAmount = flatRentNum;
           }
-          if (f.ElecRate !== undefined && f.ElecRate !== "") {
-            actRenter.ElecFixedRate = f.ElecRate;
-          } else if (actRenter.ElecFixedRate !== undefined && actRenter.ElecFixedRate !== "") {
-            f.ElecRate = actRenter.ElecFixedRate;
+          const flatElecNum = parseFloat(f.ElecRate) || 0;
+          const renterElecNum = parseFloat(actRenter.ElecFixedRate) || 0;
+          if (renterElecNum > 0) {
+            f.ElecRate = renterElecNum;
+            actRenter.ElecFixedRate = renterElecNum;
+          } else if (flatElecNum > 0) {
+            actRenter.ElecFixedRate = flatElecNum;
+            f.ElecRate = flatElecNum;
           }
-          if (f.PNGRate !== undefined && f.PNGRate !== "") {
-            actRenter.PNGFixedRate = f.PNGRate;
-          } else if (actRenter.PNGFixedRate !== undefined && actRenter.PNGFixedRate !== "") {
-            f.PNGRate = actRenter.PNGFixedRate;
+          const flatPngNum = parseFloat(f.PNGRate) || 0;
+          const renterPngNum = parseFloat(actRenter.PNGFixedRate) || 0;
+          if (renterPngNum > 0) {
+            f.PNGRate = renterPngNum;
+            actRenter.PNGFixedRate = renterPngNum;
+          } else if (flatPngNum > 0) {
+            actRenter.PNGFixedRate = flatPngNum;
+            f.PNGRate = flatPngNum;
           }
-          if (f.WaterRate !== undefined && f.WaterRate !== "") {
-            actRenter.WaterFixedRate = f.WaterRate;
-          } else if (actRenter.WaterFixedRate !== undefined && actRenter.WaterFixedRate !== "") {
-            f.WaterRate = actRenter.WaterFixedRate;
+          const flatWaterNum = parseFloat(f.WaterRate) || 0;
+          const renterWaterNum = parseFloat(actRenter.WaterFixedRate) || 0;
+          if (renterWaterNum > 0) {
+            f.WaterRate = renterWaterNum;
+            actRenter.WaterFixedRate = renterWaterNum;
+          } else if (flatWaterNum > 0) {
+            actRenter.WaterFixedRate = flatWaterNum;
+            f.WaterRate = flatWaterNum;
           }
           if (f.PNGNumber) actRenter.PNGNumber = String(f.PNGNumber);
           else if (actRenter.PNGNumber) f.PNGNumber = String(actRenter.PNGNumber);
@@ -9212,7 +9254,7 @@
         userRole: matchedUser?.Role || activeRole || "Admin",
         userFullName: matchedUser?.FullName || activeUserFullName || loggedUsername || "",
         userMobile: matchedUser?.MobileNumber || activeUserMobile || "",
-        userTheme: matchedUser?.Theme || activeThemePref || "dark",
+        userTheme: matchedUser?.Theme || activeThemePref || "system",
         userAssignedProperty: matchedUser?.AssignedProperty ?? activeAssignedProperty ?? "",
         userAssignedFlat: matchedUser?.AssignedFlat ?? activeAssignedFlat ?? "",
         userAssignedAadhaar: normalizeAadhaar12(matchedUser?.AssignedAadhaar ?? matchedUser?.AadhaarNumber ?? activeAssignedAadhaar),
@@ -9256,7 +9298,7 @@
         fullName: userDocData.FullName || userDocData.Username,
         mobile: userDocData.MobileNumber || "",
         role: userDocData.Role || "Admin",
-        theme: userDocData.Theme || "dark",
+        theme: userDocData.Theme || "system",
         assignedProperty: userDocData.AssignedProperty || "",
         assignedFlat: userDocData.AssignedFlat || "",
         assignedAadhaar: normalizeAadhaar12(userDocData.AssignedAadhaar ?? userDocData.AadhaarNumber),
@@ -9548,7 +9590,7 @@
         fullName: localMatch?.FullName || activeUserFullName || cleanUser,
         mobile: localMatch?.MobileNumber || activeUserMobile || "",
         role: localMatch?.Role || activeRole || "Admin",
-        theme: localMatch?.Theme || activeThemePref || "dark",
+        theme: localMatch?.Theme || activeThemePref || "system",
         password: localMatch?.Password || ""
       };
     }
@@ -9635,7 +9677,7 @@
               Password: String(data.newPassword || "").trim(),
               FullName: String(data.fullName || uName).trim(),
               Role: roleVal,
-              Theme: "dark",
+              Theme: data.theme || "system",
               MobileNumber: cleanPhoneStr(data.mobile || data.mobileNumber || ""),
               AssignedProperty: String(data.assignedProperty || "").trim(),
               AssignedFlat: String(data.assignedFlat || "").trim(),
@@ -9891,10 +9933,11 @@
           case "saveBackgrounds":
           case "saveGlobalAppConfig": {
             const isExplicitClear = Boolean(data.explicitClear);
+            const nextBgUrl = isExplicitClear ? "" : String(data.bgDashboard || data.bgLogin || globalConfig.bgDashboardUrl || "").trim();
             globalConfig = {
               ...globalConfig,
-              bgLoginUrl: "",
-              bgDashboardUrl: "",
+              bgLoginUrl: nextBgUrl,
+              bgDashboardUrl: nextBgUrl,
               bgCleared: isExplicitClear,
               bgClearedAt: isExplicitClear ? Date.now() : 0,
               customBackgrounds: [],
@@ -9902,39 +9945,38 @@
             };
             saveLocalGlobalConfigMaster(globalConfig);
 
-            usersList = usersList.map(function(u) {
-              return { ...u, BgLogin: "", BgDashboard: "", BgLoginUrl: "", BgDashboardUrl: "", BackgroundURL: "" };
-            });
-            saveLocalUsersMaster(usersList);
-
-            await sendGasSheetAction({ ...data, bgLogin: "", bgDashboard: "", bgLoginUrl: "", bgDashboardUrl: "", customBackgrounds: [], globalConfig: globalConfig });
-            return { status: "success", driveFolderId: GOOGLE_DRIVE_FOLDER_ID, driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL, message: "Saved to Google Drive folder (not saved in Google Sheets)." };
+            await sendGasSheetAction({ ...data, bgLogin: nextBgUrl, bgDashboard: nextBgUrl, bgLoginUrl: nextBgUrl, bgDashboardUrl: nextBgUrl, customBackgrounds: [], globalConfig: globalConfig });
+            return { status: "success", driveFolderId: GOOGLE_DRIVE_FOLDER_ID, driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL, previewUrl: nextBgUrl, message: "Saved to Google Drive & synced link to Google Sheets." };
           }
 
           case "uploadBackgroundPhoto": {
             const photoData = data.sheetSafeBase64 || data.base64Data || data.imageUrl || "";
+            const res = await sendGasSheetAction({
+              action: "uploadBackgroundPhoto",
+              base64Data: photoData,
+              fileName: data.fileName || "Portal_Background.jpg",
+              mimeType: data.mimeType || "image/jpeg",
+              driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
+              driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
+              globalConfig: globalConfig
+            });
+            const resolvedDriveLink = res?.previewUrl || res?.imageUrl || photoData;
             globalConfig = {
               ...globalConfig,
-              bgLoginUrl: "",
-              bgDashboardUrl: "",
+              bgLoginUrl: resolvedDriveLink,
+              bgDashboardUrl: resolvedDriveLink,
               bgCleared: false,
               customBackgrounds: [],
               updatedAt: new Date().toISOString()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            const res = await sendGasSheetAction({
-              action: "uploadBackgroundPhoto",
-              base64Data: photoData,
-              driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
-              driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
-              globalConfig: globalConfig
-            });
             return {
               status: "success",
               driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
               driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
-              previewUrl: res?.previewUrl || photoData,
-              message: "Background photo saved directly to Google Drive folder (not saved in Google Sheets)."
+              previewUrl: resolvedDriveLink,
+              imageUrl: resolvedDriveLink,
+              message: "Background photo saved to Google Drive and link pasted into Google Sheets!"
             };
           }
 
@@ -10065,7 +10107,7 @@
     let activeManagerPermissions = [];
     let activeSessionToken = "";
     let isSessionConflictModalOpen = false;
-    let activeThemePref = "black";
+    let activeThemePref = "system";
     let selectedProperty = null;
     let selectedFlat = null;
     let activeFlatRenterObj = null;
@@ -10488,11 +10530,10 @@
       }
       const file = inputEl.files && inputEl.files[0];
       if (!file) return;
-      triggerSideToast("Uploading Photo to Google Drive", "Saving photo directly to your Google Drive folder...", "warning");
+      triggerSideToast("Uploading Photo to Google Drive", "Saving photo to Google Drive & pasting link into Google Sheets...", "warning");
       try {
         const hdDataUrl = await readHdBackgroundFileToDataUrl(file, 1600, 0.85);
-        applyBgImages(hdDataUrl, hdDataUrl);
-        await sendFirebaseAction({
+        const res = await sendFirebaseAction({
           action: "uploadBackgroundPhoto",
           username: activeUser || "admin",
           type: "dashboard",
@@ -10502,9 +10543,16 @@
           driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
           driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL
         });
+        const driveBgUrl = (res && (res.previewUrl || res.imageUrl)) ? normalizeGoogleDriveBgUrl(res.previewUrl || res.imageUrl) : hdDataUrl;
+        try {
+          localStorage.setItem("portal_custom_bg_dashboard", driveBgUrl);
+          localStorage.setItem("portal_custom_bg_login", driveBgUrl);
+        } catch (e) {}
+        applyCustomBackgrounds();
+        initCustomBgInputs();
         const el = document.getElementById("bgUrlLoginScreen");
-        if (el) el.value = "Saved directly to Google Drive (No Sheet Link)";
-        triggerSideToast("Saved to Google Drive", "Photo saved directly to Google Drive folder (not saved in Google Sheets)!", true);
+        if (el) el.value = driveBgUrl.startsWith("data:image") ? "Saved to Google Drive" : driveBgUrl;
+        triggerSideToast("Saved to Google Drive & Sheet", "Photo saved to Google Drive and link pasted into Google Sheets for all devices!", true);
       } catch (err) {
         triggerSideToast("Upload Failed", "Could not upload photo to Google Drive.", false);
       }
@@ -10610,6 +10658,19 @@
       const isSelfTarget = targetClean === String(activeUser || "").trim().toLowerCase();
       if (isBlocking && isSelfTarget) {
         return triggerSideToast("Action Blocked", "You cannot block your own currently logged-in account.", false);
+      }
+
+      const lockState = typeof getLoginLockoutState === "function" ? getLoginLockoutState(targetClean) : null;
+      const isPermLockedByAttempts = Boolean(
+        (targetU && (Number(targetU.LockoutStage || 0) >= 4 || targetU.PermanentlyLockedByAttempts === true || (String(targetU.IsPermanentlyBlocked || "").toLowerCase() === "true" && Number(targetU.LockoutStage || 0) >= 4))) ||
+        (lockState && lockState.isPermanentlyBlocked && Number(lockState.stage || 0) >= 4)
+      );
+      if (!isBlocking && isPermLockedByAttempts) {
+        return triggerSideToast(
+          "Permanently Blocked Account",
+          `@${targetUsername} was permanently blocked after 12 failed password attempts (4 lockout stages) and cannot be unblocked even by the Admin.`,
+          false
+        );
       }
 
       // Only Admin can unblock a moved-out renter account (or unblock any blocked account when not Admin)
@@ -13415,11 +13476,36 @@ function formatMonthLabel(rawVal) {
         if (aadhaarSlotKey) {
           DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = savedSlot;
         }
+        // Also store the Google Drive link on the renter record's Photo1URL..Photo4URL so it is synced & visible in Screenshot Verification 4x4 Grid
+        const catFieldMap = {
+          electricity_meter: "Photo1URL",
+          photo_1: "Photo1URL",
+          completed_payment: "Photo2URL",
+          photo_2: "Photo2URL",
+          water_meter_bill: "Photo3URL",
+          photo_3: "Photo3URL",
+          png_gas_meter: "Photo4URL",
+          photo_4: "Photo4URL"
+        };
+        const targetPhotoCol = catFieldMap[cleanCat] || "Photo1URL";
+        (DB.renters || []).forEach(r => {
+          const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+          const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
+          const sameId = renterId && String(r.RenterID || "") === String(renterId);
+          const sameAadh = normAadhaar.length === 12 && rAadh === normAadhaar;
+          if (sameId || sameAadh || (sameFlat && String(r.Status || "").toLowerCase() === "active")) {
+            r[targetPhotoCol] = driveUrl;
+          }
+        });
+        saveDbSnapshotToCache();
         renderAllDashboardUI();
+        if (typeof renderAdminScreenshotVerificationGrid === "function") {
+          renderAdminScreenshotVerificationGrid();
+        }
 
         triggerSideToast(
-          "Saved to Google Drive",
-          `${categoryLabel} for ${formatMonthLabel(cleanMonth)} saved directly on Google Drive!`,
+          "Saved to Google Drive & Sheet",
+          `${categoryLabel} (${formatMonthLabel(cleanMonth)}) saved to Google Drive & link pasted in Google Sheet!`,
           true
         );
       } catch (err) {
@@ -14174,8 +14260,9 @@ function formatMonthLabel(rawVal) {
         const monthlyUploadCategories = [
           {
             key: "electricity_meter",
-            title: "Electricity Meter Photo",
-            subtitle: "Upload monthly sub-meter reading photo",
+            colKey: "Photo1URL",
+            title: "Photo 1 • Electricity Meter / Any Photo",
+            subtitle: "Upload electricity meter or any photo to Google Drive",
             icon: "fa-solid fa-bolt",
             accent: "#38bdf8",
             bg: "rgba(56,189,248,0.14)",
@@ -14183,8 +14270,9 @@ function formatMonthLabel(rawVal) {
           },
           {
             key: "completed_payment",
-            title: "Completed Payment Photo",
-            subtitle: "Upload monthly rent/utility payment screenshot",
+            colKey: "Photo2URL",
+            title: "Photo 2 • Completed Payment / Any Photo",
+            subtitle: "Upload payment screenshot or any photo to Google Drive",
             icon: "fa-solid fa-receipt",
             accent: "#10b981",
             bg: "rgba(16,185,129,0.14)",
@@ -14192,8 +14280,9 @@ function formatMonthLabel(rawVal) {
           },
           {
             key: "water_meter_bill",
-            title: "Water Meter / Bill Photo",
-            subtitle: "Upload monthly water meter or bill photo",
+            colKey: "Photo3URL",
+            title: "Photo 3 • Water Meter / Bill / Any Photo",
+            subtitle: "Upload water meter/bill or any photo to Google Drive",
             icon: "fa-solid fa-faucet-drip",
             accent: "#06b6d4",
             bg: "rgba(6,182,212,0.14)",
@@ -14201,8 +14290,9 @@ function formatMonthLabel(rawVal) {
           },
           {
             key: "png_gas_meter",
-            title: "PNG Gas Meter Photo",
-            subtitle: "Upload monthly PNG gas meter reading photo",
+            colKey: "Photo4URL",
+            title: "Photo 4 • PNG Gas Meter / Any Photo",
+            subtitle: "Upload PNG gas meter or any photo to Google Drive",
             icon: "fa-solid fa-fire-flame-simple",
             accent: "#f59e0b",
             bg: "rgba(245,158,11,0.14)",
@@ -14219,10 +14309,10 @@ function formatMonthLabel(rawVal) {
                 </div>
                 <div>
                   <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#34d399;">
-                    Monthly Utility &amp; Payment Photo Submissions • Direct Google Drive Storage
+                    Up to 4 Photos Upload • Auto-Saved to Google Drive &amp; Linked in Google Sheets
                   </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.12rem; font-weight:900; color:var(--text-main);">
-                    Upload Monthly Meter &amp; Payment Photos (${activeUploadMonthLabel})
+                    Upload Up to 4 Photos / Monthly Meter &amp; Payment Screenshots (${activeUploadMonthLabel})
                   </h3>
                 </div>
               </div>
@@ -14697,6 +14787,12 @@ function formatMonthLabel(rawVal) {
           }
         }
       } catch (e) {}
+
+      // Immediately log out the previous device & switch to Login Screen
+      activeUser = null;
+      document.getElementById("dashboardScreen")?.classList.remove("active");
+      document.getElementById("loginScreen")?.classList.add("active");
+      applyCustomBackgrounds();
 
       // Close all other modals and show the Single-Device Session Conflict Warning Modal on the first device
       document.querySelectorAll(".modal-overlay").forEach(m => {
@@ -15236,7 +15332,8 @@ function formatMonthLabel(rawVal) {
           updateLoginLockoutUI(u);
           return { justLocked: true, tierLabel: "24 Hours", lockedUntil: state.lockedUntil };
         } else {
-          // Stage 3 -> completely block user
+          // Stage 3 -> Stage 4: Permanently block user automatically; even Admin cannot unblock
+          state.stage = 4;
           state.isPermanentlyBlocked = true;
           state.lockedUntil = 0;
           state.failedInStage = 0;
@@ -15254,6 +15351,9 @@ function formatMonthLabel(rawVal) {
               usr.Status = "Blocked";
               usr.AccountStatus = "Blocked";
               usr.ActiveSessionToken = "";
+              usr.LockoutStage = 4;
+              usr.IsPermanentlyBlocked = "true";
+              usr.PermanentlyLockedByAttempts = true;
             }
           });
           saveLocalUsersMaster(DB.users);
@@ -15262,7 +15362,10 @@ function formatMonthLabel(rawVal) {
             action: "toggleUserBlock",
             targetUsername: u,
             block: true,
-            newStatus: "Blocked"
+            newStatus: "Blocked",
+            lockoutStage: 4,
+            isPermanentlyBlocked: true,
+            permanentlyLockedByAttempts: true
           }).catch(() => {});
 
           updateLoginLockoutUI(u);
@@ -17480,10 +17583,20 @@ function formatMonthLabel(rawVal) {
       if (statusSelect) {
         let blockedList = [];
         try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
-        const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(String(u.Username || "").trim().toLowerCase());
+        const uKeyLow = String(u.Username || "").trim().toLowerCase();
+        const lockEntry = (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
+        const isPermLockedByAttempts = Boolean(
+          u.PermanentlyLockedByAttempts === true ||
+          String(u.IsPermanentlyBlocked || "").toLowerCase() === "true" ||
+          Number(u.LockoutStage || 0) >= 4 ||
+          (lockEntry && lockEntry.isPermanentlyBlocked)
+        );
+        const isBlocked = isPermLockedByAttempts || String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow);
         statusSelect.value = isEditingSelf ? "Active" : (isBlocked ? "Blocked" : "Active");
-        statusSelect.disabled = isEditingSelf;
-        statusSelect.title = isEditingSelf ? "You cannot block your own currently logged-in account." : "";
+        statusSelect.disabled = isEditingSelf || isPermLockedByAttempts;
+        statusSelect.title = isPermLockedByAttempts
+          ? "Permanently blocked due to 4-tier failed password attempts. Even Admin cannot unblock this account."
+          : (isEditingSelf ? "You cannot block your own currently logged-in account." : "");
       }
       const roleVal = (u.Role === "Renter") ? "Renter" : ((u.Role === "Viewer") ? "Viewer" : ((u.Role === "Manager") ? "Manager" : "Admin"));
       const roleSelectEl = document.getElementById("editAssignRole");
@@ -17618,8 +17731,18 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Password Required", "Login password cannot be empty.", false);
       }
       const newFullNameRaw = String(document.getElementById("editAssignFullName")?.value || "").trim() || rawEnteredUsername;
-      const newStatusRaw = String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active";
-      if (isSelfEdit && newStatusRaw === "Blocked") {
+      const uKeyLow = targetUser.toLowerCase();
+      const lockEntry = (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
+      const isPermLockedByAttempts = Boolean(
+        u.PermanentlyLockedByAttempts === true ||
+        String(u.IsPermanentlyBlocked || "").toLowerCase() === "true" ||
+        Number(u.LockoutStage || 0) >= 4 ||
+        (lockEntry && lockEntry.isPermanentlyBlocked)
+      );
+      const newStatusRaw = isPermLockedByAttempts
+        ? "Blocked"
+        : (String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active");
+      if (isSelfEdit && newStatusRaw === "Blocked" && !isPermLockedByAttempts) {
         return triggerSideToast("Action Blocked", "You cannot block your own currently logged-in account.", false);
       }
       const wasPreviouslyBlocked = String(u.Status || "").trim().toLowerCase() === "blocked";
@@ -17816,17 +17939,27 @@ function formatMonthLabel(rawVal) {
 
             let blockedList = [];
             try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
-            const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uName.toLowerCase());
+            const uKeyLow = uName.toLowerCase();
+            const lockEntry = (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
+            const isPermLockedByAttempts = Boolean(
+              u.PermanentlyLockedByAttempts === true ||
+              String(u.IsPermanentlyBlocked || "").toLowerCase() === "true" ||
+              Number(u.LockoutStage || 0) >= 4 ||
+              (lockEntry && lockEntry.isPermanentlyBlocked)
+            );
+            const isBlocked = isPermLockedByAttempts || String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow);
             const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
-            const blockBtn = isBlocked
-              ? (isStrictAdmin
-                  ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="Unblock user login (Admin Only)">
-                       <i class="fa-solid fa-lock-open"></i> Unblock
-                     </button>`
-                  : `<span style="font-size:0.68rem; color:#f87171; font-weight:700; padding:4px 8px;"><i class="fa-solid fa-lock"></i> Admin Only Unblock</span>`)
-              : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#ef4444; border-color:rgba(239,68,68,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Blocked')" title="Block user from logging in">
-                   <i class="fa-solid fa-ban"></i> Block
-                 </button>`;
+            const blockBtn = isPermLockedByAttempts
+              ? `<span style="font-size:0.68rem; color:#ef4444; font-weight:800; padding:4px 9px; border-radius:8px; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.4);" title="Permanently blocked after 12 failed login attempts across 4 lockout tiers. Cannot be unblocked even by Admin."><i class="fa-solid fa-lock"></i> Permanently Blocked (Irreversible)</span>`
+              : (isBlocked
+                ? (isStrictAdmin
+                    ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="Unblock user login (Admin Only)">
+                         <i class="fa-solid fa-lock-open"></i> Unblock
+                       </button>`
+                    : `<span style="font-size:0.68rem; color:#f87171; font-weight:700; padding:4px 8px;"><i class="fa-solid fa-lock"></i> Admin Only Unblock</span>`)
+                : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#ef4444; border-color:rgba(239,68,68,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Blocked')" title="Block user from logging in">
+                     <i class="fa-solid fa-ban"></i> Block
+                   </button>`);
 
             adminControlsHtml = `
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;">
@@ -17965,6 +18098,7 @@ function formatMonthLabel(rawVal) {
 
       // Configure horizontal tab buttons based on Admin vs Manager permissions
       const tabConfigs = [
+        { btnId: "settingsTabBtnScreenshotVerify", tabId: "setSubScreenshotVerification", allowed: isAdmin || hasManagerPermission("notifications") || hasManagerPermission("billing") || hasManagerPermission("controlOf") },
         { btnId: "settingsTabBtnNotifications", tabId: "setSubNotifications", allowed: isAdmin || hasManagerPermission("notifications") },
         { btnId: "settingsTabBtnCreateUser", tabId: "setSubCreateUser", allowed: isAdmin || hasManagerPermission("createUser") },
         { btnId: "settingsTabBtnDeleteCenter", tabId: "setSubDeleteManage", allowed: isAdmin || hasManagerPermission("deleteCenter") || hasManagerPermission("controlOf") }
@@ -18032,8 +18166,186 @@ function formatMonthLabel(rawVal) {
       }
 
       renderRegisteredUsersList();
+      if (typeof renderAdminScreenshotVerificationGrid === "function") {
+        renderAdminScreenshotVerificationGrid();
+      }
       switchSettingsSubTab(null, targetTabId);
       openModal("settingsModal");
+    }
+
+    function renderAdminScreenshotVerificationGrid() {
+      const container = document.getElementById("adminScreenshotVerificationContainer");
+      if (!container) return;
+      const query = String(document.getElementById("screenshotVerifySearchInput")?.value || "").trim().toLowerCase();
+      const monthlyPhotosMap = (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object")
+        ? DB.globalConfig.renterMonthlyPhotos
+        : {};
+      const paymentProofs = typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : [];
+
+      // Collect renters and group/deduplicate by RenterID or Property+Flat+Aadhaar
+      const rentersList = Array.isArray(DB.renters) ? DB.renters : [];
+      const cardsData = [];
+
+      rentersList.forEach(r => {
+        const rName = String(r.RenterName || "Unnamed Renter").trim();
+        const rawAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+        const formattedAadh = rawAadh.length === 12 ? formatAadhaarWithHyphens(rawAadh) : (r.IdentityDocNumber || "Not Provided");
+        const propName = String(r.PropertyName || "").trim();
+        const flatName = String(r.FlatName || "").trim();
+        if (query) {
+          const hay = `${rName} ${formattedAadh} ${rawAadh} ${propName} ${flatName}`.toLowerCase();
+          if (!hay.includes(query)) return;
+        }
+
+        // Gather up to 4 uploaded photos (or more if multiple months) for this renter
+        const photoSlots = [
+          { idx: 1, key: "electricity_meter", col: "Photo1URL", label: "Photo 1 (Electricity Meter)", icon: "fa-bolt", color: "#38bdf8", url: "" },
+          { idx: 2, key: "completed_payment", col: "Photo2URL", label: "Photo 2 (Payment Screenshot)", icon: "fa-receipt", color: "#10b981", url: "" },
+          { idx: 3, key: "water_meter_bill", col: "Photo3URL", label: "Photo 3 (Water Meter / Bill)", icon: "fa-faucet-drip", color: "#06b6d4", url: "" },
+          { idx: 4, key: "png_gas_meter", col: "Photo4URL", label: "Photo 4 (PNG Gas Meter)", icon: "fa-fire-flame-simple", color: "#f59e0b", url: "" }
+        ];
+
+        // 1. Check direct columns Photo1URL..Photo4URL on renter record
+        photoSlots.forEach(slot => {
+          const directVal = r[slot.col] || "";
+          if (directVal && !isPlaceholderImageUrl(directVal)) {
+            slot.url = directVal.startsWith("data:image") ? directVal : normalizeGoogleDriveImageUrl(directVal);
+          }
+        });
+
+        // 2. Check monthlyPhotosMap for matching Aadhaar or Property+Flat
+        const normProp = propName.toLowerCase();
+        const normFlat = flatName.toLowerCase();
+        Object.keys(monthlyPhotosMap).forEach(k => {
+          const item = monthlyPhotosMap[k];
+          if (!item) return;
+          const itemUrl = item.imageUrl || item.previewUrl || "";
+          if (!itemUrl) return;
+          const itemAadh = String(item.aadhaar || item.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+          const itemProp = String(item.propertyName || "").trim().toLowerCase();
+          const itemFlat = String(item.flatName || "").trim().toLowerCase();
+          const isMatch = (rawAadh.length === 12 && itemAadh === rawAadh) ||
+                          (normProp && normFlat && itemProp === normProp && itemFlat === normFlat);
+          if (!isMatch) return;
+          const cat = String(item.category || "").toLowerCase();
+          const matchedSlot = photoSlots.find(s => s.key === cat);
+          if (matchedSlot && !matchedSlot.url) {
+            matchedSlot.url = itemUrl.startsWith("data:image") ? itemUrl : normalizeGoogleDriveImageUrl(itemUrl);
+            if (item.monthYear) matchedSlot.monthYear = item.monthYear;
+          }
+        });
+
+        // 3. Check PaymentProofs for this renter if Photo 2 is still empty
+        if (!photoSlots[1].url) {
+          const matchingProof = paymentProofs.find(p =>
+            p.screenshotUrl &&
+            ((normProp && normFlat && isSamePropAndFlat(p.propertyName, p.flatName, propName, flatName)) ||
+             (String(p.tenantName || "").trim().toLowerCase() === rName.toLowerCase()))
+          );
+          if (matchingProof && matchingProof.screenshotUrl) {
+            photoSlots[1].url = matchingProof.screenshotUrl.startsWith("data:image")
+              ? matchingProof.screenshotUrl
+              : normalizeGoogleDriveImageUrl(matchingProof.screenshotUrl);
+          }
+        }
+
+        // 4. Fallback to Profile / Aadhaar photo if no utility photos uploaded yet so Admin can still verify uploaded renter photos
+        const extraKycSlots = [
+          {
+            label: "Profile Photo",
+            url: (!isPlaceholderImageUrl(r.ProfileImageURL)) ? (r.ProfileImageURL.startsWith("data:image") ? r.ProfileImageURL : normalizeGoogleDriveImageUrl(r.ProfileImageURL)) : ""
+          },
+          {
+            label: "Aadhaar Document Photo",
+            url: (!isPlaceholderImageUrl(r.IdentityImageURL)) ? (r.IdentityImageURL.startsWith("data:image") ? r.IdentityImageURL : normalizeGoogleDriveImageUrl(r.IdentityImageURL)) : ""
+          }
+        ];
+
+        cardsData.push({
+          renter: r,
+          rName,
+          formattedAadh,
+          propName,
+          flatName,
+          status: String(r.Status || "Active"),
+          photoSlots,
+          extraKycSlots,
+          uploadedCount: photoSlots.filter(s => Boolean(s.url)).length
+        });
+      });
+
+      if (cardsData.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:28px; color:var(--text-muted); font-size:0.84rem; background:rgba(15,23,42,0.45); border:1px dashed var(--glass-border); border-radius:14px;">No renters found matching your search.</div>`;
+        return;
+      }
+
+      // Sort so renters with uploaded photos appear first, then Active renters
+      cardsData.sort((a, b) => {
+        if (b.uploadedCount !== a.uploadedCount) return b.uploadedCount - a.uploadedCount;
+        const aAct = a.status.toLowerCase() === "active" ? 0 : 1;
+        const bAct = b.status.toLowerCase() === "active" ? 0 : 1;
+        return aAct - bAct;
+      });
+
+      container.innerHTML = cardsData.map(card => {
+        const safeName = card.rName.replace(/'/g, "\\'");
+        const isAct = card.status.toLowerCase() === "active";
+        return `
+          <div style="background:rgba(15,23,42,0.68); border:1.5px solid var(--glass-border); border-radius:14px; padding:15px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+              <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">
+                  <i class="fa-solid fa-user-check" style="color:#34d399; margin-right:5px;"></i>${card.rName}
+                </div>
+                <span style="font-size:0.78rem; font-weight:800; padding:4px 10px; border-radius:8px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.35);">
+                  <i class="fa-solid fa-id-card"></i> Aadhaar: ${card.formattedAadh}
+                </span>
+                <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">
+                  <i class="fa-solid fa-building"></i> ${card.propName || "--"} — Flat ${card.flatName || "--"}
+                </span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="${isAct ? 'badge-paid' : 'badge-unpaid'}" style="font-size:0.7rem;">${isAct ? 'Active Renter' : 'Past Renter'}</span>
+                <span style="font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35);">
+                  ${card.uploadedCount} / 4 Photos Uploaded
+                </span>
+              </div>
+            </div>
+
+            <!-- 4x4 Grid Column Layout for the Renter's 4 Uploaded Photos (Click any photo to zoom) -->
+            <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px;">
+              ${card.photoSlots.map(slot => {
+                const safeUrl = String(slot.url || "").replace(/'/g, "\\'");
+                const safeTitle = `${safeName} (${card.formattedAadh}) — ${slot.label}`.replace(/'/g, "\\'");
+                return `
+                  <div style="background:var(--bg-input); border:1.5px solid ${slot.url ? 'rgba(16,185,129,0.45)' : 'var(--glass-border)'}; border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:7px;">
+                    <div style="font-size:0.72rem; font-weight:800; color:${slot.color}; display:flex; align-items:center; justify-content:space-between; gap:4px;">
+                      <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><i class="fa-solid ${slot.icon}"></i> ${slot.label}</span>
+                    </div>
+                    ${slot.url ? `
+                      <div
+                        onclick="openPhotoZoomModal('${safeUrl}', '${safeTitle}')"
+                        title="Click to zoom in on ${slot.label}"
+                        style="width:100%; height:130px; border-radius:9px; overflow:hidden; background:#090d16; border:1px solid rgba(56,189,248,0.35); cursor:zoom-in; position:relative;"
+                      >
+                        <img src="${slot.url}" alt="${slot.label}" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                        <span style="position:absolute; bottom:5px; right:5px; background:rgba(15,23,42,0.85); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 7px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                          <i class="fa-solid fa-magnifying-glass-plus"></i> Zoom
+                        </span>
+                      </div>
+                    ` : `
+                      <div style="width:100%; height:130px; border-radius:9px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; color:var(--text-muted); font-size:0.7rem; text-align:center; padding:8px;">
+                        <i class="fa-solid ${slot.icon}" style="font-size:1.2rem; opacity:0.45; color:${slot.color};"></i>
+                        <span>No Photo Uploaded</span>
+                      </div>
+                    `}
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     function switchSettingsSubTab(evt, subTabId) {
@@ -18052,6 +18364,7 @@ function formatMonthLabel(rawVal) {
         evt.currentTarget.classList.add("active");
       } else {
         const btnMap = {
+          setSubScreenshotVerification: "settingsTabBtnScreenshotVerify",
           setSubNotifications: "settingsTabBtnNotifications",
           setSubCreateUser: "settingsTabBtnCreateUser",
           setSubDeleteManage: "settingsTabBtnDeleteCenter"
@@ -18060,18 +18373,19 @@ function formatMonthLabel(rawVal) {
         if (mappedBtn) mappedBtn.classList.add("active");
       }
       document.getElementById(subTabId)?.classList.add("active");
-      if (subTabId === "setSubNotifications") {
+      if (subTabId === "setSubScreenshotVerification") {
+        renderAdminScreenshotVerificationGrid();
+      } else if (subTabId === "setSubNotifications") {
         mountSharedNotificationsWorkspaceInto("setSubNotifications");
         const composerEl = document.getElementById("adminNotificationComposeCard");
         const canCompose = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("notifications"));
         if (composerEl) {
-          composerEl.style.display = canCompose ? "block" : "none";
+          composerEl.style.display = canCompose ? "flex" : "none";
           if (canCompose && !currentEditingNoticeId) {
             renderNoticeTargetPropertiesChecklist(["ALL"]);
           }
         }
         if (typeof renderBulkBillBroadcastQueue === "function") renderBulkBillBroadcastQueue();
-        if (typeof renderAdminPaymentProofQueue === "function") renderAdminPaymentProofQueue();
         renderNotificationsListUI();
         markAllVisibleNotificationsRead();
       } else if (subTabId === "setSubCreateUser") {
@@ -18246,6 +18560,7 @@ function formatMonthLabel(rawVal) {
         newUsername: newU,
         newPassword: newP,
         role: role,
+        theme: "system",
         assignedProperty: assignedProperty,
         assignedFlat: assignedFlat,
         assignedAadhaar: assignedAadhaar,
@@ -18258,7 +18573,7 @@ function formatMonthLabel(rawVal) {
           Password: newP,
           FullName: fullName,
           Role: role,
-          Theme: "black",
+          Theme: "system",
           MobileNumber: mobile,
           AssignedProperty: assignedProperty,
           AssignedFlat: assignedFlat,
@@ -27116,6 +27431,7 @@ function formatMonthLabel(rawVal) {
         true
       );
 
+      lastWriteCompletedAt = Date.now();
       await sendFirebaseAction({
         action: "saveRenterProfile",
         renterId: newRenterId,
@@ -27138,9 +27454,9 @@ function formatMonthLabel(rawVal) {
         status: statusVal,
         identityDocNumber: formattedAadhaar || rawAadhaar,
         identityNumber: rawAadhaar,
-        profileImageUrl: "",
+        profileImageUrl: (profUrl && !profUrl.startsWith("data:image")) ? profUrl : "",
         profileImg: "",
-        identityImageUrl: "",
+        identityImageUrl: (idUrl && !idUrl.startsWith("data:image")) ? idUrl : "",
         identityImg: "",
         mobileNumber: newRenterObj.MobileNumber,
         mobile: newRenterObj.MobileNumber,
@@ -27150,8 +27466,17 @@ function formatMonthLabel(rawVal) {
         familyMembers: famCount,
         forceCreateNewRow: true
       });
+      await sendFirebaseAction({
+        action: "updateMasterRentAndRates",
+        propertyName: targetProp,
+        flatName: targetFlat,
+        rentAmount: finalRentAmount,
+        elecRate: finalElecRate,
+        pngRate: inheritedPng,
+        waterRate: inheritedWater
+      });
       if (profUrl && profUrl.startsWith("data:image")) {
-        await sendFirebaseAction({
+        const profRes = await sendFirebaseAction({
           action: "uploadRenterDocument",
           propertyName: targetProp,
           flatName: targetFlat,
@@ -27164,9 +27489,12 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: profUrl
         });
+        if (profRes && (profRes.imageUrl || profRes.url)) {
+          newRenterObj.ProfileImageURL = normalizeGoogleDriveImageUrl(profRes.imageUrl || profRes.url);
+        }
       }
       if (idUrl && idUrl.startsWith("data:image")) {
-        await sendFirebaseAction({
+        const idRes = await sendFirebaseAction({
           action: "uploadRenterDocument",
           propertyName: targetProp,
           flatName: targetFlat,
@@ -27179,8 +27507,13 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: idUrl
         });
+        if (idRes && (idRes.imageUrl || idRes.url)) {
+          newRenterObj.IdentityImageURL = normalizeGoogleDriveImageUrl(idRes.imageUrl || idRes.url);
+        }
       }
-      syncDataLive();
+      lastWriteCompletedAt = Date.now();
+      saveDbSnapshotToCache();
+      renderAllDashboardUI();
     }
 
     function syncPropertyDropdowns() {
@@ -29547,7 +29880,7 @@ function formatMonthLabel(rawVal) {
       saveStoredPaymentProofs(list);
 
       if (attachedScreenshot && attachedScreenshot.startsWith("data:image")) {
-        sendFirebaseAction({
+        const upRes = await sendFirebaseAction({
           action: "uploadRenterMonthlyPhoto",
           propertyName: propName,
           flatName: flatName,
@@ -29558,12 +29891,18 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: attachedScreenshot
         });
+        const driveProofUrl = upRes && (upRes.imageUrl || upRes.previewUrl)
+          ? normalizeGoogleDriveImageUrl(upRes.imageUrl || upRes.previewUrl)
+          : attachedScreenshot;
+        newProof.screenshotUrl = driveProofUrl;
+        saveStoredPaymentProofs(list);
       }
 
       const overlay = document.getElementById("submitPaymentProofModalOverlay");
       if (overlay) overlay.classList.remove("active");
       renderAdminPaymentProofQueue();
-      triggerSideToast("Payment Proof Submitted", `UTR ${utr} (₹${amount.toLocaleString("en-IN")}) saved to Google Drive & sent to Admin Verification Queue!`, true);
+      if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
+      triggerSideToast("Payment Proof Saved to Google Drive & Sheet", `UTR ${utr} (₹${amount.toLocaleString("en-IN")}) saved to Google Drive and link pasted into Google Sheets!`, true);
     }
 
     function renderAdminPaymentProofQueue() {
@@ -30074,9 +30413,11 @@ function formatMonthLabel(rawVal) {
             base64Data: compressedDataUrl
           });
           if (res && (res.imageUrl || res.url)) {
-            window.currentMeterProofPreviewDataUrl = normalizeGoogleDriveImageUrl(res.imageUrl || res.url);
+            const driveUrl = normalizeGoogleDriveImageUrl(res.imageUrl || res.url);
+            window.currentMeterProofPreviewDataUrl = driveUrl;
+            if (urlEl) urlEl.value = driveUrl;
           }
-          triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder!", true);
+          triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder & linked to Google Sheet!", true);
         }
       } catch (e) {
         triggerSideToast("Upload Error", "Could not process meter photo.", false);
@@ -30521,27 +30862,91 @@ function formatMonthLabel(rawVal) {
       `).join("");
     }
 
-    function exportAdminAuditLogCsv() {
+    function downloadAdminAuditLogPdf() {
       const logs = getStoredAdminAuditLogs();
       if (logs.length === 0) {
-        return triggerSideToast("No Audit Logs", "No audit trail entries available to export.", "warning");
+        return triggerSideToast("No Audit Logs", "No audit trail entries available to download.", "warning");
       }
-      const rows = [
-        ["Timestamp", "Actor", "Role", "Action Type", "Target", "Details"],
-        ...logs.map(l => [l.timestamp, l.actor, l.role, l.actionType, l.target, l.details])
-      ];
-      const csv = rows.map(r => r.map(c => `"${String(c || "").replace(/"/g, '""')}"`).join(",")).join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `Admin_Audit_Trail_${new Date().toISOString().split("T")[0]}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      triggerSideToast("Audit CSV Downloaded", "Admin audit trail exported to CSV.", true);
+      try {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          return triggerSideToast("PDF Engine Loading", "Please wait a moment and click Download PDF again.", false);
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+
+        doc.setFillColor(15, 23, 42);
+        doc.rect(0, 0, pageW, 64, "F");
+        doc.setTextColor(56, 189, 248);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("EXECUTIVE PORTAL - ADMIN AUDIT TRAIL LOG", 32, 34);
+        doc.setTextColor(203, 213, 225);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9.5);
+        doc.text(`Generated: ${new Date().toLocaleString("en-IN")}   |   Total Entries: ${logs.length}`, 32, 50);
+
+        let y = 88;
+        const colX = [32, 165, 255, 330, 445, 575];
+        const drawHeader = () => {
+          doc.setFillColor(30, 41, 59);
+          doc.rect(24, y - 14, pageW - 48, 22, "F");
+          doc.setTextColor(248, 250, 252);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(9);
+          doc.text("Timestamp", colX[0], y);
+          doc.text("Actor", colX[1], y);
+          doc.text("Role", colX[2], y);
+          doc.text("Action Type", colX[3], y);
+          doc.text("Target", colX[4], y);
+          doc.text("Details", colX[5], y);
+          y += 18;
+        };
+
+        drawHeader();
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+
+        logs.forEach((l, idx) => {
+          const detailsLines = doc.splitTextToSize(String(l.details || "-"), pageW - colX[5] - 32);
+          const targetLines = doc.splitTextToSize(String(l.target || "-"), 120);
+          const rowLines = Math.max(detailsLines.length, targetLines.length, 1);
+          const rowH = Math.max(20, rowLines * 11 + 8);
+
+          if (y + rowH > pageH - 36) {
+            doc.addPage();
+            y = 44;
+            drawHeader();
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8.5);
+          }
+
+          if (idx % 2 === 0) {
+            doc.setFillColor(241, 245, 249);
+            doc.rect(24, y - 11, pageW - 48, rowH, "F");
+          }
+
+          doc.setTextColor(15, 23, 42);
+          doc.text(String(l.timestamp || "-").slice(0, 24), colX[0], y);
+          doc.text("@" + String(l.actor || "-").slice(0, 16), colX[1], y);
+          doc.text(String(l.role || "-").slice(0, 12), colX[2], y);
+          doc.setFont("helvetica", "bold");
+          doc.text(String(l.actionType || "-").slice(0, 20), colX[3], y);
+          doc.setFont("helvetica", "normal");
+          doc.text(targetLines, colX[4], y);
+          doc.text(detailsLines, colX[5], y);
+          y += rowH;
+        });
+
+        doc.save(`Admin_Audit_Trail_${new Date().toISOString().split("T")[0]}.pdf`);
+        triggerSideToast("Audit PDF Downloaded", "Admin audit trail downloaded as PDF.", true);
+      } catch (err) {
+        console.error("Audit PDF error:", err);
+        triggerSideToast("PDF Export Failed", "Could not generate Audit Trail PDF.", false);
+      }
     }
+    const exportAdminAuditLogCsv = downloadAdminAuditLogPdf;
 
 
     // --- BUG 1 FIX HELPERS: AUTO-CREATE SEPARATE SHEETS, COLUMNS & ROWS + COPY/DOWNLOAD CODE.GS ---
