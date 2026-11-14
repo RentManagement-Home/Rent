@@ -4772,6 +4772,223 @@
     100% { transform: scale(0.9); box-shadow: 0 0 4px #10b981; }
   }
 
+  /* ============================================================================
+     COMPREHENSIVE MOBILE RESPONSIVENESS — ZERO CLIPPING OR OVERFLOW
+     ============================================================================ */
+  @media (max-width: 768px) {
+    #settingsModal .modal-window {
+      padding: 14px 10px !important;
+      border-radius: 18px !important;
+    }
+    #settingsModal .settings-horizontal-options-box {
+      padding: 8px !important;
+    }
+    #settingsModal .settings-nav-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 8px !important;
+      overflow-x: visible !important;
+      flex-wrap: wrap !important;
+    }
+    #settingsModal .settings-nav-card {
+      flex: initial !important;
+      min-width: 0 !important;
+      width: 100% !important;
+      padding: 10px 6px !important;
+      box-sizing: border-box !important;
+    }
+    #settingsModal .s-nav-title {
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+      font-size: 0.74rem !important;
+      line-height: 1.2 !important;
+    }
+    .ssv-shell {
+      padding: 12px 10px !important;
+    }
+    .ssv-header {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .ssv-controls {
+      width: 100% !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+    #screenshotVerifyMonthInput,
+    #screenshotVerifySearchInput {
+      flex: 1 1 135px !important;
+      width: auto !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+    #adminScreenshotVerificationContainer {
+      max-height: 62vh !important;
+      padding-right: 0 !important;
+    }
+    .ssv-renter-card {
+      padding: 12px 10px !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    [style*="minmax(320px"],
+    [style*="minmax(280px"],
+    [style*="minmax(260px"],
+    [style*="minmax(250px"],
+    [style*="minmax(240px"],
+    [style*="minmax(235px"],
+    [style*="minmax(220px"],
+    [style*="minmax(200px"],
+    [style*="minmax(190px"] {
+      grid-template-columns: 1fr !important;
+    }
+    .renter-modern-portal {
+      padding: 12px 8px 26px 8px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .renter-hero-banner {
+      padding: 16px 12px !important;
+      border-radius: 18px !important;
+    }
+    .renter-hero-top {
+      gap: 14px !important;
+    }
+    .renter-hero-identity {
+      flex-wrap: wrap !important;
+      gap: 12px !important;
+      width: 100% !important;
+    }
+    .renter-hero-identity h2 {
+      font-size: 1.28rem !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+    }
+    .renter-hero-avatar {
+      width: 54px !important;
+      height: 54px !important;
+      font-size: 1.25rem !important;
+    }
+    .renter-hero-actions {
+      width: 100% !important;
+      justify-content: stretch !important;
+    }
+    .renter-hero-actions > *,
+    .renter-action-btn {
+      max-width: 100% !important;
+      white-space: normal !important;
+      text-align: center !important;
+      box-sizing: border-box !important;
+    }
+    .renter-meta-chip {
+      max-width: 100% !important;
+      white-space: normal !important;
+      word-break: break-word !important;
+      font-size: 0.72rem !important;
+      padding: 5px 9px !important;
+    }
+    .renter-quick-scroll-bar {
+      padding: 0 8px !important;
+    }
+    .renter-quick-box {
+      min-width: 118px !important;
+      padding: 8px 11px !important;
+      font-size: 0.78rem !important;
+    }
+    .renter-statement-card,
+    .renter-payment-card,
+    .renter-recent-bills-card,
+    #renterMonthlyDrivePhotoUploadsCard {
+      padding: 14px 12px !important;
+      border-radius: 16px !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .renter-utility-item {
+      padding: 12px !important;
+      gap: 10px !important;
+      flex-wrap: wrap !important;
+      min-width: 0 !important;
+    }
+    .renter-utility-item-left {
+      min-width: 0 !important;
+      flex: 1 1 180px !important;
+    }
+    .renter-utility-reading-pill {
+      max-width: 100% !important;
+      white-space: normal !important;
+      word-break: break-word !important;
+    }
+    .renter-history-row-item {
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+      padding: 10px 12px !important;
+    }
+    #renterInstantUpiPaymentCard [style*="min-width:165px"] {
+      min-width: 0 !important;
+      flex: 1 1 160px !important;
+    }
+    .modal-window,
+    .exec-modal-window {
+      box-sizing: border-box !important;
+      overflow-x: hidden !important;
+      max-width: calc(100vw - 14px) !important;
+    }
+    .calc-grid-card,
+    .matrix-col,
+    .exec-field-card,
+    .flat-card-merged,
+    .split-payment-row {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    .flat-header-banner {
+      flex-wrap: wrap !important;
+      gap: 8px !important;
+    }
+    .module-nav-tab,
+    .kharch-nav-tab {
+      min-width: 160px !important;
+      padding: 9px 12px !important;
+      font-size: 0.78rem !important;
+    }
+    .renter-modern-portal,
+    .renter-modern-portal *:not(canvas):not(img):not(svg):not(i),
+    .modal-window *:not(canvas):not(img):not(svg):not(i):not(table):not(thead):not(tbody):not(tr):not(th):not(td) {
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .renter-kpi-card {
+      padding: 14px !important;
+    }
+    .renter-kpi-value {
+      font-size: 1.32rem !important;
+    }
+    .exec-modal-header {
+      padding: 14px 40px 12px 14px !important;
+    }
+    .exec-modal-body {
+      padding: 14px !important;
+    }
+    .modular-floating-widget {
+      right: 8px !important;
+      left: 8px !important;
+      bottom: 8px !important;
+      width: auto !important;
+      max-width: calc(100vw - 16px) !important;
+    }
+  }
+
 </style>
 </head>
 <body class="theme-black">
@@ -9319,6 +9536,13 @@
       inFlightGasFetchPromise = null;
       updateLocalGasSheetCacheFromDB();
       const bodyStr = JSON.stringify(data);
+      const actName = String(data?.action || "").trim();
+      const isDrivePhotoUpload = [
+        "uploadRenterMonthlyPhoto",
+        "uploadRenterDocument",
+        "uploadBackgroundPhoto",
+        "uploadPhotoToDriveOnly"
+      ].includes(actName) || (actName === "recordBill" && String(data?.meterProofBase64 || "").startsWith("data:"));
 
       // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
       const runSheetPost = async function() {
@@ -9329,14 +9553,36 @@
             body: bodyStr,
             redirect: "follow"
           });
-          const result = await response.json();
+          const rawText = await response.text();
+          let result = null;
+          try {
+            result = rawText ? JSON.parse(rawText) : null;
+          } catch (parseErr) {
+            result = null;
+          }
+          if (!response.ok || !result || typeof result !== "object") {
+            if (isDrivePhotoUpload) {
+              return {
+                status: "error",
+                message: `Google Drive / Sheet server returned an invalid response (HTTP ${response.status}). Please ensure Google Apps Script is deployed cleanly.`
+              };
+            }
+            return { status: "error", message: `Server returned HTTP ${response.status}.` };
+          }
           gasCacheNeedsRefresh = true;
           lastGasFetchTimestamp = Date.now();
-          if (result && Array.isArray(result.users) && result.users.length > 0) {
+          if (Array.isArray(result.users) && result.users.length > 0) {
             saveLocalUsersMaster(result.users);
           }
-          return result || { status: "success", message: "Saved to Google Sheet." };
+          return result;
         } catch (err) {
+          if (isDrivePhotoUpload) {
+            console.warn("Google Drive upload blocked by network/CORS:", err);
+            return {
+              status: "error",
+              message: "Could not verify Google Drive upload due to network or CORS error. Please re-check your Apps Script Web App deployment."
+            };
+          }
           try {
             await fetch(GAS_WEB_APP_URL, {
               method: "POST",
@@ -9346,10 +9592,11 @@
             });
           } catch (noCorsErr) {
             console.warn("Google Apps Script fallback notice:", noCorsErr);
+            return { status: "error", message: "Network request failed while saving to Google Sheet." };
           }
           gasCacheNeedsRefresh = true;
           lastGasFetchTimestamp = Date.now();
-          return { status: "success", message: "Saved directly to Google Sheet." };
+          return { status: "success", unverifiedNoCors: true, message: "Saved directly to Google Sheet." };
         }
       };
 
@@ -9469,14 +9716,14 @@
       });
 
       bills.forEach(function(bill) {
-        if (!bill.TenantMobile) {
+        if (!bill.TenantMobile && (bill.RenterID || bill.TenantName)) {
           let matchedRenter = null;
           if (bill.RenterID) {
             matchedRenter = renters.find(function(r) {
               return String(r.RenterID || "").trim() === String(bill.RenterID).trim();
             });
           }
-          if (!matchedRenter) {
+          if (!matchedRenter && bill.TenantName) {
             matchedRenter = renters.find(function(r) {
               return String(r.PropertyName || "").trim().toLowerCase() === String(bill.PropertyName || "").trim().toLowerCase() &&
                      String(r.FlatName || "").trim().toLowerCase() === String(bill.FlatName || "").trim().toLowerCase() &&
@@ -10273,7 +10520,13 @@
               driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
               globalConfig: globalConfig
             });
-            const resolvedDriveLink = res?.directImageUrl || res?.previewUrl || res?.imageUrl || res?.shareableUrl || photoData;
+            if (!res || res.status === "error") {
+              return { status: "error", message: res?.message || "Google Drive upload failed." };
+            }
+            const resolvedDriveLink = res?.directImageUrl || res?.previewUrl || res?.imageUrl || res?.shareableUrl || "";
+            if (!resolvedDriveLink || String(resolvedDriveLink).startsWith("data:")) {
+              return { status: "error", message: "Google Drive did not return a saved background URL." };
+            }
             globalConfig = {
               ...globalConfig,
               bgLoginUrl: resolvedDriveLink,
@@ -10944,15 +11197,16 @@
           driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
           driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL
         });
-        const returnedBg = res && (res.directImageUrl || res.previewUrl || res.imageUrl || res.shareableUrl)
+        const returnedBg = res && res.status === "success" && (res.directImageUrl || res.previewUrl || res.imageUrl || res.shareableUrl)
           ? (res.directImageUrl || res.previewUrl || res.imageUrl || res.shareableUrl)
           : "";
-        const driveBgUrl = returnedBg ? normalizeGoogleDriveBgUrl(returnedBg) : hdDataUrl;
+        if (!res || res.status === "error" || !returnedBg || String(returnedBg).startsWith("data:")) {
+          throw new Error(res?.message || "Google Drive did not return a shareable background URL.");
+        }
+        const driveBgUrl = normalizeGoogleDriveBgUrl(returnedBg);
         try {
-          if (!driveBgUrl.startsWith("data:image/")) {
-            localStorage.removeItem("portal_custom_bg_hd_cache");
-            localStorage.removeItem("portal_custom_bg_sheet_safe");
-          }
+          localStorage.removeItem("portal_custom_bg_hd_cache");
+          localStorage.removeItem("portal_custom_bg_sheet_safe");
           localStorage.setItem("portal_custom_bg_dashboard", driveBgUrl);
           localStorage.setItem("portal_custom_bg_login", driveBgUrl);
         } catch (e) {}
@@ -10964,10 +11218,10 @@
         applyCustomBackgrounds();
         initCustomBgInputs();
         const el = document.getElementById("bgUrlLoginScreen");
-        if (el) el.value = driveBgUrl.startsWith("data:image") ? "Saved to Google Drive" : driveBgUrl;
+        if (el) el.value = driveBgUrl;
         triggerSideToast("Saved to Google Drive & Sheet", "Background photo saved to Google Drive & auto-filled into Google Sheets across all screens!", true);
       } catch (err) {
-        triggerSideToast("Upload Failed", "Could not upload photo to Google Drive.", false);
+        triggerSideToast("Upload Failed", err?.message || "Could not upload photo to Google Drive.", false);
       } finally {
         if (saveBtn) saveBtn.disabled = false;
         if (inputEl) inputEl.value = "";
@@ -11001,7 +11255,7 @@
           return !hasActiveInFlat;
         }
       }
-      return Boolean(userObj.MovedOutAutoBlocked);
+      return String(userObj.MovedOutAutoBlocked || "").trim().toLowerCase() === "true";
     }
 
     function autoBlockRenterUserAccountOnMoveOut(aadhaarNumber, propertyName, flatName, renterName = "", previousAadhaar = "") {
@@ -11460,16 +11714,7 @@
       const contextStay = syncedStays[0] || (typeof aadhaarOrRenterObj === "object" && aadhaarOrRenterObj !== null ? aadhaarOrRenterObj : activeFlatRenterObj) || updatedFields;
       syncLinkedUserAccountsAadhaar(targetDigits, prevDigits, contextStay);
 
-      // Also keep TenantName & TenantMobile updated on any linked bills so historical/current ledger views match
-      if (syncedRenterIds.size > 0 && (updatedFields.RenterName || updatedFields.MobileNumber !== undefined)) {
-        (DB.bills || []).forEach(b => {
-          const bRId = String(b.RenterID || "").trim();
-          if (bRId && syncedRenterIds.has(bRId)) {
-            if (updatedFields.RenterName) b.TenantName = String(updatedFields.RenterName).trim();
-            if (updatedFields.MobileNumber !== undefined) b.TenantMobile = updatedFields.MobileNumber;
-          }
-        });
-      }
+      // Existing generated bills/receipts remain immutable and never get overwritten by future profile edits
 
       // If the currently open flat's activeFlatRenterObj shares this Aadhaar, refresh the live form inputs as well
       if (activeFlatRenterObj) {
@@ -14370,8 +14615,13 @@ function formatMonthLabel(rawVal) {
 
         const normProp = String(propName || "").trim().toLowerCase();
         const normFlat = String(flatName || "").trim().toLowerCase();
-        const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
-        const monthlySlotKey = `MONTHLY__${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
+        const fallbackSessionAadhaar = typeof getNormalizedActiveRenterAadhaar === "function"
+          ? getNormalizedActiveRenterAadhaar()
+          : normalizeAadhaar12(activeAssignedAadhaar || "");
+        const normAadhaar = normalizeAadhaar12(aadhaarNum || fallbackSessionAadhaar);
+        const monthlySlotKey = (normFlat && normFlat !== "--")
+          ? `MONTHLY__${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`
+          : `MONTHLY_AADHAAR__${normAadhaar || String(activeUser || renterName || "renter").trim().toLowerCase()}__${cleanMonth}__${cleanCat}`;
         const flatSlotKey = `${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
         const aadhaarSlotKey = normAadhaar.length === 12 ? `${normAadhaar}__${cleanMonth}__${cleanCat}` : "";
 
@@ -14393,6 +14643,13 @@ function formatMonthLabel(rawVal) {
         window.__recentMonthlyPhotoUploads = window.__recentMonthlyPhotoUploads || {};
         const trackKeys = [monthlySlotKey, flatSlotKey];
         if (aadhaarSlotKey) trackKeys.push(aadhaarSlotKey);
+
+        const prevSlotCache = {};
+        trackKeys.forEach(tk => {
+          if (Object.prototype.hasOwnProperty.call(DB.globalConfig.renterMonthlyPhotos, tk)) {
+            prevSlotCache[tk] = DB.globalConfig.renterMonthlyPhotos[tk];
+          }
+        });
 
         const catFieldMap = {
           electricity_meter: "Photo1URL",
@@ -14455,23 +14712,44 @@ function formatMonthLabel(rawVal) {
           base64Data: compressedDataUrl
         });
 
-        if (res && res.status === "error") {
-          throw new Error(res.message || "Upload failed on server.");
+        if (!res || res.status === "error") {
+          trackKeys.forEach(tk => {
+            if (Object.prototype.hasOwnProperty.call(prevSlotCache, tk)) {
+              DB.globalConfig.renterMonthlyPhotos[tk] = prevSlotCache[tk];
+            } else {
+              delete DB.globalConfig.renterMonthlyPhotos[tk];
+            }
+            if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[tk];
+          });
+          throw new Error(res?.message || "Upload failed on server.");
         }
 
-        const rawReturnedUrl = res && (res.imageUrl || res.previewUrl || res.url)
-          ? (res.imageUrl || res.previewUrl || res.url)
-          : "";
-        const driveUrl = rawReturnedUrl
-          ? (rawReturnedUrl.startsWith("data:image") ? rawReturnedUrl : normalizeGoogleDriveImageUrl(rawReturnedUrl))
-          : compressedDataUrl;
+        const rawReturnedUrl = (res.imageUrl || res.previewUrl || res.shareableUrl || res.url || "").trim();
+        if (!rawReturnedUrl || rawReturnedUrl.startsWith("data:")) {
+          trackKeys.forEach(tk => {
+            if (Object.prototype.hasOwnProperty.call(prevSlotCache, tk)) {
+              DB.globalConfig.renterMonthlyPhotos[tk] = prevSlotCache[tk];
+            } else {
+              delete DB.globalConfig.renterMonthlyPhotos[tk];
+            }
+            if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[tk];
+          });
+          throw new Error(res?.message || "Google Drive did not return a saved photo URL.");
+        }
+        const driveUrl = normalizeGoogleDriveImageUrl(rawReturnedUrl);
 
         const savedSlot = {
           ...optimisticSlot,
+          slotKey: res?.slotKey || monthlySlotKey,
           imageUrl: driveUrl,
           previewUrl: driveUrl,
+          shareableUrl: res?.shareableUrl || driveUrl,
           fileId: res?.fileId || res?.driveFileId || ""
         };
+        const canonicalReturnedKey = res?.slotKey ? String(res.slotKey).trim() : "";
+        if (canonicalReturnedKey && !trackKeys.includes(canonicalReturnedKey)) {
+          trackKeys.push(canonicalReturnedKey);
+        }
         trackKeys.forEach(tk => {
           DB.globalConfig.renterMonthlyPhotos[tk] = savedSlot;
           window.__recentMonthlyPhotoUploads[tk] = {
@@ -14487,8 +14765,8 @@ function formatMonthLabel(rawVal) {
         });
 
         (DB.renters || []).forEach(r => {
-          const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-          const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
+          const rAadh = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+          const sameFlat = propName && flatName && flatName !== "--" && isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
           const sameId = renterId && String(r.RenterID || "") === String(renterId);
           const sameAadh = normAadhaar.length === 12 && rAadh === normAadhaar;
           if (sameId || (sameAadh && String(r.Status || "").toLowerCase() === "active") || (sameFlat && String(r.Status || "").toLowerCase() === "active")) {
@@ -14509,7 +14787,7 @@ function formatMonthLabel(rawVal) {
         );
       } catch (err) {
         console.error("Monthly photo upload error:", err);
-        triggerSideToast("Upload Failed", `Could not upload ${categoryLabel}. Please try again.`, false);
+        triggerSideToast("Upload Failed", err?.message || `Could not upload ${categoryLabel} to Google Drive. Please try again.`, false);
         renderAllDashboardUI();
       }
     }
@@ -14872,7 +15150,7 @@ function formatMonthLabel(rawVal) {
                         </div>
                         <div>
                           <div style="font-size:0.83rem; font-weight:800; color:var(--text-main);">#${globalIdx + 1} • ${mMetrics.monthLabel} Receipt</div>
-                          <div style="font-size:0.71rem; color:var(--text-muted);">Flat ${bItem.FlatName || targetFlat} (${bItem.PropertyName || targetProp}) • Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
+                          <div style="font-size:0.71rem; color:var(--text-muted);">Flat ${bItem.SnapshotFlatName || bItem.FlatName || targetFlat} (${bItem.SnapshotPropertyName || bItem.PropertyName || targetProp}) • Billed: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
                         </div>
                       </div>
                       <div style="display:flex; align-items:center; gap:8px;">
@@ -14956,15 +15234,15 @@ function formatMonthLabel(rawVal) {
             stmtCarryVal = Math.round((billTotal - compSumStmt) * 100) / 100;
           }
 
-          const propObjForUpi = findPropertyObject(currentMonthBill.PropertyName || targetProp);
-          const resolvedContact = resolveFlatUpiAndContact(currentMonthBill.PropertyName || targetProp, assignedFlatObj, primaryRenter);
-          const upiName = String(propObjForUpi?.UPIName || currentMonthBill.UPIName || resolvedContact.upiName || "").trim();
-          const upiId = String(propObjForUpi?.UPIID || currentMonthBill.UPIID || resolvedContact.upiId || "").trim();
+          const snapBillPropName = currentMonthBill.SnapshotPropertyName || currentMonthBill.PropertyName || targetProp;
+          const snapBillFlatName = currentMonthBill.SnapshotFlatName || currentMonthBill.FlatName || targetFlat;
+          const resolvedContact = resolveFlatUpiAndContact(snapBillPropName, assignedFlatObj, primaryRenter);
+          const upiName = String(currentMonthBill.UPIName || resolvedContact.upiName || "").trim();
+          const upiId = String(currentMonthBill.UPIID || resolvedContact.upiId || "").trim();
           const safeUpiIdArg = String(upiId || "").replace(/'/g, "\\'");
           const contactPhone =
-            sanitizeContactPhoneDisplay(propObjForUpi?.ContractNumber || propObjForUpi?.ContractMobile) ||
-            resolvedContact.contractMobile ||
             sanitizeContactPhoneDisplay(currentMonthBill.ContractMobile) ||
+            resolvedContact.contractMobile ||
             "N/A";
 
           const payableAmt = billDue > 0 ? billDue : billTotal;
@@ -14972,7 +15250,7 @@ function formatMonthLabel(rawVal) {
             upiId,
             upiName: upiName || "N/A",
             amount: payableAmt,
-            note: `Rent ${targetProp} Flat ${targetFlat} (${billMonthName})`
+            note: `Rent ${snapBillPropName} Flat ${snapBillFlatName} (${billMonthName})`
           };
 
           const buildUpiAppsLauncherHtml = (uId, uName, amtVal, noteText) => {
@@ -15007,7 +15285,7 @@ function formatMonthLabel(rawVal) {
                   <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                     <span><i class="fa-regular fa-calendar" style="margin-right:4px; color:#818cf8;"></i>Billing Date: ${billDateStr}</span>
                     <span>•</span>
-                    <span><i class="fa-solid fa-location-dot" style="margin-right:4px; color:#38bdf8;"></i>${currentMonthBill.PropertyName || targetProp} (Flat ${currentMonthBill.FlatName || targetFlat})</span>
+                    <span><i class="fa-solid fa-location-dot" style="margin-right:4px; color:#38bdf8;"></i>${snapBillPropName} (Flat ${snapBillFlatName})</span>
                   </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -15036,7 +15314,7 @@ function formatMonthLabel(rawVal) {
                     <div>
                       <div style="font-size:0.9rem; font-weight:800; color:var(--text-main);">Monthly Base Rent</div>
                       <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">
-                        <span class="renter-utility-reading-pill"><i class="fa-regular fa-building"></i> Flat ${currentMonthBill.FlatName || targetFlat} Fixed Rent</span>
+                        <span class="renter-utility-reading-pill"><i class="fa-regular fa-building"></i> Flat ${snapBillFlatName} Fixed Rent</span>
                       </div>
                     </div>
                   </div>
@@ -19499,16 +19777,33 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      // Strictly display ONLY Active renters who ALSO have an Active registered Renter User Account
-      const registeredRenterAccounts = (Array.isArray(DB.users) ? DB.users : []).filter(u => {
-        const uRole = String(u.Role || "").trim().toLowerCase();
-        const uSt = String(u.Status || u.AccountStatus || "Active").trim().toLowerCase();
-        return uRole === "renter" && uSt === "active";
+      // Display ALL registered Renter accounts with a 12-digit Aadhaar whose account is active (not blocked and not left)
+      const allRenterUsers = (Array.isArray(DB.users) ? DB.users : []).filter(u => {
+        return String(u.Role || "").trim().toLowerCase() === "renter";
       });
+      const registeredRenterAccounts = allRenterUsers.filter(u => {
+        const uSt = String(u.Status || u.AccountStatus || "Active").trim().toLowerCase();
+        if (uSt === "blocked") return false;
+        if (typeof isRenterUserMovedOut === "function" && isRenterUserMovedOut(u)) return false;
+        return true;
+      });
+      const blockedUserAadhaars = new Set(
+        allRenterUsers
+          .filter(u => String(u.Status || u.AccountStatus || "Active").trim().toLowerCase() === "blocked")
+          .map(u => normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || ""))
+          .filter(a => a.length === 12)
+      );
+
       const activeRentersOnly = (Array.isArray(DB.renters) ? DB.renters : []).filter(r => {
         if (String(r.Status || "Active").trim().toLowerCase() !== "active") return false;
         if (registeredRenterAccounts.length === 0) return false;
         const rAadh = normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "");
+        if (rAadh.length === 12 && blockedUserAadhaars.has(rAadh)) {
+          const hasUnblockedSameAadh = registeredRenterAccounts.some(u =>
+            normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "") === rAadh
+          );
+          if (!hasUnblockedSameAadh) return false;
+        }
         return registeredRenterAccounts.some(u => {
           const uAadh = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "");
           if (rAadh.length === 12 && uAadh.length === 12 && rAadh === uAadh) return true;
@@ -19517,18 +19812,56 @@ function formatMonthLabel(rawVal) {
         });
       });
 
-      const cardsData = [];
+      // Build unified verification targets from active stays PLUS any remaining active Aadhaar-registered Renter accounts
+      const verificationTargets = [];
       const seenActiveKeys = new Set();
+      const coveredUserAadhaars = new Set();
 
       activeRentersOnly.forEach(r => {
-        const rName = String(r.RenterName || "Unnamed Renter").trim();
-        const rawAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-        const formattedAadh = rawAadh.length === 12 ? formatAadhaarWithHyphens(rawAadh) : (r.IdentityDocNumber || "Not Provided");
+        const rawAadh = normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "");
         const propName = String(r.PropertyName || "").trim();
         const flatName = String(r.FlatName || "").trim();
         const dedupeKey = `${String(r.RenterID || "").trim()}__${propName.toLowerCase()}__${flatName.toLowerCase()}__${rawAadh}`;
         if (seenActiveKeys.has(dedupeKey)) return;
         seenActiveKeys.add(dedupeKey);
+        if (rawAadh.length === 12) coveredUserAadhaars.add(rawAadh);
+        verificationTargets.push(r);
+      });
+
+      registeredRenterAccounts.forEach(u => {
+        const uAadh = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "");
+        if (uAadh.length !== 12) return;
+        if (coveredUserAadhaars.has(uAadh)) return;
+        const matchingStay = (Array.isArray(DB.renters) ? DB.renters : []).find(r =>
+          String(r.Status || "Active").trim().toLowerCase() === "active" &&
+          normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "") === uAadh
+        );
+        const anyHistoricalStay = matchingStay || (Array.isArray(DB.renters) ? DB.renters : []).find(r =>
+          normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "") === uAadh
+        );
+        // If they have a stay history and NONE are active, they already left -> skip
+        if (anyHistoricalStay && !matchingStay) return;
+        coveredUserAadhaars.add(uAadh);
+        verificationTargets.push(matchingStay || {
+          RenterID: "",
+          RenterName: String(u.FullName || u.Username || "Registered Renter").trim(),
+          IdentityDocNumber: formatAadhaarWithHyphens(uAadh),
+          AadhaarNumber: uAadh,
+          PropertyName: String(u.AssignedProperty || "--").trim(),
+          FlatName: String(u.AssignedFlat || "--").trim(),
+          Status: "Active",
+          _linkedUsername: String(u.Username || "").trim()
+        });
+      });
+
+      const cardsData = [];
+
+      verificationTargets.forEach(r => {
+        const rName = String(r.RenterName || "Unnamed Renter").trim();
+        const rawAadh = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+        const formattedAadh = rawAadh.length === 12 ? formatAadhaarWithHyphens(rawAadh) : (r.IdentityDocNumber || "Not Provided");
+        const propName = String(r.PropertyName || "").trim();
+        const flatName = String(r.FlatName || "").trim();
 
         if (query) {
           const hay = `${rName} ${formattedAadh} ${rawAadh} ${propName} ${flatName}`.toLowerCase();
@@ -19545,12 +19878,13 @@ function formatMonthLabel(rawVal) {
         const normProp = propName.toLowerCase();
         const normFlat = flatName.toLowerCase();
         const normRenterId = String(r.RenterID || "").trim().toLowerCase();
+        const linkedUsername = String(r._linkedUsername || "").trim().toLowerCase();
 
-        // 1. Match monthlyPhotosMap entries strictly for selectedMonth
+        // 1. Match monthlyPhotosMap entries strictly for selectedMonth (by RenterID, 12-digit Aadhaar, Prop+Flat, or key)
         Object.keys(monthlyPhotosMap).forEach(k => {
           const item = monthlyPhotosMap[k];
           if (!item) return;
-          const itemUrl = item.imageUrl || item.previewUrl || "";
+          const itemUrl = item.imageUrl || item.previewUrl || item.shareableUrl || "";
           if (!itemUrl || isPlaceholderImageUrl(itemUrl)) return;
 
           const itemMonth = normalizeMonthYear(item.monthYear || item.MonthYear || "");
@@ -19561,22 +19895,25 @@ function formatMonthLabel(rawVal) {
           const itemAadh = String(item.aadhaar || item.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
           const itemProp = String(item.propertyName || "").trim().toLowerCase();
           const itemFlat = String(item.flatName || "").trim().toLowerCase();
+          const itemUser = String(item.username || "").trim().toLowerCase();
+          const keyContainsAadh = rawAadh.length === 12 && String(k).includes(rawAadh);
           const isMatch = (normRenterId && itemRenterId && itemRenterId === normRenterId) ||
-                          (rawAadh.length === 12 && itemAadh === rawAadh) ||
-                          (normProp && normFlat && itemProp === normProp && itemFlat === normFlat);
+                          (rawAadh.length === 12 && (itemAadh === rawAadh || keyContainsAadh)) ||
+                          (linkedUsername && itemUser && itemUser === linkedUsername) ||
+                          (normProp && normFlat && normFlat !== "--" && itemProp === normProp && itemFlat === normFlat);
           if (!isMatch) return;
 
           const cat = String(item.category || "").toLowerCase();
-          const catAlias = cat === "photo_1" ? "electricity_meter"
-            : (cat === "photo_2" ? "completed_payment"
-            : (cat === "photo_3" ? "water_meter_bill"
-            : (cat === "photo_4" ? "png_gas_meter" : cat)));
+          const catAlias = cat === "photo_1" || cat === "photo1" ? "electricity_meter"
+            : (cat === "photo_2" || cat === "photo2" ? "completed_payment"
+            : (cat === "photo_3" || cat === "photo3" ? "water_meter_bill"
+            : (cat === "photo_4" || cat === "photo4" ? "png_gas_meter" : cat)));
           const matchedSlot = photoSlots.find(s => s.key === catAlias);
           if (matchedSlot) {
             matchedSlot.url = itemUrl.startsWith("data:image") ? itemUrl : normalizeGoogleDriveImageUrl(itemUrl);
             matchedSlot.monthYear = itemMonth || selectedMonth;
             matchedSlot.fileName = item.fileName || "";
-            matchedSlot.updatedAt = item.updatedAt || "";
+            matchedSlot.updatedAt = item.updatedAt || item.uploadedAt || "";
           }
         });
 
@@ -19586,7 +19923,9 @@ function formatMonthLabel(rawVal) {
             if (!p || !p.screenshotUrl || isPlaceholderImageUrl(p.screenshotUrl)) return false;
             const pMonth = normalizeMonthYear(p.billMonth || p.monthYear || "");
             if (pMonth && pMonth !== selectedMonth) return false;
-            return (normProp && normFlat && isSamePropAndFlat(p.propertyName, p.flatName, propName, flatName)) ||
+            const pAadh = String(p.aadhaar || p.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+            return (rawAadh.length === 12 && pAadh === rawAadh) ||
+                   (normProp && normFlat && normFlat !== "--" && isSamePropAndFlat(p.propertyName, p.flatName, propName, flatName)) ||
                    (String(p.tenantName || "").trim().toLowerCase() === rName.toLowerCase());
           });
           if (matchingProof && matchingProof.screenshotUrl) {
@@ -19634,7 +19973,7 @@ function formatMonthLabel(rawVal) {
       });
 
       if (cardsData.length === 0) {
-        container.innerHTML = `<div class="ssv-empty-state">No active renters found${query ? " matching your search" : ""}. Left/past renters are automatically hidden.</div>`;
+        container.innerHTML = `<div class="ssv-empty-state">No active unblocked Aadhaar-registered renters found${query ? " matching your search" : ""}. Blocked or vacated renters are automatically hidden.</div>`;
         return;
       }
 
@@ -19964,7 +20303,7 @@ function formatMonthLabel(rawVal) {
         inFlightGasFetchPromise = null;
         lastGasSheetDataCache = null;
         const freshRes = await fetchGasSheetData(true, true);
-        if (freshRes && freshRes.status === "success") {
+        if (freshRes && (freshRes.status === "success" || freshRes._liveSheetVerified)) {
           if (Array.isArray(freshRes.users)) {
             DB.users = freshRes.users;
             saveLocalUsersMaster(freshRes.users);
@@ -23228,9 +23567,12 @@ function formatMonthLabel(rawVal) {
         BillID: existingBillRecord ? existingBillRecord.BillID : ("BILL-" + Date.now()),
         PropertyName: selectedFlat.PropertyName,
         FlatName: selectedFlat.FlatName,
+        SnapshotPropertyName: existingBillRecord?.SnapshotPropertyName || selectedFlat.PropertyName,
+        SnapshotFlatName: existingBillRecord?.SnapshotFlatName || selectedFlat.FlatName,
         MonthYear: chosenMonth,
-        TenantName: resolvedTenantName,
-        TenantAadhaar: resolvedTenantAadhaar,
+        TenantName: existingBillRecord?.SnapshotTenantName || resolvedTenantName,
+        SnapshotTenantName: existingBillRecord?.SnapshotTenantName || resolvedTenantName,
+        TenantAadhaar: existingBillRecord?.TenantAadhaar || resolvedTenantAadhaar,
         BaseRent: parseFloat(document.getElementById("calcRent").value) || 0,
         ElecPrev: elecPrev,
         ElecCurr: elecCurr,
@@ -23256,16 +23598,16 @@ function formatMonthLabel(rawVal) {
         Status: billStatus,
         Notes: document.getElementById("calcNotes").value,
         BillDate: effectiveBillDate,
-        RenterID: resolvedRenterId,
+        RenterID: existingBillRecord?.RenterID || resolvedRenterId,
         PrevCarryBalance: prevCarryBalance,
         UPIName: snapshotUpiName,
         UPIID: snapshotUpiId,
         ContractMobile: snapshotContractMobile,
-        TenantMobile: resolvedTenantMobile,
+        TenantMobile: existingBillRecord?.TenantMobile || resolvedTenantMobile,
         MeterProofUrl: meterProofVal,
         SplitPayments: collectedSplits,
         CalculationDone: true,
-        ReceiptGenerated: Boolean(existingBillRecord?.ReceiptGenerated)
+        ReceiptGenerated: true
       };
 
       if (existingBillIdx !== -1) {
@@ -23303,8 +23645,11 @@ function formatMonthLabel(rawVal) {
         billId: newBillObj.BillID,
         propertyName: newBillObj.PropertyName,
         flatName: newBillObj.FlatName,
+        snapshotPropertyName: newBillObj.SnapshotPropertyName,
+        snapshotFlatName: newBillObj.SnapshotFlatName,
         monthYear: chosenMonth,
         tenantName: newBillObj.TenantName,
+        snapshotTenantName: newBillObj.SnapshotTenantName,
         tenantAadhaar: newBillObj.TenantAadhaar,
         baseRent: newBillObj.BaseRent,
         elecPrev: newBillObj.ElecPrev,
@@ -23337,13 +23682,18 @@ function formatMonthLabel(rawVal) {
         upiName: snapshotUpiName,
         upiId: snapshotUpiId,
         contractMobile: snapshotContractMobile,
-        tenantMobile: resolvedTenantMobile,
+        tenantMobile: newBillObj.TenantMobile,
         meterProofBase64: String(meterProofVal).startsWith("data:image") ? meterProofVal : "",
         meterProofUrl: meterProofVal,
-        splitPayments: collectedSplits
+        splitPayments: collectedSplits,
+        calculationDone: true,
+        receiptGenerated: true
       });
 
-      if (billRes && billRes.meterProofUrl) {
+      if (billRes && billRes.status === "error") {
+        triggerSideToast("Google Drive Upload Warning", billRes.message || "Bill saved locally, but Google Drive meter proof upload failed.", false);
+      }
+      if (billRes && billRes.meterProofUrl && !String(billRes.meterProofUrl).startsWith("data:")) {
         const finalProofUrl = String(billRes.meterProofUrl).startsWith("data:image")
           ? billRes.meterProofUrl
           : normalizeGoogleDriveImageUrl(billRes.meterProofUrl);
@@ -23453,7 +23803,7 @@ function formatMonthLabel(rawVal) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>${displayMonth}</strong></td>
-          <td>${bill.TenantName}</td>
+          <td>${bill.SnapshotTenantName || bill.TenantName || "--"}</td>
           <td>₹${bill.BaseRent}</td>
           <td>
             <div style="line-height:1.35; font-size:0.76rem;">
@@ -23983,7 +24333,10 @@ function formatMonthLabel(rawVal) {
 
       const billDateFormatted = formatDateOnly(bill.BillDate || bill.PaymentDate);
       const paidDateFormatted = formatDateOnly(bill.PaymentDate || bill.BillDate);
-      document.getElementById("recPropAndFlat").innerText = `${bill.PropertyName} — Flat ${bill.FlatName}`;
+      const snapPropLabel = bill.SnapshotPropertyName || bill.PropertyName;
+      const snapFlatLabel = bill.SnapshotFlatName || bill.FlatName;
+      const snapTenantLabel = bill.SnapshotTenantName || bill.TenantName || "--";
+      document.getElementById("recPropAndFlat").innerText = `${snapPropLabel} — Flat ${snapFlatLabel}`;
       // Requirement 7: Remove the billing date located at the very top next to the billing month
       document.getElementById("recMonthLabel").innerText = `Billing Month: ${formatMonthLabel(bill.MonthYear)}`;
 
@@ -24021,16 +24374,16 @@ function formatMonthLabel(rawVal) {
         ? `<span style="color:var(--accent-red);">+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)</span>`
         : (carryVal < 0 ? `<span style="color:var(--accent-green);">- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)</span>` : `₹0`);
 
-      const resolvedContact = resolveFlatUpiAndContact(bill.PropertyName, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
-      const upiId = (resolvedContact.upiId && String(resolvedContact.upiId).trim())
-        ? String(resolvedContact.upiId).trim()
-        : ((bill.UPIID && String(bill.UPIID).trim()) ? String(bill.UPIID).trim() : "");
-      const upiName = (resolvedContact.upiName && String(resolvedContact.upiName).trim())
-        ? String(resolvedContact.upiName).trim()
-        : ((bill.UPIName && String(bill.UPIName).trim()) ? String(bill.UPIName).trim() : "");
+      const resolvedContact = resolveFlatUpiAndContact(snapPropLabel, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
+      const upiId = (bill.UPIID && String(bill.UPIID).trim())
+        ? String(bill.UPIID).trim()
+        : ((resolvedContact.upiId && String(resolvedContact.upiId).trim()) ? String(resolvedContact.upiId).trim() : "");
+      const upiName = (bill.UPIName && String(bill.UPIName).trim())
+        ? String(bill.UPIName).trim()
+        : ((resolvedContact.upiName && String(resolvedContact.upiName).trim()) ? String(resolvedContact.upiName).trim() : "");
       const contactPhone =
-        resolvedContact.contractMobile ||
         sanitizeContactPhoneDisplay(bill.ContractMobile) ||
+        resolvedContact.contractMobile ||
         "N/A";
 
       document.getElementById("receiptBodyDetails").innerHTML = `
@@ -24038,7 +24391,7 @@ function formatMonthLabel(rawVal) {
         <div id="receiptItemsListContainer">
           <div class="receipt-line" id="row_rec_tenant">
             <span>Tenant Name:</span>
-            <strong>${bill.TenantName || '--'}</strong>
+            <strong>${snapTenantLabel}</strong>
           </div>
 
           <div class="receipt-line" id="row_rec_billdate">
@@ -24253,14 +24606,14 @@ function formatMonthLabel(rawVal) {
       const upiNameDisplay = document.getElementById("recDynamicUpiNameDisplay");
       if (upiNameDisplay) {
         const resolvedContact = resolveFlatUpiAndContact(
-          currentOpenedReceiptBill?.PropertyName,
+          currentOpenedReceiptBill?.SnapshotPropertyName || currentOpenedReceiptBill?.PropertyName,
           currentOpenedReceiptFlat,
           currentOpenedReceiptRenter
         );
-        const upiName = (resolvedContact.upiName && String(resolvedContact.upiName).trim())
-          ? String(resolvedContact.upiName).trim()
-          : ((currentOpenedReceiptBill?.UPIName && String(currentOpenedReceiptBill.UPIName).trim())
-              ? String(currentOpenedReceiptBill.UPIName).trim()
+        const upiName = (currentOpenedReceiptBill?.UPIName && String(currentOpenedReceiptBill.UPIName).trim())
+          ? String(currentOpenedReceiptBill.UPIName).trim()
+          : ((resolvedContact.upiName && String(resolvedContact.upiName).trim())
+              ? String(resolvedContact.upiName).trim()
               : "");
         upiNameDisplay.innerText = upiName || "N/A";
       }
@@ -24288,20 +24641,20 @@ function formatMonthLabel(rawVal) {
       qrBox.style.display = "flex";
 
       const resolvedContact = resolveFlatUpiAndContact(
-        currentOpenedReceiptBill?.PropertyName,
+        currentOpenedReceiptBill?.SnapshotPropertyName || currentOpenedReceiptBill?.PropertyName,
         currentOpenedReceiptFlat,
         currentOpenedReceiptRenter
       );
-      const rawUpiId = (resolvedContact.upiId && String(resolvedContact.upiId).trim())
-        ? String(resolvedContact.upiId).trim()
-        : ((currentOpenedReceiptBill?.UPIID && String(currentOpenedReceiptBill.UPIID).trim())
-            ? String(currentOpenedReceiptBill.UPIID).trim()
+      const rawUpiId = (currentOpenedReceiptBill?.UPIID && String(currentOpenedReceiptBill.UPIID).trim())
+        ? String(currentOpenedReceiptBill.UPIID).trim()
+        : ((resolvedContact.upiId && String(resolvedContact.upiId).trim())
+            ? String(resolvedContact.upiId).trim()
             : "");
       const upiId = String(rawUpiId || "").replace(/['"\s]/g, "").trim();
-      const upiName = (resolvedContact.upiName && String(resolvedContact.upiName).trim())
-        ? String(resolvedContact.upiName).trim()
-        : ((currentOpenedReceiptBill?.UPIName && String(currentOpenedReceiptBill.UPIName).trim())
-            ? String(currentOpenedReceiptBill.UPIName).trim()
+      const upiName = (currentOpenedReceiptBill?.UPIName && String(currentOpenedReceiptBill.UPIName).trim())
+        ? String(currentOpenedReceiptBill.UPIName).trim()
+        : ((resolvedContact.upiName && String(resolvedContact.upiName).trim())
+            ? String(resolvedContact.upiName).trim()
             : "");
 
       if (!upiId || !upiId.includes("@")) {
@@ -24454,22 +24807,25 @@ function formatMonthLabel(rawVal) {
         ? `+ ₹${carryVal.toLocaleString('en-IN')} (Previous Due)`
         : (carryVal < 0 ? `- ₹${Math.abs(carryVal).toLocaleString('en-IN')} (Advance Credit)` : `₹0`);
 
-      const resolvedContact = resolveFlatUpiAndContact(bill.PropertyName, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
-      const rawUpiId = (resolvedContact.upiId && String(resolvedContact.upiId).trim())
-        ? String(resolvedContact.upiId).trim()
-        : ((bill.UPIID && String(bill.UPIID).trim()) ? String(bill.UPIID).trim() : "");
+      const snapPropLabel = bill.SnapshotPropertyName || bill.PropertyName || "Property";
+      const snapFlatLabel = bill.SnapshotFlatName || bill.FlatName || "";
+      const snapTenantLabel = bill.SnapshotTenantName || bill.TenantName || "--";
+      const resolvedContact = resolveFlatUpiAndContact(snapPropLabel, currentOpenedReceiptFlat, currentOpenedReceiptRenter);
+      const rawUpiId = (bill.UPIID && String(bill.UPIID).trim())
+        ? String(bill.UPIID).trim()
+        : ((resolvedContact.upiId && String(resolvedContact.upiId).trim()) ? String(resolvedContact.upiId).trim() : "");
       const upiId = String(rawUpiId || "").replace(/['"\s]/g, "").trim();
-      const upiName = (resolvedContact.upiName && String(resolvedContact.upiName).trim())
-        ? String(resolvedContact.upiName).trim()
-        : ((bill.UPIName && String(bill.UPIName).trim()) ? String(bill.UPIName).trim() : "");
+      const upiName = (bill.UPIName && String(bill.UPIName).trim())
+        ? String(bill.UPIName).trim()
+        : ((resolvedContact.upiName && String(resolvedContact.upiName).trim()) ? String(resolvedContact.upiName).trim() : "");
       const contactPhone =
-        resolvedContact.contractMobile ||
         sanitizeContactPhoneDisplay(bill.ContractMobile) ||
+        resolvedContact.contractMobile ||
         "N/A";
 
       const rows = [];
       if (checkedKeys.has("tenant")) {
-        rows.push({ label: "Tenant Name:", value: String(bill.TenantName || "--"), color: "#0f172a" });
+        rows.push({ label: "Tenant Name:", value: String(snapTenantLabel), color: "#0f172a" });
       }
       if (checkedKeys.has("billdate")) {
         rows.push({ label: "Billing Date:", value: String(billDateFormatted || "--"), color: "#0f172a" });
@@ -24564,7 +24920,7 @@ function formatMonthLabel(rawVal) {
       const mCtx = measureCanvas.getContext("2d");
 
       mCtx.font = "800 20px 'Plus Jakarta Sans', Arial, sans-serif";
-      const headerTitleLines = wrapCanvasTextLines(mCtx, `${bill.PropertyName || "Property"} — Flat ${bill.FlatName || ""}`, contentW);
+      const headerTitleLines = wrapCanvasTextLines(mCtx, `${snapPropLabel} — Flat ${snapFlatLabel}`, contentW);
       const headerH = Math.max(110, 62 + headerTitleLines.length * 25);
 
       const measureRowLayout = (r) => {
@@ -29462,8 +29818,10 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: profUrl
         });
-        if (profRes && (profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.url)) {
-          newRenterObj.ProfileImageURL = String(profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.url).trim();
+        if (!profRes || profRes.status === "error") {
+          triggerSideToast("Google Drive Upload Failed", profRes?.message || "Could not upload profile photo to Google Drive.", false);
+        } else if (profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.previewUrl || profRes.url) {
+          newRenterObj.ProfileImageURL = String(profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.previewUrl || profRes.url).trim();
         }
       }
       if (idUrl && idUrl.startsWith("data:image")) {
@@ -29480,8 +29838,10 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: idUrl
         });
-        if (idRes && (idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.url)) {
-          newRenterObj.IdentityImageURL = String(idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.url).trim();
+        if (!idRes || idRes.status === "error") {
+          triggerSideToast("Google Drive Upload Failed", idRes?.message || "Could not upload Aadhaar photo to Google Drive.", false);
+        } else if (idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.previewUrl || idRes.url) {
+          newRenterObj.IdentityImageURL = String(idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.previewUrl || idRes.url).trim();
         }
       }
       lastWriteCompletedAt = Date.now();
@@ -29638,6 +29998,7 @@ function formatMonthLabel(rawVal) {
       });
       DB.bills.forEach(b => {
         if (String(b.PropertyName).trim().toLowerCase() === oldName.toLowerCase()) {
+          if (!b.SnapshotPropertyName) b.SnapshotPropertyName = b.PropertyName;
           b.PropertyName = newName;
         }
       });
@@ -30204,10 +30565,14 @@ function formatMonthLabel(rawVal) {
           base64Data: compressedDataUrl
         });
 
-        const returnedUrl = res && res.status === "success"
-          ? (res.shareableUrl || res.driveUrl || res.imageUrl || res.previewUrl || res.url || "")
-          : "";
-        const finalImageUrl = returnedUrl ? String(returnedUrl).trim() : compressedDataUrl;
+        if (!res || res.status === "error") {
+          throw new Error(res?.message || "Google Drive upload failed.");
+        }
+        const returnedUrl = (res.shareableUrl || res.driveUrl || res.imageUrl || res.previewUrl || res.url || "").trim();
+        if (!returnedUrl || returnedUrl.startsWith("data:")) {
+          throw new Error("Google Drive did not return a shareable document link.");
+        }
+        const finalImageUrl = String(returnedUrl).trim();
 
         if (res && res.resolvedRenterId && activeFlatRenterObj) {
           activeFlatRenterObj.RenterID = res.resolvedRenterId;
@@ -30238,7 +30603,7 @@ function formatMonthLabel(rawVal) {
           true
         );
       } catch (err) {
-        triggerSideToast("Upload Warning", "Displayed image locally. Please check internet connection.", "warning");
+        triggerSideToast("Google Drive Upload Failed", err?.message || `Could not upload ${docLabel} to Google Drive.`, false);
       }
     }
 
@@ -31932,6 +32297,13 @@ function formatMonthLabel(rawVal) {
       const proofId = "PROOF-" + Date.now();
       let finalScreenshotUrl = attachedScreenshot;
       const cleanMonth = normalizeMonthYear(monthYear) || new Date().toISOString().slice(0, 7);
+      const resolvedProofAadhaar = normalizeAadhaar12(
+        (typeof getNormalizedActiveRenterAadhaar === "function" ? getNormalizedActiveRenterAadhaar() : "") ||
+        activeAssignedAadhaar ||
+        activeFlatRenterObj?.IdentityDocNumber ||
+        ""
+      );
+      const resolvedProofRenterId = String(activeFlatRenterObj?.RenterID || "").trim();
 
       if (attachedScreenshot && attachedScreenshot.startsWith("data:image")) {
         const mimeMatch = String(attachedScreenshot).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
@@ -31942,6 +32314,9 @@ function formatMonthLabel(rawVal) {
           username: activeUser || "",
           propertyName: propName,
           flatName: flatName,
+          renterId: resolvedProofRenterId,
+          aadhaar: resolvedProofAadhaar,
+          identityDocNumber: resolvedProofAadhaar,
           renterName: tenantName,
           monthYear: cleanMonth,
           category: "completed_payment",
@@ -31949,9 +32324,14 @@ function formatMonthLabel(rawVal) {
           mimeType: proofMime,
           base64Data: attachedScreenshot
         });
-        finalScreenshotUrl = upRes && (upRes.imageUrl || upRes.previewUrl)
-          ? normalizeGoogleDriveImageUrl(upRes.imageUrl || upRes.previewUrl)
-          : attachedScreenshot;
+        if (!upRes || upRes.status === "error") {
+          return triggerSideToast("Google Drive Upload Failed", upRes?.message || "Could not upload payment proof screenshot to Google Drive.", false);
+        }
+        const driveProofUrl = (upRes.imageUrl || upRes.previewUrl || upRes.shareableUrl || "").trim();
+        if (!driveProofUrl || driveProofUrl.startsWith("data:")) {
+          return triggerSideToast("Google Drive Upload Failed", "Google Drive did not return a saved image link for your payment proof.", false);
+        }
+        finalScreenshotUrl = normalizeGoogleDriveImageUrl(driveProofUrl);
       }
 
       const list = getStoredPaymentProofs();
@@ -31960,6 +32340,8 @@ function formatMonthLabel(rawVal) {
         billId,
         propertyName: propName,
         flatName: flatName,
+        renterId: resolvedProofRenterId,
+        aadhaar: resolvedProofAadhaar,
         monthYear: cleanMonth,
         tenantName: tenantName,
         submittedBy: activeUser || tenantName,
@@ -32549,26 +32931,29 @@ function formatMonthLabel(rawVal) {
               mimeType: meterMime,
               base64Data: compressedDataUrl
             });
-            const resolvedUrl = res && (res.imageUrl || res.previewUrl || res.url)
-              ? normalizeGoogleDriveImageUrl(res.imageUrl || res.previewUrl || res.url)
-              : "";
-            if (resolvedUrl) {
-              window.currentMeterProofPreviewDataUrl = resolvedUrl;
-              if (urlEl) urlEl.value = resolvedUrl;
-              const existingBillObj = (DB.bills || []).find(b =>
-                isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
-                normalizeMonthYear(b.MonthYear) === chosenMonth
-              );
-              if (existingBillObj) {
-                existingBillObj.MeterProofUrl = resolvedUrl;
-                saveDbSnapshotToCache();
-              }
+            if (!res || res.status === "error") {
+              throw new Error(res?.message || "Google Drive upload failed for meter photo.");
+            }
+            const rawMeterUrl = (res.imageUrl || res.previewUrl || res.shareableUrl || res.url || "").trim();
+            if (!rawMeterUrl || rawMeterUrl.startsWith("data:")) {
+              throw new Error("Google Drive did not return a saved photo URL.");
+            }
+            const resolvedUrl = normalizeGoogleDriveImageUrl(rawMeterUrl);
+            window.currentMeterProofPreviewDataUrl = resolvedUrl;
+            if (urlEl) urlEl.value = resolvedUrl;
+            const existingBillObj = (DB.bills || []).find(b =>
+              isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+              normalizeMonthYear(b.MonthYear) === chosenMonth
+            );
+            if (existingBillObj) {
+              existingBillObj.MeterProofUrl = resolvedUrl;
+              saveDbSnapshotToCache();
             }
             syncMeterProofButtonsVisibility();
             triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder & linked to Google Sheet!", true);
           }
         } catch (e) {
-          triggerSideToast("Upload Error", "Could not process meter photo.", false);
+          triggerSideToast("Google Drive Upload Failed", e?.message || "Could not upload meter photo to Google Drive.", false);
         } finally {
           window.meterProofUploadPromise = null;
         }
