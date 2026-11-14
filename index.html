@@ -15924,6 +15924,23 @@ function formatMonthLabel(rawVal) {
                   </div>
 
                   <div class="renter-hero-actions" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    ${(() => {
+                      const quickDueInfo = typeof resolveRenterCurrentMonthDueInfo === "function" ? resolveRenterCurrentMonthDueInfo() : null;
+                      const quickDueAmt = Number(quickDueInfo?.amountDue) || 0;
+                      const quickDueSuffix = quickDueAmt > 0 ? ` • ₹${quickDueAmt.toLocaleString("en-IN")}` : "";
+                      return `
+                        <button
+                          type="button"
+                          id="btnRenterQuickPaymentShortcut"
+                          class="renter-action-btn emerald"
+                          onclick="openRenterQuickPaymentModal();"
+                          title="Open UPI payment modal pre-filled with your current month's calculated due"
+                        >
+                          <i class="fa-solid fa-bolt"></i>
+                          <span>Quick Payment${quickDueSuffix}</span>
+                        </button>
+                      `;
+                    })()}
                     ${topHeroReceiptItemHtml}
                     <button
                       type="button"
@@ -24079,7 +24096,99 @@ function formatMonthLabel(rawVal) {
       };
     }
 
-    function openRentCollectionQrModal() {
+    function resolveRenterCurrentMonthDueInfo() {
+      const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
+      const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || activeFlatRenterObj || null;
+      const propName = selectedFlat?.PropertyName || primaryRenter?.PropertyName || selectedProperty || "";
+      const flatName = selectedFlat?.FlatName || primaryRenter?.FlatName || "";
+
+      const myBills = (DB.bills || []).filter(b => isBillLinkedToLoggedInRenterAadhaar(b));
+      myBills.sort((a, b) => {
+        const mA = normalizeMonthYear(a.MonthYear || a.BillDate);
+        const mB = normalizeMonthYear(b.MonthYear || b.BillDate);
+        if (mA && mB && mA !== mB) return mB.localeCompare(mA);
+        return (new Date(b.BillDate || b.PaymentDate || 0).getTime()) - (new Date(a.BillDate || a.PaymentDate || 0).getTime());
+      });
+
+      const currentCalendarYM = getCurrentCalendarYearMonth();
+      const currentMonthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(currentCalendarYM) : currentCalendarYM;
+      const currentCalendarBill = myBills.find(b => normalizeMonthYear(b.MonthYear || b.BillDate) === currentCalendarYM) || null;
+      const selectedBill = (window.selectedRenterHomeBillId && myBills.find(b => String(b.BillID || "") === String(window.selectedRenterHomeBillId)))
+        || (window.selectedRenterHomeBillMonth && myBills.find(b => normalizeMonthYear(b.MonthYear || b.BillDate) === normalizeMonthYear(window.selectedRenterHomeBillMonth)))
+        || null;
+      const targetBill = currentCalendarBill || selectedBill || myBills[0] || null;
+
+      const ledgerStats = calculateCurrentNetBalanceForRenter(propName, flatName, primaryRenter);
+      const ledgerNetDue = Math.max(0, parseFloat(ledgerStats?.netBalance) || 0);
+
+      let amountDue = 0;
+      let monthRaw = currentCalendarYM;
+      let monthLabel = currentMonthLabel;
+      let sourceLabel = `No Pending Due for ${currentMonthLabel}`;
+
+      if (currentCalendarBill) {
+        const activeMetrics = computeCurrentMonthStandaloneAdvanceAndDue(currentCalendarBill);
+        amountDue = Math.max(0, Number(activeMetrics.dueAmt) || 0);
+        monthRaw = currentCalendarBill.MonthYear || currentCalendarBill.BillDate || currentCalendarYM;
+        monthLabel = activeMetrics.monthLabel || currentMonthLabel;
+        sourceLabel = amountDue > 0
+          ? `${monthLabel} Calculated Due`
+          : `${monthLabel} Bill Settled (₹0 Due)`;
+      } else if (targetBill) {
+        const latestMetrics = computeCurrentMonthStandaloneAdvanceAndDue(targetBill);
+        if (latestMetrics.dueAmt > 0) {
+          amountDue = Math.max(0, Number(latestMetrics.dueAmt) || 0);
+          monthRaw = targetBill.MonthYear || targetBill.BillDate || currentCalendarYM;
+          monthLabel = latestMetrics.monthLabel || currentMonthLabel;
+          sourceLabel = `${monthLabel} Pending Balance Due`;
+        } else if (ledgerNetDue > 0) {
+          amountDue = ledgerNetDue;
+          monthRaw = currentCalendarYM;
+          monthLabel = currentMonthLabel;
+          sourceLabel = "Total Pending Ledger Balance Due";
+        } else {
+          amountDue = 0;
+          monthRaw = currentCalendarYM;
+          monthLabel = currentMonthLabel;
+          sourceLabel = `All Dues Cleared (${currentMonthLabel})`;
+        }
+      } else if (ledgerNetDue > 0) {
+        amountDue = ledgerNetDue;
+        monthRaw = currentCalendarYM;
+        monthLabel = currentMonthLabel;
+        sourceLabel = "Total Pending Ledger Balance Due";
+      }
+
+      return {
+        amountDue: Number(amountDue.toFixed(2)),
+        monthRaw,
+        monthLabel,
+        sourceLabel,
+        targetBill,
+        primaryRenter
+      };
+    }
+
+    function openRenterQuickPaymentModal() {
+      const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
+      const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || activeFlatRenterObj || null;
+      if (primaryRenter) {
+        activeFlatRenterObj = primaryRenter;
+        if (!selectedFlat) {
+          selectedFlat = findFlatObject(primaryRenter.PropertyName, primaryRenter.FlatName) || {
+            PropertyName: primaryRenter.PropertyName,
+            FlatName: primaryRenter.FlatName,
+            RentAmount: primaryRenter.RentAmount || 0
+          };
+        }
+      }
+      if (!selectedFlat) {
+        return triggerSideToast("Quick Payment", "Please link your flat profile first to open Quick Payment.", false);
+      }
+      openRentCollectionQrModal({ prefillCurrentMonthDue: true });
+    }
+
+    function openRentCollectionQrModal(options = {}) {
       if (!selectedFlat && activeRole === "Renter") {
         const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
         const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || null;
@@ -24096,27 +24205,35 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Select a Flat", "Please open a flat first to generate its rent collection QR code.", false);
       }
 
-      const propName = selectedFlat.PropertyName || selectedProperty || "Property";
-      const flatName = selectedFlat.FlatName || "--";
-      const tenantName = document.getElementById("renterName")?.value?.trim() || activeFlatRenterObj?.RenterName || activeUserFullName || "Tenant";
-      let billingMonthRaw = document.getElementById("calcMonthPicker")?.value || "";
-      if (!billingMonthRaw && activeRole === "Renter") {
-        const myBills = (DB.bills || []).filter(b => isBillLinkedToLoggedInRenterAadhaar(b));
-        const currentCalendarYM = getCurrentCalendarYearMonth();
-        const activeBill = myBills.find(b => normalizeMonthYear(b.MonthYear || b.BillDate) === currentCalendarYM) || myBills[0] || null;
-        billingMonthRaw = activeBill ? (activeBill.MonthYear || activeBill.BillDate || currentCalendarYM) : currentCalendarYM;
-      }
-      const billingMonthLabel = billingMonthRaw ? formatMonthLabel(billingMonthRaw) : "Current Month";
+      const renterDueInfo = activeRole === "Renter" ? resolveRenterCurrentMonthDueInfo() : null;
+      const renterTargetBill = renterDueInfo ? renterDueInfo.targetBill : null;
 
-      // Resolve UPI details from profile inputs, flat record, renter record, or property record
+      const propName = (renterTargetBill && (renterTargetBill.SnapshotPropertyName || renterTargetBill.PropertyName)) || selectedFlat.PropertyName || selectedProperty || "Property";
+      const flatName = (renterTargetBill && (renterTargetBill.SnapshotFlatName || renterTargetBill.FlatName)) || selectedFlat.FlatName || "--";
+      const tenantName = (renterTargetBill && (renterTargetBill.SnapshotTenantName || renterTargetBill.TenantName)) || document.getElementById("renterName")?.value?.trim() || activeFlatRenterObj?.RenterName || activeUserFullName || "Tenant";
+      let billingMonthRaw = document.getElementById("calcMonthPicker")?.value || "";
+      if (!billingMonthRaw && activeRole === "Renter" && renterDueInfo) {
+        billingMonthRaw = renterDueInfo.monthRaw;
+      }
+      const billingMonthLabel = (activeRole === "Renter" && renterDueInfo?.monthLabel)
+        ? renterDueInfo.monthLabel
+        : (billingMonthRaw ? formatMonthLabel(billingMonthRaw) : "Current Month");
+
+      // Resolve UPI details from bill snapshot (for renters), profile inputs, flat record, renter record, or property record
       const domUpiId = document.getElementById("profUpiId")?.value?.trim() || "";
       const domUpiName = document.getElementById("profUpiName")?.value?.trim() || "";
       const resolvedContact = resolveFlatUpiAndContact(propName, selectedFlat, activeFlatRenterObj);
 
-      const upiId = domUpiId || resolvedContact.upiId || "";
-      const upiName = domUpiName || resolvedContact.upiName || propName || "Rent Receiver";
+      const upiId = (activeRole === "Renter" && renterTargetBill?.UPIID)
+        ? String(renterTargetBill.UPIID).trim()
+        : (domUpiId || resolvedContact.upiId || "");
+      const upiName = (activeRole === "Renter" && renterTargetBill?.UPIName)
+        ? String(renterTargetBill.UPIName).trim()
+        : (domUpiName || resolvedContact.upiName || propName || "Rent Receiver");
 
-      const dueInfo = computeCurrentFlatAmountDue();
+      const dueInfo = activeRole === "Renter" && renterDueInfo
+        ? { primaryAmountDue: renterDueInfo.amountDue, sourceLabel: renterDueInfo.sourceLabel }
+        : computeCurrentFlatAmountDue();
       const defaultNote = `Rent ${propName} Flat ${flatName} (${billingMonthLabel})`;
 
       document.getElementById("qrModalPropFlatTitle").innerText = `${propName} — Flat ${flatName}`;
@@ -24141,7 +24258,7 @@ function formatMonthLabel(rawVal) {
       }
       const inputsBox = document.getElementById("qrModalInputsContainerBox");
       if (inputsBox) {
-        inputsBox.style.display = activeRole === "Renter" ? "none" : "flex";
+        inputsBox.style.display = activeRole === "Renter" ? "none" : "block";
       }
 
       refreshRentCollectionQrModal();
