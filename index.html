@@ -520,7 +520,7 @@
       font-weight: 700;
       font-size: 0.92rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), filter 0.16s ease, opacity 0.16s ease;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -612,11 +612,10 @@
       justify-content: space-between;
       align-items: center;
       gap: 10px;
-      padding: 12px 18px;
+      padding: 12px 20px;
       background: var(--bg-header);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
     }
 
     .nav-left {
@@ -676,7 +675,7 @@
       font-weight: 700;
       letter-spacing: 0.15px;
       box-shadow: 0 6px 20px rgba(79, 70, 229, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
     }
     .search-input::placeholder {
       color: #cbd5e1;
@@ -790,19 +789,22 @@
     .pnl-tracker {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       background: var(--bg-input);
       border: 1px solid var(--glass-border);
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 12px;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
     }
     .pnl-item {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       white-space: nowrap;
+      letter-spacing: 0.01em;
     }
     .pnl-profit {
       color: var(--accent-green);
@@ -827,7 +829,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: transform 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
       flex-shrink: 0;
       font-size: 0.95rem;
     }
@@ -1088,12 +1090,10 @@
       font-size: 0.87rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
       color: #ffffff !important;
-      background: rgba(15, 23, 42, 0.36) !important;
-      backdrop-filter: blur(10px) saturate(140%) !important;
-      -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.34) !important;
+      background: rgba(15, 23, 42, 0.9) !important;
+      border: 1px solid rgba(255, 255, 255, 0.24) !important;
       border-radius: 12px !important;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
@@ -1149,20 +1149,19 @@
       flex-shrink: 0;
       padding: 14px 16px;
       background: var(--bg-card);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
       border: 2px solid var(--glass-border);
       border-radius: 16px;
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: pointer;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease, box-shadow 0.18s ease;
       user-select: none;
       color: var(--text-main);
       position: relative;
       overflow: hidden;
       -webkit-tap-highlight-color: transparent;
+      contain: layout style;
     }
     .prop-card:hover {
       border-color: var(--primary);
@@ -1224,7 +1223,7 @@
       justify-content: center;
       font-size: 1.05rem;
       flex-shrink: 0;
-      transition: all 0.2s ease;
+      transition: transform 0.18s ease, background-color 0.18s ease, color 0.18s ease;
     }
     .prop-info {
       flex: 1;
@@ -1258,8 +1257,6 @@
       text-align: center;
       padding: 46px 24px;
       background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1.5px dashed var(--glass-border);
       border-radius: var(--radius-lg);
       max-width: 520px;
@@ -1284,22 +1281,22 @@
 
     .flat-card-merged {
       background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border: 1.5px solid var(--glass-border);
       border-radius: var(--radius-lg);
       padding: 20px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease, border-color 0.18s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       min-height: 175px;
       color: var(--text-main);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+      contain: layout style;
     }
     .flat-card-merged:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
     }
 
     .flat-card-merged.flat-card-paid {
@@ -2547,6 +2544,115 @@
       background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%) !important;
       border-color: #4f46e5 !important;
       border-top: 3.5px solid #4338ca !important;
+    }
+
+    /* Screenshot Verification Dual-Theme Surface & Polish */
+    .ssv-shell {
+      border: 1.5px solid rgba(16, 185, 129, 0.36);
+      border-radius: 16px;
+      background: linear-gradient(155deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.92) 100%);
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+    }
+    body.theme-white .ssv-shell {
+      background: linear-gradient(155deg, #f0fdf4 0%, #ffffff 100%);
+      border-color: #86efac;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
+    }
+    .ssv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .ssv-title {
+      margin: 0;
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    body.theme-white .ssv-title {
+      color: #047857;
+    }
+    .ssv-subtitle {
+      margin: 4px 0 0;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .ssv-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ssv-renter-card {
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1.5px solid rgba(148, 163, 184, 0.24);
+      margin-bottom: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+    }
+    body.theme-white .ssv-renter-card {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+    .ssv-slot-tile {
+      border-radius: 11px;
+      padding: 9px;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    body.theme-white .ssv-slot-tile {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    .ssv-slot-empty {
+      height: 110px;
+      border-radius: 8px;
+      border: 1px dashed rgba(148, 163, 184, 0.42);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      text-align: center;
+      padding: 6px;
+      background: rgba(15, 23, 42, 0.35);
+    }
+    body.theme-white .ssv-slot-empty {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      color: #475569;
+    }
+    .ssv-empty-state {
+      padding: 28px 18px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      border-radius: 12px;
+      border: 1px dashed var(--glass-border);
+      background: rgba(15, 23, 42, 0.28);
+    }
+    body.theme-white .ssv-empty-state {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #475569;
     }
 
     /* Colorful Matrix & Profile Cards */
@@ -6257,18 +6363,18 @@
           </div>
         </div>
 
-        <!-- Past Renter Aadhaar Card Photo Box -->
+        <!-- Past Renter Aadhaar Card Photo (Front Side) Box -->
         <div class="matrix-col photo-card-aadhaar" style="padding:12px; text-align:center;">
           <div class="col-title" style="margin-bottom:8px; font-size:0.82rem; justify-content:center; display:flex; align-items:center; gap:6px;">
-            <i class="fa-solid fa-id-card"></i> 2. Past Renter Aadhaar Card Photo
+            <i class="fa-solid fa-id-card"></i> 2. Past Renter Aadhaar (Front Side)
           </div>
-          <div class="image-frame-container zoomable-photo-frame" style="height:125px; margin-bottom:6px;" onclick="openPhotoZoomModal(document.getElementById('editLeftIdentityPreview')?.src, (document.getElementById('editLeftName')?.value || 'Past Renter') + ' — Aadhaar Card Photo')">
-            <img id="editLeftIdentityPreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2225%22%20width%3D%2270%22%20height%3D%2275%22%20rx%3D%226%22%20fill%3D%22%23334155%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2252%22%20r%3D%2214%22%20fill%3D%22%2364748b%22%2F%3E%3Cpath%20d%3D%22M35%2090c0-11%209-18%2020-18s20%207%2020%2018%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2232%22%20width%3D%22165%22%20height%3D%2212%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2254%22%20width%3D%22130%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2274%22%20width%3D%22150%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Aadhaar%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Past Renter Aadhaar Card Photo">
+          <div class="image-frame-container zoomable-photo-frame" style="height:125px; margin-bottom:6px;" onclick="openPhotoZoomModal(document.getElementById('editLeftIdentityPreview')?.src, (document.getElementById('editLeftName')?.value || 'Past Renter') + ' — Aadhaar Card (Front Side)')">
+            <img id="editLeftIdentityPreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2225%22%20width%3D%2270%22%20height%3D%2275%22%20rx%3D%226%22%20fill%3D%22%23334155%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2252%22%20r%3D%2214%22%20fill%3D%22%2364748b%22%2F%3E%3Cpath%20d%3D%22M35%2090c0-11%209-18%2020-18s20%207%2020%2018%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2232%22%20width%3D%22165%22%20height%3D%2212%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2254%22%20width%3D%22130%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2274%22%20width%3D%22150%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Aadhaar%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Past Renter Aadhaar Card Front Photo">
             <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
           </div>
-          <div id="editLeftIdentityStatusBadge" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px;">No Aadhaar photo uploaded</div>
+          <div id="editLeftIdentityStatusBadge" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px;">No Aadhaar front photo uploaded</div>
           <div class="form-group admin-only" style="margin-bottom:8px; text-align:left;">
-            <label style="font-size:0.7rem;">Upload Aadhaar Card Photo (Saves to this Past Renter)</label>
+            <label style="font-size:0.7rem;">Upload Aadhaar Front Photo</label>
             <input type="file" id="fileEditLeftIdentityPic" class="form-control" style="padding:6px; font-size:0.74rem;" accept="image/*" onchange="handleLeftRenterDocumentUpload(this, 'identity')">
           </div>
           <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap;">
@@ -6276,6 +6382,30 @@
               <i class="fa-solid fa-download"></i> Download
             </button>
             <button type="button" id="btnDeleteLeftIdentityPic" class="btn-ledger-action admin-only" style="background:rgba(239,68,68,0.16); color:var(--accent-red); border:1px solid rgba(239,68,68,0.35); padding:5px 10px; font-size:0.72rem; font-weight:700;" onclick="deleteLeftRenterDocument('identity')">
+              <i class="fa-solid fa-trash-can"></i> Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Past Renter Aadhaar Card Photo (Back Side) Box -->
+        <div class="matrix-col photo-card-aadhaar" style="padding:12px; text-align:center;">
+          <div class="col-title" style="margin-bottom:8px; font-size:0.82rem; justify-content:center; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-id-card-clip"></i> 3. Past Renter Aadhaar (Back Side)
+          </div>
+          <div class="image-frame-container zoomable-photo-frame" style="height:125px; margin-bottom:6px;" onclick="openPhotoZoomModal(document.getElementById('editLeftIdentityBackPreview')?.src, (document.getElementById('editLeftName')?.value || 'Past Renter') + ' — Aadhaar Card (Back Side)')">
+            <img id="editLeftIdentityBackPreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2228%22%20width%3D%22252%22%20height%3D%2214%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2252%22%20width%3D%22170%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2270%22%20width%3D%22195%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Back%20Photo%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Past Renter Aadhaar Card Back Photo">
+            <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
+          </div>
+          <div id="editLeftIdentityBackStatusBadge" style="font-size:0.7rem; color:var(--text-muted); margin-bottom:6px;">No Aadhaar back photo uploaded</div>
+          <div class="form-group admin-only" style="margin-bottom:8px; text-align:left;">
+            <label style="font-size:0.7rem;">Upload Aadhaar Back Photo</label>
+            <input type="file" id="fileEditLeftIdentityBackPic" class="form-control" style="padding:6px; font-size:0.74rem;" accept="image/*" onchange="handleLeftRenterDocumentUpload(this, 'identity_back')">
+          </div>
+          <div style="display:flex; justify-content:center; gap:6px; flex-wrap:wrap;">
+            <button type="button" id="btnDownloadLeftIdentityBackPic" class="btn-ledger-action" style="background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.4); padding:5px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadLeftRenterDocument('identity_back')">
+              <i class="fa-solid fa-download"></i> Download
+            </button>
+            <button type="button" id="btnDeleteLeftIdentityBackPic" class="btn-ledger-action admin-only" style="background:rgba(239,68,68,0.16); color:var(--accent-red); border:1px solid rgba(239,68,68,0.35); padding:5px 10px; font-size:0.72rem; font-weight:700;" onclick="deleteLeftRenterDocument('identity_back')">
               <i class="fa-solid fa-trash-can"></i> Delete
             </button>
           </div>
@@ -6662,23 +6792,26 @@
 
       <!-- Settings Tab: Screenshot Verification (Right Before Notifications) -->
       <div id="setSubScreenshotVerification" class="tab-content">
-        <div class="exec-field-card" style="border:1.5px solid rgba(16,185,129,0.45); background:linear-gradient(145deg, rgba(16,185,129,0.08), rgba(15,23,42,0.55)); margin-bottom:14px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+        <div class="ssv-shell">
+          <div class="ssv-header">
             <div>
-              <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#34d399; display:flex; align-items:center; gap:8px;">
+              <h4 class="ssv-title">
                 <i class="fa-solid fa-images"></i> Active Renters Screenshot &amp; Photo Verification (4x4 Grid)
               </h4>
-              <p style="margin:3px 0 0; font-size:0.74rem; color:var(--text-muted);">
-                Only <strong>Active Renters</strong> are shown. Select a month and send a request so renters can capture &amp; upload live camera photos. Only Admin can delete or re-request photos.
+              <p class="ssv-subtitle">
+                Only <strong>Active Renters</strong> are shown. Select a month and send a request so renters can capture &amp; upload live camera photos. Click <strong>Close</strong> anytime to stop uploads for that month.
               </p>
             </div>
-            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <div class="ssv-controls">
               <input type="month" id="screenshotVerifyMonthInput" class="form-control" style="width:155px; padding:6px 10px; font-size:0.75rem; font-weight:700;" onchange="renderAdminScreenshotVerificationGrid()" />
               <button type="button" id="btnSendMonthlyScreenshotRequest" class="btn-primary" style="width:auto; padding:7px 13px; font-size:0.75rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="sendAdminMonthlyScreenshotRequest()">
                 <i class="fa-solid fa-paper-plane"></i> Send Request
               </button>
+              <button type="button" id="btnCloseMonthlyScreenshotRequest" class="btn-primary" style="width:auto; padding:7px 13px; font-size:0.75rem; background:linear-gradient(135deg, #dc2626, #ef4444);" onclick="closeAdminMonthlyScreenshotRequest()">
+                <i class="fa-solid fa-lock"></i> Close
+              </button>
               <input type="text" id="screenshotVerifySearchInput" class="form-control" style="width:190px; padding:6px 11px; font-size:0.75rem;" placeholder="Search Active Renter / Aadhaar..." oninput="renderAdminScreenshotVerificationGrid(this.value)">
-              <button type="button" class="btn-ledger-action" style="padding:6px 11px; font-size:0.74rem; color:#34d399;" onclick="syncDataLive(true).then(() => renderAdminScreenshotVerificationGrid())">
+              <button type="button" class="btn-ledger-action" style="padding:6px 11px; font-size:0.74rem; color:#10b981; border-color:rgba(16,185,129,0.4);" onclick="syncDataLive(true).then(() => renderAdminScreenshotVerificationGrid())">
                 <i class="fa-solid fa-rotate"></i> Refresh
               </button>
             </div>
@@ -6795,10 +6928,6 @@
 
       <!-- Settings Tab 2: Create a New User ID -->
       <div id="setSubCreateUser" class="tab-content">
-        <div style="background:rgba(16,185,129,0.1); border:1.5px solid rgba(16,185,129,0.35); border-radius:12px; padding:10px 14px; margin-bottom:14px; font-size:0.8rem;">
-          <i class="fa-solid fa-id-badge" style="color:#10b981; margin-right:6px;"></i>
-          <strong>Create New Login ID:</strong> Add an <strong>Admin</strong> (full control), <strong>Manager</strong> (custom permitted features &amp; properties), <strong>Viewer</strong> (read-only), or <strong>Renter</strong> (restricted to their flat/property).
-        </div>
         <div class="form-group">
           <label>Full Name <span class="req-star">*</span></label>
           <input type="text" id="createUserName" class="form-control" placeholder="Enter full name">
@@ -7210,9 +7339,6 @@
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
               <input type="text" id="auditLogSearchInput" class="form-control" style="width:170px; padding:5px 10px; font-size:0.74rem;" placeholder="Filter actor / action..." oninput="renderAdminAuditTrailList(this.value)">
-              <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.72rem; color:#f43f5e; border-color:rgba(244,63,94,0.45);" onclick="downloadAdminAuditLogPdf()">
-                <i class="fa-solid fa-file-pdf"></i> Download PDF
-              </button>
             </div>
           </div>
           <div id="adminAuditTrailList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:6px; font-size:0.76rem;"></div>
@@ -7232,12 +7358,6 @@
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <button type="button" class="btn-primary" style="width:auto; padding:8px 14px; font-size:0.76rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="triggerAutoCreateAllSheetsAndColumnsNow()">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Create &amp; Sync All Separate Sheets/Columns Now
-              </button>
-              <button type="button" class="btn-ledger-action" style="padding:8px 13px; font-size:0.75rem; color:#38bdf8; border-color:rgba(56,189,248,0.45);" onclick="copyFixedGasCodeToClipboard()">
-                <i class="fa-solid fa-copy"></i> Copy Fixed Code.gs
-              </button>
-              <button type="button" class="btn-ledger-action" style="padding:8px 13px; font-size:0.75rem; color:#a855f7; border-color:rgba(168,85,247,0.45);" onclick="downloadFixedGasCodeFile()">
-                <i class="fa-solid fa-download"></i> Download Code.gs
               </button>
             </div>
           </div>
@@ -7915,11 +8035,16 @@
             <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:220px;">
               <label style="font-size:0.72rem; font-weight:700; color:#fbbf24; margin:0; white-space:nowrap;"><i class="fa-solid fa-camera"></i> Sub-Meter Photo / Proof:</label>
               <input type="file" id="calcMeterProofFile" accept="image/*" class="form-control admin-only" style="padding:4px 8px; font-size:0.7rem; max-width:190px;" onchange="handleMeterProofUpload(this)">
-              <input type="text" id="calcMeterProofUrl" class="form-control" style="padding:5px 8px; font-size:0.72rem; flex:1;" placeholder="Or paste meter reading photo URL / verification note">
+              <input type="text" id="calcMeterProofUrl" class="form-control" style="padding:5px 8px; font-size:0.72rem; flex:1;" placeholder="Or paste meter reading photo URL / verification note" oninput="syncMeterProofButtonsVisibility()">
             </div>
-            <button type="button" class="btn-ledger-action" style="padding:4px 10px; font-size:0.7rem; color:#38bdf8;" onclick="previewCurrentMeterProof()">
-              <i class="fa-solid fa-eye"></i> View Proof
-            </button>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button type="button" id="btnPreviewMeterProof" class="btn-ledger-action" style="display:none; padding:4px 10px; font-size:0.7rem; color:#38bdf8;" onclick="previewCurrentMeterProof()">
+                <i class="fa-solid fa-eye"></i> View Proof
+              </button>
+              <button type="button" id="btnDeleteMeterProof" class="btn-ledger-action admin-only" style="display:none; padding:4px 10px; font-size:0.7rem; color:#ef4444; border-color:rgba(239,68,68,0.45);" onclick="deleteCurrentMeterProof()">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+            </div>
           </div>
 
           <!-- Feature C3: Master Meter vs. Sub-Meters Loss Reconciliation Drawer -->
@@ -8272,13 +8397,24 @@
               <div id="aadhaarPreviousRenterPrompt" style="display:none; margin-top:8px;"></div>
             </div>
 
-            <!-- Requirement 8: Upload Aadhaar Card Photo placed right below Aadhaar Card Number -->
+            <!-- Requirement 8 & 9: Upload Aadhaar Card Photo (Front Side + Back Side) placed right below Aadhaar Card Number -->
             <div class="form-group admin-only" style="background:rgba(16, 185, 129, 0.08); border:1px dashed rgba(16, 185, 129, 0.45); border-radius:10px; padding:10px;">
-              <label style="font-size:0.76rem; color:#34d399; margin-bottom:4px;"><i class="fa-solid fa-id-card"></i> Upload Aadhaar Card Photo (or Paste Drive Link)</label>
+              <label style="font-size:0.76rem; color:#34d399; margin-bottom:4px;"><i class="fa-solid fa-id-card"></i> Upload Aadhaar Card Photo — Front Side (or Paste Drive Link)</label>
               <input type="file" id="fileIdentityPic" class="form-control" style="padding:6px; font-size:0.76rem; margin-bottom:6px;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'identity')">
               <div style="display:flex; gap:6px; align-items:center;">
-                <input type="url" id="inputIdentityPicUrl" class="form-control" style="padding:6px 8px; font-size:0.74rem; flex:1;" placeholder="Or paste Google Drive / Image URL here...">
+                <input type="url" id="inputIdentityPicUrl" class="form-control" style="padding:6px 8px; font-size:0.74rem; flex:1;" placeholder="Or paste Google Drive / Image URL (Front)...">
                 <button type="button" class="btn-ledger-action" style="padding:6px 10px; font-size:0.72rem; color:#34d399; border-color:rgba(16,185,129,0.45); white-space:nowrap;" onclick="applyRenterDocumentLink('identity')">
+                  <i class="fa-solid fa-link"></i> Apply Link
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group admin-only" style="background:rgba(14, 165, 233, 0.08); border:1px dashed rgba(56, 189, 248, 0.45); border-radius:10px; padding:10px;">
+              <label style="font-size:0.76rem; color:#38bdf8; margin-bottom:4px;"><i class="fa-solid fa-id-card-clip"></i> Upload Aadhaar Card Photo — Back Side (or Paste Drive Link)</label>
+              <input type="file" id="fileIdentityBackPic" class="form-control" style="padding:6px; font-size:0.76rem; margin-bottom:6px;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'identity_back')">
+              <div style="display:flex; gap:6px; align-items:center;">
+                <input type="url" id="inputIdentityBackPicUrl" class="form-control" style="padding:6px 8px; font-size:0.74rem; flex:1;" placeholder="Or paste Google Drive / Image URL (Back)...">
+                <button type="button" class="btn-ledger-action" style="padding:6px 10px; font-size:0.72rem; color:#38bdf8; border-color:rgba(56,189,248,0.45); white-space:nowrap;" onclick="applyRenterDocumentLink('identity_back')">
                   <i class="fa-solid fa-link"></i> Apply Link
                 </button>
               </div>
@@ -8359,16 +8495,16 @@
               </div>
             </div>
 
-            <!-- 2B. Aadhaar Card Photo Box -->
+            <!-- 2B. Aadhaar Card Photo (Front Side) Box -->
             <div class="photo-card-aadhaar" style="text-align:center; background:var(--bg-input); border-radius:16px; padding:14px; border:1px solid var(--glass-border); box-shadow:0 4px 16px rgba(0,0,0,0.2);">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-weight:800; font-size:0.84rem; color:var(--text-main); display:flex; align-items:center; gap:6px;">
-                  <i class="fa-solid fa-id-card" style="color:#34d399;"></i> Aadhaar Card Photo
+                  <i class="fa-solid fa-id-card" style="color:#34d399;"></i> Aadhaar Card (Front Side)
                 </span>
-                <span id="identityCloudStatusBadge" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">No Aadhaar</span>
+                <span id="identityCloudStatusBadge" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">No Front Photo</span>
               </div>
-              <div class="image-frame-container zoomable-photo-frame" style="height: 165px; margin-bottom: 10px;" onclick="openPhotoZoomModal(document.getElementById('identityPicturePreview')?.src, (document.getElementById('renterName')?.value || 'Renter') + ' — Aadhaar Card Document')">
-                <img id="identityPicturePreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2225%22%20width%3D%2270%22%20height%3D%2275%22%20rx%3D%226%22%20fill%3D%22%23334155%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2252%22%20r%3D%2214%22%20fill%3D%22%2364748b%22%2F%3E%3Cpath%20d%3D%22M35%2090c0-11%209-18%2020-18s20%207%2020%2018%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2232%22%20width%3D%22165%22%20height%3D%2212%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2254%22%20width%3D%22130%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2274%22%20width%3D%22150%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Aadhaar%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Aadhaar / ID Document">
+              <div class="image-frame-container zoomable-photo-frame" style="height: 165px; margin-bottom: 10px;" onclick="openPhotoZoomModal(document.getElementById('identityPicturePreview')?.src, (document.getElementById('renterName')?.value || 'Renter') + ' — Aadhaar Card (Front Side)')">
+                <img id="identityPicturePreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2225%22%20width%3D%2270%22%20height%3D%2275%22%20rx%3D%226%22%20fill%3D%22%23334155%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2252%22%20r%3D%2214%22%20fill%3D%22%2364748b%22%2F%3E%3Cpath%20d%3D%22M35%2090c0-11%209-18%2020-18s20%207%2020%2018%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2232%22%20width%3D%22165%22%20height%3D%2212%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2254%22%20width%3D%22130%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2274%22%20width%3D%22150%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Aadhaar%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Aadhaar / ID Document (Front)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
               </div>
               <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -8379,7 +8515,7 @@
                   style="background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="downloadRenterDocumentPhoto('identity')"
                 >
-                  <i class="fa-solid fa-download"></i> Download Aadhaar
+                  <i class="fa-solid fa-download"></i> Download Front
                 </button>
                 <button
                   type="button"
@@ -8387,6 +8523,40 @@
                   class="btn-ledger-action admin-only"
                   style="background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="deleteRenterDocumentFromCloud('identity')"
+                >
+                  <i class="fa-solid fa-trash-can"></i> Delete
+                </button>
+              </div>
+            </div>
+
+            <!-- 2C. Aadhaar Card Photo (Back Side) Box -->
+            <div class="photo-card-aadhaar" style="text-align:center; background:var(--bg-input); border-radius:16px; padding:14px; border:1px solid var(--glass-border); box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-weight:800; font-size:0.84rem; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-id-card-clip" style="color:#38bdf8;"></i> Aadhaar Card (Back Side)
+                </span>
+                <span id="identityBackCloudStatusBadge" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">No Back Photo</span>
+              </div>
+              <div class="image-frame-container zoomable-photo-frame" style="height: 165px; margin-bottom: 10px;" onclick="openPhotoZoomModal(document.getElementById('identityBackPicturePreview')?.src, (document.getElementById('renterName')?.value || 'Renter') + ' — Aadhaar Card (Back Side)')">
+                <img id="identityBackPicturePreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2228%22%20width%3D%22252%22%20height%3D%2214%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2252%22%20width%3D%22170%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2270%22%20width%3D%22195%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Back%20Photo%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Aadhaar / ID Document (Back)">
+                <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
+              </div>
+              <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
+                <button
+                  type="button"
+                  id="btnDownloadIdentityBackPic"
+                  class="btn-ledger-action"
+                  style="background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  onclick="downloadRenterDocumentPhoto('identity_back')"
+                >
+                  <i class="fa-solid fa-download"></i> Download Back
+                </button>
+                <button
+                  type="button"
+                  id="btnDeleteIdentityBackPic"
+                  class="btn-ledger-action admin-only"
+                  style="background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  onclick="deleteRenterDocumentFromCloud('identity_back')"
                 >
                   <i class="fa-solid fa-trash-can"></i> Delete
                 </button>
@@ -8853,13 +9023,12 @@
         });
         for (let i = localStorage.length - 1; i >= 0; i--) {
           const k = localStorage.key(i);
-          if (k && (k.indexOf("portal_checklist_") === 0 || k.indexOf("portal_session_pass_") === 0 || k.indexOf("portal_gas_") === 0)) {
+          if (k && (k.indexOf("portal_checklist_") === 0 || k.indexOf("portal_gas_") === 0)) {
             localStorage.removeItem(k);
           }
         }
       } catch (e) {}
     }
-    purgeAllPortalBrowserCaches();
 
     function loadLocalUsersMaster() {
       return (typeof DB !== "undefined" && DB && Array.isArray(DB.users)) ? DB.users : [];
@@ -8916,7 +9085,6 @@
     let lastLoginCompletedAt = 0;
 
     async function fetchGasSheetData(forceRefresh = false, bypassPendingGuard = false) {
-      purgeAllPortalBrowserCaches();
       if (inFlightGasFetchPromise) {
         return inFlightGasFetchPromise;
       }
@@ -8986,11 +9154,6 @@
 
               if (remoteUsers && remoteUsers.length > 0) {
                 saveLocalUsersMaster(remoteUsers);
-                await fetch("/api/gas-engine", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
-                }).catch(function() {});
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
               const withinRecentLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 12000;
@@ -9069,9 +9232,8 @@
         } finally {
           inFlightGasFetchPromise = null;
         }
-        const mirrorFallback = await fetchFastMirrorInitialData();
-        if (mirrorFallback) return mirrorFallback;
         return {
+          _liveSheetVerified: false,
           properties: DB.properties || [],
           flats: DB.flats || [],
           renters: DB.renters || [],
@@ -9096,22 +9258,6 @@
       updateLocalGasSheetCacheFromDB();
       const bodyStr = JSON.stringify(data);
 
-      // Sync user/auth/config state immediately with local GAS engine mirror
-      let bridgeResult = null;
-      try {
-        const bRes = await fetch("/api/gas-engine", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: bodyStr
-        });
-        if (bRes.ok) {
-          bridgeResult = await bRes.json();
-          if (bridgeResult && Array.isArray(bridgeResult.users) && bridgeResult.users.length > 0) {
-            saveLocalUsersMaster(bridgeResult.users);
-          }
-        }
-      } catch (e) {}
-
       // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
       const runSheetPost = async function() {
         try {
@@ -9127,10 +9273,7 @@
           if (result && Array.isArray(result.users) && result.users.length > 0) {
             saveLocalUsersMaster(result.users);
           }
-          if (result && result.status === "error" && /not recognized|unknown action/i.test(String(result.message || ""))) {
-            if (bridgeResult) return bridgeResult;
-          }
-          return result || bridgeResult || { status: "success", message: "Saved to Google Sheet." };
+          return result || { status: "success", message: "Saved to Google Sheet." };
         } catch (err) {
           try {
             await fetch(GAS_WEB_APP_URL, {
@@ -9144,7 +9287,7 @@
           }
           gasCacheNeedsRefresh = true;
           lastGasFetchTimestamp = Date.now();
-          return bridgeResult || { status: "success", message: "Saved directly to Google Sheet." };
+          return { status: "success", message: "Saved directly to Google Sheet." };
         }
       };
 
@@ -9306,6 +9449,7 @@
 
       return {
         status: "success",
+        _liveSheetVerified: Boolean(sheetData && sheetData._liveSheetVerified),
         sessionConflict: Boolean(sheetData?.sessionConflict),
         properties: linked.properties,
         flats: linked.flats,
@@ -9395,20 +9539,6 @@
     }
 
     async function fetchFastMirrorInitialData() {
-      try {
-        const res = await Promise.race([
-          fetch("/api/gas-engine", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "getInitialData" })
-          }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }),
-          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 1500); })
-        ]);
-        if (res && res.status === "success" && Array.isArray(res.users) && res.users.length > 0) {
-          saveLocalUsersMaster(res.users);
-          return res;
-        }
-      } catch (e) {}
       return null;
     }
 
@@ -9420,10 +9550,9 @@
         return { status: "error", message: "Username and password are required." };
       }
 
-      // STEP 1: Fetch Google Sheet data.
-      // Start live GAS fetch AND fast mirror check in parallel so slow Apps Script cold starts (20-40s) never cause Login to time out!
+      // STEP 1: Fetch Google Sheet data directly from Google Apps Script
       const liveGasPromise = fetchGasSheetData(true, true);
-      const mirrorSnapshot = await fetchFastMirrorInitialData();
+      const mirrorSnapshot = null;
 
       const hasFallbackUsers =
         (mirrorSnapshot && Array.isArray(mirrorSnapshot.users) && mirrorSnapshot.users.length > 0) ||
@@ -9502,32 +9631,6 @@
           message: "This user account (@" + liveMatch.Username + ") has been blocked. Login access is strictly denied."
         };
       }
-
-      // Check server lockout status for this valid username (with fast 1.5s timeout so login never hangs)
-      try {
-        const lockCheckRes = await Promise.race([
-          fetch("/api/gas-engine", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "checkUserLockout", username: cleanUKey })
-          }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; }),
-          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 1500); })
-        ]);
-
-        if (lockCheckRes) {
-          if (lockCheckRes.status === "blocked" || lockCheckRes.isPermanentlyBlocked) {
-            return {
-              status: "blocked",
-              userExists: true,
-              isPermanentlyBlocked: true,
-              message: lockCheckRes.message || ("This user account (@" + liveMatch.Username + ") has been permanently blocked.")
-            };
-          }
-          if (lockCheckRes.status === "locked" || lockCheckRes.locked === true) {
-            return lockCheckRes;
-          }
-        }
-      } catch (e) {}
 
       // Also check lockout from the live Google Sheet's globalConfig.loginLockouts
       const sheetLockouts = (liveSheetData && liveSheetData.globalConfig && liveSheetData.globalConfig.loginLockouts) || {};
@@ -9898,13 +10001,54 @@
             if (targetU === String(activeUser || "").trim().toLowerCase()) {
               return { status: "error", message: "You cannot delete your own currently logged-in account." };
             }
+            const targetUserObj = usersList.find(function(u) {
+              return String(u.Username || "").trim().toLowerCase() === targetU;
+            }) || null;
+            const targetRole = String(targetUserObj?.Role || "").trim().toLowerCase();
+            const targetAadh = normalizeAadhaar12(targetUserObj?.AssignedAadhaar || targetUserObj?.AadhaarNumber || "");
+            const targetProp = String(targetUserObj?.AssignedProperty || "").trim().toLowerCase();
+            const targetFlat = String(targetUserObj?.AssignedFlat || "").trim().toLowerCase();
+
             usersList = usersList.filter(function(u) {
               return String(u.Username || "").trim().toLowerCase() !== targetU;
             });
             saveLocalUsersMaster(usersList);
-            const delRes = await sendGasSheetAction({ ...data, users: usersList });
+
+            // Cascade delete MaintenanceTickets raised by this renter user
+            if (!targetUserObj || targetRole === "renter") {
+              const prevTickets = Array.isArray(globalConfig.maintenanceTickets) ? globalConfig.maintenanceTickets : [];
+              const filteredTickets = prevTickets.filter(function(t) {
+                if (!t) return false;
+                const tBy = String(t.submittedBy || "").trim().toLowerCase();
+                if (tBy && tBy === targetU) return false;
+                const tAadh = normalizeAadhaar12(t.aadhaar || t.identityDocNumber || "");
+                if (targetAadh.length === 12 && tAadh === targetAadh) return false;
+                if (targetProp && targetFlat && isSamePropAndFlat(t.propertyName, t.flatName, targetProp, targetFlat)) {
+                  return false;
+                }
+                return true;
+              });
+              if (filteredTickets.length !== prevTickets.length) {
+                globalConfig = {
+                  ...globalConfig,
+                  maintenanceTickets: filteredTickets,
+                  updatedAt: new Date().toISOString()
+                };
+                saveLocalGlobalConfigMaster(globalConfig);
+              }
+            }
+
+            const delRes = await sendGasSheetAction({ ...data, users: usersList, globalConfig: globalConfig });
             if (delRes && Array.isArray(delRes.users) && delRes.users.length > 0) {
               saveLocalUsersMaster(delRes.users);
+            }
+            if (delRes && Array.isArray(delRes.maintenanceTickets)) {
+              globalConfig = {
+                ...loadLocalGlobalConfigMaster(),
+                maintenanceTickets: delRes.maintenanceTickets,
+                updatedAt: new Date().toISOString()
+              };
+              saveLocalGlobalConfigMaster(globalConfig);
             }
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("DELETE_USER", `Deleted user account @${rawTarget}`, activeUser || "Admin");
@@ -10091,6 +10235,7 @@
 
           case "requestMonthlyPhoto":
           case "reRequestMonthlyPhoto":
+          case "closeMonthlyPhotoRequest":
           case "saveScreenshotRequests": {
             const existingReqs = (globalConfig.screenshotRequests && typeof globalConfig.screenshotRequests === "object")
               ? { ...globalConfig.screenshotRequests }
@@ -10098,7 +10243,27 @@
             if (data.screenshotRequests && typeof data.screenshotRequests === "object") {
               Object.assign(existingReqs, data.screenshotRequests);
             }
-            if (data.requestKey && data.requestEntry && typeof data.requestEntry === "object") {
+            if (action === "closeMonthlyPhotoRequest" && data.monthYear) {
+              const targetMonth = normalizeMonthYear(data.monthYear);
+              const nowIso = new Date().toISOString();
+              Object.keys(existingReqs).forEach(function(k) {
+                const entry = existingReqs[k];
+                if (entry && normalizeMonthYear(entry.monthYear) === targetMonth) {
+                  existingReqs[k] = { ...entry, status: "closed", closedAt: nowIso, updatedAt: nowIso };
+                }
+              });
+              const globalKey = "ALL_ACTIVE__" + targetMonth;
+              existingReqs[globalKey] = {
+                ...(existingReqs[globalKey] || {}),
+                requestKey: globalKey,
+                scope: "ALL_ACTIVE",
+                status: "closed",
+                monthYear: targetMonth,
+                closedBy: data.requesterUsername || activeUser || "Admin",
+                closedAt: nowIso,
+                updatedAt: nowIso
+              };
+            } else if (data.requestKey && data.requestEntry && typeof data.requestEntry === "object") {
               existingReqs[String(data.requestKey)] = { ...data.requestEntry, updatedAt: new Date().toISOString() };
             }
             globalConfig = {
@@ -11075,11 +11240,15 @@
         const permId = "";
         const candidateProf = !isPlaceholderImageUrl(r.ProfileImageURL) ? r.ProfileImageURL : permProf;
         const candidateId = !isPlaceholderImageUrl(r.IdentityImageURL) ? r.IdentityImageURL : permId;
+        const candidateIdBack = !isPlaceholderImageUrl(r.IdentityBackImageURL) ? r.IdentityBackImageURL : "";
         if (isPlaceholderImageUrl(merged.ProfileImageURL) && !isPlaceholderImageUrl(candidateProf)) {
           merged.ProfileImageURL = normalizeGoogleDriveImageUrl(candidateProf);
         }
         if (isPlaceholderImageUrl(merged.IdentityImageURL) && !isPlaceholderImageUrl(candidateId)) {
           merged.IdentityImageURL = normalizeGoogleDriveImageUrl(candidateId);
+        }
+        if (isPlaceholderImageUrl(merged.IdentityBackImageURL) && !isPlaceholderImageUrl(candidateIdBack)) {
+          merged.IdentityBackImageURL = normalizeGoogleDriveImageUrl(candidateIdBack);
         }
       });
       if (rawDigits.length === 12) {
@@ -11184,11 +11353,12 @@
         }
         if (updatedFields.ProfileImageURL !== undefined && (updatedFields.ProfileImageURL !== "" || updatedFields.forceClearProfileImage)) {
           r.ProfileImageURL = updatedFields.ProfileImageURL;
-          
         }
         if (updatedFields.IdentityImageURL !== undefined && (updatedFields.IdentityImageURL !== "" || updatedFields.forceClearIdentityImage)) {
           r.IdentityImageURL = updatedFields.IdentityImageURL;
-          
+        }
+        if (updatedFields.IdentityBackImageURL !== undefined && (updatedFields.IdentityBackImageURL !== "" || updatedFields.forceClearIdentityBackImage)) {
+          r.IdentityBackImageURL = updatedFields.IdentityBackImageURL;
         }
         r.UpdatedAt = nowIso;
         syncedStays.push(r);
@@ -11234,6 +11404,9 @@
           }
           if (updatedFields.IdentityImageURL !== undefined && (updatedFields.IdentityImageURL !== "" || updatedFields.forceClearIdentityImage)) {
             updateRenterImageSlotUI("identity", updatedFields.IdentityImageURL);
+          }
+          if (updatedFields.IdentityBackImageURL !== undefined && (updatedFields.IdentityBackImageURL !== "" || updatedFields.forceClearIdentityBackImage)) {
+            updateRenterImageSlotUI("identity_back", updatedFields.IdentityBackImageURL);
           }
         }
       }
@@ -11437,7 +11610,7 @@
       pendingReactivatingRenter = merged;
       document.getElementById("reactivateTargetRenterId").value = merged.RenterID || "";
       document.getElementById("reactivateTargetName").value = (merged.RenterName || "") + (merged.IdentityDocNumber ? " (Aadhaar: " + merged.IdentityDocNumber + ")" : "");
-      document.getElementById("reactivateJoinDate").value = new Date().toISOString().split("T")[0];
+      document.getElementById("reactivateJoinDate").value = getLocalTodayIsoDate();
       document.getElementById("reactivateRentAmount").value = merged.RentAmount || selectedFlat?.RentAmount || 0;
 
       sortPropertiesAlphabetically(DB.properties);
@@ -11461,7 +11634,7 @@
       if (!pendingReactivatingRenter) return;
       const destProp = document.getElementById("reactivatePropertySelect")?.value;
       const destFlat = document.getElementById("reactivateFlatSelect")?.value;
-      const joinDate = document.getElementById("reactivateJoinDate")?.value || new Date().toISOString().split("T")[0];
+      const joinDate = document.getElementById("reactivateJoinDate")?.value || getLocalTodayIsoDate();
       const rentAmt = parseFloat(document.getElementById("reactivateRentAmount")?.value) || 0;
 
       if (!destProp || !destFlat) {
@@ -11491,6 +11664,7 @@
         IdentityDocNumber: formattedAadhaar,
         ProfileImageURL: merged.ProfileImageURL || "",
         IdentityImageURL: merged.IdentityImageURL || "",
+        IdentityBackImageURL: merged.IdentityBackImageURL || "",
         MobileNumber: merged.MobileNumber || "",
         AltMobileNumber: merged.AltMobileNumber || "",
         Address: merged.Address || "",
@@ -11515,7 +11689,8 @@
         TotalFamilyMembers: newActiveRenterRecord.TotalFamilyMembers,
         FamilyMembersList: newActiveRenterRecord.FamilyMembersList,
         ProfileImageURL: newActiveRenterRecord.ProfileImageURL,
-        IdentityImageURL: newActiveRenterRecord.IdentityImageURL
+        IdentityImageURL: newActiveRenterRecord.IdentityImageURL,
+        IdentityBackImageURL: newActiveRenterRecord.IdentityBackImageURL
       });
 
       saveRenterTenureMeta(
@@ -11579,7 +11754,8 @@
         endDate: "",
         rentAmount: rentAmt,
         profileImageUrl: newActiveRenterRecord.ProfileImageURL || "",
-        identityImageUrl: newActiveRenterRecord.IdentityImageURL || ""
+        identityImageUrl: newActiveRenterRecord.IdentityImageURL || "",
+        identityBackImageUrl: newActiveRenterRecord.IdentityBackImageURL || ""
       });
     }
 
@@ -11596,7 +11772,7 @@
         return triggerSideToast("No Renter in Flat", "There is no active renter in this flat to shift.", false);
       }
 
-      const todayStr = new Date().toISOString().split("T")[0];
+      const todayStr = getLocalTodayIsoDate();
       const currentAadhaar = formatAadhaarWithHyphens(document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || "");
       const summaryEl = document.getElementById("shiftCurrentRenterDisplay") || document.getElementById("shiftCurrentRenterSummary");
       if (summaryEl) {
@@ -11663,7 +11839,7 @@
       if (!selectedFlat) return;
       const destProp = ((document.getElementById("shiftTargetPropSelect") || (document.getElementById("shiftTargetPropSelect") || document.getElementById("shiftTargetPropertySelect")))?.value || "").trim();
       const destFlat = (document.getElementById("shiftTargetFlatSelect")?.value || "").trim();
-      const shiftDate = (document.getElementById("shiftEffectiveDate") || (document.getElementById("shiftEffectiveDate") || document.getElementById("shiftDateInput")))?.value || new Date().toISOString().split("T")[0];
+      const shiftDate = (document.getElementById("shiftEffectiveDate") || (document.getElementById("shiftEffectiveDate") || document.getElementById("shiftDateInput")))?.value || getLocalTodayIsoDate();
       const newRentAmt = parseFloat(document.getElementById("shiftTargetRentAmount")?.value) || 0;
 
       if (!destProp || !destFlat) {
@@ -11691,7 +11867,10 @@
           : (activeFlatRenterObj?.ProfileImageURL || ""),
         IdentityImageURL: !isPlaceholderImageUrl(document.getElementById("identityPicturePreview")?.src)
           ? document.getElementById("identityPicturePreview").src
-          : (activeFlatRenterObj?.IdentityImageURL || "")
+          : (activeFlatRenterObj?.IdentityImageURL || ""),
+        IdentityBackImageURL: !isPlaceholderImageUrl(document.getElementById("identityBackPicturePreview")?.src)
+          ? document.getElementById("identityBackPicturePreview").src
+          : (activeFlatRenterObj?.IdentityBackImageURL || "")
       };
 
       const { merged } = consolidateRenterHistoryDetailsByAadhaar(formRenterSnapshot);
@@ -11737,6 +11916,7 @@
         FamilyMembersList: Array.isArray(merged.FamilyMembersList) ? JSON.parse(JSON.stringify(merged.FamilyMembersList)) : [],
         ProfileImageURL: merged.ProfileImageURL || "",
         IdentityImageURL: merged.IdentityImageURL || "",
+        IdentityBackImageURL: merged.IdentityBackImageURL || "",
         JoinDate: shiftDate,
         EndDate: "",
         Status: "Active",
@@ -11763,7 +11943,8 @@
         TotalFamilyMembers: shiftedRenterRecord.TotalFamilyMembers,
         FamilyMembersList: shiftedRenterRecord.FamilyMembersList,
         ProfileImageURL: shiftedRenterRecord.ProfileImageURL,
-        IdentityImageURL: shiftedRenterRecord.IdentityImageURL
+        IdentityImageURL: shiftedRenterRecord.IdentityImageURL,
+        IdentityBackImageURL: shiftedRenterRecord.IdentityBackImageURL
       });
 
       if (targetFlatObj) {
@@ -11819,7 +12000,8 @@
           endDate: shiftDate,
           rentAmount: oldRenterRecord.RentAmount || 0,
           profileImageUrl: oldRenterRecord.ProfileImageURL || "",
-          identityImageUrl: oldRenterRecord.IdentityImageURL || ""
+          identityImageUrl: oldRenterRecord.IdentityImageURL || "",
+          identityBackImageUrl: oldRenterRecord.IdentityBackImageURL || ""
         });
       }
 
@@ -11841,7 +12023,8 @@
         endDate: "",
         rentAmount: newRentAmt,
         profileImageUrl: shiftedRenterRecord.ProfileImageURL || "",
-        identityImageUrl: shiftedRenterRecord.IdentityImageURL || ""
+        identityImageUrl: shiftedRenterRecord.IdentityImageURL || "",
+        identityBackImageUrl: shiftedRenterRecord.IdentityBackImageURL || ""
       });
     }
 
@@ -11879,6 +12062,14 @@
     }
 
     
+    function getLocalTodayIsoDate() {
+      const d = new Date();
+      const yr = d.getFullYear();
+      const mo = String(d.getMonth() + 1).padStart(2, "0");
+      const da = String(d.getDate()).padStart(2, "0");
+      return `${yr}-${mo}-${da}`;
+    }
+
     /**
      * Requirement 4 & 8: Display Year, Month, and Date ONLY (strictly NO time)
      */
@@ -11886,8 +12077,7 @@
       if (!rawDate) return "--";
       const s = String(rawDate).trim().replace(/^'+/, "");
       if (!s || s === "undefined" || s === "null" || s === "Invalid Date" || s === "--") return "--";
-      if (s.includes("T")) return s.split("T")[0];
-      if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
       const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
       if (dmyMatch) {
         const d = dmyMatch[1].padStart(2, "0");
@@ -11895,6 +12085,17 @@
         const y = dmyMatch[3];
         return `${y}-${m}-${d}`;
       }
+      if (s.includes("T")) {
+        const parsedT = new Date(s);
+        if (!isNaN(parsedT.getTime())) {
+          const y = parsedT.getFullYear();
+          const m = String(parsedT.getMonth() + 1).padStart(2, "0");
+          const d = String(parsedT.getDate()).padStart(2, "0");
+          return `${y}-${m}-${d}`;
+        }
+        return s.split("T")[0];
+      }
+      if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
       const parsed = new Date(s);
       if (!isNaN(parsed.getTime())) {
         const y = parsed.getFullYear();
@@ -13694,7 +13895,8 @@ function formatMonthLabel(rawVal) {
       const normFlat = String(flatName || "").trim().toLowerCase();
       const normRenterId = String(renterId || "").trim().toLowerCase();
       const normAadh = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
-      const result = { hasMonthRequest: false, reRequestedCats: {} };
+      const result = { hasMonthRequest: false, isClosed: false, reRequestedCats: {} };
+      let hasClosedEntry = false;
 
       Object.keys(reqMap).forEach(k => {
         const entry = reqMap[k];
@@ -13715,13 +13917,18 @@ function formatMonthLabel(rawVal) {
           (normProp && normFlat && eProp === normProp && eFlat === normFlat);
 
         if (!matchesRenter) return;
-        result.hasMonthRequest = true;
         const st = String(entry.status || "").toLowerCase();
+        if (st === "closed") {
+          hasClosedEntry = true;
+          return;
+        }
+        result.hasMonthRequest = true;
         const cat = String(entry.category || "").trim().toLowerCase();
         if (cat && st === "re-requested") {
           result.reRequestedCats[cat] = entry;
         }
       });
+      result.isClosed = hasClosedEntry && !result.hasMonthRequest;
       return result;
     }
 
@@ -13738,6 +13945,7 @@ function formatMonthLabel(rawVal) {
       Object.keys(reqMap).forEach(k => {
         const entry = reqMap[k];
         if (!entry || typeof entry !== "object") return;
+        if (String(entry.status || "").toLowerCase() === "closed") return;
         const entryMonth = normalizeMonthYear(entry.monthYear);
         if (!entryMonth) return;
         const scopeType = String(entry.scope || "").toUpperCase();
@@ -14014,6 +14222,7 @@ function formatMonthLabel(rawVal) {
 
         const res = await sendFirebaseAction({
           action: "uploadRenterMonthlyPhoto",
+          username: activeUser || "",
           propertyName: propName,
           flatName: flatName,
           renterId: renterId,
@@ -14027,6 +14236,10 @@ function formatMonthLabel(rawVal) {
           mimeType: "image/jpeg",
           base64Data: compressedDataUrl
         });
+
+        if (res && res.status === "error") {
+          throw new Error(res.message || "Upload failed on server.");
+        }
 
         const rawReturnedUrl = res && (res.imageUrl || res.previewUrl || res.url)
           ? (res.imageUrl || res.previewUrl || res.url)
@@ -14065,6 +14278,7 @@ function formatMonthLabel(rawVal) {
             r[targetPhotoCol] = driveUrl;
           }
         });
+        saveLocalGlobalConfigMaster(DB.globalConfig);
         saveDbSnapshotToCache();
         renderAllDashboardUI();
         if (typeof renderAdminScreenshotVerificationGrid === "function") {
@@ -15745,8 +15959,10 @@ function formatMonthLabel(rawVal) {
         );
         const rawProf = r.DriveProfilePreviewUrl || r.ProfileImageURL || prevMatch?.ProfileImageURL || "";
         const rawId = r.DriveIdentityPreviewUrl || r.IdentityImageURL || prevMatch?.IdentityImageURL || "";
+        const rawIdBack = r.DriveIdentityBackPreviewUrl || r.IdentityBackImageURL || prevMatch?.IdentityBackImageURL || "";
         if (rawProf) r.ProfileImageURL = rawProf.startsWith("data:image") ? rawProf : normalizeGoogleDriveImageUrl(rawProf);
         if (rawId) r.IdentityImageURL = rawId.startsWith("data:image") ? rawId : normalizeGoogleDriveImageUrl(rawId);
+        if (rawIdBack) r.IdentityBackImageURL = rawIdBack.startsWith("data:image") ? rawIdBack : normalizeGoogleDriveImageUrl(rawIdBack);
         if (r.IdentityDocNumber) r.IdentityDocNumber = formatAadhaarWithHyphens(r.IdentityDocNumber);
         if (r.MobileNumber) r.MobileNumber = sanitizeContactPhoneDisplay(r.MobileNumber);
         if (r.AltMobileNumber) r.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
@@ -16121,103 +16337,81 @@ function formatMonthLabel(rawVal) {
       }
 
       try {
-        // Refresh from live Google Sheet in background without forcing redundant requests on every keystroke
-        fetchGasSheetData(false).catch(() => {});
-
-        const res = await fetch("/api/gas-engine", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "checkUserLockout", username: cleanVal })
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          const currentVal = String(document.getElementById("loginUsername")?.value || "").trim().toLowerCase();
-          if (currentVal !== cleanVal) return;
-
-          if (data && data.userExists === false) {
-            resetLoginLockoutState(cleanVal);
-            if (badgeEl) {
-              badgeEl.style.display = "none";
-              badgeEl.innerHTML = "";
-            }
-            if (noteEl) {
-              noteEl.style.display = "none";
-              noteEl.innerHTML = "";
-            }
-            return;
-          }
-
-          if (data && (data.status === "blocked" || data.isPermanentlyBlocked)) {
-            const state = getLoginLockoutState(cleanVal);
-            state.username = cleanVal;
-            state.stage = 4;
-            state.failedInStage = 0;
-            state.lockedUntil = 0;
-            state.isPermanentlyBlocked = true;
-            saveLoginLockoutState(cleanVal, state);
-            updateLoginLockoutUI(cleanVal);
-
-            if (badgeEl) {
-              badgeEl.style.display = "inline-flex";
-              badgeEl.style.background = "rgba(239, 68, 68, 0.22)";
-              badgeEl.style.color = "#fca5a5";
-              badgeEl.style.border = "1px solid #ef4444";
-              badgeEl.innerHTML = `<i class="fa-solid fa-ban"></i> Blocked`;
-            }
-            if (noteEl) {
-              noteEl.style.display = "block";
-              noteEl.innerHTML = `<span style="color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> Username @${cleanVal} is permanently blocked.</span>`;
-            }
-            return;
-          }
-
-          if (data && (data.status === "locked" || data.locked === true)) {
-            const state = getLoginLockoutState(cleanVal);
-            state.username = cleanVal;
-            state.stage = Number(data.tier) || state.stage || 1;
-            state.failedInStage = 0;
-            state.lockedUntil = data.lockedUntil;
-            state.lockedTierLabel = data.tierLabel || "1 minute";
-            saveLoginLockoutState(cleanVal, state);
-            updateLoginLockoutUI(cleanVal);
-
-            const remMin = data.remainingMinutes || Math.max(1, Math.ceil((data.lockedUntil - Date.now()) / 60000));
-            const remSec = data.remainingSeconds || Math.max(1, Math.ceil((data.lockedUntil - Date.now()) / 1000));
-            if (badgeEl) {
-              badgeEl.style.display = "inline-flex";
-              badgeEl.style.background = "rgba(239, 68, 68, 0.22)";
-              badgeEl.style.color = "#f87171";
-              badgeEl.style.border = "1px solid rgba(239, 68, 68, 0.55)";
-              badgeEl.innerHTML = `<i class="fa-solid fa-lock"></i> Locked`;
-            }
-            if (noteEl) {
-              noteEl.style.display = "block";
-              noteEl.innerHTML = `<span style="color:#f87171;"><i class="fa-solid fa-shield-halved"></i> Username locked for ${data.tierLabel || "1 minute"}. Remaining: ${remMin}m (${remSec}s).</span>`;
-            }
-            return;
-          }
-
-          if (data && data.userExists) {
-            const state = getLoginLockoutState(cleanVal);
-            state.username = cleanVal;
-            state.stage = Number(data.tier) || 0;
-            state.failedInStage = Number(data.attempts) || 0;
-            state.lockedUntil = 0;
-            state.isPermanentlyBlocked = false;
-            saveLoginLockoutState(cleanVal, state);
-            updateLoginLockoutUI(cleanVal);
-            if (badgeEl) {
-              badgeEl.style.display = "none";
-              badgeEl.innerHTML = "";
-            }
-            if (noteEl) {
-              noteEl.style.display = "none";
-              noteEl.innerHTML = "";
-            }
-            return;
-          }
+        if (!Array.isArray(DB.users) || DB.users.length === 0) {
+          await fetchGasSheetData(false).catch(() => {});
+        } else {
+          fetchGasSheetData(false).catch(() => {});
         }
+
+        const currentVal = String(document.getElementById("loginUsername")?.value || "").trim().toLowerCase();
+        if (currentVal !== cleanVal) return;
+
+        const usersList = Array.isArray(DB.users) && DB.users.length > 0 ? DB.users : loadLocalUsersMaster();
+        const matchedUser = usersList.find(u => String(u.Username || "").trim().toLowerCase() === cleanVal);
+
+        if (usersList.length > 0 && !matchedUser) {
+          resetLoginLockoutState(cleanVal);
+          if (badgeEl) { badgeEl.style.display = "none"; badgeEl.innerHTML = ""; }
+          if (noteEl) { noteEl.style.display = "none"; noteEl.innerHTML = ""; }
+          return;
+        }
+
+        const liveSt = String(matchedUser?.Status || matchedUser?.AccountStatus || "Active").trim().toLowerCase();
+        const sheetLocks = (DB.globalConfig && DB.globalConfig.loginLockouts) || {};
+        const sheetLock = sheetLocks[cleanVal] || null;
+
+        if (liveSt === "blocked" || liveSt === "suspended" || liveSt === "inactive" || (sheetLock && sheetLock.isPermanentlyBlocked)) {
+          const state = getLoginLockoutState(cleanVal);
+          state.username = cleanVal;
+          state.stage = 4;
+          state.failedInStage = 0;
+          state.lockedUntil = 0;
+          state.isPermanentlyBlocked = true;
+          saveLoginLockoutState(cleanVal, state);
+          updateLoginLockoutUI(cleanVal);
+
+          if (badgeEl) {
+            badgeEl.style.display = "inline-flex";
+            badgeEl.style.background = "rgba(239, 68, 68, 0.22)";
+            badgeEl.style.color = "#fca5a5";
+            badgeEl.style.border = "1px solid #ef4444";
+            badgeEl.innerHTML = `<i class="fa-solid fa-ban"></i> Blocked`;
+          }
+          if (noteEl) {
+            noteEl.style.display = "block";
+            noteEl.innerHTML = `<span style="color:#f87171;"><i class="fa-solid fa-triangle-exclamation"></i> Username @${cleanVal} is permanently blocked.</span>`;
+          }
+          return;
+        }
+
+        if (sheetLock && sheetLock.lockedUntil && Number(sheetLock.lockedUntil) > Date.now()) {
+          const state = getLoginLockoutState(cleanVal);
+          state.username = cleanVal;
+          state.stage = Number(sheetLock.tier) || state.stage || 1;
+          state.failedInStage = 0;
+          state.lockedUntil = Number(sheetLock.lockedUntil);
+          state.lockedTierLabel = sheetLock.tierLabel || "1 minute";
+          saveLoginLockoutState(cleanVal, state);
+          updateLoginLockoutUI(cleanVal);
+
+          const remMin = Math.max(1, Math.ceil((state.lockedUntil - Date.now()) / 60000));
+          const remSec = Math.max(1, Math.ceil((state.lockedUntil - Date.now()) / 1000));
+          if (badgeEl) {
+            badgeEl.style.display = "inline-flex";
+            badgeEl.style.background = "rgba(239, 68, 68, 0.22)";
+            badgeEl.style.color = "#f87171";
+            badgeEl.style.border = "1px solid rgba(239, 68, 68, 0.55)";
+            badgeEl.innerHTML = `<i class="fa-solid fa-lock"></i> Locked`;
+          }
+          if (noteEl) {
+            noteEl.style.display = "block";
+            noteEl.innerHTML = `<span style="color:#f87171;"><i class="fa-solid fa-shield-halved"></i> Username locked for ${state.lockedTierLabel}. Remaining: ${remMin}m (${remSec}s).</span>`;
+          }
+          return;
+        }
+
+        if (badgeEl) { badgeEl.style.display = "none"; badgeEl.innerHTML = ""; }
+        if (noteEl) { noteEl.style.display = "none"; noteEl.innerHTML = ""; }
       } catch (e) {
         if (badgeEl) {
           badgeEl.style.display = "none";
@@ -16402,45 +16596,17 @@ function formatMonthLabel(rawVal) {
           return;
         }
 
-        // Valid username with wrong password -> Record failed attempt centrally on server & Google Sheet (4-Stage Progressive Lockout)
+        // Valid username with wrong password -> Record failed attempt directly on Google Apps Script (4-Stage Progressive Lockout)
         const failBodyStr = JSON.stringify({ action: "recordFailedAttempt", username: cleanU });
-        const engineFailOutcome = await Promise.race([
-          fetch("/api/gas-engine", {
+        const serverOutcome = await Promise.race([
+          fetch(GAS_WEB_APP_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: failBodyStr
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: failBodyStr,
+            redirect: "follow"
           }).then(r => r.ok ? r.json() : null).catch(() => null),
-          new Promise(resolve => setTimeout(() => resolve(null), 2500))
+          new Promise(resolve => setTimeout(() => resolve(null), 5000))
         ]);
-
-        fetch(GAS_WEB_APP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: failBodyStr,
-          redirect: "follow"
-        }).then(r => r.ok ? r.json() : null).then(gasOut => {
-          if (gasOut && gasOut.userExists) {
-            const st = getLoginLockoutState(cleanU);
-            if (gasOut.status === "blocked" || gasOut.isPermanentlyBlocked) {
-              st.stage = 4;
-              st.failedInStage = 0;
-              st.lockedUntil = 0;
-              st.isPermanentlyBlocked = true;
-            } else if (gasOut.status === "locked" || gasOut.locked) {
-              st.stage = Number(gasOut.tier) || st.stage || 1;
-              st.failedInStage = 0;
-              st.lockedUntil = Number(gasOut.lockedUntil) || st.lockedUntil;
-              st.lockedTierLabel = gasOut.tierLabel || st.lockedTierLabel || "1 minute";
-            } else if (gasOut.status === "attempt_counted") {
-              st.stage = Number(gasOut.tier !== undefined ? gasOut.tier : st.stage) || 0;
-              st.failedInStage = Number(gasOut.attempts) || st.failedInStage;
-            }
-            saveLoginLockoutState(cleanU, st);
-            updateLoginLockoutUI(cleanU);
-          }
-        }).catch(() => {});
-
-        const serverOutcome = engineFailOutcome;
 
         if (serverOutcome && serverOutcome.userExists === false) {
           resetLoginLockoutState(cleanU);
@@ -16549,6 +16715,7 @@ function formatMonthLabel(rawVal) {
           hasCompletedInitialSync = true;
 
           const incomingUsers = Array.isArray(res.users) ? res.users : [];
+          const isVerifiedSheetUsers = Boolean(res._liveSheetVerified === true && incomingUsers.length > 0);
           const matchedServerUser = incomingUsers.find(
             u => String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase()
           );
@@ -16561,6 +16728,7 @@ function formatMonthLabel(rawVal) {
           const localTokTs = extractSessionTokenTimestamp(localTok);
           const withinLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 12000;
           if (
+            isVerifiedSheetUsers &&
             !withinLoginGrace &&
             (
               res.sessionConflict === true ||
@@ -16575,8 +16743,8 @@ function formatMonthLabel(rawVal) {
             return;
           }
 
-          // If the currently logged-in user's ID (including Admin) was deleted or renamed in Google Sheets, log out immediately!
-          if (res.userDeleted === true || res.userExists === false || !activeUserStillInSheet) {
+          // Only auto-logout when the live Google Sheet was genuinely verified and returned non-empty users
+          if (isVerifiedSheetUsers && (res.userDeleted === true || res.userExists === false || !activeUserStillInSheet)) {
             DB.properties = [];
             DB.flats = [];
             DB.renters = [];
@@ -16592,14 +16760,14 @@ function formatMonthLabel(rawVal) {
             return;
           }
 
-          if (String(res.userStatus || res.accountStatus || matchedServerUser?.Status || matchedServerUser?.AccountStatus || "").toLowerCase() === "blocked") {
+          if (isVerifiedSheetUsers && String(res.userStatus || res.accountStatus || matchedServerUser?.Status || matchedServerUser?.AccountStatus || "").toLowerCase() === "blocked") {
             performConfirmedLogout();
             showAccountBlockedModal("Your account has been blocked by an administrator.");
             return;
           }
 
           const savedSessionPass = sessionStorage.getItem("active_session_password") || localStorage.getItem("portal_session_pass_" + String(activeUser || "").trim().toLowerCase()) || "";
-          if (matchedServerUser && savedSessionPass && String(matchedServerUser.Password || "").trim() && String(matchedServerUser.Password || "").trim() !== savedSessionPass) {
+          if (isVerifiedSheetUsers && matchedServerUser && savedSessionPass && String(matchedServerUser.Password || "").trim() && String(matchedServerUser.Password || "").trim() !== savedSessionPass) {
             performConfirmedLogout();
             setTimeout(() => {
               triggerSideToast("Password Changed", "Your account password was changed. Please log in with your new password.", false);
@@ -16619,8 +16787,10 @@ function formatMonthLabel(rawVal) {
             );
             const rawProf = r.DriveProfilePreviewUrl || r.ProfileImageURL || prevMatch?.ProfileImageURL || "";
             const rawId = r.DriveIdentityPreviewUrl || r.IdentityImageURL || prevMatch?.IdentityImageURL || "";
+            const rawIdBack = r.DriveIdentityBackPreviewUrl || r.IdentityBackImageURL || prevMatch?.IdentityBackImageURL || "";
             if (rawProf) r.ProfileImageURL = rawProf.startsWith("data:image") ? rawProf : normalizeGoogleDriveImageUrl(rawProf);
             if (rawId) r.IdentityImageURL = rawId.startsWith("data:image") ? rawId : normalizeGoogleDriveImageUrl(rawId);
+            if (rawIdBack) r.IdentityBackImageURL = rawIdBack.startsWith("data:image") ? rawIdBack : normalizeGoogleDriveImageUrl(rawIdBack);
             if (r.IdentityDocNumber) r.IdentityDocNumber = formatAadhaarWithHyphens(r.IdentityDocNumber);
             if (r.MobileNumber) r.MobileNumber = sanitizeContactPhoneDisplay(r.MobileNumber);
             if (r.AltMobileNumber) r.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
@@ -16655,7 +16825,9 @@ function formatMonthLabel(rawVal) {
             l: incomingLoginHistory,
             fd: incomingFdRecords,
             kh: incomingKhetRecords,
-            kharch: incomingKharchRecords
+            kharch: incomingKharchRecords,
+            rmp: res.globalConfig?.renterMonthlyPhotos || {},
+            srq: res.globalConfig?.screenshotRequests || {}
           });
 
           const hasDataChanged = incomingHash !== lastSyncedDataHash;
@@ -16677,14 +16849,19 @@ function formatMonthLabel(rawVal) {
           syncServerBackgroundsToLocal(res.globalConfig || res, res.bgLoginUrl || res.userBgLogin || "", res.bgDashboardUrl || res.userBgDashboard || "", Boolean(res.globalConfig));
           if (res.globalConfig && typeof res.globalConfig === "object") {
             if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-            const mergedMonthlyPhotos = {
-              ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
-              ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
-            };
-            const mergedScreenshotReqs = {
-              ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
-              ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
-            };
+            const trustServerMonthly = Boolean(res._liveSheetVerified && !pendingWriteCount);
+            const mergedMonthlyPhotos = trustServerMonthly
+              ? ((res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object") ? res.globalConfig.renterMonthlyPhotos : {})
+              : {
+                  ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
+                  ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
+                };
+            const mergedScreenshotReqs = trustServerMonthly
+              ? ((res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object") ? res.globalConfig.screenshotRequests : {})
+              : {
+                  ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
+                  ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
+                };
             DB.globalConfig = {
               ...DB.globalConfig,
               ...res.globalConfig,
@@ -16755,6 +16932,10 @@ function formatMonthLabel(rawVal) {
 
           if (hasDataChanged || forceRender) {
             renderAllDashboardUI();
+            const ssvPanel = document.getElementById("setSubScreenshotVerification");
+            if (ssvPanel && ssvPanel.classList.contains("active") && typeof renderAdminScreenshotVerificationGrid === "function") {
+              renderAdminScreenshotVerificationGrid();
+            }
           }
         }
       } catch (err) {
@@ -16931,18 +17112,12 @@ function formatMonthLabel(rawVal) {
       const countedBillIds = new Set();
 
       targetFlats.forEach(flat => {
-        const flatRenters = (DB.renters || []).filter(r =>
-          isSamePropAndFlat(r.PropertyName, r.FlatName, flat.PropertyName, flat.FlatName)
+        const activeFlatRenters = (DB.renters || []).filter(r =>
+          isSamePropAndFlat(r.PropertyName, r.FlatName, flat.PropertyName, flat.FlatName) &&
+          String(r.Status || "").trim().toLowerCase() === "active"
         );
 
-        // Sort active renters first so current stay claims its bills first
-        flatRenters.sort((a, b) => {
-          const aAct = String(a.Status || "").trim().toLowerCase() === "active" ? 0 : 1;
-          const bAct = String(b.Status || "").trim().toLowerCase() === "active" ? 0 : 1;
-          return aAct - bAct;
-        });
-
-        flatRenters.forEach(renter => {
+        activeFlatRenters.forEach(renter => {
           const renterBills = getBillsForSpecificRenter(flat.PropertyName, flat.FlatName, renter).filter(b => {
             const key = String(b.BillID || `${b.PropertyName}_${b.FlatName}_${b.MonthYear}_${b.TenantName}`);
             if (countedBillIds.has(key)) return false;
@@ -16957,7 +17132,6 @@ function formatMonthLabel(rawVal) {
               const billed = parseFloat(b.TotalBilled) || 0;
               const carry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
               const paid = parseFloat(b.PaidAmount) || 0;
-              // Include initial opening carry on the first bill of the stay if any, and standalone charges for all bills
               const standalone = idx === 0 ? billed : (billed - carry);
               stayStandaloneBilled += standalone;
               stayPaid += paid;
@@ -16969,33 +17143,6 @@ function formatMonthLabel(rawVal) {
             }
           }
         });
-
-        // Also include any bills recorded on this flat that were not matched to a specific renter profile above
-        const unlinkedFlatBills = (DB.bills || []).filter(b => {
-          if (!isSamePropAndFlat(b.PropertyName, b.FlatName, flat.PropertyName, flat.FlatName)) return false;
-          const key = String(b.BillID || `${b.PropertyName}_${b.FlatName}_${b.MonthYear}_${b.TenantName}`);
-          if (countedBillIds.has(key)) return false;
-          countedBillIds.add(key);
-          return true;
-        });
-
-        if (unlinkedFlatBills.length > 0) {
-          let unlinkedStandaloneBilled = 0;
-          let unlinkedPaid = 0;
-          unlinkedFlatBills.forEach((b, idx) => {
-            const billed = parseFloat(b.TotalBilled) || 0;
-            const carry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
-            const paid = parseFloat(b.PaidAmount) || 0;
-            const standalone = idx === 0 ? billed : (billed - carry);
-            unlinkedStandaloneBilled += standalone;
-            unlinkedPaid += paid;
-          });
-          totalProfit += unlinkedPaid;
-          const unlinkedNetDue = Math.round((unlinkedStandaloneBilled - unlinkedPaid) * 100) / 100;
-          if (unlinkedNetDue > 0) {
-            totalLoss += unlinkedNetDue;
-          }
-        }
       });
 
       totalProfit = Math.round(totalProfit * 100) / 100;
@@ -18816,7 +18963,26 @@ function formatMonthLabel(rawVal) {
         "Delete Registered User",
         `Are you sure you want to permanently delete user @${targetUsername}?`,
         async () => {
+          const targetUserObj = (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === targetClean) || null;
+          const targetRole = String(targetUserObj?.Role || "").trim().toLowerCase();
+          const targetAadh = normalizeAadhaar12(targetUserObj?.AssignedAadhaar || targetUserObj?.AadhaarNumber || "");
+          const targetProp = String(targetUserObj?.AssignedProperty || "").trim().toLowerCase();
+          const targetFlat = String(targetUserObj?.AssignedFlat || "").trim().toLowerCase();
+
           DB.users = (DB.users || []).filter(u => String(u.Username || "").trim().toLowerCase() !== targetClean);
+          if ((!targetUserObj || targetRole === "renter") && DB.globalConfig && Array.isArray(DB.globalConfig.maintenanceTickets)) {
+            DB.globalConfig.maintenanceTickets = DB.globalConfig.maintenanceTickets.filter(t => {
+              if (!t) return false;
+              const tBy = String(t.submittedBy || "").trim().toLowerCase();
+              if (tBy && tBy === targetClean) return false;
+              const tAadh = normalizeAadhaar12(t.aadhaar || t.identityDocNumber || "");
+              if (targetAadh.length === 12 && tAadh === targetAadh) return false;
+              if (targetProp && targetFlat && isSamePropAndFlat(t.propertyName, t.flatName, targetProp, targetFlat)) return false;
+              return true;
+            });
+            saveLocalGlobalConfigMaster(DB.globalConfig);
+            if (typeof renderAdminMaintenanceTickets === "function") renderAdminMaintenanceTickets();
+          }
           if (typeof removeVerifiedUserAuth === "function") {
             try { removeVerifiedUserAuth(targetUsername); } catch (e) {}
           }
@@ -18947,32 +19113,60 @@ function formatMonthLabel(rawVal) {
       const paymentProofs = typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : [];
       const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
 
-      // Update status banner for the selected month
+      // Update status banner & Close button state for the selected month
       const statusBanner = document.getElementById("adminScreenshotRequestStatusBanner");
-      if (statusBanner) {
-        const hasGlobalMonthReq = Object.keys(screenshotReqMap).some(k => {
-          const entry = screenshotReqMap[k];
-          return entry && String(entry.scope || "").toUpperCase() === "ALL_ACTIVE" && normalizeMonthYear(entry.monthYear) === selectedMonth;
-        });
-        const specificReqCount = Object.keys(screenshotReqMap).filter(k => {
-          const entry = screenshotReqMap[k];
-          return entry && normalizeMonthYear(entry.monthYear) === selectedMonth && String(entry.scope || "").toUpperCase() !== "ALL_ACTIVE";
-        }).length;
+      const closeReqBtn = document.getElementById("btnCloseMonthlyScreenshotRequest");
+      const hasGlobalMonthReq = Object.keys(screenshotReqMap).some(k => {
+        const entry = screenshotReqMap[k];
+        return entry &&
+          String(entry.scope || "").toUpperCase() === "ALL_ACTIVE" &&
+          normalizeMonthYear(entry.monthYear) === selectedMonth &&
+          String(entry.status || "").toLowerCase() !== "closed";
+      });
+      const specificReqCount = Object.keys(screenshotReqMap).filter(k => {
+        const entry = screenshotReqMap[k];
+        return entry &&
+          normalizeMonthYear(entry.monthYear) === selectedMonth &&
+          String(entry.scope || "").toUpperCase() !== "ALL_ACTIVE" &&
+          String(entry.status || "").toLowerCase() !== "closed";
+      }).length;
+      const hasAnyOpenReq = hasGlobalMonthReq || specificReqCount > 0;
+      const isMonthExplicitlyClosed = !hasAnyOpenReq && Object.keys(screenshotReqMap).some(k => {
+        const entry = screenshotReqMap[k];
+        return entry &&
+          normalizeMonthYear(entry.monthYear) === selectedMonth &&
+          String(entry.status || "").toLowerCase() === "closed";
+      });
 
-        if (hasGlobalMonthReq || specificReqCount > 0) {
+      if (closeReqBtn) {
+        closeReqBtn.disabled = !hasAnyOpenReq;
+        closeReqBtn.style.opacity = hasAnyOpenReq ? "1" : "0.48";
+        closeReqBtn.title = hasAnyOpenReq
+          ? `Close open photo request for ${selectedMonthLabel}`
+          : `No open request to close for ${selectedMonthLabel}`;
+      }
+
+      if (statusBanner) {
+        if (hasAnyOpenReq) {
           statusBanner.style.display = "block";
           statusBanner.style.background = "rgba(16,185,129,0.14)";
-          statusBanner.style.color = "#34d399";
+          statusBanner.style.color = "#10b981";
           statusBanner.style.border = "1px solid rgba(16,185,129,0.35)";
           statusBanner.innerHTML = hasGlobalMonthReq
-            ? `<i class="fa-solid fa-paper-plane"></i> Photo request is ACTIVE for <strong>${selectedMonthLabel}</strong> across all active renters. Renters can capture & upload using their Live Camera.`
-            : `<i class="fa-solid fa-paper-plane"></i> ${specificReqCount} targeted request(s) / re-request(s) active for <strong>${selectedMonthLabel}</strong>. Click "Send Request" above to open for all active renters.`;
+            ? `<i class="fa-solid fa-paper-plane"></i> Photo request is ACTIVE for <strong>${selectedMonthLabel}</strong> across all active renters. Renters can capture &amp; upload using their Live Camera.`
+            : `<i class="fa-solid fa-paper-plane"></i> ${specificReqCount} targeted request(s) / re-request(s) active for <strong>${selectedMonthLabel}</strong>. Click "Send Request" above to open for all active renters, or click "Close" to end requests.`;
+        } else if (isMonthExplicitlyClosed) {
+          statusBanner.style.display = "block";
+          statusBanner.style.background = "rgba(239,68,68,0.12)";
+          statusBanner.style.color = "#ef4444";
+          statusBanner.style.border = "1px solid rgba(239,68,68,0.35)";
+          statusBanner.innerHTML = `<i class="fa-solid fa-lock"></i> Photo request for <strong>${selectedMonthLabel}</strong> is CLOSED. Renter live camera uploads are disabled until you click <strong>Send Request</strong> again.`;
         } else {
           statusBanner.style.display = "block";
           statusBanner.style.background = "rgba(245,158,11,0.12)";
-          statusBanner.style.color = "#fbbf24";
+          statusBanner.style.color = "#d97706";
           statusBanner.style.border = "1px solid rgba(245,158,11,0.35)";
-          statusBanner.innerHTML = `<i class="fa-solid fa-clock"></i> No global request sent yet for <strong>${selectedMonthLabel}</strong>. Select the month and click <strong>Send Request</strong> so active renters can capture & upload photos via Live Camera.`;
+          statusBanner.innerHTML = `<i class="fa-solid fa-clock"></i> No active request for <strong>${selectedMonthLabel}</strong>. Select the month and click <strong>Send Request</strong> so active renters can capture &amp; upload photos via Live Camera.`;
         }
       }
 
@@ -19088,7 +19282,7 @@ function formatMonthLabel(rawVal) {
       });
 
       if (cardsData.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:28px; color:var(--text-muted); font-size:0.84rem; background:rgba(15,23,42,0.45); border:1px dashed var(--glass-border); border-radius:14px;">No active renters found${query ? " matching your search" : ""}. Left/past renters are automatically hidden.</div>`;
+        container.innerHTML = `<div class="ssv-empty-state">No active renters found${query ? " matching your search" : ""}. Left/past renters are automatically hidden.</div>`;
         return;
       }
 
@@ -19104,19 +19298,19 @@ function formatMonthLabel(rawVal) {
         const safeRenterId = card.renterId.replace(/'/g, "\\'");
         const safeAadh = card.rawAadh.replace(/'/g, "\\'");
         const reqBadge = card.hasReRequestedSlot
-          ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(245,158,11,0.18); color:#fbbf24; border:1px solid rgba(245,158,11,0.45);"><i class="fa-solid fa-rotate-right"></i> Re-requested (${selectedMonthLabel})</span>`
+          ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(245,158,11,0.18); color:#d97706; border:1px solid rgba(245,158,11,0.45);"><i class="fa-solid fa-rotate-right"></i> Re-requested (${selectedMonthLabel})</span>`
           : (card.hasMonthRequest
-              ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.38);"><i class="fa-solid fa-paper-plane"></i> Requested (${selectedMonthLabel})</span>`
-              : `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(148,163,184,0.14); color:var(--text-muted); border:1px solid var(--glass-border);">Not Requested</span>`);
+              ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(56,189,248,0.16); color:#0284c7; border:1px solid rgba(56,189,248,0.38);"><i class="fa-solid fa-paper-plane"></i> Requested (${selectedMonthLabel})</span>`
+              : `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(148,163,184,0.14); color:var(--text-muted); border:1px solid var(--glass-border);">Closed / Not Requested</span>`);
 
         return `
-          <div style="background:rgba(15,23,42,0.68); border:1.5px solid var(--glass-border); border-radius:14px; padding:15px;">
+          <div class="ssv-renter-card">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
                 <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">
-                  <i class="fa-solid fa-user-check" style="color:#34d399; margin-right:5px;"></i>${card.rName}
+                  <i class="fa-solid fa-user-check" style="color:#10b981; margin-right:5px;"></i>${card.rName}
                 </div>
-                <span style="font-size:0.78rem; font-weight:800; padding:4px 10px; border-radius:8px; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.35);">
+                <span style="font-size:0.78rem; font-weight:800; padding:4px 10px; border-radius:8px; background:rgba(56,189,248,0.15); color:#0284c7; border:1px solid rgba(56,189,248,0.35);">
                   <i class="fa-solid fa-id-card"></i> Aadhaar: ${card.formattedAadh}
                 </span>
                 <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">
@@ -19126,11 +19320,11 @@ function formatMonthLabel(rawVal) {
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span class="badge-paid" style="font-size:0.7rem;">Active Renter</span>
                 ${reqBadge}
-                <span style="font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35);">
+                <span style="font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(16,185,129,0.16); color:#10b981; border:1px solid rgba(16,185,129,0.35);">
                   ${card.uploadedCount} / 4 Uploaded (${selectedMonthLabel})
                 </span>
                 ${isStrictAdmin ? `
-                  <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#34d399; border-color:rgba(16,185,129,0.45);" onclick="sendAdminMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
+                  <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#10b981; border-color:rgba(16,185,129,0.45);" onclick="sendAdminMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
                     <i class="fa-solid fa-paper-plane"></i> ${card.hasMonthRequest ? "Resend Month Request" : "Request Month"}
                   </button>
                 ` : ""}
@@ -19144,10 +19338,10 @@ function formatMonthLabel(rawVal) {
                 const safeLabel = slot.label.replace(/'/g, "\\'");
                 const downloadFileName = `${card.rName}_${card.propName}_${card.flatName}_${selectedMonth}_${slot.key}`.replace(/[^a-zA-Z0-9._-]/g, "_");
                 return `
-                  <div style="background:var(--bg-input); border:1.5px solid ${slot.isReRequested ? 'rgba(245,158,11,0.6)' : (slot.url ? 'rgba(16,185,129,0.45)' : 'var(--glass-border)')}; border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:7px;">
+                  <div class="ssv-slot-tile" style="border-color:${slot.isReRequested ? 'rgba(245,158,11,0.65)' : (slot.url ? 'rgba(16,185,129,0.48)' : 'var(--glass-border)')};">
                     <div style="font-size:0.72rem; font-weight:800; color:${slot.color}; display:flex; align-items:center; justify-content:space-between; gap:4px;">
                       <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><i class="fa-solid ${slot.icon}"></i> ${slot.label}</span>
-                      ${slot.isReRequested ? `<span style="font-size:0.62rem; font-weight:800; color:#fbbf24; white-space:nowrap;"><i class="fa-solid fa-rotate-right"></i> Re-requested</span>` : ""}
+                      ${slot.isReRequested ? `<span style="font-size:0.62rem; font-weight:800; color:#d97706; white-space:nowrap;"><i class="fa-solid fa-rotate-right"></i> Re-requested</span>` : ""}
                     </div>
                     ${slot.url ? `
                       <div
@@ -19162,10 +19356,10 @@ function formatMonthLabel(rawVal) {
                       </div>
                       ${isStrictAdmin ? `
                         <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:5px; margin-top:2px;">
-                          <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#38bdf8; border-color:rgba(56,189,248,0.4);" onclick="triggerImageFileDownload('${safeUrl}', '${downloadFileName}')" title="Download uploaded photo">
+                          <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#0284c7; border-color:rgba(56,189,248,0.45);" onclick="triggerImageFileDownload('${safeUrl}', '${downloadFileName}')" title="Download uploaded photo">
                             <i class="fa-solid fa-download"></i> Save
                           </button>
-                          <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#fbbf24; border-color:rgba(245,158,11,0.45);" onclick="reRequestAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')" title="Ask renter to retake and re-upload this photo">
+                          <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#d97706; border-color:rgba(245,158,11,0.45);" onclick="reRequestAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')" title="Ask renter to retake and re-upload this photo">
                             <i class="fa-solid fa-rotate-right"></i> Re-req
                           </button>
                           <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#ef4444; border-color:rgba(239,68,68,0.45);" onclick="adminDeleteMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')" title="Delete photo (Admin Only)">
@@ -19174,11 +19368,11 @@ function formatMonthLabel(rawVal) {
                         </div>
                       ` : ""}
                     ` : `
-                      <div style="width:100%; height:130px; border-radius:9px; border:1px dashed ${slot.isReRequested ? 'rgba(245,158,11,0.5)' : 'var(--glass-border)'}; background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); font-size:0.7rem; text-align:center; padding:8px;">
-                        <i class="fa-solid ${slot.icon}" style="font-size:1.2rem; opacity:0.55; color:${slot.color};"></i>
+                      <div class="ssv-slot-empty" style="border-color:${slot.isReRequested ? 'rgba(245,158,11,0.55)' : 'var(--glass-border)'};">
+                        <i class="fa-solid ${slot.icon}" style="font-size:1.2rem; opacity:0.65; color:${slot.color};"></i>
                         <span>${slot.isReRequested ? "Re-requested — Awaiting Renter Live Camera" : (card.hasMonthRequest ? "Awaiting Renter Capture" : "No Photo Uploaded")}</span>
                         ${isStrictAdmin ? `
-                          <button type="button" class="btn-ledger-action" style="padding:4px 8px; font-size:0.65rem; font-weight:800; color:#fbbf24; border-color:rgba(245,158,11,0.4);" onclick="reRequestAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')">
+                          <button type="button" class="btn-ledger-action" style="padding:4px 8px; font-size:0.65rem; font-weight:800; color:#d97706; border-color:rgba(245,158,11,0.45);" onclick="reRequestAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')">
                             <i class="fa-solid fa-camera"></i> Request Slot
                           </button>
                         ` : ""}
@@ -19260,6 +19454,65 @@ function formatMonthLabel(rawVal) {
         renterId: reqEntry.renterId,
         aadhaar: reqEntry.aadhaar,
         renterName: reqEntry.renterName,
+        screenshotRequests: DB.globalConfig.screenshotRequests
+      });
+    }
+
+    async function closeAdminMonthlyScreenshotRequest() {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Only", "Only the Admin can close monthly photo requests.", false);
+      }
+      const monthInput = document.getElementById("screenshotVerifyMonthInput");
+      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
+      if (monthInput) monthInput.value = selectedMonth;
+      window.selectedAdminScreenshotVerifyMonth = selectedMonth;
+      const monthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(selectedMonth) : selectedMonth;
+
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      if (!DB.globalConfig.screenshotRequests || typeof DB.globalConfig.screenshotRequests !== "object") {
+        DB.globalConfig.screenshotRequests = {};
+      }
+
+      const closedIso = new Date().toISOString();
+      const closedBy = activeUser || "Admin";
+      Object.keys(DB.globalConfig.screenshotRequests).forEach(k => {
+        const entry = DB.globalConfig.screenshotRequests[k];
+        if (!entry || typeof entry !== "object") return;
+        if (normalizeMonthYear(entry.monthYear) === selectedMonth) {
+          entry.status = "closed";
+          entry.closedBy = closedBy;
+          entry.closedAt = closedIso;
+        }
+      });
+
+      const globalKey = `ALL_ACTIVE__${selectedMonth}`;
+      DB.globalConfig.screenshotRequests[globalKey] = {
+        ...(DB.globalConfig.screenshotRequests[globalKey] || {}),
+        requestKey: globalKey,
+        scope: "ALL_ACTIVE",
+        status: "closed",
+        monthYear: selectedMonth,
+        closedBy: closedBy,
+        closedAt: closedIso
+      };
+
+      saveLocalGlobalConfigMaster(DB.globalConfig);
+      saveDbSnapshotToCache();
+      renderAdminScreenshotVerificationGrid();
+      renderAllDashboardUI();
+
+      triggerSideToast(
+        "Photo Request Closed",
+        `Closed photo request for ${monthLabel}. Renters can no longer capture or upload photos for ${monthLabel} until requested again.`,
+        true
+      );
+
+      await sendFirebaseAction({
+        action: "closeMonthlyPhotoRequest",
+        requesterRole: activeRole || "Admin",
+        requesterUsername: activeUser || "Admin",
+        monthYear: selectedMonth,
         screenshotRequests: DB.globalConfig.screenshotRequests
       });
     }
@@ -20070,9 +20323,10 @@ function formatMonthLabel(rawVal) {
         document.getElementById("calcNotes").value = existingBill.Notes || "";
 
         const mProofUrlEl = document.getElementById("calcMeterProofUrl");
-        const mProofBtn = document.getElementById("btnPreviewMeterProof");
+        window.currentMeterProofPreviewDataUrl = existingBill.MeterProofUrl || "";
+        window.currentMeterProofDeletedExplicitly = false;
         if (mProofUrlEl) mProofUrlEl.value = existingBill.MeterProofUrl || "";
-        if (mProofBtn) mProofBtn.style.display = existingBill.MeterProofUrl ? "inline-flex" : "none";
+        if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
         if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
           renderSplitPaymentInstallmentsFromBill(existingBill);
         }
@@ -20108,9 +20362,10 @@ function formatMonthLabel(rawVal) {
         if (payDateElEmpty) payDateElEmpty.value = "";
         document.getElementById("calcNotes").value = "";
         const mProofUrlEl = document.getElementById("calcMeterProofUrl");
-        const mProofBtn = document.getElementById("btnPreviewMeterProof");
+        window.currentMeterProofPreviewDataUrl = "";
+        window.currentMeterProofDeletedExplicitly = false;
         if (mProofUrlEl) mProofUrlEl.value = "";
-        if (mProofBtn) mProofBtn.style.display = "none";
+        if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
         if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
           renderSplitPaymentInstallmentsFromBill(null);
         }
@@ -20179,7 +20434,7 @@ function formatMonthLabel(rawVal) {
         document.getElementById("calcAddAmount").value = "";
         document.getElementById("calcPrevCarryBalance").value = autoCarryBalance !== 0 ? autoCarryBalance : "";
         document.getElementById("calcPaidNow").value = 0;
-        const todayIso = new Date().toISOString().split("T")[0];
+        const todayIso = chosenMonth === getCurrentCalendarYearMonth() ? getLocalTodayIsoDate() : `${chosenMonth}-01`;
         const billDateElNew = document.getElementById("calcBillDatePicker");
         if (billDateElNew) {
           billDateElNew.value = todayIso;
@@ -20190,9 +20445,10 @@ function formatMonthLabel(rawVal) {
         }
         document.getElementById("calcNotes").value = "";
         const mProofUrlEl = document.getElementById("calcMeterProofUrl");
-        const mProofBtn = document.getElementById("btnPreviewMeterProof");
+        window.currentMeterProofPreviewDataUrl = "";
+        window.currentMeterProofDeletedExplicitly = false;
         if (mProofUrlEl) mProofUrlEl.value = "";
-        if (mProofBtn) mProofBtn.style.display = "none";
+        if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
         if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
           renderSplitPaymentInstallmentsFromBill(null);
         }
@@ -20210,13 +20466,22 @@ function formatMonthLabel(rawVal) {
     }
 
     function updateRenterImageSlotUI(docType, imageUrl) {
-      const isIdentity = docType === "identity";
-      const imgEl = document.getElementById(isIdentity ? "identityPicturePreview" : "profilePicturePreview");
-      const badgeEl = document.getElementById(isIdentity ? "identityCloudStatusBadge" : "profileCloudStatusBadge");
-      const delBtn = document.getElementById(isIdentity ? "btnDeleteIdentityPic" : "btnDeleteProfilePic");
-      const dlBtn = document.getElementById(isIdentity ? "btnDownloadIdentityPic" : "btnDownloadProfilePic");
-      const fileInput = document.getElementById(isIdentity ? "fileIdentityPic" : "fileProfilePic");
-      const urlInput = document.getElementById(isIdentity ? "inputIdentityPicUrl" : "inputProfilePicUrl");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const isAnyIdentity = isIdentityFront || isIdentityBack;
+      const imgId = isIdentityBack ? "identityBackPicturePreview" : (isIdentityFront ? "identityPicturePreview" : "profilePicturePreview");
+      const badgeId = isIdentityBack ? "identityBackCloudStatusBadge" : (isIdentityFront ? "identityCloudStatusBadge" : "profileCloudStatusBadge");
+      const delId = isIdentityBack ? "btnDeleteIdentityBackPic" : (isIdentityFront ? "btnDeleteIdentityPic" : "btnDeleteProfilePic");
+      const dlId = isIdentityBack ? "btnDownloadIdentityBackPic" : (isIdentityFront ? "btnDownloadIdentityPic" : "btnDownloadProfilePic");
+      const fileId = isIdentityBack ? "fileIdentityBackPic" : (isIdentityFront ? "fileIdentityPic" : "fileProfilePic");
+      const urlId = isIdentityBack ? "inputIdentityBackPicUrl" : (isIdentityFront ? "inputIdentityPicUrl" : "inputProfilePicUrl");
+
+      const imgEl = document.getElementById(imgId);
+      const badgeEl = document.getElementById(badgeId);
+      const delBtn = document.getElementById(delId);
+      const dlBtn = document.getElementById(dlId);
+      const fileInput = document.getElementById(fileId);
+      const urlInput = document.getElementById(urlId);
 
       const normalizedUrl = normalizeGoogleDriveImageUrl(imageUrl);
       const hasRealImage = !isPlaceholderImageUrl(normalizedUrl);
@@ -20242,15 +20507,17 @@ function formatMonthLabel(rawVal) {
         }
         imgEl.src = hasRealImage
           ? normalizedUrl
-          : (isIdentity ? EMPTY_IDENTITY_PLACEHOLDER : EMPTY_PROFILE_PLACEHOLDER);
+          : (isAnyIdentity ? EMPTY_IDENTITY_PLACEHOLDER : EMPTY_PROFILE_PLACEHOLDER);
       }
       if (urlInput) {
         urlInput.value = "";
       }
       if (badgeEl) {
         badgeEl.innerText = hasRealImage
-          ? (isIdentity ? "Aadhaar Card saved on Google Drive (Click photo to Zoom)" : "Profile photo saved on Google Drive (Click photo to Zoom)")
-          : (isIdentity ? "No Aadhaar / ID uploaded" : "No profile photo uploaded");
+          ? (isIdentityBack
+              ? "Aadhaar Back saved on Google Drive (Click photo to Zoom)"
+              : (isIdentityFront ? "Aadhaar Front saved on Google Drive (Click photo to Zoom)" : "Profile photo saved on Google Drive (Click photo to Zoom)"))
+          : (isIdentityBack ? "No Back Photo uploaded" : (isIdentityFront ? "No Aadhaar Front uploaded" : "No profile photo uploaded"));
         badgeEl.style.color = hasRealImage ? "var(--accent-green)" : "var(--text-muted)";
       }
       if (delBtn) {
@@ -20386,15 +20653,17 @@ function formatMonthLabel(rawVal) {
     }
 
     function downloadRenterDocumentPhoto(docType, customSrc = "", customName = "") {
-      const isIdentity = docType === "identity";
-      const imgEl = document.getElementById(isIdentity ? "identityPicturePreview" : "profilePicturePreview");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const imgEl = document.getElementById(isIdentityBack ? "identityBackPicturePreview" : (isIdentityFront ? "identityPicturePreview" : "profilePicturePreview"));
       const src = customSrc || (imgEl ? imgEl.src : "");
       if (isPlaceholderImageUrl(src)) {
-        return triggerSideToast("No Photo Uploaded", `No ${isIdentity ? "Aadhaar card" : "profile"} photo is uploaded yet.`, false);
+        return triggerSideToast("No Photo Uploaded", `No ${isIdentityBack ? "Aadhaar Back" : (isIdentityFront ? "Aadhaar Front" : "profile")} photo is uploaded yet.`, false);
       }
       const renterName = customName || document.getElementById("renterName")?.value?.trim() || activeFlatRenterObj?.RenterName || "Renter";
       const flatLabel = selectedFlat ? `${selectedFlat.PropertyName}_Flat_${selectedFlat.FlatName}` : "Flat";
-      const fileLabel = `${flatLabel}_${renterName}_${isIdentity ? "Aadhaar_Card" : "Profile_Photo"}`;
+      const docSuffix = isIdentityBack ? "Aadhaar_Card_Back" : (isIdentityFront ? "Aadhaar_Card_Front" : "Profile_Photo");
+      const fileLabel = `${flatLabel}_${renterName}_${docSuffix}`;
       triggerImageFileDownload(src, fileLabel);
     }
 
@@ -20578,12 +20847,14 @@ function formatMonthLabel(rawVal) {
     
 
     function updateLeftRenterImageSlotUI(docType, imageUrl) {
-      const isIdentity = docType === "identity";
-      const imgEl = document.getElementById(isIdentity ? "editLeftIdentityPreview" : "editLeftProfilePreview");
-      const badgeEl = document.getElementById(isIdentity ? "editLeftIdentityStatusBadge" : "editLeftProfileStatusBadge");
-      const delBtn = document.getElementById(isIdentity ? "btnDeleteLeftIdentityPic" : "btnDeleteLeftProfilePic");
-      const dlBtn = document.getElementById(isIdentity ? "btnDownloadLeftIdentityPic" : "btnDownloadLeftProfilePic");
-      const fileInput = document.getElementById(isIdentity ? "fileEditLeftIdentityPic" : "fileEditLeftProfilePic");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const isAnyIdentity = isIdentityFront || isIdentityBack;
+      const imgEl = document.getElementById(isIdentityBack ? "editLeftIdentityBackPreview" : (isIdentityFront ? "editLeftIdentityPreview" : "editLeftProfilePreview"));
+      const badgeEl = document.getElementById(isIdentityBack ? "editLeftIdentityBackStatusBadge" : (isIdentityFront ? "editLeftIdentityStatusBadge" : "editLeftProfileStatusBadge"));
+      const delBtn = document.getElementById(isIdentityBack ? "btnDeleteLeftIdentityBackPic" : (isIdentityFront ? "btnDeleteLeftIdentityPic" : "btnDeleteLeftProfilePic"));
+      const dlBtn = document.getElementById(isIdentityBack ? "btnDownloadLeftIdentityBackPic" : (isIdentityFront ? "btnDownloadLeftIdentityPic" : "btnDownloadLeftProfilePic"));
+      const fileInput = document.getElementById(isIdentityBack ? "fileEditLeftIdentityBackPic" : (isIdentityFront ? "fileEditLeftIdentityPic" : "fileEditLeftProfilePic"));
 
       const normalizedUrl = normalizeGoogleDriveImageUrl(imageUrl);
       const hasRealImage = !isPlaceholderImageUrl(normalizedUrl);
@@ -20591,12 +20862,12 @@ function formatMonthLabel(rawVal) {
         imgEl.dataset.rawSource = hasRealImage ? String(imageUrl || normalizedUrl).trim() : "";
         imgEl.src = hasRealImage
           ? normalizedUrl
-          : (isIdentity ? EMPTY_IDENTITY_PLACEHOLDER : EMPTY_PROFILE_PLACEHOLDER);
+          : (isAnyIdentity ? EMPTY_IDENTITY_PLACEHOLDER : EMPTY_PROFILE_PLACEHOLDER);
       }
       if (badgeEl) {
         badgeEl.innerText = hasRealImage
-          ? (isIdentity ? "Aadhaar photo saved on Google Drive" : "Profile photo saved on Google Drive")
-          : (isIdentity ? "No Aadhaar photo uploaded" : "No profile photo uploaded");
+          ? (isIdentityBack ? "Aadhaar Back saved on Google Drive" : (isIdentityFront ? "Aadhaar Front saved on Google Drive" : "Profile photo saved on Google Drive"))
+          : (isIdentityBack ? "No Back Photo" : (isIdentityFront ? "No Aadhaar Front uploaded" : "No profile photo uploaded"));
         badgeEl.style.color = hasRealImage ? "var(--accent-green)" : "var(--text-muted)";
       }
       if (delBtn) delBtn.style.display = hasRealImage ? "inline-flex" : "none";
@@ -20615,8 +20886,11 @@ function formatMonthLabel(rawVal) {
       }
 
       const file = input.files[0];
-      const isIdentity = docType === "identity";
-      const badgeEl = document.getElementById(isIdentity ? "editLeftIdentityStatusBadge" : "editLeftProfileStatusBadge");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const isAnyIdentity = isIdentityFront || isIdentityBack;
+      const docLabel = isIdentityBack ? "Aadhaar Back photo" : (isIdentityFront ? "Aadhaar Front photo" : "Profile photo");
+      const badgeEl = document.getElementById(isIdentityBack ? "editLeftIdentityBackStatusBadge" : (isIdentityFront ? "editLeftIdentityStatusBadge" : "editLeftProfileStatusBadge"));
 
       try {
         if (badgeEl) {
@@ -20624,18 +20898,20 @@ function formatMonthLabel(rawVal) {
           badgeEl.style.color = "var(--primary)";
         }
 
-        const compressedDataUrl = await compressImageFileToDataUrl(file, isIdentity ? 780 : 600, 0.78);
+        const compressedDataUrl = await compressImageFileToDataUrl(file, isAnyIdentity ? 780 : 600, 0.78);
         updateLeftRenterImageSlotUI(docType, compressedDataUrl);
 
-        if (isIdentity) {
+        if (isIdentityBack) {
+          targetRenter.IdentityBackImageURL = compressedDataUrl;
+        } else if (isIdentityFront) {
           targetRenter.IdentityImageURL = compressedDataUrl;
         } else {
           targetRenter.ProfileImageURL = compressedDataUrl;
         }
-        
-        syncRenterIdentityAcrossAllStays(targetRenter, isIdentity
-          ? { IdentityImageURL: compressedDataUrl }
-          : { ProfileImageURL: compressedDataUrl }
+
+        syncRenterIdentityAcrossAllStays(targetRenter, isIdentityBack
+          ? { IdentityBackImageURL: compressedDataUrl }
+          : (isIdentityFront ? { IdentityImageURL: compressedDataUrl } : { ProfileImageURL: compressedDataUrl })
         );
 
         saveDbSnapshotToCache();
@@ -20644,7 +20920,7 @@ function formatMonthLabel(rawVal) {
 
         triggerSideToast(
           "Uploading Past Renter Photo",
-          `Saving ${isIdentity ? "Aadhaar Card photo" : "Profile photo"} specifically to ${targetRenter.RenterName || "past renter"}'s profile in Google Drive...`,
+          `Saving ${docLabel} specifically to ${targetRenter.RenterName || "past renter"}'s profile in Google Drive...`,
           "warning"
         );
 
@@ -20666,14 +20942,16 @@ function formatMonthLabel(rawVal) {
         const returnedImg = res && res.status === "success" ? (res.shareableUrl || res.driveUrl || res.imageUrl || res.previewUrl || res.url || "") : "";
         const finalSavedImg = returnedImg ? String(returnedImg).trim() : compressedDataUrl;
         updateLeftRenterImageSlotUI(docType, finalSavedImg);
-        if (isIdentity) {
+        if (isIdentityBack) {
+          targetRenter.IdentityBackImageURL = finalSavedImg;
+        } else if (isIdentityFront) {
           targetRenter.IdentityImageURL = finalSavedImg;
         } else {
           targetRenter.ProfileImageURL = finalSavedImg;
         }
-        syncRenterIdentityAcrossAllStays(targetRenter, isIdentity
-          ? { IdentityImageURL: finalSavedImg }
-          : { ProfileImageURL: finalSavedImg }
+        syncRenterIdentityAcrossAllStays(targetRenter, isIdentityBack
+          ? { IdentityBackImageURL: finalSavedImg }
+          : (isIdentityFront ? { IdentityImageURL: finalSavedImg } : { ProfileImageURL: finalSavedImg })
         );
         saveDbSnapshotToCache();
         renderAllDashboardUI();
@@ -20681,7 +20959,7 @@ function formatMonthLabel(rawVal) {
 
         triggerSideToast(
           "Saved & Synced Across All Stays",
-          `${isIdentity ? "Aadhaar Card photo" : "Profile photo"} saved and synced across all historical & active stays for ${targetRenter.RenterName}!`,
+          `${docLabel} saved to Google Drive & Sheet and synced across all stays for ${targetRenter.RenterName}!`,
           true
         );
       } catch (err) {
@@ -20695,27 +20973,30 @@ function formatMonthLabel(rawVal) {
       const targetRenter = (DB.renters || []).find(r => String(r.RenterID || "").trim() === String(targetRenterId || "").trim());
       if (!targetRenter) return;
 
-      const isIdentity = docType === "identity";
-      const imgEl = document.getElementById(isIdentity ? "editLeftIdentityPreview" : "editLeftProfilePreview");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const docLabel = isIdentityBack ? "Aadhaar Back" : (isIdentityFront ? "Aadhaar Front" : "Profile");
+      const imgEl = document.getElementById(isIdentityBack ? "editLeftIdentityBackPreview" : (isIdentityFront ? "editLeftIdentityPreview" : "editLeftProfilePreview"));
       const currentUrl = imgEl ? imgEl.src : "";
       if (isPlaceholderImageUrl(currentUrl)) {
         return triggerSideToast("Already Empty", "No photo is currently uploaded in this slot.", false);
       }
 
       updateLeftRenterImageSlotUI(docType, "");
-      if (isIdentity) targetRenter.IdentityImageURL = "";
+      if (isIdentityBack) targetRenter.IdentityBackImageURL = "";
+      else if (isIdentityFront) targetRenter.IdentityImageURL = "";
       else targetRenter.ProfileImageURL = "";
 
-      syncRenterIdentityAcrossAllStays(targetRenter, isIdentity
-        ? { IdentityImageURL: "", forceClearIdentityImage: true }
-        : { ProfileImageURL: "", forceClearProfileImage: true }
+      syncRenterIdentityAcrossAllStays(targetRenter, isIdentityBack
+        ? { IdentityBackImageURL: "", forceClearIdentityBackImage: true }
+        : (isIdentityFront ? { IdentityImageURL: "", forceClearIdentityImage: true } : { ProfileImageURL: "", forceClearProfileImage: true })
       );
 
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
 
-      triggerSideToast("Photo Deleted", `Removed ${isIdentity ? "Aadhaar Card" : "Profile"} photo from ${targetRenter.RenterName}'s profile.`, true);
+      triggerSideToast("Photo Deleted", `Removed ${docLabel} photo from ${targetRenter.RenterName}'s profile.`, true);
 
       await sendFirebaseAction({
         action: "deleteRenterDocument",
@@ -20724,13 +21005,17 @@ function formatMonthLabel(rawVal) {
         renterId: targetRenter.RenterID,
         identityDocNumber: targetRenter.IdentityDocNumber || "",
         docType: docType,
-        currentImageUrl: currentUrl
+        currentImageUrl: currentUrl,
+        clearIdentityImage: isIdentityFront,
+        clearIdentityBackImage: isIdentityBack,
+        clearProfileImage: !isIdentityFront && !isIdentityBack
       });
     }
 
     function downloadLeftRenterDocument(docType) {
-      const isIdentity = docType === "identity";
-      const imgEl = document.getElementById(isIdentity ? "editLeftIdentityPreview" : "editLeftProfilePreview");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const imgEl = document.getElementById(isIdentityBack ? "editLeftIdentityBackPreview" : (isIdentityFront ? "editLeftIdentityPreview" : "editLeftProfilePreview"));
       const src = imgEl ? imgEl.src : "";
       const rName = document.getElementById("editLeftName")?.value?.trim() || "Past_Renter";
       downloadRenterDocumentPhoto(docType, src, rName);
@@ -20773,9 +21058,10 @@ function formatMonthLabel(rawVal) {
       document.getElementById("editLeftJoinDate").value = toInputDateValue(targetRenter.JoinDate);
       document.getElementById("editLeftEndDate").value = toInputDateValue(targetRenter.EndDate);
 
-      // Populate Past Renter Profile & Aadhaar Card Photo Slots with consolidated images
+      // Populate Past Renter Profile & Aadhaar Card (Front & Back) Photo Slots with consolidated images
       updateLeftRenterImageSlotUI("profile", merged.ProfileImageURL || targetRenter.ProfileImageURL || "");
       updateLeftRenterImageSlotUI("identity", merged.IdentityImageURL || targetRenter.IdentityImageURL || "");
+      updateLeftRenterImageSlotUI("identity_back", merged.IdentityBackImageURL || targetRenter.IdentityBackImageURL || "");
 
       // Requirement 5: Only show Reactivate button when the renter has left (Inactive), never for an Active renter
       const reactivateBtn = document.getElementById("btnReactivateFromEditModal");
@@ -20785,8 +21071,6 @@ function formatMonthLabel(rawVal) {
 
       openModal("editLeftRenterModal");
     }
-
-    
 
     async function saveDepartedRenterChanges() {
       if (activeRole === "Viewer" || !selectedFlat) return;
@@ -20830,8 +21114,10 @@ function formatMonthLabel(rawVal) {
 
       const leftProfImgEl = document.getElementById("editLeftProfilePreview");
       const leftIdImgEl = document.getElementById("editLeftIdentityPreview");
+      const leftIdBackImgEl = document.getElementById("editLeftIdentityBackPreview");
       const leftProfSrc = leftProfImgEl?.dataset?.rawSource || leftProfImgEl?.src || "";
       const leftIdSrc = leftIdImgEl?.dataset?.rawSource || leftIdImgEl?.src || "";
+      const leftIdBackSrc = leftIdBackImgEl?.dataset?.rawSource || leftIdBackImgEl?.src || "";
 
       targetRenter.RenterName = newName;
       targetRenter.IdentityDocNumber = cleanAadhaar;
@@ -20844,6 +21130,7 @@ function formatMonthLabel(rawVal) {
       targetRenter.EndDate = document.getElementById("editLeftEndDate").value;
       targetRenter.ProfileImageURL = isPlaceholderImageUrl(leftProfSrc) ? (targetRenter.ProfileImageURL || "") : leftProfSrc;
       targetRenter.IdentityImageURL = isPlaceholderImageUrl(leftIdSrc) ? (targetRenter.IdentityImageURL || "") : leftIdSrc;
+      targetRenter.IdentityBackImageURL = isPlaceholderImageUrl(leftIdBackSrc) ? (targetRenter.IdentityBackImageURL || "") : leftIdBackSrc;
       targetRenter.UpdatedAt = new Date().toISOString();
 
       // Synchronize updated personal/KYC details across ALL historical and active stays sharing this Aadhaar
@@ -20857,7 +21144,8 @@ function formatMonthLabel(rawVal) {
           Address: targetRenter.Address,
           TotalFamilyMembers: targetRenter.TotalFamilyMembers,
           ProfileImageURL: targetRenter.ProfileImageURL,
-          IdentityImageURL: targetRenter.IdentityImageURL
+          IdentityImageURL: targetRenter.IdentityImageURL,
+          IdentityBackImageURL: targetRenter.IdentityBackImageURL
         },
         previousAadhaar
       );
@@ -20896,7 +21184,8 @@ function formatMonthLabel(rawVal) {
         joinDate: targetRenter.JoinDate,
         endDate: targetRenter.EndDate,
         profileImageUrl: targetRenter.ProfileImageURL || "",
-        identityImageUrl: targetRenter.IdentityImageURL || ""
+        identityImageUrl: targetRenter.IdentityImageURL || "",
+        identityBackImageUrl: targetRenter.IdentityBackImageURL || ""
       });
 
       closeModal("editLeftRenterModal");
@@ -20908,12 +21197,7 @@ function formatMonthLabel(rawVal) {
       if (!rawDate) return "";
       const s = String(rawDate).trim().replace(/^'+/, "");
       if (!s || s === "Present" || s === "Departed" || s === "Active" || s === "Left" || s === "--" || s === "undefined" || s === "null" || s === "Invalid Date") return "";
-      if (s.includes("T")) {
-        const part = s.split("T")[0];
-        if (/^\d{4}-\d{2}-\d{2}$/.test(part)) return part;
-      }
       if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-      if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
       const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
       if (dmyMatch) {
         const d = dmyMatch[1].padStart(2, "0");
@@ -20921,6 +21205,19 @@ function formatMonthLabel(rawVal) {
         const y = dmyMatch[3];
         return `${y}-${m}-${d}`;
       }
+      if (s.includes("T")) {
+        const parsedT = new Date(s);
+        if (!isNaN(parsedT.getTime())) {
+          const y = parsedT.getFullYear();
+          const m = String(parsedT.getMonth() + 1).padStart(2, "0");
+          const d = String(parsedT.getDate()).padStart(2, "0");
+          const resT = y + "-" + m + "-" + d;
+          if (/^\d{4}-\d{2}-\d{2}$/.test(resT)) return resT;
+        }
+        const part = s.split("T")[0];
+        if (/^\d{4}-\d{2}-\d{2}$/.test(part)) return part;
+      }
+      if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
       const parsed = new Date(s);
       if (!isNaN(parsed.getTime())) {
         const y = parsed.getFullYear();
@@ -21099,7 +21396,17 @@ function formatMonthLabel(rawVal) {
         : "background:linear-gradient(135deg, rgba(56,189,248,0.22), rgba(99,102,241,0.22)); border:1px solid #38bdf8; color:#38bdf8;";
 
       const currentYear = new Date().getFullYear();
-      const threeYears = [currentYear, currentYear - 1, currentYear - 2];
+      const yearsSet = new Set([currentYear, currentYear - 1, currentYear - 2]);
+      (allFlatBills || []).forEach(b => {
+        const normM = normalizeMonthYear(b.MonthYear);
+        const billD = toInputDateValue(b.BillDate);
+        const mMatch = (normM && normM.match(/^(\d{4})-/)) || (billD && billD.match(/^(\d{4})-/));
+        if (mMatch) {
+          const yNum = parseInt(mMatch[1], 10);
+          if (yNum >= 2000 && yNum <= 2100) yearsSet.add(yNum);
+        }
+      });
+      const threeYears = Array.from(yearsSet).sort((a, b) => b - a);
 
       const scopedBills = (allFlatBills || []).filter(b => {
         if (flatGraph1SelectedScope === "ALL") return true;
@@ -21600,7 +21907,17 @@ function formatMonthLabel(rawVal) {
           titleEl.innerHTML = `<i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 1. Total Expense Breakdown — ${prop} (Flat ${flat}) • High-Definition Vector Zoom (${Math.round(z * 100)}%)`;
         }
         const currentYear = new Date().getFullYear();
-        const threeYears = [currentYear, currentYear - 1, currentYear - 2];
+        const yearsSet = new Set([currentYear, currentYear - 1, currentYear - 2]);
+        activeUsersBills.forEach(b => {
+          const normM = normalizeMonthYear(b.MonthYear);
+          const billD = toInputDateValue(b.BillDate);
+          const mMatch = (normM && normM.match(/^(\d{4})-/)) || (billD && billD.match(/^(\d{4})-/));
+          if (mMatch) {
+            const yNum = parseInt(mMatch[1], 10);
+            if (yNum >= 2000 && yNum <= 2100) yearsSet.add(yNum);
+          }
+        });
+        const threeYears = Array.from(yearsSet).sort((a, b) => b - a);
         const scopedBills = activeUsersBills.filter(b => {
           if (flatGraph1SelectedScope === "ALL") return true;
           const norm = normalizeMonthYear(b.MonthYear);
@@ -21994,6 +22311,7 @@ function formatMonthLabel(rawVal) {
         if (consolidated) {
           if (!renter.ProfileImageURL && consolidated.ProfileImageURL) renter.ProfileImageURL = consolidated.ProfileImageURL;
           if (!renter.IdentityImageURL && consolidated.IdentityImageURL) renter.IdentityImageURL = consolidated.IdentityImageURL;
+          if (!renter.IdentityBackImageURL && consolidated.IdentityBackImageURL) renter.IdentityBackImageURL = consolidated.IdentityBackImageURL;
           if (!renter.MobileNumber && consolidated.MobileNumber) renter.MobileNumber = consolidated.MobileNumber;
           if (!renter.AltMobileNumber && consolidated.AltMobileNumber) renter.AltMobileNumber = consolidated.AltMobileNumber;
           if (!renter.Address && consolidated.Address) renter.Address = consolidated.Address;
@@ -22016,8 +22334,10 @@ function formatMonthLabel(rawVal) {
         document.getElementById("renterEndDate").value = resolvedMeta.endDate;
         const rawProfilePic = String(renter.ProfileImageURL || "").trim();
         const rawIdentityPic = String(renter.IdentityImageURL || "").trim();
+        const rawIdentityBackPic = String(renter.IdentityBackImageURL || "").trim();
         updateRenterImageSlotUI("profile", rawProfilePic);
         updateRenterImageSlotUI("identity", rawIdentityPic);
+        updateRenterImageSlotUI("identity_back", rawIdentityBackPic);
         updateRenterTenureStatusUI(renter, renter.IdentityDocNumber);
         syncProfileReactivateButtonVisibility();
       } else {
@@ -22379,7 +22699,9 @@ function formatMonthLabel(rawVal) {
       const snapshotTenantMobile = (existingBillRecord && existingBillRecord.TenantMobile) ? existingBillRecord.TenantMobile : (activeFlatRenterObj?.MobileNumber || activeFlatRenterObj?.AltMobileNumber || "");
       const snapshotTenantName = (existingBillRecord && existingBillRecord.TenantName) ? existingBillRecord.TenantName : currentTenantName;
 
-      const meterProofVal = (document.getElementById("calcMeterProofUrl")?.value || "").trim() || (existingBillRecord?.MeterProofUrl || "");
+      const typedMeterProof = (document.getElementById("calcMeterProofUrl")?.value || "").trim();
+      const meterProofVal = typedMeterProof || (window.currentMeterProofDeletedExplicitly ? "" : (existingBillRecord?.MeterProofUrl || ""));
+      window.currentMeterProofDeletedExplicitly = false;
       const collectedSplits = typeof collectSplitPaymentsFromDOM === "function"
         ? collectSplitPaymentsFromDOM()
         : (Array.isArray(existingBillRecord?.SplitPayments) ? existingBillRecord.SplitPayments : []);
@@ -22410,11 +22732,11 @@ function formatMonthLabel(rawVal) {
         AdditionalAmount: netAddAmt,
         TotalBilled: totalBilled,
         PaidAmount: paidAmount,
-        PaymentDate: document.getElementById("calcPaymentDate")?.value || existingBillRecord?.PaymentDate || new Date().toISOString().split("T")[0],
+        PaymentDate: toInputDateValue(document.getElementById("calcPaymentDate")?.value || existingBillRecord?.PaymentDate) || getLocalTodayIsoDate(),
         PaymentMode: document.getElementById("calcPayMode").value,
         Status: billStatus,
         Notes: document.getElementById("calcNotes").value,
-        BillDate: document.getElementById("calcBillDatePicker")?.value || toInputDateValue(existingBillRecord?.BillDate) || new Date().toISOString().split("T")[0],
+        BillDate: toInputDateValue(document.getElementById("calcBillDatePicker")?.value || existingBillRecord?.BillDate) || getLocalTodayIsoDate(),
         RenterID: existingBillRecord?.RenterID || currentRenterId,
         PrevCarryBalance: prevCarryBalance,
         UPIName: snapshotUpiName,
@@ -24082,14 +24404,14 @@ function formatMonthLabel(rawVal) {
         : `https://web.whatsapp.com/send?phone=${formattedPhone}`;
 
       try {
-        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-      } catch (openErr) {
         const link = document.createElement("a");
         link.href = whatsappUrl;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
         link.click();
-      }
+        document.body.removeChild(link);
+      } catch (openErr) {}
       triggerSideToast(
         "Receipt Image Ready for WhatsApp",
         copiedToClipboard
@@ -24618,7 +24940,10 @@ function formatMonthLabel(rawVal) {
           : targetRenter.ProfileImageURL,
         IdentityImageURL: !isPlaceholderImageUrl(consolidatedRenter.IdentityImageURL)
           ? consolidatedRenter.IdentityImageURL
-          : targetRenter.IdentityImageURL
+          : targetRenter.IdentityImageURL,
+        IdentityBackImageURL: !isPlaceholderImageUrl(consolidatedRenter.IdentityBackImageURL)
+          ? consolidatedRenter.IdentityBackImageURL
+          : targetRenter.IdentityBackImageURL
       };
 
       const prop = targetRenter.PropertyName || propName || "";
@@ -24636,6 +24961,9 @@ function formatMonthLabel(rawVal) {
         : EMPTY_PROFILE_PLACEHOLDER;
       const identityImgSrc = (!isPlaceholderImageUrl(targetRenter.IdentityImageURL))
         ? normalizeGoogleDriveImageUrl(targetRenter.IdentityImageURL)
+        : EMPTY_IDENTITY_PLACEHOLDER;
+      const identityBackImgSrc = (!isPlaceholderImageUrl(targetRenter.IdentityBackImageURL))
+        ? normalizeGoogleDriveImageUrl(targetRenter.IdentityBackImageURL)
         : EMPTY_IDENTITY_PLACEHOLDER;
 
       const bills = getBillsForSpecificRenter(prop, flat, targetRenter);
@@ -24749,8 +25077,8 @@ function formatMonthLabel(rawVal) {
             <div><span style="color:var(--text-muted);">Water No &amp; Meter:</span> <strong>${targetRenter.WaterNumber || '--'} (${targetRenter.WaterMeterNumber || '--'})</strong></div>
           </div>
 
-          <!-- Uploaded Profile Render & Aadhaar Documents (Click to Zoom + Download) -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <!-- Uploaded Profile Render & Aadhaar Documents (Front & Back • Click to Zoom + Download) -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; margin-bottom:14px;">
             <div class="matrix-col photo-card-profile" style="padding:10px; text-align:center;">
               <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">1. Renter Profile Photo</div>
               <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${profileImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Profile Photo')">
@@ -24760,12 +25088,20 @@ function formatMonthLabel(rawVal) {
               ${!isPlaceholderImageUrl(profileImgSrc) ? `<button type="button" class="btn-ledger-action" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('profile', '${profileImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Photo</button>` : ''}
             </div>
             <div class="matrix-col photo-card-aadhaar" style="padding:10px; text-align:center;">
-              <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">2. Aadhaar Card Document Photo</div>
-              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Aadhaar Card Document')">
-                <img src="${identityImgSrc}" alt="Aadhaar / ID Document">
+              <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">2. Aadhaar Card (Front Side)</div>
+              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Aadhaar Card (Front Side)')">
+                <img src="${identityImgSrc}" alt="Aadhaar / ID Document (Front)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
               </div>
-              ${!isPlaceholderImageUrl(identityImgSrc) ? `<button type="button" class="btn-ledger-action" style="background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity', '${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Aadhaar</button>` : ''}
+              ${!isPlaceholderImageUrl(identityImgSrc) ? `<button type="button" class="btn-ledger-action" style="background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity', '${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Front</button>` : ''}
+            </div>
+            <div class="matrix-col photo-card-aadhaar" style="padding:10px; text-align:center;">
+              <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">3. Aadhaar Card (Back Side)</div>
+              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${identityBackImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Aadhaar Card (Back Side)')">
+                <img src="${identityBackImgSrc}" alt="Aadhaar / ID Document (Back)">
+                <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
+              </div>
+              ${!isPlaceholderImageUrl(identityBackImgSrc) ? `<button type="button" class="btn-ledger-action" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity_back', '${identityBackImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Back</button>` : ''}
             </div>
           </div>
 
@@ -27679,14 +28015,19 @@ function formatMonthLabel(rawVal) {
 
       const profPreviewEl = document.getElementById("profilePicturePreview");
       const idPreviewEl = document.getElementById("identityPicturePreview");
+      const idBackPreviewEl = document.getElementById("identityBackPicturePreview");
       const currentProfileSrc = profPreviewEl?.dataset?.rawSource || profPreviewEl?.src || "";
       const currentIdentitySrc = idPreviewEl?.dataset?.rawSource || idPreviewEl?.src || "";
+      const currentIdentityBackSrc = idBackPreviewEl?.dataset?.rawSource || idBackPreviewEl?.src || "";
       const resolvedProfileUrl = !isPlaceholderImageUrl(currentProfileSrc)
         ? currentProfileSrc
         : (activeFlatRenterObj?.ProfileImageURL || "");
       const resolvedIdentityUrl = !isPlaceholderImageUrl(currentIdentitySrc)
         ? currentIdentitySrc
         : (activeFlatRenterObj?.IdentityImageURL || "");
+      const resolvedIdentityBackUrl = !isPlaceholderImageUrl(currentIdentityBackSrc)
+        ? currentIdentityBackSrc
+        : (activeFlatRenterObj?.IdentityBackImageURL || "");
 
       // Bug 6 Fix: Do NOT auto-save unsubmitted edits from "3. Rent & Utility Details" when saving Renter Profile on the right.
       // Only use the already-saved values on selectedFlat (which are updated exclusively when clicking 'Save Utility & Rates').
@@ -27704,9 +28045,9 @@ function formatMonthLabel(rawVal) {
       const savedUpiId = selectedFlat.UPIID || activeFlatRenterObj?.UPIID || resolvedCurrentContact.upiId || "";
       const savedContractMob = selectedFlat.ContractMobile || activeFlatRenterObj?.ContractMobile || resolvedCurrentContact.contractMobile || "";
 
-      const joinDateVal = toInputDateValue(document.getElementById("renterJoinDate").value) || toInputDateValue(activeFlatRenterObj?.JoinDate) || new Date().toISOString().split('T')[0];
+      const joinDateVal = toInputDateValue(document.getElementById("renterJoinDate").value) || toInputDateValue(activeFlatRenterObj?.JoinDate) || getLocalTodayIsoDate();
       const rawEndInput = toInputDateValue(document.getElementById("renterEndDate").value);
-      const endDateVal = rawEndInput || (statusVal === "Inactive" ? (toInputDateValue(activeFlatRenterObj?.EndDate) || new Date().toISOString().split('T')[0]) : "");
+      const endDateVal = rawEndInput || (statusVal === "Inactive" ? (toInputDateValue(activeFlatRenterObj?.EndDate) || getLocalTodayIsoDate()) : "");
 
       const payload = {
         action: "updateRenterProfile",
@@ -27725,7 +28066,9 @@ function formatMonthLabel(rawVal) {
         endDate: endDateVal,
         profileImageUrl: resolvedProfileUrl,
         identityImageUrl: resolvedIdentityUrl,
+        identityBackImageUrl: resolvedIdentityBackUrl,
         identitySheetSafeBase64: resolvedIdentityUrl.startsWith("data:image") ? resolvedIdentityUrl : "",
+        identityBackSheetSafeBase64: resolvedIdentityBackUrl.startsWith("data:image") ? resolvedIdentityBackUrl : "",
         rentAmount: savedRentVal,
         pngNumber: savedPngNum,
         pngMeterNumber: savedPngMeter,
@@ -27784,6 +28127,7 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.EndDate = payload.endDate;
           existingRenterRecord.ProfileImageURL = payload.profileImageUrl;
           existingRenterRecord.IdentityImageURL = payload.identityImageUrl;
+          existingRenterRecord.IdentityBackImageURL = payload.identityBackImageUrl;
           existingRenterRecord.RentAmount = payload.rentAmount;
           existingRenterRecord.PNGNumber = payload.pngNumber;
           existingRenterRecord.PNGMeterNumber = payload.pngMeterNumber;
@@ -27821,7 +28165,8 @@ function formatMonthLabel(rawVal) {
             TotalFamilyMembers: payload.familyMembers,
             FamilyMembersList: payload.familyMembersList,
             ProfileImageURL: payload.profileImageUrl,
-            IdentityImageURL: payload.identityImageUrl
+            IdentityImageURL: payload.identityImageUrl,
+            IdentityBackImageURL: payload.identityBackImageUrl
           },
           previousAadhaarBeforeEdit
         );
@@ -27863,6 +28208,7 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.JoinDate = payload.joinDate;
           existingRenterRecord.ProfileImageURL = payload.profileImageUrl;
           existingRenterRecord.IdentityImageURL = payload.identityImageUrl;
+          existingRenterRecord.IdentityBackImageURL = payload.identityBackImageUrl;
           existingRenterRecord.RentAmount = payload.rentAmount;
           existingRenterRecord.PNGNumber = payload.pngNumber;
           existingRenterRecord.PNGMeterNumber = payload.pngMeterNumber;
@@ -27893,6 +28239,7 @@ function formatMonthLabel(rawVal) {
             EndDate: payload.endDate,
             ProfileImageURL: payload.profileImageUrl,
             IdentityImageURL: payload.identityImageUrl,
+            IdentityBackImageURL: payload.identityBackImageUrl,
             RentAmount: payload.rentAmount,
             PNGNumber: payload.pngNumber,
             PNGMeterNumber: payload.pngMeterNumber,
@@ -27923,7 +28270,8 @@ function formatMonthLabel(rawVal) {
             TotalFamilyMembers: payload.familyMembers,
             FamilyMembersList: payload.familyMembersList,
             ProfileImageURL: payload.profileImageUrl,
-            IdentityImageURL: payload.identityImageUrl
+            IdentityImageURL: payload.identityImageUrl,
+            IdentityBackImageURL: payload.identityBackImageUrl
           },
           previousAadhaarBeforeEdit
         );
@@ -27962,7 +28310,7 @@ function formatMonthLabel(rawVal) {
       document.getElementById("renterFamily").value = "1";
       renderRenterFamilyMembersRows([]);
       document.getElementById("renterStatus").value = "Active";
-      document.getElementById("renterJoinDate").value = new Date().toISOString().split('T')[0];
+      document.getElementById("renterJoinDate").value = getLocalTodayIsoDate();
       document.getElementById("renterEndDate").value = "";
       const promptEl = document.getElementById("aadhaarPreviousRenterPrompt");
       if (promptEl) {
@@ -27971,6 +28319,7 @@ function formatMonthLabel(rawVal) {
       }
       updateRenterImageSlotUI("profile", "");
       updateRenterImageSlotUI("identity", "");
+      updateRenterImageSlotUI("identity_back", "");
       updateRenterTenureStatusUI(null, "");
       syncProfileReactivateButtonVisibility();
     }
@@ -29170,11 +29519,12 @@ function formatMonthLabel(rawVal) {
           ElecFixedRate: selectedFlat.ElecRate || "",
           PNGFixedRate: selectedFlat.PNGRate || "",
           WaterFixedRate: selectedFlat.WaterRate || "",
-          JoinDate: document.getElementById("renterJoinDate")?.value || new Date().toISOString().split("T")[0],
+          JoinDate: document.getElementById("renterJoinDate")?.value || getLocalTodayIsoDate(),
           Status: "Active",
           IdentityDocNumber: (document.getElementById("renterIdentityNum")?.value || "").replace(/\D/g, "").slice(0, 12),
           ProfileImageURL: "",
           IdentityImageURL: "",
+          IdentityBackImageURL: "",
           MobileNumber: document.getElementById("renterMobile")?.value.trim() || "",
           AltMobileNumber: document.getElementById("renterAltMobile")?.value.trim() || "",
           Address: document.getElementById("renterAddress")?.value.trim() || "",
@@ -29189,11 +29539,12 @@ function formatMonthLabel(rawVal) {
 
     async function applyRenterDocumentLink(docType) {
       if (activeRole === "Viewer" || !selectedFlat) return;
-      const isIdentity = docType === "identity";
-      const inputEl = document.getElementById(isIdentity ? "inputIdentityPicUrl" : "inputProfilePicUrl");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const inputEl = document.getElementById(isIdentityBack ? "inputIdentityBackPicUrl" : (isIdentityFront ? "inputIdentityPicUrl" : "inputProfilePicUrl"));
       const rawLink = inputEl ? inputEl.value.trim() : "";
       if (!rawLink) {
-        return triggerSideToast("Upload Photo File", "Please use the Upload File button above to save photos directly to Google Drive.", false);
+        return triggerSideToast("Upload Photo File", "Please use the Upload File button above or paste a Google Drive link first.", false);
       }
       if (rawLink.includes("/folders/")) {
         if (inputEl) inputEl.value = "";
@@ -29206,22 +29557,41 @@ function formatMonthLabel(rawVal) {
       ensureActiveRenterRecordExistsForFlat();
 
       if (activeFlatRenterObj) {
-        if (isIdentity) activeFlatRenterObj.IdentityImageURL = directImageUrl;
+        if (isIdentityBack) activeFlatRenterObj.IdentityBackImageURL = directImageUrl;
+        else if (isIdentityFront) activeFlatRenterObj.IdentityImageURL = directImageUrl;
         else activeFlatRenterObj.ProfileImageURL = directImageUrl;
       }
       let matchedRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName));
       let targetR = matchedRenters.find(r => activeFlatRenterObj?.RenterID && String(r.RenterID) === String(activeFlatRenterObj.RenterID)) ||
                     matchedRenters.find(r => String(r.Status || "").toLowerCase() === "active");
       if (targetR) {
-        if (isIdentity) targetR.IdentityImageURL = directImageUrl;
+        if (isIdentityBack) targetR.IdentityBackImageURL = directImageUrl;
+        else if (isIdentityFront) targetR.IdentityImageURL = directImageUrl;
         else targetR.ProfileImageURL = directImageUrl;
       }
       const currentAadhaarVal = document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || targetR?.IdentityDocNumber || "";
-      syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentity ? { IdentityImageURL: directImageUrl } : { ProfileImageURL: directImageUrl });
+      const syncFields = isIdentityBack
+        ? { IdentityBackImageURL: directImageUrl }
+        : (isIdentityFront ? { IdentityImageURL: directImageUrl } : { ProfileImageURL: directImageUrl });
+      syncRenterIdentityAcrossAllStays(currentAadhaarVal, syncFields);
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
-      triggerSideToast("Photo Preview Updated", "Use the Upload button to save photos directly into your Google Drive folder (no links are stored in Google Sheets).", true);
+      triggerSideToast("Saving Link to Google Sheet", "Persisting document link to the database...", "warning");
+
+      await sendFirebaseAction({
+        action: "uploadRenterDocument",
+        propertyName: selectedFlat.PropertyName,
+        flatName: selectedFlat.FlatName,
+        renterId: activeFlatRenterObj?.RenterID || "",
+        identityDocNumber: currentAadhaarVal,
+        renterName: document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Current Tenant",
+        rentAmount: selectedFlat.RentAmount || 0,
+        docType: docType,
+        directImageUrl: directImageUrl
+      });
+
+      triggerSideToast("Saved to Google Sheet", "Document link saved permanently in Google Sheets and synced across all devices!", true);
     }
 
     async function handleRenterDocumentUpload(input, docType) {
@@ -29229,8 +29599,11 @@ function formatMonthLabel(rawVal) {
       if (!input.files || !input.files[0]) return;
 
       const file = input.files[0];
-      const isIdentity = docType === "identity";
-      const badgeEl = document.getElementById(isIdentity ? "identityCloudStatusBadge" : "profileCloudStatusBadge");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const isAnyIdentity = isIdentityFront || isIdentityBack;
+      const docLabel = isIdentityBack ? "Aadhaar Card (Back Side)" : (isIdentityFront ? "Aadhaar Card (Front Side)" : "Profile Photo");
+      const badgeEl = document.getElementById(isIdentityBack ? "identityBackCloudStatusBadge" : (isIdentityFront ? "identityCloudStatusBadge" : "profileCloudStatusBadge"));
 
       try {
         if (badgeEl) {
@@ -29238,31 +29611,36 @@ function formatMonthLabel(rawVal) {
           badgeEl.style.color = "var(--primary)";
         }
 
-        const compressedDataUrl = await compressImageFileToDataUrl(file, isIdentity ? 1080 : 800, 0.82);
+        const compressedDataUrl = await compressImageFileToDataUrl(file, isAnyIdentity ? 1080 : 800, 0.82);
 
-        // Immediately display inside its respective profile render / Aadhaar section
+        // Immediately display inside its respective profile / Aadhaar Front / Aadhaar Back section
         updateRenterImageSlotUI(docType, compressedDataUrl);
         ensureActiveRenterRecordExistsForFlat();
 
         if (activeFlatRenterObj) {
-          if (isIdentity) activeFlatRenterObj.IdentityImageURL = compressedDataUrl;
+          if (isIdentityBack) activeFlatRenterObj.IdentityBackImageURL = compressedDataUrl;
+          else if (isIdentityFront) activeFlatRenterObj.IdentityImageURL = compressedDataUrl;
           else activeFlatRenterObj.ProfileImageURL = compressedDataUrl;
         }
         let matchedRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName));
         let targetR = matchedRenters.find(r => activeFlatRenterObj?.RenterID && String(r.RenterID) === String(activeFlatRenterObj.RenterID)) ||
                       matchedRenters.find(r => String(r.Status || "").toLowerCase() === "active");
         if (targetR) {
-          if (isIdentity) targetR.IdentityImageURL = compressedDataUrl;
+          if (isIdentityBack) targetR.IdentityBackImageURL = compressedDataUrl;
+          else if (isIdentityFront) targetR.IdentityImageURL = compressedDataUrl;
           else targetR.ProfileImageURL = compressedDataUrl;
         }
         const currentAadhaarVal = document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || targetR?.IdentityDocNumber || "";
-        syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentity ? { IdentityImageURL: compressedDataUrl } : { ProfileImageURL: compressedDataUrl });
+        syncRenterIdentityAcrossAllStays(
+          currentAadhaarVal,
+          isIdentityBack ? { IdentityBackImageURL: compressedDataUrl } : (isIdentityFront ? { IdentityImageURL: compressedDataUrl } : { ProfileImageURL: compressedDataUrl })
+        );
         saveDbSnapshotToCache();
         renderAllDashboardUI();
 
         triggerSideToast(
           "Uploading to Google Drive",
-          `Uploading ${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} to Google Drive and saving the shareable link to the database...`,
+          `Uploading ${docLabel} to Google Drive and saving the shareable link to Google Sheets...`,
           "warning"
         );
 
@@ -29290,22 +29668,27 @@ function formatMonthLabel(rawVal) {
         }
         updateRenterImageSlotUI(docType, finalImageUrl);
         if (activeFlatRenterObj) {
-          if (isIdentity) activeFlatRenterObj.IdentityImageURL = finalImageUrl;
+          if (isIdentityBack) activeFlatRenterObj.IdentityBackImageURL = finalImageUrl;
+          else if (isIdentityFront) activeFlatRenterObj.IdentityImageURL = finalImageUrl;
           else activeFlatRenterObj.ProfileImageURL = finalImageUrl;
         }
         if (targetR) {
           if (res && res.resolvedRenterId) targetR.RenterID = res.resolvedRenterId;
-          if (isIdentity) targetR.IdentityImageURL = finalImageUrl;
+          if (isIdentityBack) targetR.IdentityBackImageURL = finalImageUrl;
+          else if (isIdentityFront) targetR.IdentityImageURL = finalImageUrl;
           else targetR.ProfileImageURL = finalImageUrl;
         }
-        syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentity ? { IdentityImageURL: finalImageUrl } : { ProfileImageURL: finalImageUrl });
+        syncRenterIdentityAcrossAllStays(
+          currentAadhaarVal,
+          isIdentityBack ? { IdentityBackImageURL: finalImageUrl } : (isIdentityFront ? { IdentityImageURL: finalImageUrl } : { ProfileImageURL: finalImageUrl })
+        );
         saveDbSnapshotToCache();
         renderAllDashboardUI();
         populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
 
         triggerSideToast(
-          "Saved to Google Drive & Database",
-          `${isIdentity ? "Aadhaar / ID Card" : "Profile Photo"} uploaded to Google Drive and its shareable link is saved in the database!`,
+          "Saved to Google Drive & Sheet",
+          `${docLabel} uploaded to Google Drive and shareable link saved in Google Sheets for all devices!`,
           true
         );
       } catch (err) {
@@ -29315,8 +29698,10 @@ function formatMonthLabel(rawVal) {
 
     async function deleteRenterDocumentFromCloud(docType) {
       if (activeRole === "Viewer" || !selectedFlat) return;
-      const isIdentity = docType === "identity";
-      const imgEl = document.getElementById(isIdentity ? "identityPicturePreview" : "profilePicturePreview");
+      const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
+      const isIdentityFront = docType === "identity" || docType === "aadhaar";
+      const docLabel = isIdentityBack ? "Aadhaar Card (Back Side)" : (isIdentityFront ? "Aadhaar Card (Front Side)" : "Profile Photo");
+      const imgEl = document.getElementById(isIdentityBack ? "identityBackPicturePreview" : (isIdentityFront ? "identityPicturePreview" : "profilePicturePreview"));
       const currentUrl = imgEl ? imgEl.src : "";
 
       if (isPlaceholderImageUrl(currentUrl)) {
@@ -29327,21 +29712,25 @@ function formatMonthLabel(rawVal) {
       updateRenterImageSlotUI(docType, "");
 
       if (activeFlatRenterObj) {
-        if (isIdentity) activeFlatRenterObj.IdentityImageURL = "";
+        if (isIdentityBack) activeFlatRenterObj.IdentityBackImageURL = "";
+        else if (isIdentityFront) activeFlatRenterObj.IdentityImageURL = "";
         else activeFlatRenterObj.ProfileImageURL = "";
       }
       let matchedRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName));
       matchedRenters.forEach(r => {
         if (!activeFlatRenterObj?.RenterID || String(r.RenterID) === String(activeFlatRenterObj.RenterID)) {
-          if (isIdentity) r.IdentityImageURL = "";
+          if (isIdentityBack) r.IdentityBackImageURL = "";
+          else if (isIdentityFront) r.IdentityImageURL = "";
           else r.ProfileImageURL = "";
         }
       });
-      
+
       const currentAadhaarVal = document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || "";
-      syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentity
-        ? { IdentityImageURL: "", forceClearIdentityImage: true }
-        : { ProfileImageURL: "", forceClearProfileImage: true }
+      syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentityBack
+        ? { IdentityBackImageURL: "", forceClearIdentityBackImage: true }
+        : (isIdentityFront
+            ? { IdentityImageURL: "", forceClearIdentityImage: true }
+            : { ProfileImageURL: "", forceClearProfileImage: true })
       );
 
       saveDbSnapshotToCache();
@@ -29350,7 +29739,7 @@ function formatMonthLabel(rawVal) {
 
       triggerSideToast(
         "Removed from Cloud Drive",
-        `${isIdentity ? "Aadhaar / ID Card" : "Profile Render"} deleted and slot reset for a new upload!`,
+        `${docLabel} deleted and slot reset for a new upload!`,
         true
       );
 
@@ -29362,8 +29751,9 @@ function formatMonthLabel(rawVal) {
         identityDocNumber: currentAadhaarVal,
         docType: docType,
         currentImageUrl: currentUrl,
-        clearIdentityImage: isIdentity,
-        clearProfileImage: !isIdentity
+        clearIdentityImage: isIdentityFront,
+        clearIdentityBackImage: isIdentityBack,
+        clearProfileImage: !isIdentityFront && !isIdentityBack
       });
     }
 
@@ -29378,6 +29768,7 @@ function formatMonthLabel(rawVal) {
         "deleteUser",
         "requestMonthlyPhoto",
         "reRequestMonthlyPhoto",
+        "closeMonthlyPhotoRequest",
         "saveScreenshotRequests",
         "uploadBackgroundPhoto",
         "saveBackgrounds"
@@ -31505,21 +31896,64 @@ function formatMonthLabel(rawVal) {
     }
 
     // --- GROUP C1 & C3: METER READING PHOTO PROOF & MASTER METER RECONCILIATION ---
+    function syncMeterProofButtonsVisibility() {
+      const urlVal = (document.getElementById("calcMeterProofUrl")?.value || "").trim();
+      const hasProof = Boolean(window.currentMeterProofPreviewDataUrl || urlVal);
+      const prevBtn = document.getElementById("btnPreviewMeterProof");
+      const delBtn = document.getElementById("btnDeleteMeterProof");
+      if (prevBtn) prevBtn.style.display = hasProof ? "inline-flex" : "none";
+      if (delBtn) {
+        const canEdit = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
+        delBtn.style.display = (hasProof && canEdit) ? "inline-flex" : "none";
+      }
+    }
+
+    async function deleteCurrentMeterProof() {
+      if (activeRole === "Viewer" || activeRole === "Renter") return;
+      const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
+      if (typeof isCalculatorMonthLockedForEdits === "function" && isCalculatorMonthLockedForEdits(chosenMonth)) {
+        return triggerSideToast("Previous Month Locked", "Click Edit on this finalized month first if you want to remove the proof photo.", false);
+      }
+      window.currentMeterProofPreviewDataUrl = "";
+      window.currentMeterProofDeletedExplicitly = true;
+      const urlEl = document.getElementById("calcMeterProofUrl");
+      const fileEl = document.getElementById("calcMeterProofFile");
+      if (urlEl) urlEl.value = "";
+      if (fileEl) fileEl.value = "";
+
+      if (selectedFlat && chosenMonth) {
+        const billObj = (DB.bills || []).find(b =>
+          isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+          normalizeMonthYear(b.MonthYear) === chosenMonth
+        );
+        if (billObj && billObj.MeterProofUrl) {
+          billObj.MeterProofUrl = "";
+          saveDbSnapshotToCache();
+          if (typeof populateHistoryLedger === "function") {
+            populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
+          }
+        }
+      }
+      syncMeterProofButtonsVisibility();
+      triggerSideToast("Meter Proof Removed", "Electricity sub-meter proof photo cleared.", true);
+    }
+
     async function handleMeterProofUpload(inputEl) {
       const file = inputEl?.files?.[0];
       if (!file) return;
       try {
         const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
         window.currentMeterProofPreviewDataUrl = compressedDataUrl;
+        window.currentMeterProofDeletedExplicitly = false;
         const urlEl = document.getElementById("calcMeterProofUrl");
         if (urlEl) urlEl.value = "";
-        const prevBtn = document.getElementById("btnPreviewMeterProof");
-        if (prevBtn) prevBtn.style.display = "inline-flex";
+        syncMeterProofButtonsVisibility();
         triggerSideToast("Uploading Meter Photo", "Saving sub-meter reading photo directly to Google Drive folder...", "warning");
         if (selectedFlat) {
           const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "") || new Date().toISOString().slice(0, 7);
           const res = await sendFirebaseAction({
             action: "uploadRenterMonthlyPhoto",
+            username: activeUser || "",
             propertyName: selectedFlat.PropertyName,
             flatName: selectedFlat.FlatName,
             renterId: activeFlatRenterObj?.RenterID || "",
@@ -31536,6 +31970,7 @@ function formatMonthLabel(rawVal) {
             window.currentMeterProofPreviewDataUrl = driveUrl;
             if (urlEl) urlEl.value = driveUrl;
           }
+          syncMeterProofButtonsVisibility();
           triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder & linked to Google Sheet!", true);
         }
       } catch (e) {
