@@ -1444,6 +1444,53 @@
       color: #ffffff;
       border: 1px solid rgba(255, 255, 255, 0.22);
     }
+    .flat-top-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .flat-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      white-space: nowrap;
+    }
+    .flat-status-pill.pill-paid {
+      background: rgba(16, 185, 129, 0.28);
+      color: #d1fae5;
+      border-color: rgba(110, 231, 183, 0.55);
+    }
+    .flat-status-pill.pill-due {
+      background: rgba(239, 68, 68, 0.28);
+      color: #fee2e2;
+      border-color: rgba(252, 165, 165, 0.65);
+    }
+    .flat-status-pill.pill-due.overdue {
+      animation: overdueDuePillPulse 1.85s ease-in-out infinite;
+    }
+    .flat-status-pill.pill-vacant {
+      background: rgba(148, 163, 184, 0.22);
+      color: #e2e8f0;
+      border-color: rgba(203, 213, 225, 0.35);
+    }
+    @keyframes overdueDuePillPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(254, 202, 202, 0.72);
+      }
+      50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 0 7px rgba(254, 202, 202, 0);
+      }
+    }
 
 
     /* Global Modal Window */
@@ -7844,11 +7891,11 @@
             type="tel"
             id="editPropContractMobile"
             class="form-control"
-            maxlength="14"
+            maxlength="20"
             inputmode="tel"
             placeholder="+91 9876543210"
-            onfocus="ensurePlus91Prefix(this)"
-            oninput="this.value = formatIndianMobilePlus91(this.value)"
+            onfocus="ensureContractPhonePrefix(this)"
+            oninput="this.value = formatContractPhoneInput(this.value)"
           >
         </div>
 
@@ -8387,6 +8434,22 @@
               <div class="calc-auto-badge" id="calcPngSummary">0 U (₹0)</div>
             </div>
           </div>
+
+          <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:220px;">
+              <label style="font-size:0.72rem; font-weight:700; color:#f472b6; margin:0; white-space:nowrap;"><i class="fa-solid fa-camera"></i> PNG Sub-Meter Photo / Proof:</label>
+              <input type="file" id="calcPngProofFile" accept="image/*" class="form-control admin-only" style="padding:4px 8px; font-size:0.7rem; max-width:190px;" onchange="handleUtilityMeterProofUpload(this, 'png')">
+              <input type="text" id="calcPngProofUrl" class="form-control" style="padding:5px 8px; font-size:0.72rem; flex:1;" placeholder="Or paste PNG meter photo URL / verification note" oninput="syncUtilityProofButtonsVisibility('png')">
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button type="button" id="btnPreviewPngProof" class="btn-ledger-action" style="display:none; padding:4px 10px; font-size:0.7rem; color:#38bdf8;" onclick="previewCurrentMeterProof('png')">
+                <i class="fa-solid fa-eye"></i> View Proof
+              </button>
+              <button type="button" id="btnDeletePngProof" class="btn-ledger-action admin-only" style="display:none; padding:4px 10px; font-size:0.7rem; color:#ef4444; border-color:rgba(239,68,68,0.45);" onclick="deleteUtilityMeterProof('png')">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Box 4: Water Consumption (Ocean Cyan / Sky Blue Theme) -->
@@ -8421,6 +8484,22 @@
             <div class="calc-field-col">
               <label>Units &amp; Charge</label>
               <div class="calc-auto-badge" id="calcWaterSummary">0 U (₹0)</div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:220px;">
+              <label style="font-size:0.72rem; font-weight:700; color:#38bdf8; margin:0; white-space:nowrap;"><i class="fa-solid fa-camera"></i> Water Sub-Meter Photo / Proof:</label>
+              <input type="file" id="calcWaterProofFile" accept="image/*" class="form-control admin-only" style="padding:4px 8px; font-size:0.7rem; max-width:190px;" onchange="handleUtilityMeterProofUpload(this, 'water')">
+              <input type="text" id="calcWaterProofUrl" class="form-control" style="padding:5px 8px; font-size:0.72rem; flex:1;" placeholder="Or paste water meter photo URL / verification note" oninput="syncUtilityProofButtonsVisibility('water')">
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button type="button" id="btnPreviewWaterProof" class="btn-ledger-action" style="display:none; padding:4px 10px; font-size:0.7rem; color:#38bdf8;" onclick="previewCurrentMeterProof('water')">
+                <i class="fa-solid fa-eye"></i> View Proof
+              </button>
+              <button type="button" id="btnDeleteWaterProof" class="btn-ledger-action admin-only" style="display:none; padding:4px 10px; font-size:0.7rem; color:#ef4444; border-color:rgba(239,68,68,0.45);" onclick="deleteUtilityMeterProof('water')">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
             </div>
           </div>
         </div>
@@ -8892,7 +8971,7 @@
             </div>
             <div class="form-group"><label>Property UPI Display Name</label><input type="text" id="profUpiName" class="form-control"></div>
             <div class="form-group"><label>Property UPI ID / VPA</label><input type="text" id="profUpiId" class="form-control"></div>
-            <div class="form-group"><label>Owner Contract Phone (+91)</label><input type="tel" id="profContractMobile" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)"></div>
+            <div class="form-group"><label>Owner Contract Phone (+91)</label><input type="tel" id="profContractMobile" class="form-control" maxlength="20" inputmode="tel" placeholder="+91 9876543210" onfocus="ensureContractPhonePrefix(this)" oninput="this.value = formatContractPhoneInput(this.value)"></div>
             <button type="button" class="btn-primary admin-only" onclick="saveUtilitiesLeft(false)"><i class="fa-solid fa-floppy-disk"></i> Save Utility &amp; Rates</button>
           </div>
 
@@ -9132,13 +9211,21 @@
 
 
     function cleanPhoneStr(val) {
-      if (!val) return "";
-      const s = String(val).trim();
+      if (val === undefined || val === null) return "";
+      const s = String(val).replace(/^['=]+/, "").trim();
       if (!s) return "";
+      const upper = s.toUpperCase();
+      if (upper.includes("#ERROR") || upper.includes("#VALUE") || upper.includes("#NAME")) return "";
       if (s.indexOf("+") === 0) {
-        return "+" + s.substring(1).replace(/\D/g, "");
+        const digits = s.substring(1).replace(/\D/g, "");
+        if (!digits) return "";
+        if (digits.length === 12 && digits.startsWith("91")) return "+91 " + digits.slice(2);
+        return "+" + digits;
       }
-      return s.replace(/\D/g, "");
+      const digitsOnly = s.replace(/\D/g, "");
+      if (digitsOnly.length === 10) return "+91 " + digitsOnly;
+      if (digitsOnly.length === 12 && digitsOnly.startsWith("91")) return "+91 " + digitsOnly.slice(2);
+      return digitsOnly;
     }
 
     const GAS_SHEET_CACHE_KEY = "portal_gas_sheet_cache_v1";
@@ -9542,7 +9629,11 @@
         "uploadRenterDocument",
         "uploadBackgroundPhoto",
         "uploadPhotoToDriveOnly"
-      ].includes(actName) || (actName === "recordBill" && String(data?.meterProofBase64 || "").startsWith("data:"));
+      ].includes(actName) || (actName === "recordBill" && (
+        String(data?.meterProofBase64 || "").startsWith("data:") ||
+        String(data?.pngProofBase64 || "").startsWith("data:") ||
+        String(data?.waterProofBase64 || "").startsWith("data:")
+      ));
 
       // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
       const runSheetPost = async function() {
@@ -9637,7 +9728,9 @@
         if (parentProp) {
           if (!r.UPIName) r.UPIName = parentProp.UPIName || "";
           if (!r.UPIID) r.UPIID = parentProp.UPIID || "";
-          if (!r.ContractMobile) r.ContractMobile = cleanPhoneStr(parentProp.ContractNumber || "");
+          const propPhone = cleanPhoneStr(parentProp.ContractNumber || parentProp.ContractMobile || "");
+          const existingRPhone = cleanPhoneStr(r.ContractMobile || "");
+          r.ContractMobile = existingRPhone || propPhone;
         }
         if (pKey && fKey) {
           anyRenterByFlatMap[pKey + "::" + fKey] = r;
@@ -9654,7 +9747,9 @@
         if (parentProp) {
           if (!f.UPIName) f.UPIName = parentProp.UPIName || "";
           if (!f.UPIID) f.UPIID = parentProp.UPIID || "";
-          if (!f.ContractMobile) f.ContractMobile = cleanPhoneStr(parentProp.ContractNumber || "");
+          const propPhone = cleanPhoneStr(parentProp.ContractNumber || parentProp.ContractMobile || "");
+          const existingFPhone = cleanPhoneStr(f.ContractMobile || f.ContractNumber || "");
+          f.ContractMobile = existingFPhone || propPhone;
         }
         const actRenter = activeRenterMap[pKey + "::" + fKey];
         const fallbackRenter = actRenter || anyRenterByFlatMap[pKey + "::" + fKey];
@@ -12608,6 +12703,49 @@ function formatMonthLabel(rawVal) {
       return /^\d{10}$/.test(digits10);
     }
 
+    function ensureContractPhonePrefix(inputEl) {
+      if (!inputEl) return;
+      const cur = sanitizeContactPhoneDisplay(inputEl.value);
+      if (!cur) {
+        inputEl.value = "+91 ";
+      }
+    }
+
+    function formatContractPhoneInput(val) {
+      const raw = String(val || "").replace(/^['=]+/, "").trim();
+      if (!raw) return "";
+      if (raw.startsWith("+") && !raw.startsWith("+91") && raw !== "+9") {
+        return ("+" + raw.slice(1).replace(/[^\d\s-]/g, "")).slice(0, 20);
+      }
+      return formatIndianMobilePlus91(raw);
+    }
+
+    function parseValidContractPhone(val) {
+      const cleaned = sanitizeContactPhoneDisplay(val);
+      if (!cleaned) return { valid: true, formatted: "" };
+      if (cleaned.startsWith("+91")) {
+        const digits10 = extractIndianMobile10Digits(cleaned);
+        if (!/^\d{10}$/.test(digits10)) return { valid: false, formatted: cleaned };
+        return { valid: true, formatted: "+91 " + digits10 };
+      }
+      if (cleaned.startsWith("+")) {
+        const totalDigits = cleaned.replace(/\D/g, "");
+        if (totalDigits.length >= 7 && totalDigits.length <= 15) {
+          return { valid: true, formatted: cleaned };
+        }
+        return { valid: false, formatted: cleaned };
+      }
+      const digits10 = extractIndianMobile10Digits(cleaned);
+      if (/^\d{10}$/.test(digits10)) {
+        return { valid: true, formatted: "+91 " + digits10 };
+      }
+      const allDigits = cleaned.replace(/\D/g, "");
+      if (allDigits.length >= 7 && allDigits.length <= 15) {
+        return { valid: true, formatted: "+" + allDigits };
+      }
+      return { valid: false, formatted: cleaned };
+    }
+
     /**
      * Requirement 9: Fix notifications getting stuck or glitching on desktop/computer version of home page
      */
@@ -13392,7 +13530,7 @@ function formatMonthLabel(rawVal) {
       }];
     }
 
-    function resolveRenterForFlatPeriod(propName, flatName, billDateStr, monthYearStr) {
+    function resolveRenterForFlatPeriod(propName, flatName, billDateStr, monthYearStr, preferMonthMatch = false) {
       const flatRenters = (DB.renters || []).filter(r =>
         isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName)
       );
@@ -13406,9 +13544,16 @@ function formatMonthLabel(rawVal) {
       const activeJoinMonth = activeJoinDate ? activeJoinDate.slice(0, 7) : "";
 
       if (activeRenter) {
-        const isAfterOrOnActiveJoin = activeJoinDate
-          ? (refDate ? (refDate >= activeJoinDate) : (!refMonth || refMonth >= activeJoinMonth))
-          : true;
+        let isAfterOrOnActiveJoin = true;
+        if (activeJoinDate) {
+          if (preferMonthMatch && refMonth) {
+            isAfterOrOnActiveJoin = refMonth >= activeJoinMonth;
+          } else if (refDate) {
+            isAfterOrOnActiveJoin = refDate >= activeJoinDate;
+          } else if (refMonth) {
+            isAfterOrOnActiveJoin = refMonth >= activeJoinMonth;
+          }
+        }
 
         if (isAfterOrOnActiveJoin) {
           return { mode: "ACTIVE", renter: activeRenter };
@@ -13418,9 +13563,9 @@ function formatMonthLabel(rawVal) {
       // Prior to active renter's JoinDate (or when flat currently has no active renter):
       // Match a previous renter whose stay period [JoinDate .. EndDate] covers this date/month
       const sortedPrev = [...prevRenters].sort((a, b) => {
-        const aj = toInputDateValue(a.JoinDate || "") || "";
-        const bj = toInputDateValue(b.JoinDate || "") || "";
-        return bj.localeCompare(aj);
+        const ae = toInputDateValue(a.EndDate || "") || toInputDateValue(a.JoinDate || "") || "";
+        const be = toInputDateValue(b.EndDate || "") || toInputDateValue(b.JoinDate || "") || "";
+        return be.localeCompare(ae);
       });
 
       const matchedPrev = sortedPrev.find(pr => {
@@ -13429,7 +13574,7 @@ function formatMonthLabel(rawVal) {
         const pJoinMonth = pJoin ? pJoin.slice(0, 7) : "";
         const pEndMonth = pEnd ? pEnd.slice(0, 7) : "";
 
-        if (refDate) {
+        if (refDate && !preferMonthMatch) {
           if (pJoin && refDate < pJoin) return false;
           if (pEnd && refDate > pEnd) return false;
           if (activeJoinDate && refDate >= activeJoinDate && !pEnd) return false;
@@ -14315,6 +14460,70 @@ function formatMonthLabel(rawVal) {
       renderAllDashboardUI();
     }
 
+    function canonicalMonthlyPhotoCategory(rawCat) {
+      const cat = String(rawCat || "").trim().toLowerCase();
+      if (cat === "photo_1" || cat === "photo1") return "electricity_meter";
+      if (cat === "photo_2" || cat === "photo2") return "completed_payment";
+      if (cat === "photo_3" || cat === "photo3") return "water_meter_bill";
+      if (cat === "photo_4" || cat === "photo4") return "png_gas_meter";
+      return cat;
+    }
+
+    function enforceClientMonthlyPhotoFifo(monthlyPhotosMap, normAadhaar, propName, flatName, renterId, categoryKey, maxPerCategory = 3) {
+      if (!monthlyPhotosMap || typeof monthlyPhotosMap !== "object") return [];
+      const targetCat = canonicalMonthlyPhotoCategory(categoryKey);
+      const normProp = String(propName || "").trim().toLowerCase();
+      const normFlat = String(flatName || "").trim().toLowerCase();
+      const normRenterId = String(renterId || "").trim().toLowerCase();
+      const cleanAadh = normalizeAadhaar12(normAadhaar || "");
+      const groupsByMonth = {};
+
+      Object.keys(monthlyPhotosMap).forEach(k => {
+        const entry = monthlyPhotosMap[k];
+        if (!entry || typeof entry !== "object") return;
+        const entryUrl = String(entry.imageUrl || entry.previewUrl || entry.shareableUrl || "").trim();
+        if (!entryUrl) return;
+        const entryCat = canonicalMonthlyPhotoCategory(entry.category || "");
+        if (entryCat !== targetCat) return;
+
+        const eAadh = normalizeAadhaar12(entry.aadhaar || entry.identityDocNumber || "");
+        const eRId = String(entry.renterId || "").trim().toLowerCase();
+        const eProp = String(entry.propertyName || "").trim().toLowerCase();
+        const eFlat = String(entry.flatName || "").trim().toLowerCase();
+
+        const belongsToTarget = cleanAadh.length === 12
+          ? (eAadh === cleanAadh || String(k).includes(cleanAadh))
+          : ((normRenterId && eRId === normRenterId) || (normProp && normFlat && normFlat !== "--" && eProp === normProp && eFlat === normFlat));
+        if (!belongsToTarget) return;
+
+        const mKey = normalizeMonthYear(entry.monthYear || entry.MonthYear || "") || String(k);
+        const ts = Date.parse(entry.updatedAt || entry.uploadedAt || "") || 0;
+        if (!groupsByMonth[mKey]) {
+          groupsByMonth[mKey] = { monthYear: mKey, ts, keys: [] };
+        }
+        if (ts > groupsByMonth[mKey].ts) groupsByMonth[mKey].ts = ts;
+        groupsByMonth[mKey].keys.push(k);
+      });
+
+      const orderedGroups = Object.values(groupsByMonth).sort((a, b) => {
+        const mCmp = String(b.monthYear || "").localeCompare(String(a.monthYear || ""));
+        if (mCmp !== 0) return mCmp;
+        return b.ts - a.ts;
+      });
+
+      const prunedKeys = [];
+      if (orderedGroups.length > maxPerCategory) {
+        orderedGroups.slice(maxPerCategory).forEach(grp => {
+          grp.keys.forEach(pk => {
+            delete monthlyPhotosMap[pk];
+            if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[pk];
+            prunedKeys.push(pk);
+          });
+        });
+      }
+      return prunedKeys;
+    }
+
     function getMatchingScreenshotRequestsForRenter(monthYear, propName, flatName, renterId, aadhaarNum) {
       const reqMap = (DB.globalConfig && DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object")
         ? DB.globalConfig.screenshotRequests
@@ -14324,7 +14533,15 @@ function formatMonthLabel(rawVal) {
       const normFlat = String(flatName || "").trim().toLowerCase();
       const normRenterId = String(renterId || "").trim().toLowerCase();
       const normAadh = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
-      const result = { hasMonthRequest: false, isClosed: false, reRequestedCats: {} };
+      const result = {
+        hasMonthRequest: false,
+        hasBulkAllRequest: false,
+        hasAnyRequest: false,
+        hasAnySingleSlotRequest: false,
+        isClosed: false,
+        requestedCats: {},
+        reRequestedCats: {}
+      };
       let hasClosedEntry = false;
 
       Object.keys(reqMap).forEach(k => {
@@ -14347,17 +14564,26 @@ function formatMonthLabel(rawVal) {
 
         if (!matchesRenter) return;
         const st = String(entry.status || "").toLowerCase();
-        if (st === "closed") {
-          hasClosedEntry = true;
+        if (st === "closed" || st === "submitted") {
+          if (st === "closed") hasClosedEntry = true;
           return;
         }
-        result.hasMonthRequest = true;
-        const cat = String(entry.category || "").trim().toLowerCase();
-        if (cat && st === "re-requested") {
-          result.reRequestedCats[cat] = entry;
+        const cat = canonicalMonthlyPhotoCategory(entry.category || "");
+        if (scopeType === "SLOT" || (cat && st === "re-requested")) {
+          if (cat) {
+            result.requestedCats[cat] = entry;
+            result.hasAnySingleSlotRequest = true;
+            if (st === "re-requested") {
+              result.reRequestedCats[cat] = entry;
+            }
+          }
+        } else {
+          result.hasBulkAllRequest = true;
+          result.hasMonthRequest = true;
         }
       });
-      result.isClosed = hasClosedEntry && !result.hasMonthRequest;
+      result.hasAnyRequest = result.hasBulkAllRequest || result.hasAnySingleSlotRequest;
+      result.isClosed = hasClosedEntry && !result.hasAnyRequest;
       return result;
     }
 
@@ -14677,22 +14903,26 @@ function formatMonthLabel(rawVal) {
           };
         });
 
-        // Clear slot-level re-request status once renter submits a new photo
+        let didUpdateRequestStatus = false;
+        // Clear slot-level request / re-request status once renter submits a new photo
         if (DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object") {
           Object.keys(DB.globalConfig.screenshotRequests).forEach(rk => {
             const req = DB.globalConfig.screenshotRequests[rk];
             if (!req) return;
-            if (normalizeMonthYear(req.monthYear) === cleanMonth && String(req.category || "").toLowerCase() === cleanCat) {
+            const reqCat = canonicalMonthlyPhotoCategory(req.category || "");
+            if (normalizeMonthYear(req.monthYear) === cleanMonth && reqCat === canonicalMonthlyPhotoCategory(cleanCat)) {
               const sameR = (renterId && String(req.renterId || "") === String(renterId)) ||
-                            (normAadhaar.length === 12 && String(req.aadhaar || "") === normAadhaar) ||
+                            (normAadhaar.length === 12 && normalizeAadhaar12(req.aadhaar || "") === normAadhaar) ||
                             (isSamePropAndFlat(req.propertyName, req.flatName, propName, flatName));
               if (sameR) {
                 req.status = "submitted";
                 req.submittedAt = new Date().toISOString();
+                didUpdateRequestStatus = true;
               }
             }
           });
         }
+        enforceClientMonthlyPhotoFifo(DB.globalConfig.renterMonthlyPhotos, normAadhaar, propName, flatName, renterId, cleanCat, 3);
         renderAllDashboardUI();
 
         const res = await sendFirebaseAction({
@@ -14738,6 +14968,16 @@ function formatMonthLabel(rawVal) {
         }
         const driveUrl = normalizeGoogleDriveImageUrl(rawReturnedUrl);
 
+        if (Array.isArray(res.prunedSlotKeys)) {
+          res.prunedSlotKeys.forEach(pk => {
+            delete DB.globalConfig.renterMonthlyPhotos[pk];
+            if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[pk];
+          });
+        }
+        if (res.renterMonthlyPhotos && typeof res.renterMonthlyPhotos === "object") {
+          DB.globalConfig.renterMonthlyPhotos = { ...res.renterMonthlyPhotos };
+        }
+
         const savedSlot = {
           ...optimisticSlot,
           slotKey: res?.slotKey || monthlySlotKey,
@@ -14764,6 +15004,11 @@ function formatMonthLabel(rawVal) {
           };
         });
 
+        const clientPruned = enforceClientMonthlyPhotoFifo(DB.globalConfig.renterMonthlyPhotos, normAadhaar, propName, flatName, renterId, cleanCat, 3);
+        if (clientPruned.length > 0 && window.__recentMonthlyPhotoUploads) {
+          clientPruned.forEach(pk => delete window.__recentMonthlyPhotoUploads[pk]);
+        }
+
         (DB.renters || []).forEach(r => {
           const rAadh = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
           const sameFlat = propName && flatName && flatName !== "--" && isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
@@ -14778,6 +15023,12 @@ function formatMonthLabel(rawVal) {
         renderAllDashboardUI();
         if (typeof renderAdminScreenshotVerificationGrid === "function") {
           renderAdminScreenshotVerificationGrid();
+        }
+        if (didUpdateRequestStatus) {
+          sendFirebaseAction({
+            action: "saveScreenshotRequests",
+            screenshotRequests: DB.globalConfig.screenshotRequests
+          }).catch(() => {});
         }
 
         triggerSideToast(
@@ -14801,37 +15052,58 @@ function formatMonthLabel(rawVal) {
       await uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, file.name, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName, resolvedMime);
     }
 
-    async function deleteRenterMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum) {
+    async function deleteRenterMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, explicitSlotKey = "") {
       if (String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Permission Denied", "Only the Admin has permission to delete uploaded photos.", false);
       }
       const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
-      const cleanCat = String(categoryKey || "").trim().toLowerCase();
+      const cleanCat = canonicalMonthlyPhotoCategory(categoryKey);
       const normProp = String(propName || "").trim().toLowerCase();
       const normFlat = String(flatName || "").trim().toLowerCase();
-      const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+      const normAadhaar = normalizeAadhaar12(aadhaarNum || "");
+      const normRenterId = String(renterId || "").trim().toLowerCase();
       const monthlySlotKey = `MONTHLY__${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
       const flatSlotKey = `${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
       const aadhaarSlotKey = normAadhaar.length === 12 ? `${normAadhaar}__${cleanMonth}__${cleanCat}` : "";
+      const aadhaarNewSlotKey = normAadhaar.length === 12 ? `MONTHLY_AADHAAR__${normAadhaar}__${cleanMonth}__${cleanCat}` : "";
 
       window.__deletedMonthlyPhotoSlots = window.__deletedMonthlyPhotoSlots || {};
-      [monthlySlotKey, flatSlotKey, aadhaarSlotKey].filter(Boolean).forEach(k => {
-        window.__deletedMonthlyPhotoSlots[k] = Date.now();
-        if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[k];
-      });
+      const keysToDelete = [explicitSlotKey, monthlySlotKey, flatSlotKey, aadhaarSlotKey, aadhaarNewSlotKey].filter(Boolean);
 
       let fileIdToDelete = "";
       if (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos) {
-        const existingSlot = DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] ||
-                             DB.globalConfig.renterMonthlyPhotos[flatSlotKey] ||
-                             (aadhaarSlotKey ? DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] : null);
-        fileIdToDelete = existingSlot?.fileId || existingSlot?.driveFileId || "";
-        delete DB.globalConfig.renterMonthlyPhotos[monthlySlotKey];
-        delete DB.globalConfig.renterMonthlyPhotos[flatSlotKey];
-        if (aadhaarSlotKey) {
-          delete DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey];
-        }
+        const photosMap = DB.globalConfig.renterMonthlyPhotos;
+        Object.keys(photosMap).forEach(k => {
+          const entry = photosMap[k];
+          if (!entry || typeof entry !== "object") return;
+          const eCat = canonicalMonthlyPhotoCategory(entry.category || "");
+          const eMonth = normalizeMonthYear(entry.monthYear || entry.MonthYear || "");
+          if (eCat !== cleanCat || (cleanMonth && eMonth !== cleanMonth)) return;
+          const eAadh = normalizeAadhaar12(entry.aadhaar || entry.identityDocNumber || "");
+          const eRId = String(entry.renterId || "").trim().toLowerCase();
+          const eProp = String(entry.propertyName || "").trim().toLowerCase();
+          const eFlat = String(entry.flatName || "").trim().toLowerCase();
+          const matchesTarget = (explicitSlotKey && k === explicitSlotKey) ||
+            (normAadhaar.length === 12 && (eAadh === normAadhaar || String(k).includes(normAadhaar))) ||
+            (normRenterId && eRId === normRenterId) ||
+            (normProp && normFlat && normFlat !== "--" && eProp === normProp && eFlat === normFlat);
+          if (matchesTarget) {
+            if (!fileIdToDelete) fileIdToDelete = entry.fileId || entry.driveFileId || "";
+            keysToDelete.push(k);
+          }
+        });
+        keysToDelete.forEach(k => {
+          if (!fileIdToDelete && photosMap[k]) {
+            fileIdToDelete = photosMap[k].fileId || photosMap[k].driveFileId || "";
+          }
+          delete photosMap[k];
+        });
       }
+
+      keysToDelete.forEach(k => {
+        window.__deletedMonthlyPhotoSlots[k] = Date.now();
+        if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[k];
+      });
 
       const catFieldMap = {
         electricity_meter: "Photo1URL",
@@ -14846,8 +15118,8 @@ function formatMonthLabel(rawVal) {
       const targetPhotoCol = catFieldMap[cleanCat] || "";
       if (targetPhotoCol) {
         (DB.renters || []).forEach(r => {
-          const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-          const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
+          const rAadh = normalizeAadhaar12(r.IdentityDocNumber || "");
+          const sameFlat = normFlat && normFlat !== "--" && isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
           const sameId = renterId && String(r.RenterID || "") === String(renterId);
           const sameAadh = normAadhaar.length === 12 && rAadh === normAadhaar;
           if (sameId || sameAadh || (sameFlat && String(r.Status || "").toLowerCase() === "active")) {
@@ -14856,6 +15128,7 @@ function formatMonthLabel(rawVal) {
         });
       }
 
+      saveLocalGlobalConfigMaster(DB.globalConfig);
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       if (typeof renderAdminScreenshotVerificationGrid === "function") {
@@ -14863,10 +15136,10 @@ function formatMonthLabel(rawVal) {
       }
       triggerSideToast("Photo Deleted by Admin", `Removing ${categoryLabel} (${formatMonthLabel(cleanMonth)}) from Google Drive...`, "warning");
 
-      await sendFirebaseAction({
+      const delRes = await sendFirebaseAction({
         action: "deleteRenterMonthlyPhoto",
         requesterRole: activeRole || "Admin",
-        slotKey: monthlySlotKey,
+        slotKey: explicitSlotKey || monthlySlotKey,
         fileId: fileIdToDelete,
         propertyName: propName,
         flatName: flatName,
@@ -14876,6 +15149,16 @@ function formatMonthLabel(rawVal) {
         monthYear: cleanMonth,
         category: cleanCat
       });
+      if (delRes && delRes.renterMonthlyPhotos && typeof delRes.renterMonthlyPhotos === "object") {
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig.renterMonthlyPhotos = { ...delRes.renterMonthlyPhotos };
+        saveLocalGlobalConfigMaster(DB.globalConfig);
+        saveDbSnapshotToCache();
+        renderAllDashboardUI();
+        if (typeof renderAdminScreenshotVerificationGrid === "function") {
+          renderAdminScreenshotVerificationGrid();
+        }
+      }
     }
 
     function navigateRenterQuickNav(sectionKey) {
@@ -15615,7 +15898,8 @@ function formatMonthLabel(rawVal) {
         window.selectedRenterMonthlyUploadMonth = defaultMonthlyUploadMonth;
         const activeUploadMonthLabel = formatMonthLabel(defaultMonthlyUploadMonth);
         const renterMonthReqStatus = getMatchingScreenshotRequestsForRenter(defaultMonthlyUploadMonth, targetProp, targetFlat, primaryRenter.RenterID, effectiveAadhaar);
-        const isMonthRequestedByAdmin = Boolean(renterMonthReqStatus.hasMonthRequest || Object.keys(renterMonthReqStatus.reRequestedCats).length > 0);
+        const hasBulkRequest = Boolean(renterMonthReqStatus.hasBulkAllRequest);
+        const hasAnyReqForMonth = Boolean(renterMonthReqStatus.hasAnyRequest);
         const monthlyPhotosMap = (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object")
           ? DB.globalConfig.renterMonthlyPhotos
           : {};
@@ -15624,20 +15908,39 @@ function formatMonthLabel(rawVal) {
         const normAadhaarKey = String(effectiveAadhaar || "").replace(/\D/g, "").slice(0, 12);
 
         const resolveRenterMonthlyPhotoSlot = (catKey, colKey = "") => {
-          const cleanCat = String(catKey || "").trim().toLowerCase();
+          const cleanCat = canonicalMonthlyPhotoCategory(catKey);
           const candidateKeys = [];
           if (normAadhaarKey.length === 12) {
             candidateKeys.push(`${normAadhaarKey}__${defaultMonthlyUploadMonth}__${cleanCat}`);
+            candidateKeys.push(`MONTHLY_AADHAAR__${normAadhaarKey}__${defaultMonthlyUploadMonth}__${cleanCat}`);
           }
           candidateKeys.push(`${normPropKey}__${normFlatKey}__${defaultMonthlyUploadMonth}__${cleanCat}`);
           candidateKeys.push(`MONTHLY__${normPropKey}__${normFlatKey}__${defaultMonthlyUploadMonth}__${cleanCat}`);
           for (const k of candidateKeys) {
             const slot = monthlyPhotosMap[k];
-            if (slot && (slot.imageUrl || slot.previewUrl)) {
-              const rawImg = slot.imageUrl || slot.previewUrl;
+            if (slot && (slot.imageUrl || slot.previewUrl || slot.shareableUrl)) {
+              const rawImg = slot.imageUrl || slot.previewUrl || slot.shareableUrl;
               slot.imageUrl = rawImg.startsWith("data:image") ? rawImg : normalizeGoogleDriveImageUrl(rawImg);
               return slot;
             }
+          }
+          const matchedEntryKey = Object.keys(monthlyPhotosMap).find(k => {
+            const entry = monthlyPhotosMap[k];
+            if (!entry || typeof entry !== "object") return false;
+            const rawImg = entry.imageUrl || entry.previewUrl || entry.shareableUrl || "";
+            if (!rawImg || isPlaceholderImageUrl(rawImg)) return false;
+            if (canonicalMonthlyPhotoCategory(entry.category || "") !== cleanCat) return false;
+            const eMonth = normalizeMonthYear(entry.monthYear || entry.MonthYear || "");
+            if (eMonth !== defaultMonthlyUploadMonth) return false;
+            const eAadh = normalizeAadhaar12(entry.aadhaar || entry.identityDocNumber || "");
+            return (normAadhaarKey.length === 12 && (eAadh === normAadhaarKey || String(k).includes(normAadhaarKey))) ||
+                   (normPropKey && normFlatKey && String(entry.propertyName || "").trim().toLowerCase() === normPropKey && String(entry.flatName || "").trim().toLowerCase() === normFlatKey);
+          });
+          if (matchedEntryKey) {
+            const slot = monthlyPhotosMap[matchedEntryKey];
+            const rawImg = slot.imageUrl || slot.previewUrl || slot.shareableUrl;
+            slot.imageUrl = rawImg.startsWith("data:image") ? rawImg : normalizeGoogleDriveImageUrl(rawImg);
+            return slot;
           }
           const isCurrentOrRequestedDefault = defaultMonthlyUploadMonth === getCurrentCalendarYearMonth() ||
             (requestedMonthsList.length > 0 && defaultMonthlyUploadMonth === requestedMonthsList[0]);
@@ -15694,6 +15997,10 @@ function formatMonthLabel(rawVal) {
           }
         ];
 
+        const requestedCatTitles = monthlyUploadCategories
+          .filter(c => Boolean(renterMonthReqStatus.requestedCats && renterMonthReqStatus.requestedCats[c.key]))
+          .map(c => c.title.split("•")[0].trim());
+
         const requestedMonthsPillsHtml = requestedMonthsList.length > 0
           ? `<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
                <span style="font-size:0.72rem; font-weight:800; color:#34d399;"><i class="fa-solid fa-bell"></i> Admin Requested Months:</span>
@@ -15725,7 +16032,7 @@ function formatMonthLabel(rawVal) {
 
             ${requestedMonthsPillsHtml}
 
-            ${!isMonthRequestedByAdmin ? `
+            ${!hasAnyReqForMonth ? `
               <div style="padding:20px; border-radius:14px; border:1.5px dashed rgba(245,158,11,0.45); background:rgba(245,158,11,0.08); text-align:center; margin-bottom:14px;">
                 <div style="font-size:0.95rem; font-weight:800; color:#fbbf24; margin-bottom:5px;">
                   <i class="fa-solid fa-clock"></i> Awaiting Admin Photo Request for ${activeUploadMonthLabel}
@@ -15734,11 +16041,15 @@ function formatMonthLabel(rawVal) {
                   Photo capture opens automatically once the Admin selects <strong>${activeUploadMonthLabel}</strong> and sends a request from Settings &rarr; Screenshot Verification.
                 </div>
               </div>
-            ` : `
+            ` : (hasBulkRequest ? `
               <div style="padding:10px 14px; border-radius:10px; border:1px solid rgba(16,185,129,0.4); background:rgba(16,185,129,0.12); color:#34d399; font-size:0.76rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-                <span><i class="fa-solid fa-circle-check"></i> Admin requested photos for <strong>${activeUploadMonthLabel}</strong>. Tap any card button below to open your Live Camera and upload.</span>
+                <span><i class="fa-solid fa-circle-check"></i> Admin requested all 4 photos for <strong>${activeUploadMonthLabel}</strong>. Tap any card button below to open your Live Camera and upload.</span>
               </div>
-            `}
+            ` : `
+              <div style="padding:10px 14px; border-radius:10px; border:1px solid rgba(245,158,11,0.45); background:rgba(245,158,11,0.12); color:#fbbf24; font-size:0.76rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                <span><i class="fa-solid fa-camera"></i> Admin requested <strong>${requestedCatTitles.join(", ") || "specific photo"}</strong> for <strong>${activeUploadMonthLabel}</strong>. Only the requested box(es) are unlocked below.</span>
+              </div>
+            `)}
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(235px, 1fr)); gap:16px;">
               ${monthlyUploadCategories.map(cat => {
@@ -15755,11 +16066,13 @@ function formatMonthLabel(rawVal) {
                 const uploadedTimeStr = slotObj && slotObj.uploadedAt
                   ? new Date(slotObj.uploadedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
                   : "";
-                const isSlotReRequested = Boolean(renterMonthReqStatus.reRequestedCats[cat.key]);
-                const canRenterCapture = isSlotReRequested || (isMonthRequestedByAdmin && !displayImgUrl);
+                const isSlotReRequested = Boolean(renterMonthReqStatus.reRequestedCats && renterMonthReqStatus.reRequestedCats[cat.key]);
+                const isSlotRequested = Boolean(renterMonthReqStatus.requestedCats && renterMonthReqStatus.requestedCats[cat.key]);
+                const isThisCatUnlockedByAdmin = hasBulkRequest || isSlotRequested || isSlotReRequested;
+                const canRenterCapture = isSlotReRequested || (isThisCatUnlockedByAdmin && !displayImgUrl);
 
                 return `
-                  <div style="padding:15px; border-radius:15px; background:var(--bg-input); border:1.5px solid ${isSlotReRequested ? '#f59e0b' : (displayImgUrl ? cat.border : "var(--glass-border)")}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                  <div style="padding:15px; border-radius:15px; background:var(--bg-input); border:1.5px solid ${isSlotReRequested ? '#f59e0b' : (isSlotRequested && !displayImgUrl ? '#38bdf8' : (displayImgUrl ? cat.border : "var(--glass-border)"))}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
                     <div>
                       <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
                         <div style="display:flex; align-items:center; gap:9px;">
@@ -15771,8 +16084,8 @@ function formatMonthLabel(rawVal) {
                             <div style="font-size:0.69rem; color:var(--text-muted); margin-top:2px;">${cat.subtitle}</div>
                           </div>
                         </div>
-                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${isSlotReRequested ? "rgba(245,158,11,0.2)" : (displayImgUrl ? "rgba(16,185,129,0.16)" : "rgba(148,163,184,0.12)")}; color:${isSlotReRequested ? "#fbbf24" : (displayImgUrl ? "#34d399" : "var(--text-muted)")}; border:1px solid ${isSlotReRequested ? "rgba(245,158,11,0.45)" : (displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)")}; white-space:nowrap;">
-                          ${isSlotReRequested ? "Re-requested" : (displayImgUrl ? "Uploaded" : activeUploadMonthLabel)}
+                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${isSlotReRequested ? "rgba(245,158,11,0.2)" : (isSlotRequested && !displayImgUrl ? "rgba(56,189,248,0.18)" : (displayImgUrl ? "rgba(16,185,129,0.16)" : "rgba(148,163,184,0.12)"))}; color:${isSlotReRequested ? "#fbbf24" : (isSlotRequested && !displayImgUrl ? "#38bdf8" : (displayImgUrl ? "#34d399" : "var(--text-muted)"))}; border:1px solid ${isSlotReRequested ? "rgba(245,158,11,0.45)" : (isSlotRequested && !displayImgUrl ? "rgba(56,189,248,0.45)" : (displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"))}; white-space:nowrap;">
+                          ${isSlotReRequested ? "Re-requested" : (isSlotRequested && !displayImgUrl ? "Requested" : (displayImgUrl ? "Uploaded" : activeUploadMonthLabel))}
                         </span>
                       </div>
 
@@ -15801,7 +16114,7 @@ function formatMonthLabel(rawVal) {
                         <div style="width:100%; height:148px; border-radius:11px; border:1.5px dashed var(--glass-border); background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); padding:12px; text-align:center; margin-bottom:8px;">
                           <i class="${cat.icon}" style="font-size:1.5rem; color:${cat.accent}; opacity:0.8;"></i>
                           <div style="font-size:0.74rem; font-weight:800; color:var(--text-main);">No ${cat.title} for ${activeUploadMonthLabel}</div>
-                          <div style="font-size:0.67rem; color:var(--text-muted);">${isMonthRequestedByAdmin ? "Tap Live Camera button below to capture" : "Locked until Admin sends request"}</div>
+                          <div style="font-size:0.67rem; color:var(--text-muted);">${isThisCatUnlockedByAdmin ? "Tap Live Camera button below to capture" : "Locked until Admin requests this photo"}</div>
                         </div>
                       `}
                     </div>
@@ -15823,7 +16136,7 @@ function formatMonthLabel(rawVal) {
                         </div>
                       ` : `
                         <div style="flex:1; padding:8px 10px; border-radius:10px; background:rgba(148,163,184,0.1); border:1px solid var(--glass-border); color:var(--text-muted); font-size:0.72rem; font-weight:700; text-align:center;">
-                          <i class="fa-solid fa-lock"></i> Waiting for Admin Request
+                          <i class="fa-solid fa-lock"></i> ${hasAnyReqForMonth ? "Locked (Not Requested)" : "Waiting for Admin Request"}
                         </div>
                       `)}
                     </div>
@@ -16494,9 +16807,22 @@ function formatMonthLabel(rawVal) {
       const rawBills = Array.isArray(res.bills) ? res.bills : (Array.isArray(dbObj.bills) ? dbObj.bills : []);
       rawBills.forEach(b => {
         if (!b.MeterProofUrl && b.DriveMeterProofPreviewUrl) {
-          b.MeterProofUrl = b.DriveMeterProofPreviewUrl.startsWith("data:image")
-            ? b.DriveMeterProofPreviewUrl
-            : normalizeGoogleDriveImageUrl(b.DriveMeterProofPreviewUrl);
+          b.MeterProofUrl = b.DriveMeterProofPreviewUrl;
+        }
+        if (b.MeterProofUrl && !String(b.MeterProofUrl).startsWith("data:image")) {
+          b.MeterProofUrl = normalizeGoogleDriveImageUrl(b.MeterProofUrl);
+        }
+        if (!b.PNGProofUrl && b.DrivePngProofPreviewUrl) {
+          b.PNGProofUrl = b.DrivePngProofPreviewUrl;
+        }
+        if (b.PNGProofUrl && !String(b.PNGProofUrl).startsWith("data:image")) {
+          b.PNGProofUrl = normalizeGoogleDriveImageUrl(b.PNGProofUrl);
+        }
+        if (!b.WaterProofUrl && b.DriveWaterProofPreviewUrl) {
+          b.WaterProofUrl = b.DriveWaterProofPreviewUrl;
+        }
+        if (b.WaterProofUrl && !String(b.WaterProofUrl).startsWith("data:image")) {
+          b.WaterProofUrl = normalizeGoogleDriveImageUrl(b.WaterProofUrl);
         }
       });
       DB.bills = sanitizeAllBillsMonths(rawBills);
@@ -17382,9 +17708,22 @@ function formatMonthLabel(rawVal) {
           const rawIncomingBills = Array.isArray(res.bills) ? res.bills : [];
           rawIncomingBills.forEach(b => {
             if (!b.MeterProofUrl && b.DriveMeterProofPreviewUrl) {
-              b.MeterProofUrl = b.DriveMeterProofPreviewUrl.startsWith("data:image")
-                ? b.DriveMeterProofPreviewUrl
-                : normalizeGoogleDriveImageUrl(b.DriveMeterProofPreviewUrl);
+              b.MeterProofUrl = b.DriveMeterProofPreviewUrl;
+            }
+            if (b.MeterProofUrl && !String(b.MeterProofUrl).startsWith("data:image")) {
+              b.MeterProofUrl = normalizeGoogleDriveImageUrl(b.MeterProofUrl);
+            }
+            if (!b.PNGProofUrl && b.DrivePngProofPreviewUrl) {
+              b.PNGProofUrl = b.DrivePngProofPreviewUrl;
+            }
+            if (b.PNGProofUrl && !String(b.PNGProofUrl).startsWith("data:image")) {
+              b.PNGProofUrl = normalizeGoogleDriveImageUrl(b.PNGProofUrl);
+            }
+            if (!b.WaterProofUrl && b.DriveWaterProofPreviewUrl) {
+              b.WaterProofUrl = b.DriveWaterProofPreviewUrl;
+            }
+            if (b.WaterProofUrl && !String(b.WaterProofUrl).startsWith("data:image")) {
+              b.WaterProofUrl = normalizeGoogleDriveImageUrl(b.WaterProofUrl);
             }
           });
           const incomingBills = sanitizeAllBillsMonths(rawIncomingBills);
@@ -17589,62 +17928,118 @@ function formatMonthLabel(rawVal) {
       });
     }
 
-    // Requirement 1: When a tenant vacates a flat, the final meter reading from their stay must ALWAYS be displayed
-    // as the previous reading for the new incoming tenant (Electricity, PNG, and Water alike).
-    function getFlatLastRecordedMeterReadings(propertyName, flatName, beforeMonthYear) {
+    // Final meter reading from any prior stay (whether vacated or active) or previous bill must ALWAYS carry forward accurately for Electricity, PNG, and Water alike (including explicit 0 readings).
+    function parseFiniteReadingOrNull(val) {
+      if (val === "" || val === null || val === undefined) return null;
+      const n = Number(val);
+      return Number.isFinite(n) && n >= 0 ? n : null;
+    }
+
+    function getFlatLastRecordedMeterReadings(propertyName, flatName, beforeMonthYear, beforeBillDate = "", excludeBillId = "") {
       const cleanTargetMonth = normalizeMonthYear(beforeMonthYear);
+      const cleanTargetDate = toInputDateValue(beforeBillDate || "");
+      const cleanExcludeId = String(excludeBillId || "").trim();
+
       const allBillsForFlat = (DB.bills || [])
         .filter(b => isSamePropAndFlat(b.PropertyName, b.FlatName, propertyName, flatName))
-        .sort((a, b) => normalizeMonthYear(a.MonthYear).localeCompare(normalizeMonthYear(b.MonthYear)));
+        .filter(b => !cleanExcludeId || String(b.BillID || "").trim() !== cleanExcludeId)
+        .sort((a, b) => {
+          const mA = normalizeMonthYear(a.MonthYear);
+          const mB = normalizeMonthYear(b.MonthYear);
+          if (mA !== mB) return mA.localeCompare(mB);
+          const dA = toInputDateValue(a.BillDate || a.PaymentDate || "") || "";
+          const dB = toInputDateValue(b.BillDate || b.PaymentDate || "") || "";
+          if (dA !== dB) return dA.localeCompare(dB);
+          return String(a.BillID || "").localeCompare(String(b.BillID || ""));
+        });
 
-      const billsBeforeMonth = allBillsForFlat.filter(
-        b => !cleanTargetMonth || normalizeMonthYear(b.MonthYear) < cleanTargetMonth
-      );
+      const candidateBills = allBillsForFlat.filter(b => {
+        if (!cleanTargetMonth) return true;
+        const bm = normalizeMonthYear(b.MonthYear);
+        if (bm < cleanTargetMonth) return true;
+        if (bm === cleanTargetMonth && cleanTargetDate) {
+          const bd = toInputDateValue(b.BillDate || b.PaymentDate || "");
+          if (bd && bd < cleanTargetDate) return true;
+        }
+        return false;
+      });
 
-      // Strictly use bills prior to cleanTargetMonth when a target month is specified so future bills never leak into previous months
-      const candidateBills = cleanTargetMonth ? billsBeforeMonth : allBillsForFlat;
       const flatObj = findFlatObject(propertyName, flatName);
 
       if (candidateBills.length > 0) {
-        let bestElec = 0;
-        let bestPng = 0;
-        let bestWater = 0;
+        let bestElec = null;
+        let bestPng = null;
+        let bestWater = null;
+        let elecSourceMonth = "";
+        let pngSourceMonth = "";
+        let waterSourceMonth = "";
         let lastSourceMonth = "";
 
         candidateBills.forEach(b => {
-          const eVal = parseFloat(b.ElecCurr) || parseFloat(b.ElecPrev) || 0;
-          const pVal = parseFloat(b.PNGCurr) || parseFloat(b.PNGPrev) || 0;
-          const wVal = parseFloat(b.WaterCurr) || parseFloat(b.WaterPrev) || 0;
-          if (eVal > 0) bestElec = eVal;
-          if (pVal > 0) bestPng = pVal;
-          if (wVal > 0) bestWater = wVal;
-          if (b.MonthYear) lastSourceMonth = b.MonthYear;
+          const eCurr = parseFiniteReadingOrNull(b.ElecCurr);
+          const ePrev = parseFiniteReadingOrNull(b.ElecPrev);
+          const eVal = eCurr !== null ? eCurr : ePrev;
+          if (eVal !== null) {
+            bestElec = eVal;
+            elecSourceMonth = normalizeMonthYear(b.MonthYear) || elecSourceMonth;
+          }
+
+          const pCurr = parseFiniteReadingOrNull(b.PNGCurr);
+          const pPrev = parseFiniteReadingOrNull(b.PNGPrev);
+          const pVal = pCurr !== null ? pCurr : pPrev;
+          if (pVal !== null) {
+            bestPng = pVal;
+            pngSourceMonth = normalizeMonthYear(b.MonthYear) || pngSourceMonth;
+          }
+
+          const wCurr = parseFiniteReadingOrNull(b.WaterCurr);
+          const wPrev = parseFiniteReadingOrNull(b.WaterPrev);
+          const wVal = wCurr !== null ? wCurr : wPrev;
+          if (wVal !== null) {
+            bestWater = wVal;
+            waterSourceMonth = normalizeMonthYear(b.MonthYear) || waterSourceMonth;
+          }
+
+          if (b.MonthYear) lastSourceMonth = normalizeMonthYear(b.MonthYear);
         });
 
         if (flatObj) {
-          if (!bestElec && parseFloat(flatObj.LastElecReading) > 0) bestElec = parseFloat(flatObj.LastElecReading);
-          if (!bestPng && parseFloat(flatObj.LastPNGReading) > 0) bestPng = parseFloat(flatObj.LastPNGReading);
-          if (!bestWater && parseFloat(flatObj.LastWaterReading) > 0) bestWater = parseFloat(flatObj.LastWaterReading);
+          if (bestElec === null) {
+            const fElec = parseFiniteReadingOrNull(flatObj.LastElecReading);
+            if (fElec !== null) bestElec = fElec;
+          }
+          if (bestPng === null) {
+            const fPng = parseFiniteReadingOrNull(flatObj.LastPNGReading);
+            if (fPng !== null) bestPng = fPng;
+          }
+          if (bestWater === null) {
+            const fWater = parseFiniteReadingOrNull(flatObj.LastWaterReading);
+            if (fWater !== null) bestWater = fWater;
+          }
         }
 
         return {
           hasPriorReading: true,
-          elecPrev: bestElec,
-          pngPrev: bestPng,
-          waterPrev: bestWater,
-          sourceMonth: lastSourceMonth
+          elecPrev: bestElec !== null ? bestElec : 0,
+          pngPrev: bestPng !== null ? bestPng : 0,
+          waterPrev: bestWater !== null ? bestWater : 0,
+          sourceMonth: lastSourceMonth || elecSourceMonth || pngSourceMonth || waterSourceMonth || ""
         };
       }
 
-      const currentYearMonth = getCurrentCalendarYearMonth();
-      if ((!cleanTargetMonth || cleanTargetMonth >= currentYearMonth) && flatObj && (flatObj.LastElecReading || flatObj.LastPNGReading || flatObj.LastWaterReading)) {
-        return {
-          hasPriorReading: true,
-          elecPrev: parseFloat(flatObj.LastElecReading) || 0,
-          pngPrev: parseFloat(flatObj.LastPNGReading) || 0,
-          waterPrev: parseFloat(flatObj.LastWaterReading) || 0,
-          sourceMonth: ""
-        };
+      if (flatObj) {
+        const fElec = parseFiniteReadingOrNull(flatObj.LastElecReading);
+        const fPng = parseFiniteReadingOrNull(flatObj.LastPNGReading);
+        const fWater = parseFiniteReadingOrNull(flatObj.LastWaterReading);
+        if (fElec !== null || fPng !== null || fWater !== null) {
+          return {
+            hasPriorReading: true,
+            elecPrev: fElec !== null ? fElec : 0,
+            pngPrev: fPng !== null ? fPng : 0,
+            waterPrev: fWater !== null ? fWater : 0,
+            sourceMonth: ""
+          };
+        }
       }
 
       return {
@@ -17879,8 +18274,10 @@ function formatMonthLabel(rawVal) {
 
         let statusClass = "";
         let paymentBannerHTML = "";
+        let statusPillHTML = "";
 
         if (!renter) {
+          statusPillHTML = `<span class="flat-status-pill pill-vacant">Vacant</span>`;
           paymentBannerHTML = `
             <div class="payment-banner">
               <span><i class="fa-solid fa-circle-info"></i> Status:</span>
@@ -17889,6 +18286,7 @@ function formatMonthLabel(rawVal) {
           `;
         } else if (netBal > 0) {
           statusClass = "flat-card-due";
+          statusPillHTML = `<span class="flat-status-pill pill-due overdue"><i class="fa-solid fa-triangle-exclamation"></i> Due</span>`;
           paymentBannerHTML = `
             <div class="payment-banner">
               <span><i class="fa-solid fa-triangle-exclamation"></i> Needs to Pay:</span>
@@ -17897,6 +18295,7 @@ function formatMonthLabel(rawVal) {
           `;
         } else if (summary.billCount > 0 && netBal <= 0) {
           statusClass = "flat-card-paid";
+          statusPillHTML = `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
           const advLabel = netBal < 0 ? `Fully Paid (Adv: ₹${Math.abs(netBal).toLocaleString('en-IN')})` : `Fully Paid (₹0 Due)`;
           paymentBannerHTML = `
             <div class="payment-banner">
@@ -17906,7 +18305,10 @@ function formatMonthLabel(rawVal) {
           `;
         } else {
           const baseRent = parseFloat(flat.RentAmount || renter.RentAmount || 0);
-          statusClass = baseRent > 0 ? "flat-card-due" : "";
+          statusClass = baseRent > 0 ? "flat-card-due" : "flat-card-paid";
+          statusPillHTML = baseRent > 0
+            ? `<span class="flat-status-pill pill-due"><i class="fa-solid fa-clock"></i> Due</span>`
+            : `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
           paymentBannerHTML = `
             <div class="payment-banner">
               <span><i class="fa-solid fa-clock"></i> Needs to Pay:</span>
@@ -17932,7 +18334,10 @@ function formatMonthLabel(rawVal) {
           <div>
             <div class="flat-top-row">
               <div class="flat-name">Flat ${flat.FlatName}</div>
-              <span class="rent-status">Rent: ₹${flat.RentAmount || renter?.RentAmount || 0}/mo</span>
+              <div class="flat-top-badges">
+                <span class="rent-status">Rent: ₹${flat.RentAmount || renter?.RentAmount || 0}/mo</span>
+                ${statusPillHTML}
+              </div>
             </div>
             <div class="renter-identity">
               <div class="renter-avatar">
@@ -18085,17 +18490,24 @@ function formatMonthLabel(rawVal) {
 
         let statusClass = "";
         let paymentBannerHTML = "";
+        let statusPillHTML = "";
         if (!renter) {
+          statusPillHTML = `<span class="flat-status-pill pill-vacant">Vacant</span>`;
           paymentBannerHTML = `<div class="payment-banner"><span>Status:</span><span>Vacant</span></div>`;
         } else if (netBal > 0) {
           statusClass = "flat-card-due";
+          statusPillHTML = `<span class="flat-status-pill pill-due overdue"><i class="fa-solid fa-triangle-exclamation"></i> Due</span>`;
           paymentBannerHTML = `<div class="payment-banner"><span>Needs to Pay:</span><span>₹${netBal.toLocaleString('en-IN')} Pending</span></div>`;
         } else if (summary.billCount > 0 && netBal <= 0) {
           statusClass = "flat-card-paid";
+          statusPillHTML = `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
           paymentBannerHTML = `<div class="payment-banner"><span>Status:</span><span>Fully Paid</span></div>`;
         } else {
           const baseRent = parseFloat(flat.RentAmount || renter.RentAmount || 0);
-          statusClass = baseRent > 0 ? "flat-card-due" : "";
+          statusClass = baseRent > 0 ? "flat-card-due" : "flat-card-paid";
+          statusPillHTML = baseRent > 0
+            ? `<span class="flat-status-pill pill-due"><i class="fa-solid fa-clock"></i> Due</span>`
+            : `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
           paymentBannerHTML = `<div class="payment-banner"><span>Needs to Pay:</span><span>₹${baseRent.toLocaleString('en-IN')}</span></div>`;
         }
 
@@ -18130,7 +18542,10 @@ function formatMonthLabel(rawVal) {
           <div>
             <div class="flat-top-row">
               <div class="flat-name">${flat.PropertyName} - Flat ${flat.FlatName}</div>
-              <span class="rent-status">₹${flat.RentAmount || 0}/mo</span>
+              <div class="flat-top-badges">
+                <span class="rent-status">₹${flat.RentAmount || 0}/mo</span>
+                ${statusPillHTML}
+              </div>
             </div>
             <div class="renter-identity">
               <div class="renter-avatar">
@@ -19714,6 +20129,80 @@ function formatMonthLabel(rawVal) {
       openModal("settingsModal");
     }
 
+    function getAadhaar3MonthPhotoHistoryByCategory(rawAadh, propName, flatName, renterId, linkedUsername, monthlyPhotosMap) {
+      const cleanAadh = normalizeAadhaar12(rawAadh || "");
+      const normProp = String(propName || "").trim().toLowerCase();
+      const normFlat = String(flatName || "").trim().toLowerCase();
+      const normRenterId = String(renterId || "").trim().toLowerCase();
+      const cleanUser = String(linkedUsername || "").trim().toLowerCase();
+
+      const cats = [
+        { key: "electricity_meter", label: "Electricity Meter", shortLabel: "Electricity", icon: "fa-bolt", color: "#38bdf8" },
+        { key: "completed_payment", label: "Payment Screenshot", shortLabel: "Payment", icon: "fa-receipt", color: "#10b981" },
+        { key: "water_meter_bill", label: "Water Meter / Bill", shortLabel: "Water", icon: "fa-faucet-drip", color: "#06b6d4" },
+        { key: "png_gas_meter", label: "PNG Gas Meter", shortLabel: "PNG Gas", icon: "fa-fire-flame-simple", color: "#f59e0b" }
+      ];
+
+      const mapByCat = {};
+      cats.forEach(c => { mapByCat[c.key] = {}; });
+
+      if (monthlyPhotosMap && typeof monthlyPhotosMap === "object") {
+        Object.keys(monthlyPhotosMap).forEach(k => {
+          const item = monthlyPhotosMap[k];
+          if (!item || typeof item !== "object") return;
+          const rawUrl = item.imageUrl || item.previewUrl || item.shareableUrl || "";
+          if (!rawUrl || isPlaceholderImageUrl(rawUrl)) return;
+
+          const itemRenterId = String(item.renterId || "").trim().toLowerCase();
+          const itemAadh = normalizeAadhaar12(item.aadhaar || item.identityDocNumber || "");
+          const itemProp = String(item.propertyName || "").trim().toLowerCase();
+          const itemFlat = String(item.flatName || "").trim().toLowerCase();
+          const itemUser = String(item.username || "").trim().toLowerCase();
+          const keyHasAadh = cleanAadh.length === 12 && String(k).includes(cleanAadh);
+
+          const isMatch = (cleanAadh.length === 12 && (itemAadh === cleanAadh || keyHasAadh)) ||
+            (normRenterId && itemRenterId && itemRenterId === normRenterId) ||
+            (cleanUser && itemUser && itemUser === cleanUser) ||
+            (normProp && normFlat && normFlat !== "--" && itemProp === normProp && itemFlat === normFlat);
+          if (!isMatch) return;
+
+          const catKey = canonicalMonthlyPhotoCategory(item.category || "");
+          if (!mapByCat[catKey]) return;
+
+          const mKey = normalizeMonthYear(item.monthYear || item.MonthYear || "") || "Unknown";
+          const ts = Date.parse(item.updatedAt || item.uploadedAt || "") || 0;
+          const normalizedUrl = rawUrl.startsWith("data:image") ? rawUrl : normalizeGoogleDriveImageUrl(rawUrl);
+          const existing = mapByCat[catKey][mKey];
+          if (!existing || ts >= existing.ts) {
+            mapByCat[catKey][mKey] = {
+              key: k,
+              categoryKey: catKey,
+              monthYear: mKey,
+              monthLabel: typeof formatMonthLabel === "function" ? formatMonthLabel(mKey) : mKey,
+              url: normalizedUrl,
+              fileName: item.fileName || "",
+              updatedAt: item.updatedAt || item.uploadedAt || "",
+              ts
+            };
+          }
+        });
+      }
+
+      return cats.map(c => {
+        const items = Object.values(mapByCat[c.key])
+          .sort((a, b) => {
+            const mCmp = String(b.monthYear || "").localeCompare(String(a.monthYear || ""));
+            if (mCmp !== 0) return mCmp;
+            return b.ts - a.ts;
+          })
+          .slice(0, 3);
+        return {
+          ...c,
+          items
+        };
+      });
+    }
+
     function renderAdminScreenshotVerificationGrid() {
       const container = document.getElementById("adminScreenshotVerificationContainer");
       if (!container) return;
@@ -19965,14 +20454,28 @@ function formatMonthLabel(rawVal) {
         // 3. Check request / re-request state for this active renter & month
         const reqInfo = typeof getMatchingScreenshotRequestsForRenter === "function"
           ? getMatchingScreenshotRequestsForRenter(selectedMonth, propName, flatName, r.RenterID || "", rawAadh)
-          : { hasMonthRequest: false, reRequestedCats: {} };
+          : { hasMonthRequest: false, hasBulkAllRequest: false, hasAnySingleSlotRequest: false, requestedCats: {}, reRequestedCats: {} };
 
         photoSlots.forEach(slot => {
+          if (reqInfo.requestedCats && reqInfo.requestedCats[slot.key]) {
+            slot.isRequested = true;
+          }
           if (reqInfo.reRequestedCats && reqInfo.reRequestedCats[slot.key]) {
             slot.isReRequested = true;
             slot.reRequestNote = reqInfo.reRequestedCats[slot.key].note || "";
           }
         });
+
+        // 4. Collect up to 3 most recent months per category (auto-FIFO) for this Aadhaar renter
+        const aadhaar3MonthHistory = getAadhaar3MonthPhotoHistoryByCategory(
+          rawAadh,
+          propName,
+          flatName,
+          r.RenterID || "",
+          r._linkedUsername || "",
+          monthlyPhotosMap
+        );
+        const totalHistoryCount = aadhaar3MonthHistory.reduce((acc, g) => acc + g.items.length, 0);
 
         cardsData.push({
           renter: r,
@@ -19983,8 +20486,12 @@ function formatMonthLabel(rawVal) {
           propName,
           flatName,
           hasMonthRequest: Boolean(reqInfo.hasMonthRequest),
+          hasBulkAllRequest: Boolean(reqInfo.hasBulkAllRequest),
+          hasAnySingleSlotRequest: Boolean(reqInfo.hasAnySingleSlotRequest),
           hasReRequestedSlot: photoSlots.some(s => s.isReRequested),
           photoSlots,
+          aadhaar3MonthHistory,
+          totalHistoryCount,
           uploadedCount: photoSlots.filter(s => Boolean(s.url)).length
         });
       });
@@ -20007,9 +20514,55 @@ function formatMonthLabel(rawVal) {
         const safeAadh = card.rawAadh.replace(/'/g, "\\'");
         const reqBadge = card.hasReRequestedSlot
           ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(245,158,11,0.18); color:#d97706; border:1px solid rgba(245,158,11,0.45);"><i class="fa-solid fa-rotate-right"></i> Re-requested (${selectedMonthLabel})</span>`
-          : (card.hasMonthRequest
-              ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(56,189,248,0.16); color:#0284c7; border:1px solid rgba(56,189,248,0.38);"><i class="fa-solid fa-paper-plane"></i> Requested (${selectedMonthLabel})</span>`
-              : `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(148,163,184,0.14); color:var(--text-muted); border:1px solid var(--glass-border);">Closed / Not Requested</span>`);
+          : (card.hasBulkAllRequest
+              ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(56,189,248,0.16); color:#0284c7; border:1px solid rgba(56,189,248,0.38);"><i class="fa-solid fa-paper-plane"></i> Requested All (${selectedMonthLabel})</span>`
+              : (card.hasAnySingleSlotRequest
+                  ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(168,85,247,0.16); color:#a855f7; border:1px solid rgba(168,85,247,0.38);"><i class="fa-solid fa-camera"></i> Single Slot Requested (${selectedMonthLabel})</span>`
+                  : `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(148,163,184,0.14); color:var(--text-muted); border:1px solid var(--glass-border);">Closed / Not Requested</span>`));
+
+        const historyDrawerHtml = card.totalHistoryCount > 0 ? `
+          <details style="margin-top:12px; border-top:1px dashed var(--glass-border); padding-top:10px;">
+            <summary style="cursor:pointer; font-size:0.74rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; justify-content:space-between; gap:8px; list-style:none;">
+              <span><i class="fa-solid fa-clock-rotate-left"></i> 3-Month Aadhaar Photo History (${card.totalHistoryCount} saved • Max 3 Months/Category Auto-FIFO)</span>
+              <span style="font-size:0.66rem; color:var(--text-muted); font-weight:700;">Click to Expand / Collapse</span>
+            </summary>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(195px, 1fr)); gap:10px; margin-top:10px;">
+              ${card.aadhaar3MonthHistory.map(catGrp => `
+                <div style="background:rgba(15,23,42,0.42); border:1px solid var(--glass-border); border-radius:10px; padding:8px; display:flex; flex-direction:column; gap:7px;">
+                  <div style="font-size:0.69rem; font-weight:800; color:${catGrp.color}; display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                    <span><i class="fa-solid ${catGrp.icon}"></i> ${catGrp.shortLabel}</span>
+                    <span style="font-size:0.62rem; color:var(--text-muted);">${catGrp.items.length}/3</span>
+                  </div>
+                  ${catGrp.items.length === 0
+                    ? `<div style="font-size:0.66rem; color:var(--text-muted); padding:10px 4px; text-align:center;">No saved history</div>`
+                    : catGrp.items.map(hItem => {
+                        const safeHistUrl = String(hItem.url || "").replace(/'/g, "\\'");
+                        const safeHistTitle = `${safeName} (${card.formattedAadh}) — ${catGrp.label} (${hItem.monthLabel})`.replace(/'/g, "\\'");
+                        const safeHistMonth = String(hItem.monthYear || selectedMonth).replace(/'/g, "\\'");
+                        const safeCatLabel = catGrp.label.replace(/'/g, "\\'");
+                        const dlHistName = `${card.rName}_${card.propName}_${card.flatName}_${hItem.monthYear}_${catGrp.key}`.replace(/[^a-zA-Z0-9._-]/g, "_");
+                        return `
+                          <div style="display:flex; align-items:center; gap:8px; padding:5px; border-radius:8px; background:rgba(15,23,42,0.55); border:1px solid rgba(255,255,255,0.08);">
+                            <div onclick="openPhotoZoomModal('${safeHistUrl}', '${safeHistTitle}')" title="Zoom ${hItem.monthLabel}" style="width:46px; height:46px; border-radius:7px; overflow:hidden; flex-shrink:0; cursor:zoom-in; border:1px solid rgba(56,189,248,0.35); background:#090d16;">
+                              <img src="${hItem.url}" alt="${catGrp.label}" onerror="handleDriveImgFallback(this)" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                            </div>
+                            <div style="min-width:0; flex:1;">
+                              <div style="font-size:0.68rem; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${hItem.monthLabel}</div>
+                              <div style="display:flex; align-items:center; gap:4px; margin-top:4px; flex-wrap:wrap;">
+                                <button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.6rem; color:#0284c7;" onclick="openPhotoZoomModal('${safeHistUrl}', '${safeHistTitle}')">Zoom</button>
+                                <button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.6rem; color:#10b981;" onclick="triggerImageFileDownload('${safeHistUrl}', '${dlHistName}')">Save</button>
+                                ${isStrictAdmin ? `<button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.6rem; color:#ef4444;" onclick="adminDeleteMonthlyPhotoSlot('${catGrp.key}', '${safeCatLabel}', '${safeHistMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')">Del</button>` : ""}
+                              </div>
+                            </div>
+                          </div>
+                        `;
+                      }).join("")
+                  }
+                </div>
+              `).join("")}
+            </div>
+          </details>
+        ` : "";
 
         return `
           <div class="ssv-renter-card">
@@ -20033,7 +20586,7 @@ function formatMonthLabel(rawVal) {
                 </span>
                 ${isStrictAdmin ? `
                   <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#10b981; border-color:rgba(16,185,129,0.45);" onclick="sendAdminMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
-                    <i class="fa-solid fa-paper-plane"></i> ${card.hasMonthRequest ? "Resend Month Request" : "Request Month"}
+                    <i class="fa-solid fa-paper-plane"></i> ${card.hasBulkAllRequest ? "Resend Month Request" : "Request Month"}
                   </button>
                 ` : ""}
               </div>
@@ -20045,11 +20598,14 @@ function formatMonthLabel(rawVal) {
                 const safeTitle = `${safeName} (${card.formattedAadh}) — ${slot.label} (${selectedMonthLabel})`.replace(/'/g, "\\'");
                 const safeLabel = slot.label.replace(/'/g, "\\'");
                 const downloadFileName = `${card.rName}_${card.propName}_${card.flatName}_${selectedMonth}_${slot.key}`.replace(/[^a-zA-Z0-9._-]/g, "_");
+                const isSlotOpen = card.hasBulkAllRequest || slot.isRequested || slot.isReRequested;
                 return `
-                  <div class="ssv-slot-tile" style="border-color:${slot.isReRequested ? 'rgba(245,158,11,0.65)' : (slot.url ? 'rgba(16,185,129,0.48)' : 'var(--glass-border)')};">
+                  <div class="ssv-slot-tile" style="border-color:${slot.isReRequested ? 'rgba(245,158,11,0.65)' : (slot.isRequested ? 'rgba(168,85,247,0.62)' : (slot.url ? 'rgba(16,185,129,0.48)' : 'var(--glass-border)'))};">
                     <div style="font-size:0.72rem; font-weight:800; color:${slot.color}; display:flex; align-items:center; justify-content:space-between; gap:4px;">
                       <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><i class="fa-solid ${slot.icon}"></i> ${slot.label}</span>
-                      ${slot.isReRequested ? `<span style="font-size:0.62rem; font-weight:800; color:#d97706; white-space:nowrap;"><i class="fa-solid fa-rotate-right"></i> Re-requested</span>` : ""}
+                      ${slot.isReRequested
+                        ? `<span style="font-size:0.62rem; font-weight:800; color:#d97706; white-space:nowrap;"><i class="fa-solid fa-rotate-right"></i> Re-requested</span>`
+                        : (slot.isRequested ? `<span style="font-size:0.62rem; font-weight:800; color:#a855f7; white-space:nowrap;"><i class="fa-solid fa-camera"></i> Requested</span>` : "")}
                     </div>
                     ${slot.url ? `
                       <div
@@ -20076,12 +20632,12 @@ function formatMonthLabel(rawVal) {
                         </div>
                       ` : ""}
                     ` : `
-                      <div class="ssv-slot-empty" style="border-color:${slot.isReRequested ? 'rgba(245,158,11,0.55)' : 'var(--glass-border)'};">
+                      <div class="ssv-slot-empty" style="border-color:${slot.isReRequested ? 'rgba(245,158,11,0.55)' : (slot.isRequested ? 'rgba(168,85,247,0.55)' : 'var(--glass-border)')};">
                         <i class="fa-solid ${slot.icon}" style="font-size:1.2rem; opacity:0.65; color:${slot.color};"></i>
-                        <span>${slot.isReRequested ? "Re-requested — Awaiting Renter Live Camera" : (card.hasMonthRequest ? "Awaiting Renter Capture" : "No Photo Uploaded")}</span>
+                        <span>${slot.isReRequested ? "Re-requested — Awaiting Renter Live Camera" : (isSlotOpen ? "Awaiting Renter Capture" : "No Photo Uploaded")}</span>
                         ${isStrictAdmin ? `
-                          <button type="button" class="btn-ledger-action" style="padding:4px 8px; font-size:0.65rem; font-weight:800; color:#d97706; border-color:rgba(245,158,11,0.45);" onclick="reRequestAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')">
-                            <i class="fa-solid fa-camera"></i> Request Slot
+                          <button type="button" class="btn-ledger-action" style="padding:4px 9px; font-size:0.66rem; font-weight:800; color:#d97706; border-color:rgba(245,158,11,0.45);" onclick="requestSingleAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')">
+                            <i class="fa-solid fa-camera"></i> Request Upload
                           </button>
                         ` : ""}
                       </div>
@@ -20090,6 +20646,7 @@ function formatMonthLabel(rawVal) {
                 `;
               }).join("")}
             </div>
+            ${historyDrawerHtml}
           </div>
         `;
       }).join("");
@@ -20278,6 +20835,71 @@ function formatMonthLabel(rawVal) {
         requestKey: reReqKey,
         requestEntry: reReqEntry,
         monthYear: cleanMonth,
+        category: cleanCat,
+        categoryLabel: categoryLabel || cleanCat,
+        propertyName: propName || "",
+        flatName: flatName || "",
+        renterId: cleanRenterId,
+        aadhaar: normAadh,
+        renterName: renterName || "",
+        screenshotRequests: DB.globalConfig.screenshotRequests
+      });
+    }
+
+    async function requestSingleAdminMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Only", "Only the Admin can send a photo upload request.", false);
+      }
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || new Date().toISOString().slice(0, 7);
+      const cleanCat = canonicalMonthlyPhotoCategory(categoryKey);
+      const normProp = String(propName || "").trim().toLowerCase();
+      const normFlat = String(flatName || "").trim().toLowerCase();
+      const normAadh = normalizeAadhaar12(aadhaarNum || "");
+      const cleanRenterId = String(renterId || "").trim();
+      const monthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(cleanMonth) : cleanMonth;
+
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      if (!DB.globalConfig.screenshotRequests || typeof DB.globalConfig.screenshotRequests !== "object") {
+        DB.globalConfig.screenshotRequests = {};
+      }
+
+      const slotReqKey = `SLOTREQ__${normProp}__${normFlat}__${cleanRenterId || normAadh || "r"}__${cleanMonth}__${cleanCat}`;
+      const slotReqEntry = {
+        requestKey: slotReqKey,
+        scope: "SLOT",
+        status: "requested",
+        monthYear: cleanMonth,
+        category: cleanCat,
+        categoryLabel: categoryLabel || cleanCat,
+        propertyName: propName || "",
+        flatName: flatName || "",
+        renterId: cleanRenterId,
+        aadhaar: normAadh,
+        renterName: renterName || "",
+        requestedBy: activeUser || "Admin",
+        requestedAt: new Date().toISOString()
+      };
+
+      DB.globalConfig.screenshotRequests[slotReqKey] = slotReqEntry;
+      saveLocalGlobalConfigMaster(DB.globalConfig);
+      saveDbSnapshotToCache();
+      renderAdminScreenshotVerificationGrid();
+      renderAllDashboardUI();
+
+      triggerSideToast(
+        "Upload Request Sent",
+        `Enabled Live Camera ONLY for ${categoryLabel || cleanCat} (${monthLabel}) for ${renterName || "renter"}.`,
+        true
+      );
+
+      await sendFirebaseAction({
+        action: "requestMonthlyPhoto",
+        requesterRole: activeRole || "Admin",
+        requesterUsername: activeUser || "Admin",
+        requestKey: slotReqKey,
+        requestEntry: slotReqEntry,
+        monthYear: cleanMonth,
+        scope: "SLOT",
         category: cleanCat,
         categoryLabel: categoryLabel || cleanCat,
         propertyName: propName || "",
@@ -20727,7 +21349,8 @@ function formatMonthLabel(rawVal) {
         "calcPngPrev", "calcPngCurr", "calcPngRate",
         "calcWaterPrev", "calcWaterCurr", "calcWaterRate",
         "calcAddName", "calcAddAmount", "calcPrevCarryBalance",
-        "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes"
+        "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes",
+        "calcMeterProofUrl", "calcPngProofUrl", "calcWaterProofUrl"
       ];
       lockableIds.forEach(id => {
         const input = document.getElementById(id);
@@ -20736,6 +21359,10 @@ function formatMonthLabel(rawVal) {
           input.style.opacity = "";
           input.style.cursor = "";
         }
+      });
+      ["calcMeterProofFile", "calcPngProofFile", "calcWaterProofFile"].forEach(fid => {
+        const finp = document.getElementById(fid);
+        if (finp) finp.disabled = false;
       });
       ["calcAddToggle", "calcPayMode"].forEach(selId => {
         const sel = document.getElementById(selId);
@@ -20810,7 +21437,8 @@ function formatMonthLabel(rawVal) {
         "calcPngPrev", "calcPngCurr", "calcPngRate",
         "calcWaterPrev", "calcWaterCurr", "calcWaterRate",
         "calcAddName", "calcAddAmount", "calcPrevCarryBalance",
-        "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes"
+        "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes",
+        "calcMeterProofUrl", "calcPngProofUrl", "calcWaterProofUrl"
       ];
       allInputIds.forEach(id => {
         const el = document.getElementById(id);
@@ -20827,7 +21455,7 @@ function formatMonthLabel(rawVal) {
           el.style.cursor = "";
         }
       });
-      ["calcAddToggle", "calcPayMode"].forEach(selId => {
+      ["calcAddToggle", "calcPayMode", "calcMeterProofFile", "calcPngProofFile", "calcWaterProofFile"].forEach(selId => {
         const sel = document.getElementById(selId);
         if (sel) sel.disabled = Boolean(isLocked);
       });
@@ -21001,24 +21629,132 @@ function formatMonthLabel(rawVal) {
       // Never overwrite calculator values if viewing an already-generated bill or a previous month
       if (existingBill || chosenMonth < currentCalMonth || hasSubsequentBill) return;
 
-      const profRentRaw = document.getElementById("profRent").value;
-      const profElecRaw = document.getElementById("profElecRate").value;
-      const profPngRaw = document.getElementById("profPngRate").value;
-      const profWaterRaw = document.getElementById("profWaterRate").value;
+      const billDateVal = toInputDateValue(document.getElementById("calcBillDatePicker")?.value || "");
+      const defaultDate = chosenMonth === currentCalMonth ? getLocalTodayIsoDate() : `${chosenMonth}-01`;
+      const periodRes = resolveRenterForFlatPeriod(
+        selectedFlat.PropertyName,
+        selectedFlat.FlatName,
+        billDateVal || defaultDate,
+        chosenMonth,
+        !billDateVal
+      );
 
-      document.getElementById("calcRent").value = profRentRaw;
-      document.getElementById("calcElecRate").value = profElecRaw;
-      document.getElementById("calcPngRate").value = profPngRaw;
-      document.getElementById("calcWaterRate").value = profWaterRaw;
-
+      applyPeriodRentAndRatesToCalc(periodRes);
       runBillMath();
+    }
+
+    function applyPeriodRentAndRatesToCalc(periodRes) {
+      if (!selectedFlat) return;
+      const mode = periodRes?.mode || "VACANT";
+      const renterObj = periodRes?.renter || null;
+      const rentEl = document.getElementById("calcRent");
+      const elecRateEl = document.getElementById("calcElecRate");
+      const pngRateEl = document.getElementById("calcPngRate");
+      const waterRateEl = document.getElementById("calcWaterRate");
+
+      if (mode === "ACTIVE") {
+        const activeRent = resolveExactRateValue(selectedFlat.RentAmount, renterObj?.RentAmount);
+        if (rentEl) rentEl.value = activeRent !== "" ? activeRent : 0;
+        if (elecRateEl) elecRateEl.value = resolveExactRateValue(selectedFlat.ElecRate, renterObj?.ElecFixedRate);
+        if (pngRateEl) pngRateEl.value = resolveExactRateValue(selectedFlat.PNGRate, renterObj?.PNGFixedRate);
+        if (waterRateEl) waterRateEl.value = resolveExactRateValue(selectedFlat.WaterRate, renterObj?.WaterFixedRate);
+      } else if (mode === "PREVIOUS") {
+        const prevRent = resolveExactRateValue(renterObj?.RentAmount, "");
+        if (rentEl) rentEl.value = prevRent !== "" ? prevRent : "";
+        if (elecRateEl) elecRateEl.value = resolveExactRateValue(renterObj?.ElecFixedRate, selectedFlat.ElecRate);
+        if (pngRateEl) pngRateEl.value = resolveExactRateValue(renterObj?.PNGFixedRate, selectedFlat.PNGRate);
+        if (waterRateEl) waterRateEl.value = resolveExactRateValue(renterObj?.WaterFixedRate, selectedFlat.WaterRate);
+      } else {
+        // Strictly blank rent when the period precedes the current renter and has no previous renter
+        if (rentEl) rentEl.value = "";
+        if (elecRateEl) elecRateEl.value = resolveExactRateValue(selectedFlat.ElecRate, "");
+        if (pngRateEl) pngRateEl.value = resolveExactRateValue(selectedFlat.PNGRate, "");
+        if (waterRateEl) waterRateEl.value = resolveExactRateValue(selectedFlat.WaterRate, "");
+      }
+    }
+
+    function populateExistingBillIntoCalculator(existingBill, chosenMonth, autoCarryBalance, allFlatBills) {
+      const currentCalMonth = getCurrentCalendarYearMonth();
+      const hasSubsequentBill = (allFlatBills || []).some(b => normalizeMonthYear(b.MonthYear) > chosenMonth);
+      const isPreviousMonth = (chosenMonth < currentCalMonth) || hasSubsequentBill;
+
+      currentEditingBillId = String(existingBill.BillID || "");
+      const billTotal = parseFloat(existingBill.TotalBilled) || 0;
+      const billPaid = parseFloat(existingBill.PaidAmount) || 0;
+      const billPendingRent = Math.max(0, Math.round((billTotal - billPaid) * 100) / 100);
+      const savedCarry = (existingBill.PrevCarryBalance !== undefined && existingBill.PrevCarryBalance !== "")
+        ? (parseFloat(existingBill.PrevCarryBalance) || 0)
+        : autoCarryBalance;
+
+      document.getElementById("calcRent").value = existingBill.BaseRent !== undefined && existingBill.BaseRent !== "" ? existingBill.BaseRent : "";
+      document.getElementById("calcElecPrev").value = existingBill.ElecPrev ?? "";
+      document.getElementById("calcElecCurr").value = existingBill.ElecCurr ?? "";
+      document.getElementById("calcElecRate").value = existingBill.ElecRate !== undefined && existingBill.ElecRate !== null ? existingBill.ElecRate : "";
+
+      document.getElementById("calcPngPrev").value = existingBill.PNGPrev ?? "";
+      document.getElementById("calcPngCurr").value = existingBill.PNGCurr ?? "";
+      document.getElementById("calcPngRate").value = existingBill.PNGRate !== undefined && existingBill.PNGRate !== null ? existingBill.PNGRate : "";
+
+      document.getElementById("calcWaterPrev").value = existingBill.WaterPrev ?? "";
+      document.getElementById("calcWaterCurr").value = existingBill.WaterCurr ?? "";
+      document.getElementById("calcWaterRate").value = existingBill.WaterRate !== undefined && existingBill.WaterRate !== null ? existingBill.WaterRate : "";
+
+      const addAmtVal = parseFloat(existingBill.AdditionalAmount) || 0;
+      document.getElementById("calcAddName").value = existingBill.AdditionalName || "";
+      document.getElementById("calcAddToggle").value = addAmtVal < 0 ? "-" : "+";
+      document.getElementById("calcAddAmount").value = Math.abs(addAmtVal) || "";
+
+      const pendingValueToShow = savedCarry !== 0 ? savedCarry : (isPreviousMonth && billPendingRent > 0 ? billPendingRent : "");
+      document.getElementById("calcPrevCarryBalance").value = pendingValueToShow;
+      document.getElementById("calcPaidNow").value = existingBill.PaidAmount ?? "";
+      const billDateEl = document.getElementById("calcBillDatePicker");
+      if (billDateEl) {
+        billDateEl.value = toInputDateValue(existingBill.BillDate || existingBill.PaymentDate) || "";
+      }
+      const payDateEl = document.getElementById("calcPaymentDate");
+      if (payDateEl) {
+        payDateEl.value = toInputDateValue(existingBill.PaymentDate || existingBill.BillDate) || "";
+      }
+      document.getElementById("calcPayMode").value = existingBill.PaymentMode || "UPI";
+      document.getElementById("calcNotes").value = existingBill.Notes || "";
+
+      const mProofUrlEl = document.getElementById("calcMeterProofUrl");
+      window.currentMeterProofPreviewDataUrl = existingBill.MeterProofUrl || "";
+      window.currentMeterProofDeletedExplicitly = false;
+      if (mProofUrlEl) mProofUrlEl.value = existingBill.MeterProofUrl || "";
+
+      const pProofUrlEl = document.getElementById("calcPngProofUrl");
+      window.currentPngProofPreviewDataUrl = existingBill.PNGProofUrl || "";
+      window.currentPngProofDeletedExplicitly = false;
+      if (pProofUrlEl) pProofUrlEl.value = existingBill.PNGProofUrl || "";
+
+      const wProofUrlEl = document.getElementById("calcWaterProofUrl");
+      window.currentWaterProofPreviewDataUrl = existingBill.WaterProofUrl || "";
+      window.currentWaterProofDeletedExplicitly = false;
+      if (wProofUrlEl) wProofUrlEl.value = existingBill.WaterProofUrl || "";
+
+      if (typeof syncAllUtilityProofButtonsVisibility === "function") syncAllUtilityProofButtonsVisibility();
+      if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
+        renderSplitPaymentInstallmentsFromBill(existingBill);
+      }
+
+      document.getElementById("elecRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
+      document.getElementById("pngRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
+      document.getElementById("waterRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
+
+      const statusTag = document.getElementById("calcMonthStatusTag");
+      if (statusTag) {
+        statusTag.innerText = `Completed Bill (${formatMonthLabel(chosenMonth)}) - Locked Read-Only`;
+        statusTag.className = "calc-month-status-tag existing";
+      }
+      setCalculatorFullMonthLockState(true, `Locked (${formatMonthLabel(chosenMonth)} Finalized)`);
     }
 
     function handleBillingDatePeriodChange() {
       if (!selectedFlat) return;
       const dateStr = toInputDateValue(document.getElementById("calcBillDatePicker")?.value || "");
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
-      const periodRes = resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, dateStr, chosenMonth);
+      const periodRes = resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, dateStr, chosenMonth, false);
       const statusTag = document.getElementById("calcMonthStatusTag");
       const allFlatBills = (DB.bills || []).filter(b =>
         isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)
@@ -21029,27 +21765,55 @@ function formatMonthLabel(rawVal) {
       const matchedPeriodBill = allFlatBills.find(b => {
         if (normalizeMonthYear(b.MonthYear) !== chosenMonth) return false;
         if (periodRes.mode === "VACANT") return !b.RenterID && !b.TenantName && !b.TenantAadhaar;
-        return String(b.RenterID || "") === String(periodRes.renter?.RenterID || "");
+        if (periodRes.renter?.RenterID && b.RenterID) {
+          return String(b.RenterID) === String(periodRes.renter.RenterID);
+        }
+        return String(b.TenantName || "").trim().toLowerCase() === String(periodRes.renter?.RenterName || "").trim().toLowerCase();
       }) || null;
 
       if (matchedPeriodBill) {
-        currentEditingBillId = String(matchedPeriodBill.BillID || "");
+        if (currentEditingBillId !== String(matchedPeriodBill.BillID || "")) {
+          isExplicitBillEditMode = false;
+          resetAllCalculatorLocks();
+          populateExistingBillIntoCalculator(matchedPeriodBill, chosenMonth, autoCarryBalance, allFlatBills);
+        }
       } else {
+        const wasLockedBillLoaded = Boolean(currentEditingBillId);
         currentEditingBillId = null;
+        if (wasLockedBillLoaded) {
+          isExplicitBillEditMode = false;
+          resetAllCalculatorLocks();
+          setCalculatorFullMonthLockState(false);
+          const submitBtnText = document.getElementById("calcSubmitBtnText");
+          if (submitBtnText) submitBtnText.innerText = "Calculate Bill";
+        }
+        applyPeriodRentAndRatesToCalc(periodRes);
+
+        const flatMeterHistory = getFlatLastRecordedMeterReadings(
+          selectedFlat.PropertyName,
+          selectedFlat.FlatName,
+          chosenMonth,
+          dateStr
+        );
+        document.getElementById("calcElecPrev").value = flatMeterHistory.hasPriorReading ? flatMeterHistory.elecPrev : 0;
+        document.getElementById("calcPngPrev").value = flatMeterHistory.hasPriorReading ? flatMeterHistory.pngPrev : 0;
+        document.getElementById("calcWaterPrev").value = flatMeterHistory.hasPriorReading ? flatMeterHistory.waterPrev : 0;
+
+        if (statusTag) {
+          const periodBadge = periodRes.mode === "VACANT"
+            ? "Vacant Period (Blank / No Renter Aadhaar)"
+            : (periodRes.mode === "PREVIOUS"
+                ? `Previous Renter: ${periodRes.renter?.RenterName || "Former Tenant"}`
+                : `Active Renter: ${periodRes.renter?.RenterName || "Current Tenant"}`);
+          statusTag.innerText = `${formatMonthLabel(chosenMonth)} • ${periodBadge}`;
+          statusTag.className = "calc-month-status-tag";
+        }
+        const carryEl = document.getElementById("calcPrevCarryBalance");
+        if (carryEl) {
+          carryEl.value = periodRes.renter && autoCarryBalance !== 0 ? autoCarryBalance : "";
+        }
       }
 
-      if (!matchedPeriodBill && statusTag) {
-        const periodBadge = periodRes.mode === "VACANT"
-          ? "Vacant Period (Blank / No Renter Aadhaar)"
-          : (periodRes.mode === "PREVIOUS"
-              ? `Previous Renter: ${periodRes.renter?.RenterName || "Former Tenant"}`
-              : `Active Renter: ${periodRes.renter?.RenterName || "Current Tenant"}`);
-        statusTag.innerText = `${formatMonthLabel(chosenMonth)} • ${periodBadge}`;
-      }
-      const carryEl = document.getElementById("calcPrevCarryBalance");
-      if (carryEl && !matchedPeriodBill) {
-        carryEl.value = periodRes.renter && autoCarryBalance !== 0 ? autoCarryBalance : "";
-      }
       renderPrevMonthPendingRentDetailsBox(chosenMonth, matchedPeriodBill, autoCarryBalance, allFlatBills);
       runBillMath();
     }
@@ -21074,12 +21838,21 @@ function formatMonthLabel(rawVal) {
       );
 
       const defaultPeriodDate = chosenMonth === currentCalMonth ? getLocalTodayIsoDate() : `${chosenMonth}-01`;
-      const periodResForMonth = resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, defaultPeriodDate, chosenMonth);
+      const periodResForMonth = resolveRenterForFlatPeriod(
+        selectedFlat.PropertyName,
+        selectedFlat.FlatName,
+        defaultPeriodDate,
+        chosenMonth,
+        true
+      );
 
       const existingBill = (currentEditingBillId && allFlatBillsForMonth.find(b => String(b.BillID || "") === currentEditingBillId))
         || allFlatBillsForMonth.find(b => {
             if (periodResForMonth.mode === "VACANT") return !b.RenterID && !b.TenantName && !b.TenantAadhaar;
-            return periodResForMonth.renter && String(b.RenterID || "") === String(periodResForMonth.renter.RenterID || "");
+            return periodResForMonth.renter && (
+              String(b.RenterID || "") === String(periodResForMonth.renter.RenterID || "") ||
+              String(b.TenantName || "").trim().toLowerCase() === String(periodResForMonth.renter.RenterName || "").trim().toLowerCase()
+            );
           })
         || allFlatBillsForMonth[0]
         || null;
@@ -21088,7 +21861,7 @@ function formatMonthLabel(rawVal) {
       const isPreviousMonth = (chosenMonth < currentCalMonth) || hasSubsequentBill;
 
       const effectivePeriodRes = existingBill
-        ? resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, existingBill.BillDate || existingBill.PaymentDate || defaultPeriodDate, chosenMonth)
+        ? resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, existingBill.BillDate || existingBill.PaymentDate || defaultPeriodDate, chosenMonth, !existingBill.BillDate)
         : periodResForMonth;
 
       const autoCarryBalance = effectivePeriodRes.renter
@@ -21103,129 +21876,43 @@ function formatMonthLabel(rawVal) {
       renderPrevMonthPendingRentDetailsBox(chosenMonth, existingBill, autoCarryBalance, allFlatBills);
 
       if (existingBill) {
-        currentEditingBillId = String(existingBill.BillID || "");
-        const billTotal = parseFloat(existingBill.TotalBilled) || 0;
-        const billPaid = parseFloat(existingBill.PaidAmount) || 0;
-        const billPendingRent = Math.max(0, Math.round((billTotal - billPaid) * 100) / 100);
-        const savedCarry = (existingBill.PrevCarryBalance !== undefined && existingBill.PrevCarryBalance !== "")
-          ? (parseFloat(existingBill.PrevCarryBalance) || 0)
-          : autoCarryBalance;
-
-        document.getElementById("calcRent").value = existingBill.BaseRent !== undefined && existingBill.BaseRent !== "" ? existingBill.BaseRent : "";
-        document.getElementById("calcElecPrev").value = existingBill.ElecPrev ?? "";
-        document.getElementById("calcElecCurr").value = existingBill.ElecCurr ?? "";
-        document.getElementById("calcElecRate").value = existingBill.ElecRate !== undefined && existingBill.ElecRate !== null ? existingBill.ElecRate : "";
-
-        document.getElementById("calcPngPrev").value = existingBill.PNGPrev ?? "";
-        document.getElementById("calcPngCurr").value = existingBill.PNGCurr ?? "";
-        document.getElementById("calcPngRate").value = existingBill.PNGRate !== undefined && existingBill.PNGRate !== null ? existingBill.PNGRate : "";
-
-        document.getElementById("calcWaterPrev").value = existingBill.WaterPrev ?? "";
-        document.getElementById("calcWaterCurr").value = existingBill.WaterCurr ?? "";
-        document.getElementById("calcWaterRate").value = existingBill.WaterRate !== undefined && existingBill.WaterRate !== null ? existingBill.WaterRate : "";
-
-        const addAmtVal = parseFloat(existingBill.AdditionalAmount) || 0;
-        document.getElementById("calcAddName").value = existingBill.AdditionalName || "";
-        document.getElementById("calcAddToggle").value = addAmtVal < 0 ? "-" : "+";
-        document.getElementById("calcAddAmount").value = Math.abs(addAmtVal) || "";
-
-        // Show pending rent in Previous Pending Rent box; if no pending rent, leave it empty ("")
-        const pendingValueToShow = savedCarry !== 0 ? savedCarry : (isPreviousMonth && billPendingRent > 0 ? billPendingRent : "");
-        document.getElementById("calcPrevCarryBalance").value = pendingValueToShow;
-        document.getElementById("calcPaidNow").value = existingBill.PaidAmount ?? "";
-        const billDateEl = document.getElementById("calcBillDatePicker");
-        if (billDateEl) {
-          billDateEl.value = toInputDateValue(existingBill.BillDate || existingBill.PaymentDate) || "";
-        }
-        const payDateEl = document.getElementById("calcPaymentDate");
-        if (payDateEl) {
-          payDateEl.value = toInputDateValue(existingBill.PaymentDate || existingBill.BillDate) || "";
-        }
-        document.getElementById("calcPayMode").value = existingBill.PaymentMode || "UPI";
-        document.getElementById("calcNotes").value = existingBill.Notes || "";
-
-        const mProofUrlEl = document.getElementById("calcMeterProofUrl");
-        window.currentMeterProofPreviewDataUrl = existingBill.MeterProofUrl || "";
-        window.currentMeterProofDeletedExplicitly = false;
-        if (mProofUrlEl) mProofUrlEl.value = existingBill.MeterProofUrl || "";
-        if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
-        if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
-          renderSplitPaymentInstallmentsFromBill(existingBill);
-        }
-
-        document.getElementById("elecRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
-        document.getElementById("pngRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
-        document.getElementById("waterRolloverHint").innerText = "Loaded from saved bill snapshot (Locked)";
-
-        statusTag.innerText = `Completed Bill (${formatMonthLabel(chosenMonth)}) - Locked Read-Only`;
-        statusTag.className = "calc-month-status-tag existing";
-        setCalculatorFullMonthLockState(true, `Locked (${formatMonthLabel(chosenMonth)} Finalized)`);
-      } else if (isPreviousMonth) {
-        currentEditingBillId = null;
-        // Clicking a previous month with no generated bill:
-        // Show previous pending rent if any; if there is no pending rent, appear completely empty!
-        document.getElementById("calcRent").value = "";
-        document.getElementById("calcElecPrev").value = "";
-        document.getElementById("calcElecCurr").value = "";
-        document.getElementById("calcElecRate").value = "";
-        document.getElementById("calcPngPrev").value = "";
-        document.getElementById("calcPngCurr").value = "";
-        document.getElementById("calcPngRate").value = "";
-        document.getElementById("calcWaterPrev").value = "";
-        document.getElementById("calcWaterCurr").value = "";
-        document.getElementById("calcWaterRate").value = "";
-        document.getElementById("calcAddName").value = "";
-        document.getElementById("calcAddAmount").value = "";
-        document.getElementById("calcPrevCarryBalance").value = autoCarryBalance > 0 ? autoCarryBalance : "";
-        document.getElementById("calcPaidNow").value = "";
-        const billDateElEmpty = document.getElementById("calcBillDatePicker");
-        if (billDateElEmpty) billDateElEmpty.value = "";
-        const payDateElEmpty = document.getElementById("calcPaymentDate");
-        if (payDateElEmpty) payDateElEmpty.value = "";
-        document.getElementById("calcNotes").value = "";
-        const mProofUrlEl = document.getElementById("calcMeterProofUrl");
-        window.currentMeterProofPreviewDataUrl = "";
-        window.currentMeterProofDeletedExplicitly = false;
-        if (mProofUrlEl) mProofUrlEl.value = "";
-        if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
-        if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
-          renderSplitPaymentInstallmentsFromBill(null);
-        }
-
-        if (autoCarryBalance > 0) {
-          statusTag.innerText = `Previous Month (${formatMonthLabel(chosenMonth)}) - Pending Rent: ₹${autoCarryBalance}`;
-          statusTag.className = "calc-month-status-tag existing";
-          document.getElementById("elecRolloverHint").innerText = "Previous month pending rent view";
-          document.getElementById("pngRolloverHint").innerText = "Previous month pending rent view";
-          document.getElementById("waterRolloverHint").innerText = "Previous month pending rent view";
-          setCalculatorFullMonthLockState(false);
-          submitBtnText.innerText = "Calculate Bill";
-        } else {
-          statusTag.innerText = `Previous Month (${formatMonthLabel(chosenMonth)}) - No Pending Rent`;
-          statusTag.className = "calc-month-status-tag";
-          document.getElementById("elecRolloverHint").innerText = "No pending rent recorded for this previous month";
-          document.getElementById("pngRolloverHint").innerText = "No pending rent recorded for this previous month";
-          document.getElementById("waterRolloverHint").innerText = "No pending rent recorded for this previous month";
-          setCalculatorFullMonthLockState(false);
-          submitBtnText.innerText = "Calculate Bill";
-        }
+        populateExistingBillIntoCalculator(existingBill, chosenMonth, autoCarryBalance, allFlatBills);
       } else {
         currentEditingBillId = null;
         setCalculatorFullMonthLockState(false);
-        statusTag.innerText = `New Month Calculation - ${formatMonthLabel(chosenMonth)}`;
-        statusTag.className = "calc-month-status-tag";
+
+        let defaultNewBillDate = defaultPeriodDate;
+        if (periodResForMonth.mode === "ACTIVE" && periodResForMonth.renter?.JoinDate) {
+          const activeJoinIso = toInputDateValue(periodResForMonth.renter.JoinDate);
+          if (activeJoinIso && activeJoinIso.slice(0, 7) === chosenMonth && defaultNewBillDate < activeJoinIso) {
+            defaultNewBillDate = activeJoinIso;
+          }
+        }
+
+        const periodBadge = periodResForMonth.mode === "VACANT"
+          ? "Vacant Period (No Active/Previous Renter)"
+          : (periodResForMonth.mode === "PREVIOUS"
+              ? `Previous Renter: ${periodResForMonth.renter?.RenterName || "Former Tenant"}`
+              : `Active Renter: ${periodResForMonth.renter?.RenterName || "Current Tenant"}`);
+
+        if (isPreviousMonth) {
+          statusTag.innerText = autoCarryBalance > 0
+            ? `Previous Month (${formatMonthLabel(chosenMonth)}) • Pending Rent: ₹${autoCarryBalance} • ${periodBadge}`
+            : `Previous Month (${formatMonthLabel(chosenMonth)}) • ${periodBadge}`;
+          statusTag.className = autoCarryBalance > 0 ? "calc-month-status-tag existing" : "calc-month-status-tag";
+        } else {
+          statusTag.innerText = `New Month Calculation - ${formatMonthLabel(chosenMonth)} • ${periodBadge}`;
+          statusTag.className = "calc-month-status-tag";
+        }
         submitBtnText.innerText = "Calculate Bill";
 
-        const profileBaseRent = resolveExactRateValue(selectedFlat.RentAmount, activeFlatRenterObj?.RentAmount);
-        document.getElementById("calcRent").value = profileBaseRent !== "" ? profileBaseRent : 0;
-        document.getElementById("calcElecRate").value = resolveExactRateValue(selectedFlat.ElecRate, activeFlatRenterObj?.ElecFixedRate);
-        document.getElementById("calcPngRate").value = resolveExactRateValue(selectedFlat.PNGRate, activeFlatRenterObj?.PNGFixedRate);
-        document.getElementById("calcWaterRate").value = resolveExactRateValue(selectedFlat.WaterRate, activeFlatRenterObj?.WaterFixedRate);
+        applyPeriodRentAndRatesToCalc(periodResForMonth);
 
         const flatMeterHistory = getFlatLastRecordedMeterReadings(
           selectedFlat.PropertyName,
           selectedFlat.FlatName,
-          chosenMonth
+          chosenMonth,
+          defaultNewBillDate
         );
 
         if (flatMeterHistory.hasPriorReading) {
@@ -21254,23 +21941,41 @@ function formatMonthLabel(rawVal) {
         document.getElementById("calcWaterCurr").value = "";
         document.getElementById("calcAddName").value = "";
         document.getElementById("calcAddAmount").value = "";
-        document.getElementById("calcPrevCarryBalance").value = autoCarryBalance !== 0 ? autoCarryBalance : "";
+        document.getElementById("calcPrevCarryBalance").value = (periodResForMonth.renter && autoCarryBalance !== 0) ? autoCarryBalance : "";
         document.getElementById("calcPaidNow").value = 0;
-        const todayIso = chosenMonth === getCurrentCalendarYearMonth() ? getLocalTodayIsoDate() : `${chosenMonth}-01`;
+
         const billDateElNew = document.getElementById("calcBillDatePicker");
         if (billDateElNew) {
-          billDateElNew.value = todayIso;
+          billDateElNew.value = defaultNewBillDate;
         }
         const payDateElNew = document.getElementById("calcPaymentDate");
         if (payDateElNew) {
-          payDateElNew.value = todayIso;
+          payDateElNew.value = defaultNewBillDate;
         }
         document.getElementById("calcNotes").value = "";
+
         const mProofUrlEl = document.getElementById("calcMeterProofUrl");
         window.currentMeterProofPreviewDataUrl = "";
         window.currentMeterProofDeletedExplicitly = false;
         if (mProofUrlEl) mProofUrlEl.value = "";
-        if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
+        const mProofFileEl = document.getElementById("calcMeterProofFile");
+        if (mProofFileEl) mProofFileEl.value = "";
+
+        const pProofUrlEl = document.getElementById("calcPngProofUrl");
+        window.currentPngProofPreviewDataUrl = "";
+        window.currentPngProofDeletedExplicitly = false;
+        if (pProofUrlEl) pProofUrlEl.value = "";
+        const pProofFileEl = document.getElementById("calcPngProofFile");
+        if (pProofFileEl) pProofFileEl.value = "";
+
+        const wProofUrlEl = document.getElementById("calcWaterProofUrl");
+        window.currentWaterProofPreviewDataUrl = "";
+        window.currentWaterProofDeletedExplicitly = false;
+        if (wProofUrlEl) wProofUrlEl.value = "";
+        const wProofFileEl = document.getElementById("calcWaterProofFile");
+        if (wProofFileEl) wProofFileEl.value = "";
+
+        if (typeof syncAllUtilityProofButtonsVisibility === "function") syncAllUtilityProofButtonsVisibility();
         if (typeof renderSplitPaymentInstallmentsFromBill === "function") {
           renderSplitPaymentInstallmentsFromBill(null);
         }
@@ -23480,6 +24185,12 @@ function formatMonthLabel(rawVal) {
       if (window.meterProofUploadPromise) {
         try { await window.meterProofUploadPromise; } catch (e) {}
       }
+      if (window.pngProofUploadPromise) {
+        try { await window.pngProofUploadPromise; } catch (e) {}
+      }
+      if (window.waterProofUploadPromise) {
+        try { await window.waterProofUploadPromise; } catch (e) {}
+      }
 
       const now = new Date();
       const fallbackMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
@@ -23576,6 +24287,15 @@ function formatMonthLabel(rawVal) {
       const typedMeterProof = (document.getElementById("calcMeterProofUrl")?.value || "").trim();
       const meterProofVal = typedMeterProof || window.currentMeterProofPreviewDataUrl || (window.currentMeterProofDeletedExplicitly ? "" : (existingBillRecord?.MeterProofUrl || ""));
       window.currentMeterProofDeletedExplicitly = false;
+
+      const typedPngProof = (document.getElementById("calcPngProofUrl")?.value || "").trim();
+      const pngProofVal = typedPngProof || window.currentPngProofPreviewDataUrl || (window.currentPngProofDeletedExplicitly ? "" : (existingBillRecord?.PNGProofUrl || ""));
+      window.currentPngProofDeletedExplicitly = false;
+
+      const typedWaterProof = (document.getElementById("calcWaterProofUrl")?.value || "").trim();
+      const waterProofVal = typedWaterProof || window.currentWaterProofPreviewDataUrl || (window.currentWaterProofDeletedExplicitly ? "" : (existingBillRecord?.WaterProofUrl || ""));
+      window.currentWaterProofDeletedExplicitly = false;
+
       const collectedSplits = typeof collectSplitPaymentsFromDOM === "function"
         ? collectSplitPaymentsFromDOM()
         : (Array.isArray(existingBillRecord?.SplitPayments) ? existingBillRecord.SplitPayments : []);
@@ -23622,6 +24342,8 @@ function formatMonthLabel(rawVal) {
         ContractMobile: snapshotContractMobile,
         TenantMobile: existingBillRecord?.TenantMobile || resolvedTenantMobile,
         MeterProofUrl: meterProofVal,
+        PNGProofUrl: pngProofVal,
+        WaterProofUrl: waterProofVal,
         SplitPayments: collectedSplits,
         CalculationDone: true,
         ReceiptGenerated: true
@@ -23644,10 +24366,17 @@ function formatMonthLabel(rawVal) {
         );
       }
 
-      // Keep latest meter readings permanently recorded on the flat object as well
-      selectedFlat.LastElecReading = elecCurr;
-      selectedFlat.LastPNGReading = pngCurr;
-      selectedFlat.LastWaterReading = waterCurr;
+      // Only update flat's Last*Reading if this bill is at or after the flat's latest recorded bill month
+      const hasNewerFlatBill = (DB.bills || []).some(b =>
+        b !== newBillObj &&
+        isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+        normalizeMonthYear(b.MonthYear) > chosenMonth
+      );
+      if (!hasNewerFlatBill) {
+        selectedFlat.LastElecReading = elecCurr;
+        selectedFlat.LastPNGReading = pngCurr;
+        selectedFlat.LastWaterReading = waterCurr;
+      }
 
       saveDbSnapshotToCache();
       renderAllDashboardUI();
@@ -23702,6 +24431,10 @@ function formatMonthLabel(rawVal) {
         tenantMobile: newBillObj.TenantMobile,
         meterProofBase64: String(meterProofVal).startsWith("data:image") ? meterProofVal : "",
         meterProofUrl: meterProofVal,
+        pngProofBase64: String(pngProofVal).startsWith("data:image") ? pngProofVal : "",
+        pngProofUrl: pngProofVal,
+        waterProofBase64: String(waterProofVal).startsWith("data:image") ? waterProofVal : "",
+        waterProofUrl: waterProofVal,
         splitPayments: collectedSplits,
         calculationDone: true,
         receiptGenerated: true
@@ -23710,19 +24443,40 @@ function formatMonthLabel(rawVal) {
       if (billRes && billRes.status === "error") {
         triggerSideToast("Google Drive Upload Warning", billRes.message || "Bill saved locally, but Google Drive meter proof upload failed.", false);
       }
-      if (billRes && billRes.meterProofUrl && !String(billRes.meterProofUrl).startsWith("data:")) {
-        const finalProofUrl = String(billRes.meterProofUrl).startsWith("data:image")
-          ? billRes.meterProofUrl
-          : normalizeGoogleDriveImageUrl(billRes.meterProofUrl);
-        newBillObj.MeterProofUrl = finalProofUrl;
-        window.currentMeterProofPreviewDataUrl = finalProofUrl;
-        const mUrlEl = document.getElementById("calcMeterProofUrl");
-        if (mUrlEl && normalizeMonthYear(document.getElementById("calcMonthPicker")?.value) === chosenMonth) {
-          mUrlEl.value = finalProofUrl;
-          if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
+      if (billRes) {
+        let proofSynced = false;
+        const isCurrentMonthShown = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value) === chosenMonth;
+        if (billRes.meterProofUrl && !String(billRes.meterProofUrl).startsWith("data:")) {
+          const finalElecUrl = String(billRes.meterProofUrl).startsWith("data:image") ? billRes.meterProofUrl : normalizeGoogleDriveImageUrl(billRes.meterProofUrl);
+          newBillObj.MeterProofUrl = finalElecUrl;
+          window.currentMeterProofPreviewDataUrl = finalElecUrl;
+          const mUrlEl = document.getElementById("calcMeterProofUrl");
+          if (mUrlEl && isCurrentMonthShown) mUrlEl.value = finalElecUrl;
+          proofSynced = true;
         }
-        saveDbSnapshotToCache();
-        populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
+        if (billRes.pngProofUrl && !String(billRes.pngProofUrl).startsWith("data:")) {
+          const finalPngUrl = String(billRes.pngProofUrl).startsWith("data:image") ? billRes.pngProofUrl : normalizeGoogleDriveImageUrl(billRes.pngProofUrl);
+          newBillObj.PNGProofUrl = finalPngUrl;
+          window.currentPngProofPreviewDataUrl = finalPngUrl;
+          const pUrlEl = document.getElementById("calcPngProofUrl");
+          if (pUrlEl && isCurrentMonthShown) pUrlEl.value = finalPngUrl;
+          proofSynced = true;
+        }
+        if (billRes.waterProofUrl && !String(billRes.waterProofUrl).startsWith("data:")) {
+          const finalWaterUrl = String(billRes.waterProofUrl).startsWith("data:image") ? billRes.waterProofUrl : normalizeGoogleDriveImageUrl(billRes.waterProofUrl);
+          newBillObj.WaterProofUrl = finalWaterUrl;
+          window.currentWaterProofPreviewDataUrl = finalWaterUrl;
+          const wUrlEl = document.getElementById("calcWaterProofUrl");
+          if (wUrlEl && isCurrentMonthShown) wUrlEl.value = finalWaterUrl;
+          proofSynced = true;
+        }
+        if (proofSynced) {
+          if (isCurrentMonthShown && typeof syncAllUtilityProofButtonsVisibility === "function") {
+            syncAllUtilityProofButtonsVisibility();
+          }
+          saveDbSnapshotToCache();
+          populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
+        }
       }
     }
 
@@ -23814,6 +24568,9 @@ function formatMonthLabel(rawVal) {
 
         const paidDateDisplay = formatDateOnly(bill.PaymentDate || bill.BillDate);
         const hasMeterProof = Boolean(bill.MeterProofUrl);
+        const hasPngProof = Boolean(bill.PNGProofUrl);
+        const hasWaterProof = Boolean(bill.WaterProofUrl);
+        const safeBillIdArg = String(bill.BillID || "").replace(/'/g, "\\'");
         const splitsCount = Array.isArray(bill.SplitPayments) ? bill.SplitPayments.length : 0;
         const statusInfo = getBillHistoryStatusInfo(bill);
 
@@ -23827,7 +24584,7 @@ function formatMonthLabel(rawVal) {
               <div>Prev: <strong>${elecPrev}</strong> | Curr: <strong>${elecCurr}</strong></div>
               <div>Consumed: <strong>${elecUnits} U</strong> @ ₹${elecRate}/U</div>
               <div style="color:var(--primary); font-weight:800;">Total: ₹${elecTotal.toLocaleString('en-IN')}</div>
-              ${hasMeterProof ? `<div style="margin-top:2px;"><button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.65rem; background:rgba(56,189,248,0.16); color:#38bdf8;" onclick="openMeterProofViewer('${String(bill.BillID).replace(/'/g, "\\'")}')"><i class="fa-solid fa-camera"></i> Meter Proof</button></div>` : ''}
+              ${hasMeterProof ? `<div style="margin-top:2px;"><button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.65rem; background:rgba(56,189,248,0.16); color:#38bdf8;" onclick="openMeterProofViewer('${safeBillIdArg}', 'elec')"><i class="fa-solid fa-camera"></i> Elec Proof</button></div>` : ''}
             </div>
           </td>
           <td>
@@ -23835,6 +24592,7 @@ function formatMonthLabel(rawVal) {
               <div>Prev: <strong>${pngPrev}</strong> | Curr: <strong>${pngCurr}</strong></div>
               <div>Consumed: <strong>${pngUnits} U</strong> @ ₹${pngRate}/U</div>
               <div style="color:var(--primary); font-weight:800;">Total: ₹${pngTotal.toLocaleString('en-IN')}</div>
+              ${hasPngProof ? `<div style="margin-top:2px;"><button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.65rem; background:rgba(244,114,182,0.16); color:#f472b6;" onclick="openMeterProofViewer('${safeBillIdArg}', 'png')"><i class="fa-solid fa-camera"></i> PNG Proof</button></div>` : ''}
             </div>
           </td>
           <td>
@@ -23842,6 +24600,7 @@ function formatMonthLabel(rawVal) {
               <div>Prev: <strong>${waterPrev}</strong> | Curr: <strong>${waterCurr}</strong></div>
               <div>Consumed: <strong>${waterUnits} U</strong> @ ₹${waterRate}/U</div>
               <div style="color:var(--primary); font-weight:800;">Total: ₹${waterTotal.toLocaleString('en-IN')}</div>
+              ${hasWaterProof ? `<div style="margin-top:2px;"><button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.65rem; background:rgba(56,189,248,0.16); color:#38bdf8;" onclick="openMeterProofViewer('${safeBillIdArg}', 'water')"><i class="fa-solid fa-camera"></i> Water Proof</button></div>` : ''}
             </div>
           </td>
           <td>${carryText}</td>
@@ -28547,11 +29306,12 @@ function formatMonthLabel(rawVal) {
       const exactElecRate = parseInputRateOrEmpty("profElecRate");
 
       const rawContractMobile = document.getElementById("profContractMobile").value.trim();
-      if (rawContractMobile && rawContractMobile !== "+91" && !isValidIndianMobilePlus91(rawContractMobile)) {
-        return triggerSideToast("Invalid Contract Mobile", "Contract Mobile Number must start with +91 followed by exactly 10 digits (e.g. +919876543210).", false);
+      const parsedContract = parseValidContractPhone(rawContractMobile);
+      if (!parsedContract.valid) {
+        return triggerSideToast("Invalid Contract Mobile", "Contract Mobile Number must contain a valid phone number (e.g. +91 9876543210).", false);
       }
-      const cleanContractMobile = (rawContractMobile && rawContractMobile !== "+91") ? formatIndianMobilePlus91(rawContractMobile) : "";
-      if (cleanContractMobile) document.getElementById("profContractMobile").value = cleanContractMobile;
+      const cleanContractMobile = parsedContract.formatted;
+      document.getElementById("profContractMobile").value = cleanContractMobile;
 
       const escalationPctVal = parseFloat(document.getElementById("profEscalationPct")?.value) || 0;
       const securityDepositVal = parseFloat(document.getElementById("profSecurityDeposit")?.value) || 0;
@@ -28995,14 +29755,11 @@ function formatMonthLabel(rawVal) {
       document.getElementById("renterAltMobile").value = cleanAltMobile;
 
       const rawContractMobile = document.getElementById("profContractMobile").value.trim();
-      let cleanContractMobile = "";
-      const digitsContractMobile = extractIndianMobile10Digits(rawContractMobile);
-      if (rawContractMobile && rawContractMobile !== "+91" && digitsContractMobile.length > 0) {
-        if (digitsContractMobile.length !== 10) {
-          return triggerSideToast("Invalid Contract Mobile", "When entered, Contract Mobile Number must contain 10 digits.", false);
-        }
-        cleanContractMobile = "+91 " + digitsContractMobile;
+      const parsedContract = parseValidContractPhone(rawContractMobile);
+      if (!parsedContract.valid) {
+        return triggerSideToast("Invalid Contract Mobile", "When entered, Contract Mobile Number must contain a valid phone number.", false);
       }
+      const cleanContractMobile = parsedContract.formatted;
       document.getElementById("profContractMobile").value = cleanContractMobile;
 
       const collectedFamilyMembers = collectRenterFamilyMembersFromDOM();
@@ -30009,8 +30766,8 @@ function formatMonthLabel(rawVal) {
       const resolved = resolveFlatUpiAndContact(val, null, null);
       if (upiNameEl) upiNameEl.value = propObj?.UPIName || resolved.upiName || "";
       if (upiIdEl) upiIdEl.value = propObj?.UPIID || resolved.upiId || "";
-      const savedMob = propObj?.ContractNumber || propObj?.ContractMobile || resolved.contractMobile || "";
-      if (mobEl) mobEl.value = savedMob ? formatIndianMobilePlus91(savedMob) : "+91";
+      const savedMob = sanitizeContactPhoneDisplay(propObj?.ContractNumber || propObj?.ContractMobile || resolved.contractMobile || "");
+      if (mobEl) mobEl.value = savedMob || "+91 ";
     }
 
     function populateDeleteFlatList() {
@@ -30077,13 +30834,12 @@ function formatMonthLabel(rawVal) {
       const upiName = (document.getElementById("editPropUpiName")?.value || "").trim();
       const upiId = (document.getElementById("editPropUpiId")?.value || "").trim();
       const rawMob = (document.getElementById("editPropContractMobile")?.value || "").trim();
-      const mobDigits = extractIndianMobile10Digits(rawMob);
-      if (rawMob && rawMob !== "+91" && mobDigits.length > 0 && mobDigits.length !== 10) {
-        return triggerSideToast("Invalid Contact Mobile", "Please enter a valid 10-digit Indian mobile number.", false);
+      const parsedEditMob = parseValidContractPhone(rawMob);
+      if (!parsedEditMob.valid) {
+        return triggerSideToast("Invalid Contact Mobile", "Please enter a valid contact phone number (e.g. +91 9876543210).", false);
       }
-      const contractNumber = mobDigits.length === 10
-        ? ("+91 " + mobDigits)
-        : (existingProp?.ContractNumber || existingProp?.ContractMobile || existingResolved.contractMobile || "");
+      const contractNumber = parsedEditMob.formatted ||
+        sanitizeContactPhoneDisplay(existingProp?.ContractNumber || existingProp?.ContractMobile || existingResolved.contractMobile || "");
 
       DB.properties.forEach(p => {
         if (String(p.PropertyName).trim().toLowerCase() === oldName.toLowerCase()) {
@@ -30243,7 +30999,7 @@ function formatMonthLabel(rawVal) {
       const propObj = findPropertyObject(targetProp);
       const inheritedUpiName = propObj?.UPIName || "";
       const inheritedUpiId = propObj?.UPIID || "";
-      const inheritedContract = propObj?.ContractNumber || "";
+      const inheritedContract = sanitizeContactPhoneDisplay(propObj?.ContractNumber || propObj?.ContractMobile || "");
 
       DB.flats.push({
         PropertyName: targetProp,
@@ -32972,11 +33728,53 @@ function formatMonthLabel(rawVal) {
     }
 
     // --- GROUP C1 & C3: METER READING PHOTO PROOF & MASTER METER RECONCILIATION ---
-    function syncMeterProofButtonsVisibility() {
-      const urlVal = (document.getElementById("calcMeterProofUrl")?.value || "").trim();
-      const hasProof = Boolean(window.currentMeterProofPreviewDataUrl || urlVal);
-      const prevBtn = document.getElementById("btnPreviewMeterProof");
-      const delBtn = document.getElementById("btnDeleteMeterProof");
+    const UTILITY_PROOF_META = {
+      elec: {
+        label: "Electricity Sub-Meter",
+        urlInputId: "calcMeterProofUrl",
+        fileInputId: "calcMeterProofFile",
+        previewBtnId: "btnPreviewMeterProof",
+        deleteBtnId: "btnDeleteMeterProof",
+        billField: "MeterProofUrl",
+        previewVar: "currentMeterProofPreviewDataUrl",
+        deletedVar: "currentMeterProofDeletedExplicitly",
+        promiseVar: "meterProofUploadPromise"
+      },
+      png: {
+        label: "PNG Gas Sub-Meter",
+        urlInputId: "calcPngProofUrl",
+        fileInputId: "calcPngProofFile",
+        previewBtnId: "btnPreviewPngProof",
+        deleteBtnId: "btnDeletePngProof",
+        billField: "PNGProofUrl",
+        previewVar: "currentPngProofPreviewDataUrl",
+        deletedVar: "currentPngProofDeletedExplicitly",
+        promiseVar: "pngProofUploadPromise"
+      },
+      water: {
+        label: "Water Sub-Meter",
+        urlInputId: "calcWaterProofUrl",
+        fileInputId: "calcWaterProofFile",
+        previewBtnId: "btnPreviewWaterProof",
+        deleteBtnId: "btnDeleteWaterProof",
+        billField: "WaterProofUrl",
+        previewVar: "currentWaterProofPreviewDataUrl",
+        deletedVar: "currentWaterProofDeletedExplicitly",
+        promiseVar: "waterProofUploadPromise"
+      }
+    };
+
+    function getUtilityProofMeta(utilType) {
+      const k = String(utilType || "elec").trim().toLowerCase();
+      return UTILITY_PROOF_META[k] || UTILITY_PROOF_META.elec;
+    }
+
+    function syncUtilityProofButtonsVisibility(utilType = "elec") {
+      const meta = getUtilityProofMeta(utilType);
+      const urlVal = (document.getElementById(meta.urlInputId)?.value || "").trim();
+      const hasProof = Boolean(window[meta.previewVar] || urlVal);
+      const prevBtn = document.getElementById(meta.previewBtnId);
+      const delBtn = document.getElementById(meta.deleteBtnId);
       if (prevBtn) prevBtn.style.display = hasProof ? "inline-flex" : "none";
       if (delBtn) {
         const canEdit = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
@@ -32984,40 +33782,57 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    async function deleteCurrentMeterProof() {
+    function syncAllUtilityProofButtonsVisibility() {
+      syncUtilityProofButtonsVisibility("elec");
+      syncUtilityProofButtonsVisibility("png");
+      syncUtilityProofButtonsVisibility("water");
+    }
+
+    function syncMeterProofButtonsVisibility() {
+      syncUtilityProofButtonsVisibility("elec");
+    }
+
+    async function deleteUtilityMeterProof(utilType = "elec") {
       if (activeRole === "Viewer" || activeRole === "Renter") return;
+      const meta = getUtilityProofMeta(utilType);
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
       if (typeof isCalculatorMonthLockedForEdits === "function" && isCalculatorMonthLockedForEdits(chosenMonth)) {
         return triggerSideToast("Previous Month Locked", "Click Edit on this finalized month first if you want to remove the proof photo.", false);
       }
-      window.currentMeterProofPreviewDataUrl = "";
-      window.currentMeterProofDeletedExplicitly = true;
-      const urlEl = document.getElementById("calcMeterProofUrl");
-      const fileEl = document.getElementById("calcMeterProofFile");
+      window[meta.previewVar] = "";
+      window[meta.deletedVar] = true;
+      const urlEl = document.getElementById(meta.urlInputId);
+      const fileEl = document.getElementById(meta.fileInputId);
       if (urlEl) urlEl.value = "";
       if (fileEl) fileEl.value = "";
 
       if (selectedFlat && chosenMonth) {
-        const billObj = (DB.bills || []).find(b =>
-          isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
-          normalizeMonthYear(b.MonthYear) === chosenMonth
-        );
-        if (billObj && billObj.MeterProofUrl) {
-          billObj.MeterProofUrl = "";
+        const billObj = (currentEditingBillId && (DB.bills || []).find(b => String(b.BillID || "") === currentEditingBillId))
+          || (DB.bills || []).find(b =>
+            isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+            normalizeMonthYear(b.MonthYear) === chosenMonth
+          );
+        if (billObj && billObj[meta.billField]) {
+          billObj[meta.billField] = "";
           saveDbSnapshotToCache();
           if (typeof populateHistoryLedger === "function") {
             populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
           }
         }
       }
-      syncMeterProofButtonsVisibility();
-      triggerSideToast("Meter Proof Removed", "Electricity sub-meter proof photo cleared.", true);
+      syncUtilityProofButtonsVisibility(utilType);
+      triggerSideToast("Meter Proof Removed", `${meta.label} proof photo cleared.`, true);
     }
 
-    async function handleMeterProofUpload(inputEl) {
+    async function deleteCurrentMeterProof() {
+      return deleteUtilityMeterProof("elec");
+    }
+
+    async function handleUtilityMeterProofUpload(inputEl, utilType = "elec") {
       if (activeRole === "Viewer" || activeRole === "Renter") {
         return triggerSideToast("View-Only Mode", "You do not have permission to upload sub-meter proof here.", false);
       }
+      const meta = getUtilityProofMeta(utilType);
       const file = inputEl?.files?.[0];
       if (!file) return;
       const uploadTask = (async () => {
@@ -33026,25 +33841,23 @@ function formatMonthLabel(rawVal) {
           const mimeMatch = String(compressedDataUrl || "").match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
           const meterMime = mimeMatch ? mimeMatch[1].toLowerCase() : (file.type || "image/jpeg");
           const ext = meterMime === "image/png" ? "png" : (meterMime === "image/webp" ? "webp" : "jpg");
-          window.currentMeterProofPreviewDataUrl = compressedDataUrl;
-          window.currentMeterProofDeletedExplicitly = false;
-          const urlEl = document.getElementById("calcMeterProofUrl");
+          window[meta.previewVar] = compressedDataUrl;
+          window[meta.deletedVar] = false;
+          const urlEl = document.getElementById(meta.urlInputId);
           if (urlEl) urlEl.value = "";
-          syncMeterProofButtonsVisibility();
-          triggerSideToast("Uploading Meter Photo", "Saving sub-meter reading photo directly to Google Drive folder...", "warning");
+          syncUtilityProofButtonsVisibility(utilType);
+          triggerSideToast("Uploading Meter Photo", `Saving ${meta.label} proof directly to Google Drive...`, "warning");
           if (selectedFlat) {
             const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "") || new Date().toISOString().slice(0, 7);
+            // IMPORTANT: Use uploadPhotoToDriveOnly so Admin calculation photos NEVER enter Screenshot Verification
             const res = await sendFirebaseAction({
-              action: "uploadRenterMonthlyPhoto",
-              username: activeUser || "",
+              action: "uploadPhotoToDriveOnly",
+              kind: "CALC_METER_PROOF",
+              utilityType: String(utilType || "elec").toLowerCase(),
               propertyName: selectedFlat.PropertyName,
               flatName: selectedFlat.FlatName,
-              renterId: activeFlatRenterObj?.RenterID || "",
-              identityDocNumber: activeFlatRenterObj?.IdentityDocNumber || "",
-              renterName: document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Tenant",
               monthYear: chosenMonth,
-              category: "electricity_meter",
-              fileName: `MeterProof_${selectedFlat.PropertyName}_Flat_${selectedFlat.FlatName}_${chosenMonth}.${ext}`,
+              fileName: `CalcMeter_${String(utilType || "elec").toLowerCase()}_${selectedFlat.PropertyName}_Flat_${selectedFlat.FlatName}_${chosenMonth}_${Date.now()}.${ext}`,
               mimeType: meterMime,
               base64Data: compressedDataUrl
             });
@@ -33056,46 +33869,54 @@ function formatMonthLabel(rawVal) {
               throw new Error("Google Drive did not return a saved photo URL.");
             }
             const resolvedUrl = normalizeGoogleDriveImageUrl(rawMeterUrl);
-            window.currentMeterProofPreviewDataUrl = resolvedUrl;
+            window[meta.previewVar] = resolvedUrl;
             if (urlEl) urlEl.value = resolvedUrl;
-            const existingBillObj = (DB.bills || []).find(b =>
-              isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
-              normalizeMonthYear(b.MonthYear) === chosenMonth
-            );
+            const existingBillObj = (currentEditingBillId && (DB.bills || []).find(b => String(b.BillID || "") === currentEditingBillId))
+              || (DB.bills || []).find(b =>
+                isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+                normalizeMonthYear(b.MonthYear) === chosenMonth
+              );
             if (existingBillObj) {
-              existingBillObj.MeterProofUrl = resolvedUrl;
+              existingBillObj[meta.billField] = resolvedUrl;
               saveDbSnapshotToCache();
             }
-            syncMeterProofButtonsVisibility();
-            triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder & linked to Google Sheet!", true);
+            syncUtilityProofButtonsVisibility(utilType);
+            triggerSideToast("Saved to Google Drive", `${meta.label} photo saved to Google Drive (isolated from Screenshot Verification).`, true);
           }
         } catch (e) {
           triggerSideToast("Google Drive Upload Failed", e?.message || "Could not upload meter photo to Google Drive.", false);
         } finally {
-          window.meterProofUploadPromise = null;
+          window[meta.promiseVar] = null;
         }
       })();
-      window.meterProofUploadPromise = uploadTask;
+      window[meta.promiseVar] = uploadTask;
       return uploadTask;
     }
 
-    function previewCurrentMeterProof() {
-      const val = window.currentMeterProofPreviewDataUrl || (document.getElementById("calcMeterProofUrl")?.value || "").trim();
-      if (!val) return triggerSideToast("No Meter Proof", "Attach a meter photo or paste a proof note first.", false);
+    async function handleMeterProofUpload(inputEl) {
+      return handleUtilityMeterProofUpload(inputEl, "elec");
+    }
+
+    function previewCurrentMeterProof(utilType = "elec") {
+      const meta = getUtilityProofMeta(utilType);
+      const val = window[meta.previewVar] || (document.getElementById(meta.urlInputId)?.value || "").trim();
+      if (!val) return triggerSideToast("No Meter Proof", `Attach a ${meta.label} photo or paste a proof note first.`, false);
       if (val.startsWith("data:image") || val.startsWith("http")) {
-        openPhotoZoomModal(val, "Sub-Meter Reading Proof");
+        openPhotoZoomModal(val, `${meta.label} Reading Proof`);
       } else {
-        triggerSideToast("Meter Verification Note", val, true);
+        triggerSideToast(`${meta.label} Note`, val, true);
       }
     }
 
-    function openMeterProofViewer(billId) {
+    function openMeterProofViewer(billId, utilType = "elec") {
+      const meta = getUtilityProofMeta(utilType);
       const b = (DB.bills || []).find(x => String(x.BillID || "") === String(billId));
-      if (!b || !b.MeterProofUrl) return;
-      if (String(b.MeterProofUrl).startsWith("data:image") || String(b.MeterProofUrl).startsWith("http")) {
-        openPhotoZoomModal(b.MeterProofUrl, `${b.PropertyName} Flat ${b.FlatName} (${formatMonthLabel(b.MonthYear)}) — Meter Proof`);
+      if (!b || !b[meta.billField]) return;
+      const proofVal = String(b[meta.billField]);
+      if (proofVal.startsWith("data:image") || proofVal.startsWith("http")) {
+        openPhotoZoomModal(proofVal, `${b.PropertyName} Flat ${b.FlatName} (${formatMonthLabel(b.MonthYear)}) — ${meta.label} Proof`);
       } else {
-        triggerSideToast("Meter Proof Note", String(b.MeterProofUrl), true);
+        triggerSideToast(`${meta.label} Proof Note`, proofVal, true);
       }
     }
 
