@@ -4694,6 +4694,56 @@
     </div>
   </div>
 
+  <!-- RENTER LIVE CAMERA CAPTURE MODAL -->
+  <div id="renterLiveCameraModal" class="modal-overlay" style="z-index: 96000; background: rgba(15, 23, 42, 0.85);" onclick="if(event.target===this) closeRenterLiveCameraModal()">
+    <div class="modal-window" style="max-width: 560px; width: 94vw;">
+      <button type="button" class="modal-close-btn" onclick="closeRenterLiveCameraModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; padding-right:34px;">
+        <div style="width:36px; height:36px; border-radius:10px; background:rgba(16,185,129,0.18); color:#34d399; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0;">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+        <div>
+          <h3 id="liveCameraModalTitle" style="margin:0; font-size:1rem; font-weight:900; color:var(--text-main);">Live Camera Capture</h3>
+          <div id="liveCameraModalSubtitle" style="font-size:0.74rem; color:var(--text-muted); margin-top:2px;">Point camera at meter / receipt and capture photo</div>
+        </div>
+      </div>
+
+      <div id="liveCameraViewportBox" style="position:relative; width:100%; min-height:280px; max-height:58vh; border-radius:14px; overflow:hidden; background:#020617; border:1.5px solid rgba(56,189,248,0.45); display:flex; align-items:center; justify-content:center; margin-bottom:12px;">
+        <video id="liveCameraVideo" autoplay playsinline muted style="width:100%; max-height:58vh; object-fit:cover; display:block;"></video>
+        <img id="liveCameraCapturedImg" src="" alt="Captured Photo" style="width:100%; max-height:58vh; object-fit:contain; display:none; background:#020617;" />
+        <canvas id="liveCameraCanvas" style="display:none;"></canvas>
+        <div id="liveCameraFallbackNotice" style="display:none; padding:22px; text-align:center; color:#cbd5e1; font-size:0.82rem; line-height:1.5;">
+          <i class="fa-solid fa-video-slash" style="font-size:1.8rem; color:#f59e0b; margin-bottom:8px; display:block;"></i>
+          <div id="liveCameraFallbackText">Unable to access live camera stream directly in this browser window. Use the Device Camera button below to take a photo directly.</div>
+        </div>
+      </div>
+
+      <input type="file" id="liveCameraFallbackInput" accept="image/*" capture="environment" style="display:none;" onchange="handleLiveCameraFallbackFile(this)" />
+
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="btnLiveCameraSwitch" class="btn-ledger-action" style="padding:8px 12px; font-size:0.76rem;" onclick="switchLiveCameraFacingMode()">
+            <i class="fa-solid fa-camera-rotate"></i> Switch Camera
+          </button>
+          <button type="button" id="btnLiveCameraDeviceFallback" class="btn-ledger-action" style="padding:8px 12px; font-size:0.76rem; color:#38bdf8;" onclick="document.getElementById('liveCameraFallbackInput').click()">
+            <i class="fa-solid fa-mobile-screen-button"></i> Device Camera
+          </button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="btnLiveCameraRetake" class="btn-ledger-action" style="display:none; padding:8px 14px; font-size:0.78rem; color:#f59e0b;" onclick="retakeLiveCameraPhoto()">
+            <i class="fa-solid fa-rotate-left"></i> Retake
+          </button>
+          <button type="button" id="btnLiveCameraCapture" class="btn-primary" style="width:auto; padding:9px 18px; font-size:0.82rem; background:linear-gradient(135deg, #0284c7, #2563eb);" onclick="captureLiveCameraPhoto()">
+            <i class="fa-solid fa-camera"></i> Capture Photo
+          </button>
+          <button type="button" id="btnLiveCameraUpload" class="btn-primary" style="display:none; width:auto; padding:9px 18px; font-size:0.82rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="confirmAndUploadCapturedPhoto()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Use &amp; Upload Photo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==========================================================================
        MONTHLY BILL RECEIPT POPUP MODAL (OPENED FROM HISTORY "RECEIPT" BUTTON)
        ========================================================================== -->
@@ -6616,19 +6666,24 @@
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
             <div>
               <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:#34d399; display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-images"></i> Renter Screenshot &amp; Photo Verification (4x4 Grid)
+                <i class="fa-solid fa-images"></i> Active Renters Screenshot &amp; Photo Verification (4x4 Grid)
               </h4>
               <p style="margin:3px 0 0; font-size:0.74rem; color:var(--text-muted);">
-                Displays each renter's name, Aadhaar card number, and their uploaded photos in a 4x4 grid. Click any photo to zoom in full screen.
+                Only <strong>Active Renters</strong> are shown. Select a month and send a request so renters can capture &amp; upload live camera photos. Only Admin can delete or re-request photos.
               </p>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <input type="text" id="screenshotVerifySearchInput" class="form-control" style="width:210px; padding:6px 11px; font-size:0.75rem;" placeholder="Search Renter / Aadhaar..." oninput="renderAdminScreenshotVerificationGrid(this.value)">
-              <button type="button" class="btn-ledger-action" style="padding:6px 11px; font-size:0.74rem; color:#34d399;" onclick="syncDataLive().then(() => renderAdminScreenshotVerificationGrid(document.getElementById('screenshotVerifySearchInput')?.value || ''))">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <input type="month" id="screenshotVerifyMonthInput" class="form-control" style="width:155px; padding:6px 10px; font-size:0.75rem; font-weight:700;" onchange="renderAdminScreenshotVerificationGrid()" />
+              <button type="button" id="btnSendMonthlyScreenshotRequest" class="btn-primary" style="width:auto; padding:7px 13px; font-size:0.75rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="sendAdminMonthlyScreenshotRequest()">
+                <i class="fa-solid fa-paper-plane"></i> Send Request
+              </button>
+              <input type="text" id="screenshotVerifySearchInput" class="form-control" style="width:190px; padding:6px 11px; font-size:0.75rem;" placeholder="Search Active Renter / Aadhaar..." oninput="renderAdminScreenshotVerificationGrid(this.value)">
+              <button type="button" class="btn-ledger-action" style="padding:6px 11px; font-size:0.74rem; color:#34d399;" onclick="syncDataLive(true).then(() => renderAdminScreenshotVerificationGrid())">
                 <i class="fa-solid fa-rotate"></i> Refresh
               </button>
             </div>
           </div>
+          <div id="adminScreenshotRequestStatusBanner" style="display:none; margin-bottom:10px; padding:8px 12px; border-radius:10px; font-size:0.75rem; font-weight:700;"></div>
           <div id="adminScreenshotVerificationContainer" style="max-height:470px; overflow-y:auto; padding-right:4px;"></div>
         </div>
       </div>
@@ -6869,7 +6924,8 @@
           </div>
         </div>
 
-        <button class="btn-primary" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="submitCreateNewUser()">
+        <div id="createUserSubmitStatusBanner" style="display:none; margin-bottom:12px; padding:10px 14px; border-radius:10px; font-size:0.8rem; font-weight:800; align-items:center; gap:8px;"></div>
+        <button type="button" id="btnCreateUserSubmit" class="btn-primary" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="submitCreateNewUser()">
           <i class="fa-solid fa-user-check"></i> Create New User ID in Google Sheet
         </button>
       </div>
@@ -6921,33 +6977,33 @@
       </div>
 
         
-        <!-- Option: Change Background Photo (Home Page Only in Full HD Quality — Login/Logout Screen Unchanged) -->
+        <!-- Option: Change Background Photo (Global HD Wallpaper across all screens via Google Drive + Sheet) -->
         <div id="otherPanelChangeBg" class="stat-pill admin-only" style="text-align: left; display: none;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
             <div>
               <span style="font-weight:800; font-size:0.88rem; color:#ec4899;">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Home Page HD Background Wallpaper (Dashboard Only)
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Global Portal HD Background Wallpaper (All Screens)
               </span>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Upload a photo in Full HD quality or paste an image link below. This background applies <strong>only to the Home Page after logging in</strong> (the Logout / Login screen keeps its default background).
+                Upload a photo or paste an image link below. Uploads auto-save to Google Drive with public view access, update Google Sheets automatically, and display across <strong>all screens/pages</strong>.
               </div>
             </div>
             <span style="font-size:0.7rem; color:#10b981; font-weight:700; background:rgba(16,185,129,0.15); padding:3px 8px; border-radius:12px;">
-              <i class="fa-solid fa-high-definition"></i> Full HD • Home Page Only
+              <i class="fa-solid fa-high-definition"></i> Drive + Sheet • All Pages
             </span>
           </div>
 
           <div style="display:flex; flex-direction:column; gap:12px;">
             <div style="background:var(--bg-input); padding:12px; border-radius:12px; border:1px solid var(--glass-border);">
               <label style="font-size:0.76rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:6px; margin-bottom:6px;">
-                <i class="fa-solid fa-house" style="color:#ec4899;"></i> Home Page Background Link (URL or Upload HD Photo)
+                <i class="fa-solid fa-globe" style="color:#ec4899;"></i> Global Background Link (Auto-filled from Google Drive or Paste URL)
               </label>
               <div style="display:flex; gap:8px; margin-bottom:8px;">
                 <input
                   type="url"
                   id="bgUrlLoginScreen"
                   class="form-control"
-                  placeholder="Paste HD image link for Home Page background (e.g. https://...)"
+                  placeholder="Paste HD image link or upload photo below (e.g. https://...)"
                   style="font-size:0.78rem;"
                 >
                 <button
@@ -6962,11 +7018,11 @@
                 </button>
               </div>
               <div class="admin-only" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <label style="font-size:0.72rem; color:var(--text-muted); margin:0;"><i class="fa-solid fa-cloud-arrow-up" style="color:#ec4899;"></i> Or Upload HD Photo from Device:</label>
-                <input type="file" accept="image/*" class="form-control" style="padding:5px 8px; font-size:0.74rem; max-width:260px;" onchange="handleDirectBgUpload(this)">
+                <label style="font-size:0.72rem; color:var(--text-muted); margin:0;"><i class="fa-solid fa-cloud-arrow-up" style="color:#ec4899;"></i> Upload Photo to Google Drive:</label>
+                <input type="file" id="bgDirectUploadFileInput" accept="image/*" class="form-control" style="padding:5px 8px; font-size:0.74rem; max-width:260px;" onchange="handleDirectBgUpload(this)">
               </div>
               <div id="bgLoginStatusHint" style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">
-                Applies in crisp HD strictly to the Home Page after login (Logout/Login screen remains unchanged).
+                Applies globally across Login, Home, and all Portal screens from Google Sheets.
               </div>
               <!-- Requirement 10: Persistent Live Preview Box inside Background Photo Settings -->
               <div id="bgActivePreviewContainer" style="margin-top:10px; padding:10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px dashed rgba(236,72,153,0.45); display:flex; align-items:center; gap:12px;">
@@ -8662,7 +8718,14 @@
             const p = msg.payload || {};
             const targetU = String(p.username || "").trim().toLowerCase();
             const newTok = String(p.sessionToken || "").trim();
-            if (activeUser && activeSessionToken && String(activeUser).trim().toLowerCase() === targetU && newTok && newTok !== activeSessionToken) {
+            if (
+              activeUser &&
+              activeSessionToken &&
+              String(activeUser).trim().toLowerCase() === targetU &&
+              newTok &&
+              newTok !== activeSessionToken &&
+              !isSessionTokenOnSameDevice(newTok, activeSessionToken)
+            ) {
               triggerSingleDeviceSessionConflict();
             }
           } else if (msg.topic === "users") {
@@ -8671,10 +8734,15 @@
               const me = DB.users.find(function(u) {
                 return String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase();
               });
-              if (me && me.ActiveSessionToken && String(me.ActiveSessionToken).trim() !== String(activeSessionToken).trim()) {
+              if (
+                me &&
+                me.ActiveSessionToken &&
+                String(me.ActiveSessionToken).trim() !== String(activeSessionToken).trim() &&
+                !isSessionTokenOnSameDevice(me.ActiveSessionToken, activeSessionToken)
+              ) {
                 const remoteTs = extractSessionTokenTimestamp(me.ActiveSessionToken);
                 const localTs = extractSessionTokenTimestamp(activeSessionToken);
-                if (remoteTs === 0 || localTs === 0 || remoteTs >= localTs) {
+                if (remoteTs === 0 || localTs === 0 || remoteTs > localTs) {
                   triggerSingleDeviceSessionConflict();
                   return;
                 }
@@ -8698,9 +8766,45 @@
       };
     }
 
-    // STRICT REAL-TIME SSE (Server-Sent Events) ENGINE for Chat, Notifications & Live Updates
+    // Browser Device ID & Role-Separated Session Helpers
+    const PORTAL_BROWSER_DEVICE_ID_KEY = "portal_browser_device_id_v1";
     let realtimeEventSource = null;
     let realtimePollTimer = null;
+    let isLoginWriteInFlight = false;
+
+    function getOrCreatePortalDeviceId() {
+      try {
+        let devId = localStorage.getItem(PORTAL_BROWSER_DEVICE_ID_KEY) || "";
+        if (!devId) {
+          devId = "DEV-" + Date.now().toString(36) + "-" + Math.random().toString(36).substring(2, 10);
+          localStorage.setItem(PORTAL_BROWSER_DEVICE_ID_KEY, devId);
+        }
+        return devId;
+      } catch (e) {
+        return "DEV-SESSION";
+      }
+    }
+
+    function extractDeviceIdFromSessionToken(token) {
+      const str = String(token || "").trim();
+      const m = str.match(/-D-(DEV-[A-Za-z0-9-]+)$/);
+      return m ? m[1] : "";
+    }
+
+    function isSessionTokenOnSameDevice(tokA, tokB) {
+      const devA = extractDeviceIdFromSessionToken(tokA);
+      const devB = extractDeviceIdFromSessionToken(tokB);
+      if (devA && devB) return devA === devB;
+      const localDev = getOrCreatePortalDeviceId();
+      if (devA && devA === localDev) return true;
+      if (devB && devB === localDev) return true;
+      return false;
+    }
+
+    function getRoleSessionStorageKey(role) {
+      const cleanRole = String(role || "viewer").trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+      return "portal_role_session_token_" + (cleanRole || "user");
+    }
 
     function extractSessionTokenTimestamp(token) {
       const str = String(token || "").trim();
@@ -8716,153 +8820,11 @@
     }
 
     function initRealtimeSSE() {
-      if (typeof EventSource !== "undefined") {
-        if (realtimeEventSource) {
-          try { realtimeEventSource.close(); } catch (e) {}
-        }
-        try {
-          realtimeEventSource = new EventSource("/api/realtime/stream");
-          realtimeEventSource.onmessage = function (ev) {
-            try {
-              const data = JSON.parse(ev.data);
-              if (!data || !data.event) return;
-              const payload = data.payload || data.data || {};
-
-              if (data.event === "CHAT_UPDATED") {
-                const incoming = payload.privateChats || payload;
-                if (incoming && typeof incoming === "object") {
-                  if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-                  DB.globalConfig.privateChats = incoming;
-                  if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
-                  if (typeof renderAdminChatChannelsList === "function") renderAdminChatChannelsList();
-                  if (typeof renderRenterAdminTargetList === "function") renderRenterAdminTargetList();
-                  if (typeof updateLiveChatUnreadBadge === "function") updateLiveChatUnreadBadge();
-                }
-              } else if (data.event === "NOTICES_UPDATED") {
-                const incoming = payload.broadcastNotices || payload;
-                if (Array.isArray(incoming)) {
-                  if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-                  DB.globalConfig.broadcastNotices = incoming;
-                  if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
-                  if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
-                }
-              } else if (data.event === "CONTACT_UPDATED") {
-                const incoming = payload.contactConfig || payload;
-                if (incoming && typeof incoming === "object") {
-                  if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-                  DB.globalConfig.contactConfig = incoming;
-                  if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
-                }
-              } else if (data.event === "USER_SESSION_REVOKED") {
-                const targetU = String(payload.username || "").trim().toLowerCase();
-                const newTok = String(payload.newSessionToken || "").trim();
-                if (activeUser && String(activeUser).trim().toLowerCase() === targetU) {
-                  const localTs = extractSessionTokenTimestamp(activeSessionToken);
-                  const remoteTs = extractSessionTokenTimestamp(newTok);
-                  if (activeSessionToken && newTok && String(activeSessionToken).trim() !== newTok && (remoteTs === 0 || localTs === 0 || remoteTs >= localTs)) {
-                    triggerSingleDeviceSessionConflict();
-                  }
-                }
-              } else if (data.event === "USER_LOCKOUT") {
-                const targetU = String(payload.username || "").trim().toLowerCase();
-                const lockData = payload.lockout;
-                if (targetU && lockData) {
-                  const state = getLoginLockoutState(targetU);
-                  state.stage = Number(lockData.tier || 0);
-                  state.failedInStage = Number(lockData.attempts || 0);
-                  state.lockedUntil = Number(lockData.lockedUntil || 0);
-                  state.lockedTierLabel = lockData.tierLabel || "1 minute";
-                  state.isPermanentlyBlocked = Boolean(lockData.isPermanentlyBlocked);
-                  saveLoginLockoutState(targetU, state);
-                  updateLoginLockoutUI(targetU);
-                }
-              } else if (data.event === "DATA_SYNC") {
-                if (typeof syncDataLive === "function" && activeUser) {
-                  syncDataLive(false);
-                }
-              }
-            } catch (err) {}
-          };
-          realtimeEventSource.onerror = function () {
-            // Built-in browser retry handles SSE reconnection
-          };
-        } catch (e) {}
+      // Live synchronization is driven directly by GAS_WEB_APP_URL syncTimer & BroadcastChannel
+      if (realtimePollTimer) {
+        clearInterval(realtimePollTimer);
+        realtimePollTimer = null;
       }
-
-      // Fast heartbeat poll (every 2.5s) to guarantee real-time updates across distinct hosts
-      if (realtimePollTimer) clearInterval(realtimePollTimer);
-      realtimePollTimer = setInterval(async () => {
-        if (!activeUser || typeof activeRole === "undefined" || !activeRole) return;
-        try {
-          const chatRes = await fetch("/api/gas-engine/chats");
-          if (chatRes.ok) {
-            const chatData = await chatRes.json();
-            if (chatData && chatData.status === "success" && chatData.privateChats) {
-              if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-              const prevStr = JSON.stringify(DB.globalConfig.privateChats || {});
-              const newStr = JSON.stringify(chatData.privateChats);
-              if (prevStr !== newStr) {
-                DB.globalConfig.privateChats = chatData.privateChats;
-                if (typeof renderCurrentChatMessages === "function") renderCurrentChatMessages();
-                if (typeof renderAdminChatChannelsList === "function") renderAdminChatChannelsList();
-                if (typeof renderRenterAdminTargetList === "function") renderRenterAdminTargetList();
-                if (typeof updateLiveChatUnreadBadge === "function") updateLiveChatUnreadBadge();
-              }
-            }
-          }
-        } catch (e) {}
-
-        try {
-          const noticeRes = await fetch("/api/gas-engine/notices");
-          if (noticeRes.ok) {
-            const noticeData = await noticeRes.json();
-            if (noticeData && noticeData.status === "success") {
-              if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-              if (Array.isArray(noticeData.broadcastNotices)) {
-                const prevStr = JSON.stringify(DB.globalConfig.broadcastNotices || []);
-                const newStr = JSON.stringify(noticeData.broadcastNotices);
-                if (prevStr !== newStr) {
-                  DB.globalConfig.broadcastNotices = noticeData.broadcastNotices;
-                  if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
-                  if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
-                }
-              }
-              if (noticeData.contactConfig && typeof noticeData.contactConfig === "object") {
-                const prevContact = JSON.stringify(DB.globalConfig.contactConfig || {});
-                const newContact = JSON.stringify(noticeData.contactConfig);
-                if (prevContact !== newContact) {
-                  DB.globalConfig.contactConfig = noticeData.contactConfig;
-                  if (typeof renderContactUsDynamicBody === "function") renderContactUsDynamicBody();
-                }
-              }
-            }
-          }
-        } catch (e) {}
-
-        // Immediate single-device concurrent session check (logs out older device immediately if user logs in elsewhere)
-        try {
-          if (activeUser && activeSessionToken) {
-            const sessRes = await fetch(`/api/gas-engine/session-check?username=${encodeURIComponent(activeUser)}&sessionToken=${encodeURIComponent(activeSessionToken)}`);
-            if (sessRes.ok) {
-              const sessData = await sessRes.json();
-              if (sessData && sessData.valid === false) {
-                if (sessData.reason === "session_conflict") {
-                  triggerSingleDeviceSessionConflict();
-                  return;
-                } else if (sessData.reason === "user_blocked") {
-                  performConfirmedLogout();
-                  showAccountBlockedModal("Your account has been blocked by an administrator.");
-                  return;
-                } else if (sessData.reason === "user_deleted") {
-                  performConfirmedLogout();
-                  triggerSideToast("Account Removed", "Your User ID was removed in Google Sheets. Please log in with the latest User ID.", false);
-                  return;
-                }
-              }
-            }
-          }
-        } catch (e) {}
-      }, 2500);
     }
 
     function purgeAllPortalBrowserCaches() {
@@ -9031,8 +8993,8 @@
                 }).catch(function() {});
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
-              const withinRecentLoginGrace = (Date.now() - lastLoginCompletedAt) < 2500;
-              let detectedRemoteConflict = Boolean(json.sessionConflict);
+              const withinRecentLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 12000;
+              let detectedRemoteConflict = Boolean(json.sessionConflict) && !withinRecentLoginGrace;
 
               remoteUsers = remoteUsers.map(function(u) {
                 const rawSt = String(u.Status || u.AccountStatus || "Active").trim();
@@ -9042,7 +9004,13 @@
                   if (withinRecentLoginGrace) {
                     resolvedTok = activeSessionToken;
                   } else if (resolvedTok && resolvedTok !== String(activeSessionToken).trim()) {
-                    detectedRemoteConflict = true;
+                    const remoteTs = extractSessionTokenTimestamp(resolvedTok);
+                    const localTs = extractSessionTokenTimestamp(activeSessionToken);
+                    if (!isSessionTokenOnSameDevice(resolvedTok, activeSessionToken) && (remoteTs === 0 || localTs === 0 || remoteTs > localTs)) {
+                      detectedRemoteConflict = true;
+                    } else {
+                      resolvedTok = activeSessionToken;
+                    }
                   }
                 }
                 return Object.assign({}, u, {
@@ -9053,13 +9021,6 @@
                 });
               });
               saveLocalUsersMaster(remoteUsers);
-              if (!detectedRemoteConflict) {
-                fetch("/api/gas-engine", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ action: "replaceUsersFromSheet", users: remoteUsers })
-                }).catch(function() {});
-              }
 
               if (detectedRemoteConflict && activeUser && activeSessionToken && !withinRecentLoginGrace) {
                 setTimeout(function() {
@@ -9642,39 +9603,28 @@
         sessionStorage.setItem("active_session_password", cleanPass);
         localStorage.setItem("portal_session_pass_" + cleanUKey, cleanPass);
         localStorage.setItem("portal_device_session_" + cleanUKey, sessionToken);
+        localStorage.setItem(getRoleSessionStorageKey(liveMatch.Role), sessionToken);
       } catch (e) {}
 
       notifyCrossTabSync("session_login", { username: cleanUKey, sessionToken: sessionToken });
 
       lastWriteCompletedAt = Date.now();
       lastLoginCompletedAt = Date.now();
+      isLoginWriteInFlight = true;
 
-      // Record login session & reset lockout in backend and Google Apps Script so all devices see the new ActiveSessionToken
+      // Record login session & reset lockout in Google Apps Script and wait up to 4.5s so sheet sync never reads stale token
       const loginPayloadObj = {
         action: "loginUser",
         username: liveMatch.Username,
         password: cleanPass,
         sessionToken: sessionToken,
+        deviceId: getOrCreatePortalDeviceId(),
         loginTime: new Date().toLocaleString("en-IN"),
         deviceInfo: navigator.userAgent || "Web Browser"
       };
       const bodyStr = JSON.stringify(loginPayloadObj);
 
-      await Promise.race([
-        fetch("/api/gas-engine", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: bodyStr
-        }).then(function(r) { return r.ok ? r.json() : null; }).then(function(engineRes) {
-          if (engineRes && Array.isArray(engineRes.loginHistory) && engineRes.loginHistory.length > 0) {
-            saveLocalLoginHistoryMaster(engineRes.loginHistory);
-          }
-        }).catch(function() {}),
-        new Promise(function(resolve) { setTimeout(resolve, 800); })
-      ]);
-
-      // Non-blocking background sync to Google Apps Script so login completes immediately
-      fetch(GAS_WEB_APP_URL, {
+      const gasLoginPromise = fetch(GAS_WEB_APP_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: bodyStr,
@@ -9683,7 +9633,16 @@
         if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
           saveLocalLoginHistoryMaster(gasRes.loginHistory);
         }
-      }).catch(function() {});
+        return gasRes;
+      }).catch(function() { return null; }).finally(function() {
+        isLoginWriteInFlight = false;
+        lastLoginCompletedAt = Date.now();
+      });
+
+      await Promise.race([
+        gasLoginPromise,
+        new Promise(function(resolve) { setTimeout(resolve, 4500); })
+      ]);
 
       return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, liveSheetData);
     }
@@ -9803,13 +9762,17 @@
               BgDashboard: "",
               ActiveSessionToken: ""
             };
-            usersList.push(userDoc);
+            const nextUsersPreview = usersList.concat([userDoc]);
+            const gasCreateRes = await sendGasSheetAction({ ...data, userDoc: userDoc, users: nextUsersPreview });
+            if (gasCreateRes && (gasCreateRes.status === "error" || gasCreateRes.status === "duplicate")) {
+              return gasCreateRes;
+            }
+            usersList = Array.isArray(gasCreateRes?.users) && gasCreateRes.users.length > 0 ? gasCreateRes.users : nextUsersPreview;
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({ ...data, userDoc: userDoc, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("CREATE_USER", `Created user @${uName} (${roleVal})`, activeUser || "Admin");
             }
-            return { status: "success", message: "User account created and synced to Google Sheet." };
+            return { status: "success", user: userDoc, message: "User Created Successfully" };
           }
 
           case "updateUserRole": {
@@ -9861,6 +9824,19 @@
             }
             if (nextStatus.toLowerCase() === "blocked") {
               updateFields.ActiveSessionToken = "";
+            } else {
+              updateFields.LockoutStage = 0;
+              updateFields.FailedAttempts = 0;
+              updateFields.LockedUntil = 0;
+              updateFields.LockedTierLabel = "";
+              updateFields.IsPermanentlyBlocked = "false";
+              updateFields.PermanentlyLockedByAttempts = false;
+              updateFields.MovedOutAutoBlocked = false;
+              if (globalConfig.loginLockouts) {
+                delete globalConfig.loginLockouts[oldLower];
+                delete globalConfig.loginLockouts[newLower];
+                saveLocalGlobalConfigMaster(globalConfig);
+              }
             }
 
             if (idx !== -1) {
@@ -9881,21 +9857,36 @@
             const targetLower = rawTarget.toLowerCase();
             const reqLower = String(data.requesterUsername || activeUser || "").trim().toLowerCase();
             const newStatus = data.newStatus || (data.block ? "Blocked" : "Active");
-            if (reqLower && targetLower === reqLower && String(newStatus).toLowerCase() === "blocked") {
+            const isActivating = String(newStatus).toLowerCase() !== "blocked";
+            if (reqLower && targetLower === reqLower && !isActivating) {
               return { status: "error", message: "You cannot block your own currently logged-in account." };
             }
             usersList = usersList.map(function(u) {
               if (String(u.Username || "").trim().toLowerCase() === targetLower) {
-                return {
+                const updated = {
                   ...u,
                   Status: newStatus,
                   AccountStatus: newStatus,
-                  ActiveSessionToken: String(newStatus).toLowerCase() === "blocked" ? "" : (u.ActiveSessionToken || ""),
+                  ActiveSessionToken: !isActivating ? "" : (u.ActiveSessionToken || ""),
                   UpdatedAt: new Date().toISOString()
                 };
+                if (isActivating) {
+                  updated.LockoutStage = 0;
+                  updated.FailedAttempts = 0;
+                  updated.LockedUntil = 0;
+                  updated.LockedTierLabel = "";
+                  updated.IsPermanentlyBlocked = "false";
+                  updated.PermanentlyLockedByAttempts = false;
+                  updated.MovedOutAutoBlocked = false;
+                }
+                return updated;
               }
               return u;
             });
+            if (isActivating && globalConfig.loginLockouts && globalConfig.loginLockouts[targetLower]) {
+              delete globalConfig.loginLockouts[targetLower];
+              saveLocalGlobalConfigMaster(globalConfig);
+            }
             saveLocalUsersMaster(usersList);
             await sendGasSheetAction({ ...data, users: usersList });
             return { status: "success", message: `User status updated to ${newStatus}.` };
@@ -10053,6 +10044,7 @@
               ...globalConfig,
               bgLoginUrl: nextBgUrl,
               bgDashboardUrl: nextBgUrl,
+              backgroundUrl: nextBgUrl,
               bgCleared: isExplicitClear,
               bgClearedAt: isExplicitClear ? Date.now() : 0,
               customBackgrounds: [],
@@ -10060,8 +10052,8 @@
             };
             saveLocalGlobalConfigMaster(globalConfig);
 
-            await sendGasSheetAction({ ...data, bgLogin: nextBgUrl, bgDashboard: nextBgUrl, bgLoginUrl: nextBgUrl, bgDashboardUrl: nextBgUrl, customBackgrounds: [], globalConfig: globalConfig });
-            return { status: "success", driveFolderId: GOOGLE_DRIVE_FOLDER_ID, driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL, previewUrl: nextBgUrl, message: "Saved to Google Drive & synced link to Google Sheets." };
+            await sendGasSheetAction({ ...data, bgLogin: nextBgUrl, bgDashboard: nextBgUrl, bgLoginUrl: nextBgUrl, bgDashboardUrl: nextBgUrl, backgroundUrl: nextBgUrl, customBackgrounds: [], globalConfig: globalConfig });
+            return { status: "success", driveFolderId: GOOGLE_DRIVE_FOLDER_ID, driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL, previewUrl: nextBgUrl, directImageUrl: nextBgUrl, message: "Saved to Google Drive & synced link to Google Sheets." };
           }
 
           case "uploadBackgroundPhoto": {
@@ -10075,11 +10067,12 @@
               driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
               globalConfig: globalConfig
             });
-            const resolvedDriveLink = res?.previewUrl || res?.imageUrl || photoData;
+            const resolvedDriveLink = res?.directImageUrl || res?.previewUrl || res?.imageUrl || res?.shareableUrl || photoData;
             globalConfig = {
               ...globalConfig,
               bgLoginUrl: resolvedDriveLink,
               bgDashboardUrl: resolvedDriveLink,
+              backgroundUrl: resolvedDriveLink,
               bgCleared: false,
               customBackgrounds: [],
               updatedAt: new Date().toISOString()
@@ -10089,9 +10082,36 @@
               status: "success",
               driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
               driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
+              directImageUrl: resolvedDriveLink,
               previewUrl: resolvedDriveLink,
               imageUrl: resolvedDriveLink,
               message: "Background photo saved to Google Drive and link pasted into Google Sheets!"
+            };
+          }
+
+          case "requestMonthlyPhoto":
+          case "reRequestMonthlyPhoto":
+          case "saveScreenshotRequests": {
+            const existingReqs = (globalConfig.screenshotRequests && typeof globalConfig.screenshotRequests === "object")
+              ? { ...globalConfig.screenshotRequests }
+              : {};
+            if (data.screenshotRequests && typeof data.screenshotRequests === "object") {
+              Object.assign(existingReqs, data.screenshotRequests);
+            }
+            if (data.requestKey && data.requestEntry && typeof data.requestEntry === "object") {
+              existingReqs[String(data.requestKey)] = { ...data.requestEntry, updatedAt: new Date().toISOString() };
+            }
+            globalConfig = {
+              ...globalConfig,
+              screenshotRequests: existingReqs,
+              updatedAt: new Date().toISOString()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            const reqRes = await sendGasSheetAction({ ...data, screenshotRequests: existingReqs, globalConfig: globalConfig });
+            return {
+              status: reqRes?.status || "success",
+              screenshotRequests: reqRes?.screenshotRequests || existingReqs,
+              message: reqRes?.message || "Screenshot request synced to Google Sheets."
             };
           }
 
@@ -10469,8 +10489,8 @@
 
       if (hintLogin) {
         hintLogin.innerText = hasCustom
-          ? "Full HD custom background photo is locked & active on the Home Page after login (Admin-controlled)."
-          : "Default placeholder background photo is active across all locations.";
+          ? "Custom background photo is saved in Google Drive & Google Sheets and active across all screens/pages."
+          : "Default placeholder background photo is active across all screens.";
         hintLogin.style.color = hasCustom ? "var(--accent-green)" : "var(--text-muted)";
       }
     }
@@ -10481,12 +10501,12 @@
       const dashScreenEl = document.getElementById("dashboardScreen");
       const bgCanvasEl = document.querySelector(".bg-canvas");
 
-      const effectiveHomeBg = (dashBg && dashBg.trim() && dashBg.trim() !== DEFAULT_PORTAL_BACKGROUND_IMAGE)
+      const effectiveGlobalBg = (dashBg && dashBg.trim() && dashBg.trim() !== DEFAULT_PORTAL_BACKGROUND_IMAGE)
         ? normalizeGoogleDriveBgUrl(dashBg.trim())
         : DEFAULT_PORTAL_BACKGROUND_IMAGE;
 
       if (loginScreenEl) {
-        loginScreenEl.style.setProperty("background-image", 'url("' + DEFAULT_PORTAL_BACKGROUND_IMAGE + '")', "important");
+        loginScreenEl.style.setProperty("background-image", 'url("' + effectiveGlobalBg + '")', "important");
         loginScreenEl.style.backgroundSize = "cover";
         loginScreenEl.style.backgroundPosition = "center";
         loginScreenEl.style.backgroundRepeat = "no-repeat";
@@ -10494,7 +10514,7 @@
       }
 
       if (dashScreenEl) {
-        dashScreenEl.style.setProperty("background-image", 'url("' + effectiveHomeBg + '")', "important");
+        dashScreenEl.style.setProperty("background-image", 'url("' + effectiveGlobalBg + '")', "important");
         dashScreenEl.style.backgroundSize = "cover";
         dashScreenEl.style.backgroundPosition = "center";
         dashScreenEl.style.backgroundRepeat = "no-repeat";
@@ -10502,9 +10522,7 @@
       }
 
       if (bgCanvasEl) {
-        const isDashboardActive = dashScreenEl && dashScreenEl.classList.contains("active");
-        const canvasBg = isDashboardActive ? effectiveHomeBg : DEFAULT_PORTAL_BACKGROUND_IMAGE;
-        bgCanvasEl.style.setProperty("background-image", 'url("' + canvasBg + '")', "important");
+        bgCanvasEl.style.setProperty("background-image", 'url("' + effectiveGlobalBg + '")', "important");
         bgCanvasEl.style.backgroundSize = "cover";
         bgCanvasEl.style.backgroundPosition = "center";
         bgCanvasEl.style.backgroundRepeat = "no-repeat";
@@ -10534,7 +10552,6 @@
       const prevUrl = localStorage.getItem("portal_custom_bg_dashboard") || localStorage.getItem("portal_custom_bg_login") || "";
 
       if (isExplicitlyCleared) {
-        const hadCustomLocal = Boolean(prevUrl || localHdCache || localStorage.getItem("portal_custom_bg_sheet_safe"));
         localStorage.removeItem("portal_custom_bg_dashboard");
         localStorage.removeItem("portal_custom_bg_login");
         localStorage.removeItem("portal_custom_bg_hd_cache");
@@ -10548,7 +10565,7 @@
       if (serverDashBg && serverDashBg !== DEFAULT_PORTAL_BACKGROUND_IMAGE) {
         if (localHdCache && serverDashBg.startsWith("data:image/")) {
           localStorage.setItem("portal_custom_bg_sheet_safe", serverDashBg);
-        } else if (prevUrl !== serverDashBg) {
+        } else if (prevUrl !== serverDashBg || localHdCache) {
           localStorage.setItem("portal_custom_bg_dashboard", serverDashBg);
           localStorage.setItem("portal_custom_bg_login", serverDashBg);
           if (!serverDashBg.startsWith("data:image/")) {
@@ -10570,9 +10587,9 @@
       }
       const inputLogin = document.getElementById("bgUrlLoginScreen");
       const rawInputVal = inputLogin ? inputLogin.value.trim() : "";
-      const isHdPlaceholderText = rawInputVal.startsWith("Full HD Photo Uploaded");
+      const isHdPlaceholderText = rawInputVal.startsWith("Full HD Photo Uploaded") || rawInputVal === "Saved to Google Drive";
       const rawGlobalVal = isHdPlaceholderText
-        ? (localStorage.getItem("portal_custom_bg_hd_cache") || localStorage.getItem("portal_custom_bg_dashboard") || localStorage.getItem("portal_custom_bg_login") || "")
+        ? (localStorage.getItem("portal_custom_bg_dashboard") || localStorage.getItem("portal_custom_bg_login") || localStorage.getItem("portal_custom_bg_hd_cache") || "")
         : normalizeGoogleDriveBgUrl(rawInputVal);
       const globalVal = (rawGlobalVal && rawGlobalVal !== DEFAULT_PORTAL_BACKGROUND_IMAGE) ? rawGlobalVal : "";
 
@@ -10585,7 +10602,7 @@
           localStorage.setItem("portal_custom_bg_dashboard", globalVal);
           localStorage.setItem("portal_custom_bg_login", globalVal);
         } catch (e) {}
-        if (!isHdPlaceholderText && !globalVal.startsWith("data:image/")) {
+        if (!globalVal.startsWith("data:image/")) {
           localStorage.removeItem("portal_custom_bg_hd_cache");
           localStorage.removeItem("portal_custom_bg_sheet_safe");
         }
@@ -10596,13 +10613,19 @@
         localStorage.removeItem("portal_custom_bg_sheet_safe");
       }
 
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      DB.globalConfig.bgLoginUrl = globalVal;
+      DB.globalConfig.bgDashboardUrl = globalVal;
+      DB.globalConfig.backgroundUrl = globalVal;
+      DB.globalConfig.bgCleared = !globalVal;
+
       applyCustomBackgrounds();
       initCustomBgInputs();
       triggerSideToast(
-        globalVal ? "Home Page HD Background Saved" : "Default Placeholder Photo Restored",
+        globalVal ? "Global Background Saved" : "Default Placeholder Photo Restored",
         globalVal
-          ? "Full HD background photo locked & applied to the Home Page after login!"
-          : "Custom background deleted by Admin — default placeholder photo is now applied across all locations.",
+          ? "Background photo synced to Google Sheets & applied across all screens!"
+          : "Custom background deleted by Admin — default placeholder photo restored across all locations.",
         true
       );
 
@@ -10615,7 +10638,7 @@
           await sendFirebaseAction({
             action: "saveBackgrounds",
             username: activeUser,
-            bgLogin: globalVal ? "" : DEFAULT_PORTAL_BACKGROUND_IMAGE,
+            bgLogin: globalVal ? serverSafePayload : DEFAULT_PORTAL_BACKGROUND_IMAGE,
             bgDashboard: serverSafePayload,
             sheetSafeBase64: globalVal ? sheetSafeCopy : "",
             explicitClear: !globalVal
@@ -10645,7 +10668,14 @@
       }
       const file = inputEl.files && inputEl.files[0];
       if (!file) return;
-      triggerSideToast("Uploading Photo to Google Drive", "Saving photo to Google Drive & pasting link into Google Sheets...", "warning");
+      const hintEl = document.getElementById("bgLoginStatusHint");
+      const saveBtn = document.getElementById("btnSaveCustomBgPhoto");
+      if (hintEl) {
+        hintEl.innerText = "Uploading photo to Google Drive & updating Google Sheets...";
+        hintEl.style.color = "#38bdf8";
+      }
+      if (saveBtn) saveBtn.disabled = true;
+      triggerSideToast("Uploading Photo to Google Drive", "Saving photo to Google Drive with public link & updating Google Sheets...", "warning");
       try {
         const hdDataUrl = await readHdBackgroundFileToDataUrl(file, 1600, 0.85);
         const res = await sendFirebaseAction({
@@ -10658,18 +10688,33 @@
           driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
           driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL
         });
-        const driveBgUrl = (res && (res.previewUrl || res.imageUrl)) ? normalizeGoogleDriveBgUrl(res.previewUrl || res.imageUrl) : hdDataUrl;
+        const returnedBg = res && (res.directImageUrl || res.previewUrl || res.imageUrl || res.shareableUrl)
+          ? (res.directImageUrl || res.previewUrl || res.imageUrl || res.shareableUrl)
+          : "";
+        const driveBgUrl = returnedBg ? normalizeGoogleDriveBgUrl(returnedBg) : hdDataUrl;
         try {
+          if (!driveBgUrl.startsWith("data:image/")) {
+            localStorage.removeItem("portal_custom_bg_hd_cache");
+            localStorage.removeItem("portal_custom_bg_sheet_safe");
+          }
           localStorage.setItem("portal_custom_bg_dashboard", driveBgUrl);
           localStorage.setItem("portal_custom_bg_login", driveBgUrl);
         } catch (e) {}
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig.bgLoginUrl = driveBgUrl;
+        DB.globalConfig.bgDashboardUrl = driveBgUrl;
+        DB.globalConfig.backgroundUrl = driveBgUrl;
+        DB.globalConfig.bgCleared = false;
         applyCustomBackgrounds();
         initCustomBgInputs();
         const el = document.getElementById("bgUrlLoginScreen");
         if (el) el.value = driveBgUrl.startsWith("data:image") ? "Saved to Google Drive" : driveBgUrl;
-        triggerSideToast("Saved to Google Drive & Sheet", "Photo saved to Google Drive and link pasted into Google Sheets for all devices!", true);
+        triggerSideToast("Saved to Google Drive & Sheet", "Background photo saved to Google Drive & auto-filled into Google Sheets across all screens!", true);
       } catch (err) {
         triggerSideToast("Upload Failed", "Could not upload photo to Google Drive.", false);
+      } finally {
+        if (saveBtn) saveBtn.disabled = false;
+        if (inputEl) inputEl.value = "";
       }
     }
 
@@ -10794,20 +10839,7 @@
         return triggerSideToast("Action Blocked", "You cannot block your own currently logged-in account.", false);
       }
 
-      const lockState = typeof getLoginLockoutState === "function" ? getLoginLockoutState(targetClean) : null;
-      const isPermLockedByAttempts = Boolean(
-        (targetU && (Number(targetU.LockoutStage || 0) >= 4 || targetU.PermanentlyLockedByAttempts === true || (String(targetU.IsPermanentlyBlocked || "").toLowerCase() === "true" && Number(targetU.LockoutStage || 0) >= 4))) ||
-        (lockState && lockState.isPermanentlyBlocked && Number(lockState.stage || 0) >= 4)
-      );
-      if (!isBlocking && isPermLockedByAttempts) {
-        return triggerSideToast(
-          "Permanently Blocked Account",
-          `@${targetUsername} was permanently blocked after 12 failed password attempts (4 lockout stages) and cannot be unblocked even by the Admin.`,
-          false
-        );
-      }
-
-      // Only Admin can unblock a moved-out renter account (or unblock any blocked account when not Admin)
+      // Only Admin can unblock a moved-out or blocked renter/user account
       if (!isBlocking && callerRole !== "admin") {
         return triggerSideToast("Admin Only", "Only the Admin can unblock a blocked user account.", false);
       }
@@ -10822,14 +10854,26 @@
         isBlocking ? `Block User Account @${targetUsername}?` : `Unblock User Account @${targetUsername}?`,
         isBlocking
           ? `Are you sure you want to block @${targetUsername}? They will be immediately barred from logging in and a popup will notify them that their account has been blocked.`
-          : `Are you sure you want to unblock @${targetUsername} and restore their login access?`,
+          : `Are you sure you want to unblock @${targetUsername} and restore their login access immediately?`,
         async () => {
           const uObj = (DB.users || []).find(u => String(u.Username || "").toLowerCase() === targetClean);
           if (uObj) {
             uObj.Status = newStatus;
             uObj.AccountStatus = newStatus;
-            if (!isBlocking) uObj.MovedOutAutoBlocked = false;
+            if (!isBlocking) {
+              uObj.MovedOutAutoBlocked = false;
+              uObj.LockoutStage = 0;
+              uObj.FailedAttempts = 0;
+              uObj.LockedUntil = 0;
+              uObj.LockedTierLabel = "";
+              uObj.IsPermanentlyBlocked = "false";
+              uObj.PermanentlyLockedByAttempts = false;
+            }
           }
+          if (!isBlocking && DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[targetClean]) {
+            delete DB.globalConfig.loginLockouts[targetClean];
+          }
+          saveLocalUsersMaster(DB.users || []);
 
           let blockedList = [];
           try {
@@ -12445,7 +12489,12 @@ function formatMonthLabel(rawVal) {
       window.addEventListener("storage", (ev) => {
         if (!activeUser || !activeSessionToken) return;
         const expectedKey = "portal_device_session_" + String(activeUser).trim().toLowerCase();
-        if (ev.key === expectedKey && ev.newValue && ev.newValue !== activeSessionToken) {
+        if (
+          ev.key === expectedKey &&
+          ev.newValue &&
+          ev.newValue !== activeSessionToken &&
+          !isSessionTokenOnSameDevice(ev.newValue, activeSessionToken)
+        ) {
           triggerSingleDeviceSessionConflict();
         }
       });
@@ -13636,9 +13685,270 @@ function formatMonthLabel(rawVal) {
       renderAllDashboardUI();
     }
 
-    async function handleRenterMonthlyPhotoUpload(inputEl, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+    function getMatchingScreenshotRequestsForRenter(monthYear, propName, flatName, renterId, aadhaarNum) {
+      const reqMap = (DB.globalConfig && DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object")
+        ? DB.globalConfig.screenshotRequests
+        : {};
+      const cleanMonth = normalizeMonthYear(monthYear);
+      const normProp = String(propName || "").trim().toLowerCase();
+      const normFlat = String(flatName || "").trim().toLowerCase();
+      const normRenterId = String(renterId || "").trim().toLowerCase();
+      const normAadh = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+      const result = { hasMonthRequest: false, reRequestedCats: {} };
+
+      Object.keys(reqMap).forEach(k => {
+        const entry = reqMap[k];
+        if (!entry || typeof entry !== "object") return;
+        const entryMonth = normalizeMonthYear(entry.monthYear);
+        if (cleanMonth && entryMonth !== cleanMonth) return;
+
+        const scopeType = String(entry.scope || "").toUpperCase();
+        const eRenterId = String(entry.renterId || "").trim().toLowerCase();
+        const eAadh = String(entry.aadhaar || entry.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+        const eProp = String(entry.propertyName || "").trim().toLowerCase();
+        const eFlat = String(entry.flatName || "").trim().toLowerCase();
+
+        const matchesRenter =
+          scopeType === "ALL_ACTIVE" ||
+          (normRenterId && eRenterId && normRenterId === eRenterId) ||
+          (normAadh.length === 12 && eAadh === normAadh) ||
+          (normProp && normFlat && eProp === normProp && eFlat === normFlat);
+
+        if (!matchesRenter) return;
+        result.hasMonthRequest = true;
+        const st = String(entry.status || "").toLowerCase();
+        const cat = String(entry.category || "").trim().toLowerCase();
+        if (cat && st === "re-requested") {
+          result.reRequestedCats[cat] = entry;
+        }
+      });
+      return result;
+    }
+
+    function getAllRequestedMonthsForRenter(propName, flatName, renterId, aadhaarNum) {
+      const reqMap = (DB.globalConfig && DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object")
+        ? DB.globalConfig.screenshotRequests
+        : {};
+      const normProp = String(propName || "").trim().toLowerCase();
+      const normFlat = String(flatName || "").trim().toLowerCase();
+      const normRenterId = String(renterId || "").trim().toLowerCase();
+      const normAadh = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+      const monthsSet = new Set();
+
+      Object.keys(reqMap).forEach(k => {
+        const entry = reqMap[k];
+        if (!entry || typeof entry !== "object") return;
+        const entryMonth = normalizeMonthYear(entry.monthYear);
+        if (!entryMonth) return;
+        const scopeType = String(entry.scope || "").toUpperCase();
+        const eRenterId = String(entry.renterId || "").trim().toLowerCase();
+        const eAadh = String(entry.aadhaar || entry.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+        const eProp = String(entry.propertyName || "").trim().toLowerCase();
+        const eFlat = String(entry.flatName || "").trim().toLowerCase();
+        if (
+          scopeType === "ALL_ACTIVE" ||
+          (normRenterId && eRenterId && normRenterId === eRenterId) ||
+          (normAadh.length === 12 && eAadh === normAadh) ||
+          (normProp && normFlat && eProp === normProp && eFlat === normFlat)
+        ) {
+          monthsSet.add(entryMonth);
+        }
+      });
+      return Array.from(monthsSet).sort().reverse();
+    }
+
+    let liveCameraStream = null;
+    let liveCameraFacingMode = "environment";
+    let liveCameraContext = null;
+    let liveCameraCapturedDataUrl = "";
+
+    function stopLiveCameraStream() {
+      if (liveCameraStream) {
+        try {
+          liveCameraStream.getTracks().forEach(t => {
+            try { t.stop(); } catch (e) {}
+          });
+        } catch (e) {}
+        liveCameraStream = null;
+      }
+      const videoEl = document.getElementById("liveCameraVideo");
+      if (videoEl) videoEl.srcObject = null;
+    }
+
+    function closeRenterLiveCameraModal() {
+      stopLiveCameraStream();
+      liveCameraCapturedDataUrl = "";
+      liveCameraContext = null;
+      closeModal("renterLiveCameraModal");
+    }
+
+    async function startLiveCameraStream() {
+      stopLiveCameraStream();
+      const videoEl = document.getElementById("liveCameraVideo");
+      const imgEl = document.getElementById("liveCameraCapturedImg");
+      const noticeEl = document.getElementById("liveCameraFallbackNotice");
+      const btnCapture = document.getElementById("btnLiveCameraCapture");
+      const btnRetake = document.getElementById("btnLiveCameraRetake");
+      const btnUpload = document.getElementById("btnLiveCameraUpload");
+      const btnSwitch = document.getElementById("btnLiveCameraSwitch");
+
+      liveCameraCapturedDataUrl = "";
+      if (imgEl) { imgEl.style.display = "none"; imgEl.src = ""; }
+      if (btnRetake) btnRetake.style.display = "none";
+      if (btnUpload) btnUpload.style.display = "none";
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (videoEl) videoEl.style.display = "none";
+        if (noticeEl) noticeEl.style.display = "block";
+        if (btnCapture) btnCapture.style.display = "none";
+        if (btnSwitch) btnSwitch.style.display = "none";
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: liveCameraFacingMode }, width: { ideal: 1280 }, height: { ideal: 960 } },
+          audio: false
+        });
+        liveCameraStream = stream;
+        if (videoEl) {
+          videoEl.srcObject = stream;
+          videoEl.style.display = "block";
+          try { await videoEl.play(); } catch (e) {}
+        }
+        if (noticeEl) noticeEl.style.display = "none";
+        if (btnCapture) btnCapture.style.display = "inline-flex";
+        if (btnSwitch) btnSwitch.style.display = "inline-flex";
+      } catch (err) {
+        if (videoEl) videoEl.style.display = "none";
+        if (noticeEl) noticeEl.style.display = "block";
+        if (btnCapture) btnCapture.style.display = "none";
+      }
+    }
+
+    function openRenterLiveCameraCapture(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
+      liveCameraContext = {
+        categoryKey: String(categoryKey || "").trim().toLowerCase(),
+        categoryLabel: String(categoryLabel || "Photo"),
+        monthYear: cleanMonth,
+        propName: String(propName || "").trim(),
+        flatName: String(flatName || "").trim(),
+        renterId: String(renterId || "").trim(),
+        aadhaarNum: String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12),
+        renterName: String(renterName || "Renter").trim()
+      };
+      const titleEl = document.getElementById("liveCameraModalTitle");
+      const subEl = document.getElementById("liveCameraModalSubtitle");
+      if (titleEl) titleEl.innerText = `Live Camera — ${liveCameraContext.categoryLabel}`;
+      if (subEl) subEl.innerText = `${formatMonthLabel(cleanMonth)} • ${liveCameraContext.propName} (Flat ${liveCameraContext.flatName})`;
+      openModal("renterLiveCameraModal");
+      startLiveCameraStream();
+    }
+
+    function switchLiveCameraFacingMode() {
+      liveCameraFacingMode = (liveCameraFacingMode === "environment") ? "user" : "environment";
+      startLiveCameraStream();
+    }
+
+    function captureLiveCameraPhoto() {
+      const videoEl = document.getElementById("liveCameraVideo");
+      const canvasEl = document.getElementById("liveCameraCanvas");
+      const imgEl = document.getElementById("liveCameraCapturedImg");
+      const btnCapture = document.getElementById("btnLiveCameraCapture");
+      const btnRetake = document.getElementById("btnLiveCameraRetake");
+      const btnUpload = document.getElementById("btnLiveCameraUpload");
+      if (!videoEl || !canvasEl || !videoEl.videoWidth) {
+        return triggerSideToast("Camera Not Ready", "Please wait for live camera preview or tap Device Camera.", false);
+      }
+
+      const maxDim = 1080;
+      let w = videoEl.videoWidth;
+      let h = videoEl.videoHeight;
+      if (w > maxDim || h > maxDim) {
+        if (w >= h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+        else { w = Math.round((w * maxDim) / h); h = maxDim; }
+      }
+      canvasEl.width = Math.max(1, w);
+      canvasEl.height = Math.max(1, h);
+      const ctx = canvasEl.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+      ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
+
+      let q = 0.82;
+      let dataUrl = canvasEl.toDataURL("image/jpeg", q);
+      while (dataUrl.length > 38000 && q > 0.45) {
+        q -= 0.1;
+        dataUrl = canvasEl.toDataURL("image/jpeg", q);
+      }
+
+      liveCameraCapturedDataUrl = dataUrl;
+      stopLiveCameraStream();
+      if (videoEl) videoEl.style.display = "none";
+      if (imgEl) { imgEl.src = dataUrl; imgEl.style.display = "block"; }
+      if (btnCapture) btnCapture.style.display = "none";
+      if (btnRetake) btnRetake.style.display = "inline-flex";
+      if (btnUpload) { btnUpload.style.display = "inline-flex"; btnUpload.disabled = false; }
+    }
+
+    function retakeLiveCameraPhoto() {
+      startLiveCameraStream();
+    }
+
+    async function handleLiveCameraFallbackFile(inputEl) {
       const file = inputEl && inputEl.files && inputEl.files[0];
       if (!file) return;
+      try {
+        const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
+        liveCameraCapturedDataUrl = compressedDataUrl;
+        stopLiveCameraStream();
+        const videoEl = document.getElementById("liveCameraVideo");
+        const noticeEl = document.getElementById("liveCameraFallbackNotice");
+        const imgEl = document.getElementById("liveCameraCapturedImg");
+        const btnCapture = document.getElementById("btnLiveCameraCapture");
+        const btnRetake = document.getElementById("btnLiveCameraRetake");
+        const btnUpload = document.getElementById("btnLiveCameraUpload");
+        if (videoEl) videoEl.style.display = "none";
+        if (noticeEl) noticeEl.style.display = "none";
+        if (imgEl) { imgEl.src = compressedDataUrl; imgEl.style.display = "block"; }
+        if (btnCapture) btnCapture.style.display = "none";
+        if (btnRetake) btnRetake.style.display = "inline-flex";
+        if (btnUpload) { btnUpload.style.display = "inline-flex"; btnUpload.disabled = false; }
+      } catch (e) {
+        triggerSideToast("Camera Error", "Could not read captured photo.", false);
+      } finally {
+        if (inputEl) inputEl.value = "";
+      }
+    }
+
+    async function confirmAndUploadCapturedPhoto() {
+      if (!liveCameraContext || !liveCameraCapturedDataUrl) {
+        return triggerSideToast("Capture Required", "Please capture a photo first.", false);
+      }
+      const ctx = { ...liveCameraContext };
+      const dataUrl = liveCameraCapturedDataUrl;
+      const btnUpload = document.getElementById("btnLiveCameraUpload");
+      if (btnUpload) {
+        btnUpload.disabled = true;
+        btnUpload.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading...`;
+      }
+      closeRenterLiveCameraModal();
+      await uploadRenterMonthlyPhotoDataUrl(
+        dataUrl,
+        `Camera_${ctx.categoryKey}_${ctx.monthYear}.jpg`,
+        ctx.categoryKey,
+        ctx.categoryLabel,
+        ctx.monthYear,
+        ctx.propName,
+        ctx.flatName,
+        ctx.renterId,
+        ctx.aadhaarNum,
+        ctx.renterName
+      );
+    }
+
+    async function uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, fileName, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
       const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
       const cleanCat = String(categoryKey || "").trim().toLowerCase();
       const btnEl = document.getElementById("btnRenterMonthlyUpload_" + cleanCat);
@@ -13650,15 +13960,11 @@ function formatMonthLabel(rawVal) {
         }
         triggerSideToast(
           "Uploading to Google Drive",
-          `Saving ${categoryLabel} (${formatMonthLabel(cleanMonth)}) directly to Google Drive folder...`,
+          `Saving ${categoryLabel} (${formatMonthLabel(cleanMonth)}) directly to Google Drive...`,
           "warning"
         );
 
-        const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
-
-        if (!DB.globalConfig || typeof DB.globalConfig !== "object") {
-          DB.globalConfig = {};
-        }
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
         if (!DB.globalConfig.renterMonthlyPhotos || typeof DB.globalConfig.renterMonthlyPhotos !== "object") {
           DB.globalConfig.renterMonthlyPhotos = {};
         }
@@ -13686,8 +13992,23 @@ function formatMonthLabel(rawVal) {
         };
         DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] = optimisticSlot;
         DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = optimisticSlot;
-        if (aadhaarSlotKey) {
-          DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = optimisticSlot;
+        if (aadhaarSlotKey) DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = optimisticSlot;
+
+        // Clear slot-level re-request status once renter submits a new photo
+        if (DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object") {
+          Object.keys(DB.globalConfig.screenshotRequests).forEach(rk => {
+            const req = DB.globalConfig.screenshotRequests[rk];
+            if (!req) return;
+            if (normalizeMonthYear(req.monthYear) === cleanMonth && String(req.category || "").toLowerCase() === cleanCat) {
+              const sameR = (renterId && String(req.renterId || "") === String(renterId)) ||
+                            (normAadhaar.length === 12 && String(req.aadhaar || "") === normAadhaar) ||
+                            (isSamePropAndFlat(req.propertyName, req.flatName, propName, flatName));
+              if (sameR) {
+                req.status = "submitted";
+                req.submittedAt = new Date().toISOString();
+              }
+            }
+          });
         }
         renderAllDashboardUI();
 
@@ -13702,7 +14023,7 @@ function formatMonthLabel(rawVal) {
           monthYear: cleanMonth,
           category: cleanCat,
           categoryLabel: categoryLabel,
-          fileName: file.name,
+          fileName: fileName || `Camera_${cleanCat}_${cleanMonth}.jpg`,
           mimeType: "image/jpeg",
           base64Data: compressedDataUrl
         });
@@ -13722,10 +14043,8 @@ function formatMonthLabel(rawVal) {
         };
         DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] = savedSlot;
         DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = savedSlot;
-        if (aadhaarSlotKey) {
-          DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = savedSlot;
-        }
-        // Also store the Google Drive link on the renter record's Photo1URL..Photo4URL so it is synced & visible in Screenshot Verification 4x4 Grid
+        if (aadhaarSlotKey) DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = savedSlot;
+
         const catFieldMap = {
           electricity_meter: "Photo1URL",
           photo_1: "Photo1URL",
@@ -13754,7 +14073,7 @@ function formatMonthLabel(rawVal) {
 
         triggerSideToast(
           "Saved to Google Drive & Sheet",
-          `${categoryLabel} (${formatMonthLabel(cleanMonth)}) saved to Google Drive & link pasted in Google Sheet!`,
+          `${categoryLabel} (${formatMonthLabel(cleanMonth)}) uploaded and visible to Admin!`,
           true
         );
       } catch (err) {
@@ -13764,27 +14083,74 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    async function handleRenterMonthlyPhotoUpload(inputEl, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+      const file = inputEl && inputEl.files && inputEl.files[0];
+      if (!file) return;
+      const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
+      await uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, file.name, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName);
+    }
+
     async function deleteRenterMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum) {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Permission Denied", "Only the Admin has permission to delete uploaded photos.", false);
+      }
       const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
       const cleanCat = String(categoryKey || "").trim().toLowerCase();
       const normProp = String(propName || "").trim().toLowerCase();
       const normFlat = String(flatName || "").trim().toLowerCase();
       const normAadhaar = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
       const monthlySlotKey = `MONTHLY__${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
+      const flatSlotKey = `${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
+      const aadhaarSlotKey = normAadhaar.length === 12 ? `${normAadhaar}__${cleanMonth}__${cleanCat}` : "";
 
+      let fileIdToDelete = "";
       if (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos) {
+        const existingSlot = DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] ||
+                             DB.globalConfig.renterMonthlyPhotos[flatSlotKey] ||
+                             (aadhaarSlotKey ? DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] : null);
+        fileIdToDelete = existingSlot?.fileId || existingSlot?.driveFileId || "";
         delete DB.globalConfig.renterMonthlyPhotos[monthlySlotKey];
-        delete DB.globalConfig.renterMonthlyPhotos[`${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`];
-        if (normAadhaar.length === 12) {
-          delete DB.globalConfig.renterMonthlyPhotos[`${normAadhaar}__${cleanMonth}__${cleanCat}`];
+        delete DB.globalConfig.renterMonthlyPhotos[flatSlotKey];
+        if (aadhaarSlotKey) {
+          delete DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey];
         }
       }
+
+      const catFieldMap = {
+        electricity_meter: "Photo1URL",
+        photo_1: "Photo1URL",
+        completed_payment: "Photo2URL",
+        photo_2: "Photo2URL",
+        water_meter_bill: "Photo3URL",
+        photo_3: "Photo3URL",
+        png_gas_meter: "Photo4URL",
+        photo_4: "Photo4URL"
+      };
+      const targetPhotoCol = catFieldMap[cleanCat] || "";
+      if (targetPhotoCol) {
+        (DB.renters || []).forEach(r => {
+          const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+          const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
+          const sameId = renterId && String(r.RenterID || "") === String(renterId);
+          const sameAadh = normAadhaar.length === 12 && rAadh === normAadhaar;
+          if (sameId || sameAadh || (sameFlat && String(r.Status || "").toLowerCase() === "active")) {
+            r[targetPhotoCol] = "";
+          }
+        });
+      }
+
+      saveDbSnapshotToCache();
       renderAllDashboardUI();
-      triggerSideToast("Photo Removed", `Removing ${categoryLabel} (${formatMonthLabel(cleanMonth)}) from Google Drive...`, "warning");
+      if (typeof renderAdminScreenshotVerificationGrid === "function") {
+        renderAdminScreenshotVerificationGrid();
+      }
+      triggerSideToast("Photo Deleted by Admin", `Removing ${categoryLabel} (${formatMonthLabel(cleanMonth)}) from Google Drive...`, "warning");
 
       await sendFirebaseAction({
         action: "deleteRenterMonthlyPhoto",
+        requesterRole: activeRole || "Admin",
         slotKey: monthlySlotKey,
+        fileId: fileIdToDelete,
         propertyName: propName,
         flatName: flatName,
         renterId: renterId,
@@ -14519,15 +14885,18 @@ function formatMonthLabel(rawVal) {
           `;
         }
 
-        // Requirement 5: 4 Monthly Photo Upload Options on Renter's Home Page (Electricity Meter, Completed Payment, Water Meter/Bill, PNG Gas Meter) — Saved Directly to Google Drive Folder Only
+        const requestedMonthsList = getAllRequestedMonthsForRenter(targetProp, targetFlat, primaryRenter.RenterID, effectiveAadhaar);
         const defaultMonthlyUploadMonth = normalizeMonthYear(
           window.selectedRenterMonthlyUploadMonth ||
+          (requestedMonthsList.length > 0 ? requestedMonthsList[0] : "") ||
           (currentMonthBill && currentMonthBill.MonthYear) ||
           (latestBill && latestBill.MonthYear) ||
           new Date().toISOString().slice(0, 7)
         ) || new Date().toISOString().slice(0, 7);
         window.selectedRenterMonthlyUploadMonth = defaultMonthlyUploadMonth;
         const activeUploadMonthLabel = formatMonthLabel(defaultMonthlyUploadMonth);
+        const renterMonthReqStatus = getMatchingScreenshotRequestsForRenter(defaultMonthlyUploadMonth, targetProp, targetFlat, primaryRenter.RenterID, effectiveAadhaar);
+        const isMonthRequestedByAdmin = Boolean(renterMonthReqStatus.hasMonthRequest || Object.keys(renterMonthReqStatus.reRequestedCats).length > 0);
         const monthlyPhotosMap = (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object")
           ? DB.globalConfig.renterMonthlyPhotos
           : {};
@@ -14559,7 +14928,7 @@ function formatMonthLabel(rawVal) {
             key: "electricity_meter",
             colKey: "Photo1URL",
             title: "Photo 1 • Electricity Meter / Any Photo",
-            subtitle: "Upload electricity meter or any photo to Google Drive",
+            subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-bolt",
             accent: "#38bdf8",
             bg: "rgba(56,189,248,0.14)",
@@ -14569,7 +14938,7 @@ function formatMonthLabel(rawVal) {
             key: "completed_payment",
             colKey: "Photo2URL",
             title: "Photo 2 • Completed Payment / Any Photo",
-            subtitle: "Upload payment screenshot or any photo to Google Drive",
+            subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-receipt",
             accent: "#10b981",
             bg: "rgba(16,185,129,0.14)",
@@ -14579,7 +14948,7 @@ function formatMonthLabel(rawVal) {
             key: "water_meter_bill",
             colKey: "Photo3URL",
             title: "Photo 3 • Water Meter / Bill / Any Photo",
-            subtitle: "Upload water meter/bill or any photo to Google Drive",
+            subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-faucet-drip",
             accent: "#06b6d4",
             bg: "rgba(6,182,212,0.14)",
@@ -14589,7 +14958,7 @@ function formatMonthLabel(rawVal) {
             key: "png_gas_meter",
             colKey: "Photo4URL",
             title: "Photo 4 • PNG Gas Meter / Any Photo",
-            subtitle: "Upload PNG gas meter or any photo to Google Drive",
+            subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-fire-flame-simple",
             accent: "#f59e0b",
             bg: "rgba(245,158,11,0.14)",
@@ -14597,19 +14966,30 @@ function formatMonthLabel(rawVal) {
           }
         ];
 
+        const requestedMonthsPillsHtml = requestedMonthsList.length > 0
+          ? `<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+               <span style="font-size:0.72rem; font-weight:800; color:#34d399;"><i class="fa-solid fa-bell"></i> Admin Requested Months:</span>
+               ${requestedMonthsList.map(m => `
+                 <button type="button" onclick="changeRenterMonthlyUploadMonth('${m}')" style="padding:4px 10px; border-radius:999px; font-size:0.7rem; font-weight:800; cursor:pointer; border:1px solid ${m === defaultMonthlyUploadMonth ? '#10b981' : 'rgba(56,189,248,0.4)'}; background:${m === defaultMonthlyUploadMonth ? 'rgba(16,185,129,0.22)' : 'rgba(56,189,248,0.12)'}; color:${m === defaultMonthlyUploadMonth ? '#34d399' : '#38bdf8'};">
+                   ${formatMonthLabel(m)}
+                 </button>
+               `).join("")}
+             </div>`
+          : "";
+
         const renterMonthlyPhotoUploadsSectionHtml = `
           <div class="renter-kpi-summary-box" id="renterMonthlyDrivePhotoUploadsCard" style="margin-top: 22px; padding: 22px; border-radius: 18px; background: var(--bg-card); border: 1.5px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.18);">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:12px;">
                 <div style="width:40px; height:40px; border-radius:12px; background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
-                  <i class="fa-brands fa-google-drive"></i>
+                  <i class="fa-solid fa-camera"></i>
                 </div>
                 <div>
                   <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#34d399;">
-                    Up to 4 Photos Upload • Auto-Saved to Google Drive &amp; Linked in Google Sheets
+                    Live Camera Photo Verification • Auto-Saved to Google Drive
                   </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.12rem; font-weight:900; color:var(--text-main);">
-                    Upload Up to 4 Photos / Monthly Meter &amp; Payment Screenshots (${activeUploadMonthLabel})
+                    Monthly Meter &amp; Payment Photos (${activeUploadMonthLabel})
                   </h3>
                 </div>
               </div>
@@ -14629,6 +15009,23 @@ function formatMonthLabel(rawVal) {
               </div>
             </div>
 
+            ${requestedMonthsPillsHtml}
+
+            ${!isMonthRequestedByAdmin ? `
+              <div style="padding:20px; border-radius:14px; border:1.5px dashed rgba(245,158,11,0.45); background:rgba(245,158,11,0.08); text-align:center; margin-bottom:14px;">
+                <div style="font-size:0.95rem; font-weight:800; color:#fbbf24; margin-bottom:5px;">
+                  <i class="fa-solid fa-clock"></i> Awaiting Admin Photo Request for ${activeUploadMonthLabel}
+                </div>
+                <div style="font-size:0.77rem; color:var(--text-muted);">
+                  Photo capture opens automatically once the Admin selects <strong>${activeUploadMonthLabel}</strong> and sends a request from Settings &rarr; Screenshot Verification.
+                </div>
+              </div>
+            ` : `
+              <div style="padding:10px 14px; border-radius:10px; border:1px solid rgba(16,185,129,0.4); background:rgba(16,185,129,0.12); color:#34d399; font-size:0.76rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                <span><i class="fa-solid fa-circle-check"></i> Admin requested photos for <strong>${activeUploadMonthLabel}</strong>. Tap any card button below to open your Live Camera and upload.</span>
+              </div>
+            `}
+
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(235px, 1fr)); gap:16px;">
               ${monthlyUploadCategories.map(cat => {
                 const slotObj = resolveRenterMonthlyPhotoSlot(cat.key);
@@ -14644,9 +15041,11 @@ function formatMonthLabel(rawVal) {
                 const uploadedTimeStr = slotObj && slotObj.uploadedAt
                   ? new Date(slotObj.uploadedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
                   : "";
+                const isSlotReRequested = Boolean(renterMonthReqStatus.reRequestedCats[cat.key]);
+                const canRenterCapture = isSlotReRequested || (isMonthRequestedByAdmin && !displayImgUrl);
 
                 return `
-                  <div style="padding:15px; border-radius:15px; background:var(--bg-input); border:1.5px solid ${displayImgUrl ? cat.border : "var(--glass-border)"}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                  <div style="padding:15px; border-radius:15px; background:var(--bg-input); border:1.5px solid ${isSlotReRequested ? '#f59e0b' : (displayImgUrl ? cat.border : "var(--glass-border)")}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
                     <div>
                       <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
                         <div style="display:flex; align-items:center; gap:9px;">
@@ -14658,10 +15057,16 @@ function formatMonthLabel(rawVal) {
                             <div style="font-size:0.69rem; color:var(--text-muted); margin-top:2px;">${cat.subtitle}</div>
                           </div>
                         </div>
-                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${displayImgUrl ? "rgba(16,185,129,0.16)" : "rgba(148,163,184,0.12)"}; color:${displayImgUrl ? "#34d399" : "var(--text-muted)"}; border:1px solid ${displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"}; white-space:nowrap;">
-                          ${displayImgUrl ? "Uploaded" : activeUploadMonthLabel}
+                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${isSlotReRequested ? "rgba(245,158,11,0.2)" : (displayImgUrl ? "rgba(16,185,129,0.16)" : "rgba(148,163,184,0.12)")}; color:${isSlotReRequested ? "#fbbf24" : (displayImgUrl ? "#34d399" : "var(--text-muted)")}; border:1px solid ${isSlotReRequested ? "rgba(245,158,11,0.45)" : (displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)")}; white-space:nowrap;">
+                          ${isSlotReRequested ? "Re-requested" : (displayImgUrl ? "Uploaded" : activeUploadMonthLabel)}
                         </span>
                       </div>
+
+                      ${isSlotReRequested ? `
+                        <div style="padding:7px 10px; border-radius:8px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.45); color:#fbbf24; font-size:0.7rem; font-weight:800; margin-bottom:8px;">
+                          <i class="fa-solid fa-rotate"></i> Admin requested a new photo for ${activeUploadMonthLabel}. Please capture via Live Camera.
+                        </div>
+                      ` : ""}
 
                       ${displayImgUrl ? `
                         <div
@@ -14682,38 +15087,31 @@ function formatMonthLabel(rawVal) {
                         <div style="width:100%; height:148px; border-radius:11px; border:1.5px dashed var(--glass-border); background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); padding:12px; text-align:center; margin-bottom:8px;">
                           <i class="${cat.icon}" style="font-size:1.5rem; color:${cat.accent}; opacity:0.8;"></i>
                           <div style="font-size:0.74rem; font-weight:800; color:var(--text-main);">No ${cat.title} for ${activeUploadMonthLabel}</div>
-                          <div style="font-size:0.67rem; color:var(--text-muted);">Saves directly to Google Drive folder</div>
+                          <div style="font-size:0.67rem; color:var(--text-muted);">${isMonthRequestedByAdmin ? "Tap Live Camera button below to capture" : "Locked until Admin sends request"}</div>
                         </div>
                       `}
                     </div>
 
                     <div style="display:flex; align-items:center; gap:8px;">
-                      <input
-                        type="file"
-                        id="renterMonthlyFile_${cat.key}"
-                        accept="image/*"
-                        style="display:none;"
-                        onchange="handleRenterMonthlyPhotoUpload(this, '${cat.key}', '${cat.title.replace(/'/g, "\\'")}', '${defaultMonthlyUploadMonth}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}', '${safeRenterNameArg2}')"
-                      />
-                      <button
-                        type="button"
-                        id="btnRenterMonthlyUpload_${cat.key}"
-                        onclick="document.getElementById('renterMonthlyFile_${cat.key}').click()"
-                        style="flex:1; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, ${cat.accent}26 0%, ${cat.accent}14 100%); border:1.5px solid ${cat.border}; color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
-                      >
-                        <i class="fa-solid fa-cloud-arrow-up" style="color:${cat.accent};"></i>
-                        <span>${displayImgUrl ? "Replace Photo" : "Upload Photo"}</span>
-                      </button>
-                      ${displayImgUrl ? `
+                      ${canRenterCapture ? `
                         <button
                           type="button"
-                          onclick="deleteRenterMonthlyPhotoSlot('${cat.key}', '${cat.title.replace(/'/g, "\\'")}', '${defaultMonthlyUploadMonth}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}')"
-                          title="Delete ${cat.title} for ${activeUploadMonthLabel}"
-                          style="padding:9px 11px; border-radius:10px; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.38); color:#f87171; font-size:0.76rem; font-weight:800; cursor:pointer;"
+                          id="btnRenterMonthlyUpload_${cat.key}"
+                          onclick="openRenterLiveCameraCapture('${cat.key}', '${cat.title.replace(/'/g, "\\'")}', '${defaultMonthlyUploadMonth}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}', '${safeRenterNameArg2}')"
+                          style="flex:1; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, ${cat.accent}26 0%, ${cat.accent}14 100%); border:1.5px solid ${cat.border}; color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
                         >
-                          <i class="fa-solid fa-trash-can"></i>
+                          <i class="fa-solid fa-camera" style="color:${cat.accent};"></i>
+                          <span>${isSlotReRequested ? "Re-Capture Photo (Camera)" : "Open Live Camera"}</span>
                         </button>
-                      ` : ""}
+                      ` : (displayImgUrl ? `
+                        <div style="flex:1; padding:8px 10px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-size:0.72rem; font-weight:800; text-align:center;">
+                          <i class="fa-solid fa-shield-halved"></i> Uploaded (Admin-only Delete / Re-request)
+                        </div>
+                      ` : `
+                        <div style="flex:1; padding:8px 10px; border-radius:10px; background:rgba(148,163,184,0.1); border:1px solid var(--glass-border); color:var(--text-muted); font-size:0.72rem; font-weight:700; text-align:center;">
+                          <i class="fa-solid fa-lock"></i> Waiting for Admin Request
+                        </div>
+                      `)}
                     </div>
                   </div>
                 `;
@@ -14819,7 +15217,7 @@ function formatMonthLabel(rawVal) {
                       onclick="openRenterKycProfileOnlyModal();"
                     >
                       <i class="fa-solid fa-user-shield"></i>
-                      <span>My KYC Profile</span>
+                      <span>My Profile</span>
                     </button>
                   </div>
                 </div>
@@ -15398,10 +15796,15 @@ function formatMonthLabel(rawVal) {
           ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
           ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
         };
+        const mergedScreenshotReqs = {
+          ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
+          ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
+        };
         DB.globalConfig = {
           ...DB.globalConfig,
           ...res.globalConfig,
           renterMonthlyPhotos: mergedMonthlyPhotos,
+          screenshotRequests: mergedScreenshotReqs,
           contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
           broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
           privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
@@ -15877,8 +16280,36 @@ function formatMonthLabel(rawVal) {
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Verifying...`;
       }
 
+      // Cleanly scrub any residual previous session state/timers/tokens before initializing the new session
       try {
-        const newSessionToken = "SESS-" + Date.now() + "-" + Math.random().toString(36).substring(2, 10);
+        const prevUserKey = String(activeUser || localStorage.getItem("active_session_user") || sessionStorage.getItem("active_session_user") || "").trim().toLowerCase();
+        if (syncTimer) {
+          clearInterval(syncTimer);
+          syncTimer = null;
+        }
+        if (realtimePollTimer) {
+          clearInterval(realtimePollTimer);
+          realtimePollTimer = null;
+        }
+        isSessionConflictModalOpen = false;
+        activeUser = null;
+        activeSessionToken = "";
+        inFlightGasFetchPromise = null;
+        lastGasSheetDataCache = null;
+        sessionStorage.clear();
+        localStorage.removeItem(PERSISTED_AUTH_SESSION_KEY);
+        localStorage.removeItem("portal_active_auth_session_v1");
+        localStorage.removeItem("active_session_user");
+        localStorage.removeItem("active_session_role");
+        localStorage.removeItem("active_session_token");
+        if (prevUserKey) {
+          localStorage.removeItem("portal_device_session_" + prevUserKey);
+          localStorage.removeItem("portal_session_pass_" + prevUserKey);
+        }
+      } catch (scrubErr) {}
+
+      try {
+        const newSessionToken = "SESS-" + Date.now() + "-" + Math.random().toString(36).substring(2, 10) + "-D-" + getOrCreatePortalDeviceId();
         let res = null;
 
         try {
@@ -16128,9 +16559,13 @@ function formatMonthLabel(rawVal) {
           const localTok = String(activeSessionToken || "").trim();
           const serverTokTs = extractSessionTokenTimestamp(serverTok);
           const localTokTs = extractSessionTokenTimestamp(localTok);
+          const withinLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 12000;
           if (
-            res.sessionConflict === true ||
-            (serverTok && localTok && serverTok !== localTok && (serverTokTs === 0 || localTokTs === 0 || serverTokTs >= localTokTs))
+            !withinLoginGrace &&
+            (
+              res.sessionConflict === true ||
+              (serverTok && localTok && serverTok !== localTok && !isSessionTokenOnSameDevice(serverTok, localTok) && (serverTokTs === 0 || localTokTs === 0 || serverTokTs > localTokTs))
+            )
           ) {
             triggerSingleDeviceSessionConflict();
             return;
@@ -16246,10 +16681,15 @@ function formatMonthLabel(rawVal) {
               ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
               ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
             };
+            const mergedScreenshotReqs = {
+              ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
+              ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
+            };
             DB.globalConfig = {
               ...DB.globalConfig,
               ...res.globalConfig,
               renterMonthlyPhotos: mergedMonthlyPhotos,
+              screenshotRequests: mergedScreenshotReqs,
               contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
               broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
               privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
@@ -17895,12 +18335,12 @@ function formatMonthLabel(rawVal) {
           Number(u.LockoutStage || 0) >= 4 ||
           (lockEntry && lockEntry.isPermanentlyBlocked)
         );
-        const isBlocked = isPermLockedByAttempts || String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow);
+        const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow) || (isPermLockedByAttempts && String(u.Status || "Blocked").toLowerCase() !== "active");
         statusSelect.value = isEditingSelf ? "Active" : (isBlocked ? "Blocked" : "Active");
-        statusSelect.disabled = isEditingSelf || isPermLockedByAttempts;
-        statusSelect.title = isPermLockedByAttempts
-          ? "Permanently blocked due to 4-tier failed password attempts. Even Admin cannot unblock this account."
-          : (isEditingSelf ? "You cannot block your own currently logged-in account." : "");
+        statusSelect.disabled = isEditingSelf;
+        statusSelect.title = isEditingSelf
+          ? "You cannot block your own currently logged-in account."
+          : (isBlocked ? "Admin can switch status to Active to unblock this account." : "");
       }
       const roleVal = (u.Role === "Renter") ? "Renter" : ((u.Role === "Viewer") ? "Viewer" : ((u.Role === "Manager") ? "Manager" : "Admin"));
       const roleSelectEl = document.getElementById("editAssignRole");
@@ -18036,17 +18476,8 @@ function formatMonthLabel(rawVal) {
       }
       const newFullNameRaw = String(document.getElementById("editAssignFullName")?.value || "").trim() || rawEnteredUsername;
       const uKeyLow = targetUser.toLowerCase();
-      const lockEntry = (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
-      const isPermLockedByAttempts = Boolean(
-        u.PermanentlyLockedByAttempts === true ||
-        String(u.IsPermanentlyBlocked || "").toLowerCase() === "true" ||
-        Number(u.LockoutStage || 0) >= 4 ||
-        (lockEntry && lockEntry.isPermanentlyBlocked)
-      );
-      const newStatusRaw = isPermLockedByAttempts
-        ? "Blocked"
-        : (String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active");
-      if (isSelfEdit && newStatusRaw === "Blocked" && !isPermLockedByAttempts) {
+      const newStatusRaw = String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active";
+      if (isSelfEdit && newStatusRaw === "Blocked") {
         return triggerSideToast("Action Blocked", "You cannot block your own currently logged-in account.", false);
       }
       const wasPreviouslyBlocked = String(u.Status || "").trim().toLowerCase() === "blocked";
@@ -18110,9 +18541,27 @@ function formatMonthLabel(rawVal) {
       u.AssignedAadhaar = assignedAadhaar;
       u.ManagerPermissions = managerPermissions;
 
+      if (newStatusRaw === "Active") {
+        u.LockoutStage = 0;
+        u.FailedAttempts = 0;
+        u.LockedUntil = 0;
+        u.LockedTierLabel = "";
+        u.IsPermanentlyBlocked = "false";
+        u.PermanentlyLockedByAttempts = false;
+        u.MovedOutAutoBlocked = false;
+        if (DB.globalConfig && DB.globalConfig.loginLockouts) {
+          delete DB.globalConfig.loginLockouts[uKeyLow];
+          delete DB.globalConfig.loginLockouts[rawEnteredUsername];
+        }
+        if (typeof resetLoginLockoutState === "function") {
+          resetLoginLockoutState(uKeyLow);
+          resetLoginLockoutState(rawEnteredUsername);
+        }
+      }
+
       try {
         let blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
-        blockedList = blockedList.filter(item => item !== targetUser.toLowerCase() && item !== rawEnteredUsername);
+        blockedList = blockedList.filter(item => item !== uKeyLow && item !== rawEnteredUsername);
         if (newStatusRaw === "Blocked") blockedList.push(rawEnteredUsername);
         localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
       } catch (e) {}
@@ -18251,19 +18700,17 @@ function formatMonthLabel(rawVal) {
               Number(u.LockoutStage || 0) >= 4 ||
               (lockEntry && lockEntry.isPermanentlyBlocked)
             );
-            const isBlocked = isPermLockedByAttempts || String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow);
+            const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow) || (isPermLockedByAttempts && String(u.Status || "Blocked").toLowerCase() !== "active");
             const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
-            const blockBtn = isPermLockedByAttempts
-              ? `<span style="font-size:0.68rem; color:#ef4444; font-weight:800; padding:4px 9px; border-radius:8px; background:rgba(239,68,68,0.14); border:1px solid rgba(239,68,68,0.4);" title="Permanently blocked after 12 failed login attempts across 4 lockout tiers. Cannot be unblocked even by Admin."><i class="fa-solid fa-lock"></i> Permanently Blocked (Irreversible)</span>`
-              : (isBlocked
-                ? (isStrictAdmin
-                    ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="Unblock user login (Admin Only)">
-                         <i class="fa-solid fa-lock-open"></i> Unblock
-                       </button>`
-                    : `<span style="font-size:0.68rem; color:#f87171; font-weight:700; padding:4px 8px;"><i class="fa-solid fa-lock"></i> Admin Only Unblock</span>`)
-                : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#ef4444; border-color:rgba(239,68,68,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Blocked')" title="Block user from logging in">
-                     <i class="fa-solid fa-ban"></i> Block
-                   </button>`);
+            const blockBtn = isBlocked
+              ? (isStrictAdmin
+                  ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#34d399; border-color:rgba(16,185,129,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Active')" title="${isPermLockedByAttempts ? 'Unblock security-locked user account (Admin Only)' : 'Unblock user login (Admin Only)'}">
+                       <i class="fa-solid fa-lock-open"></i> Unblock
+                     </button>`
+                  : `<span style="font-size:0.68rem; color:#f87171; font-weight:700; padding:4px 8px;"><i class="fa-solid fa-lock"></i> Admin Only Unblock</span>`)
+              : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:#ef4444; border-color:rgba(239,68,68,0.4);" onclick="toggleUserBlockStatus('${safeUName}', 'Blocked')" title="Block user from logging in">
+                   <i class="fa-solid fa-ban"></i> Block
+                 </button>`;
 
             adminControlsHtml = `
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;">
@@ -18480,72 +18927,132 @@ function formatMonthLabel(rawVal) {
     function renderAdminScreenshotVerificationGrid() {
       const container = document.getElementById("adminScreenshotVerificationContainer");
       if (!container) return;
+
+      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const monthInput = document.getElementById("screenshotVerifyMonthInput");
+      let selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
+      if (monthInput && monthInput.value !== selectedMonth) {
+        monthInput.value = selectedMonth;
+      }
+      window.selectedAdminScreenshotVerifyMonth = selectedMonth;
+      const selectedMonthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(selectedMonth) : selectedMonth;
+
       const query = String(document.getElementById("screenshotVerifySearchInput")?.value || "").trim().toLowerCase();
       const monthlyPhotosMap = (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object")
         ? DB.globalConfig.renterMonthlyPhotos
         : {};
+      const screenshotReqMap = (DB.globalConfig && DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object")
+        ? DB.globalConfig.screenshotRequests
+        : {};
       const paymentProofs = typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : [];
+      const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
 
-      // Collect renters and group/deduplicate by RenterID or Property+Flat+Aadhaar
-      const rentersList = Array.isArray(DB.renters) ? DB.renters : [];
+      // Update status banner for the selected month
+      const statusBanner = document.getElementById("adminScreenshotRequestStatusBanner");
+      if (statusBanner) {
+        const hasGlobalMonthReq = Object.keys(screenshotReqMap).some(k => {
+          const entry = screenshotReqMap[k];
+          return entry && String(entry.scope || "").toUpperCase() === "ALL_ACTIVE" && normalizeMonthYear(entry.monthYear) === selectedMonth;
+        });
+        const specificReqCount = Object.keys(screenshotReqMap).filter(k => {
+          const entry = screenshotReqMap[k];
+          return entry && normalizeMonthYear(entry.monthYear) === selectedMonth && String(entry.scope || "").toUpperCase() !== "ALL_ACTIVE";
+        }).length;
+
+        if (hasGlobalMonthReq || specificReqCount > 0) {
+          statusBanner.style.display = "block";
+          statusBanner.style.background = "rgba(16,185,129,0.14)";
+          statusBanner.style.color = "#34d399";
+          statusBanner.style.border = "1px solid rgba(16,185,129,0.35)";
+          statusBanner.innerHTML = hasGlobalMonthReq
+            ? `<i class="fa-solid fa-paper-plane"></i> Photo request is ACTIVE for <strong>${selectedMonthLabel}</strong> across all active renters. Renters can capture & upload using their Live Camera.`
+            : `<i class="fa-solid fa-paper-plane"></i> ${specificReqCount} targeted request(s) / re-request(s) active for <strong>${selectedMonthLabel}</strong>. Click "Send Request" above to open for all active renters.`;
+        } else {
+          statusBanner.style.display = "block";
+          statusBanner.style.background = "rgba(245,158,11,0.12)";
+          statusBanner.style.color = "#fbbf24";
+          statusBanner.style.border = "1px solid rgba(245,158,11,0.35)";
+          statusBanner.innerHTML = `<i class="fa-solid fa-clock"></i> No global request sent yet for <strong>${selectedMonthLabel}</strong>. Select the month and click <strong>Send Request</strong> so active renters can capture & upload photos via Live Camera.`;
+        }
+      }
+
+      // Strictly display ONLY Active renters — left/past/vacated renters are automatically excluded
+      const activeRentersOnly = (Array.isArray(DB.renters) ? DB.renters : []).filter(r => {
+        return String(r.Status || "Active").trim().toLowerCase() === "active";
+      });
+
       const cardsData = [];
+      const seenActiveKeys = new Set();
 
-      rentersList.forEach(r => {
+      activeRentersOnly.forEach(r => {
         const rName = String(r.RenterName || "Unnamed Renter").trim();
         const rawAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
         const formattedAadh = rawAadh.length === 12 ? formatAadhaarWithHyphens(rawAadh) : (r.IdentityDocNumber || "Not Provided");
         const propName = String(r.PropertyName || "").trim();
         const flatName = String(r.FlatName || "").trim();
+        const dedupeKey = `${String(r.RenterID || "").trim()}__${propName.toLowerCase()}__${flatName.toLowerCase()}__${rawAadh}`;
+        if (seenActiveKeys.has(dedupeKey)) return;
+        seenActiveKeys.add(dedupeKey);
+
         if (query) {
           const hay = `${rName} ${formattedAadh} ${rawAadh} ${propName} ${flatName}`.toLowerCase();
           if (!hay.includes(query)) return;
         }
 
-        // Gather up to 4 uploaded photos (or more if multiple months) for this renter
         const photoSlots = [
-          { idx: 1, key: "electricity_meter", col: "Photo1URL", label: "Photo 1 (Electricity Meter)", icon: "fa-bolt", color: "#38bdf8", url: "" },
-          { idx: 2, key: "completed_payment", col: "Photo2URL", label: "Photo 2 (Payment Screenshot)", icon: "fa-receipt", color: "#10b981", url: "" },
-          { idx: 3, key: "water_meter_bill", col: "Photo3URL", label: "Photo 3 (Water Meter / Bill)", icon: "fa-faucet-drip", color: "#06b6d4", url: "" },
-          { idx: 4, key: "png_gas_meter", col: "Photo4URL", label: "Photo 4 (PNG Gas Meter)", icon: "fa-fire-flame-simple", color: "#f59e0b", url: "" }
+          { idx: 1, key: "electricity_meter", col: "Photo1URL", label: "Photo 1 (Electricity Meter)", icon: "fa-bolt", color: "#38bdf8", url: "", fileName: "", updatedAt: "", isReRequested: false },
+          { idx: 2, key: "completed_payment", col: "Photo2URL", label: "Photo 2 (Payment Screenshot)", icon: "fa-receipt", color: "#10b981", url: "", fileName: "", updatedAt: "", isReRequested: false },
+          { idx: 3, key: "water_meter_bill", col: "Photo3URL", label: "Photo 3 (Water Meter / Bill)", icon: "fa-faucet-drip", color: "#06b6d4", url: "", fileName: "", updatedAt: "", isReRequested: false },
+          { idx: 4, key: "png_gas_meter", col: "Photo4URL", label: "Photo 4 (PNG Gas Meter)", icon: "fa-fire-flame-simple", color: "#f59e0b", url: "", fileName: "", updatedAt: "", isReRequested: false }
         ];
 
-        // 1. Check direct columns Photo1URL..Photo4URL on renter record
-        photoSlots.forEach(slot => {
-          const directVal = r[slot.col] || "";
-          if (directVal && !isPlaceholderImageUrl(directVal)) {
-            slot.url = directVal.startsWith("data:image") ? directVal : normalizeGoogleDriveImageUrl(directVal);
-          }
-        });
-
-        // 2. Check monthlyPhotosMap for matching Aadhaar or Property+Flat
         const normProp = propName.toLowerCase();
         const normFlat = flatName.toLowerCase();
+        const normRenterId = String(r.RenterID || "").trim().toLowerCase();
+
+        // 1. Match monthlyPhotosMap entries strictly for selectedMonth
         Object.keys(monthlyPhotosMap).forEach(k => {
           const item = monthlyPhotosMap[k];
           if (!item) return;
           const itemUrl = item.imageUrl || item.previewUrl || "";
-          if (!itemUrl) return;
+          if (!itemUrl || isPlaceholderImageUrl(itemUrl)) return;
+
+          const itemMonth = normalizeMonthYear(item.monthYear || item.MonthYear || "");
+          if (itemMonth && itemMonth !== selectedMonth) return;
+          if (!itemMonth && selectedMonth !== currentMonthDefault) return;
+
+          const itemRenterId = String(item.renterId || "").trim().toLowerCase();
           const itemAadh = String(item.aadhaar || item.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
           const itemProp = String(item.propertyName || "").trim().toLowerCase();
           const itemFlat = String(item.flatName || "").trim().toLowerCase();
-          const isMatch = (rawAadh.length === 12 && itemAadh === rawAadh) ||
+          const isMatch = (normRenterId && itemRenterId && itemRenterId === normRenterId) ||
+                          (rawAadh.length === 12 && itemAadh === rawAadh) ||
                           (normProp && normFlat && itemProp === normProp && itemFlat === normFlat);
           if (!isMatch) return;
+
           const cat = String(item.category || "").toLowerCase();
-          const matchedSlot = photoSlots.find(s => s.key === cat);
-          if (matchedSlot && !matchedSlot.url) {
+          const catAlias = cat === "photo_1" ? "electricity_meter"
+            : (cat === "photo_2" ? "completed_payment"
+            : (cat === "photo_3" ? "water_meter_bill"
+            : (cat === "photo_4" ? "png_gas_meter" : cat)));
+          const matchedSlot = photoSlots.find(s => s.key === catAlias);
+          if (matchedSlot) {
             matchedSlot.url = itemUrl.startsWith("data:image") ? itemUrl : normalizeGoogleDriveImageUrl(itemUrl);
-            if (item.monthYear) matchedSlot.monthYear = item.monthYear;
+            matchedSlot.monthYear = itemMonth || selectedMonth;
+            matchedSlot.fileName = item.fileName || "";
+            matchedSlot.updatedAt = item.updatedAt || "";
           }
         });
 
-        // 3. Check PaymentProofs for this renter if Photo 2 is still empty
+        // 2. Fallback to PaymentProofs for selectedMonth when Photo 2 is empty
         if (!photoSlots[1].url) {
-          const matchingProof = paymentProofs.find(p =>
-            p.screenshotUrl &&
-            ((normProp && normFlat && isSamePropAndFlat(p.propertyName, p.flatName, propName, flatName)) ||
-             (String(p.tenantName || "").trim().toLowerCase() === rName.toLowerCase()))
-          );
+          const matchingProof = paymentProofs.find(p => {
+            if (!p || !p.screenshotUrl || isPlaceholderImageUrl(p.screenshotUrl)) return false;
+            const pMonth = normalizeMonthYear(p.billMonth || p.monthYear || "");
+            if (pMonth && pMonth !== selectedMonth) return false;
+            return (normProp && normFlat && isSamePropAndFlat(p.propertyName, p.flatName, propName, flatName)) ||
+                   (String(p.tenantName || "").trim().toLowerCase() === rName.toLowerCase());
+          });
           if (matchingProof && matchingProof.screenshotUrl) {
             photoSlots[1].url = matchingProof.screenshotUrl.startsWith("data:image")
               ? matchingProof.screenshotUrl
@@ -18553,47 +19060,55 @@ function formatMonthLabel(rawVal) {
           }
         }
 
-        // 4. Fallback to Profile / Aadhaar photo if no utility photos uploaded yet so Admin can still verify uploaded renter photos
-        const extraKycSlots = [
-          {
-            label: "Profile Photo",
-            url: (!isPlaceholderImageUrl(r.ProfileImageURL)) ? (r.ProfileImageURL.startsWith("data:image") ? r.ProfileImageURL : normalizeGoogleDriveImageUrl(r.ProfileImageURL)) : ""
-          },
-          {
-            label: "Aadhaar Document Photo",
-            url: (!isPlaceholderImageUrl(r.IdentityImageURL)) ? (r.IdentityImageURL.startsWith("data:image") ? r.IdentityImageURL : normalizeGoogleDriveImageUrl(r.IdentityImageURL)) : ""
+        // 3. Check request / re-request state for this active renter & month
+        const reqInfo = typeof getMatchingScreenshotRequestsForRenter === "function"
+          ? getMatchingScreenshotRequestsForRenter(selectedMonth, propName, flatName, r.RenterID || "", rawAadh)
+          : { hasMonthRequest: false, reRequestedCats: {} };
+
+        photoSlots.forEach(slot => {
+          if (reqInfo.reRequestedCats && reqInfo.reRequestedCats[slot.key]) {
+            slot.isReRequested = true;
+            slot.reRequestNote = reqInfo.reRequestedCats[slot.key].note || "";
           }
-        ];
+        });
 
         cardsData.push({
           renter: r,
+          renterId: String(r.RenterID || "").trim(),
           rName,
+          rawAadh,
           formattedAadh,
           propName,
           flatName,
-          status: String(r.Status || "Active"),
+          hasMonthRequest: Boolean(reqInfo.hasMonthRequest),
+          hasReRequestedSlot: photoSlots.some(s => s.isReRequested),
           photoSlots,
-          extraKycSlots,
           uploadedCount: photoSlots.filter(s => Boolean(s.url)).length
         });
       });
 
       if (cardsData.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:28px; color:var(--text-muted); font-size:0.84rem; background:rgba(15,23,42,0.45); border:1px dashed var(--glass-border); border-radius:14px;">No renters found matching your search.</div>`;
+        container.innerHTML = `<div style="text-align:center; padding:28px; color:var(--text-muted); font-size:0.84rem; background:rgba(15,23,42,0.45); border:1px dashed var(--glass-border); border-radius:14px;">No active renters found${query ? " matching your search" : ""}. Left/past renters are automatically hidden.</div>`;
         return;
       }
 
-      // Sort so renters with uploaded photos appear first, then Active renters
       cardsData.sort((a, b) => {
         if (b.uploadedCount !== a.uploadedCount) return b.uploadedCount - a.uploadedCount;
-        const aAct = a.status.toLowerCase() === "active" ? 0 : 1;
-        const bAct = b.status.toLowerCase() === "active" ? 0 : 1;
-        return aAct - bAct;
+        return a.rName.localeCompare(b.rName);
       });
 
       container.innerHTML = cardsData.map(card => {
         const safeName = card.rName.replace(/'/g, "\\'");
-        const isAct = card.status.toLowerCase() === "active";
+        const safeProp = card.propName.replace(/'/g, "\\'");
+        const safeFlat = card.flatName.replace(/'/g, "\\'");
+        const safeRenterId = card.renterId.replace(/'/g, "\\'");
+        const safeAadh = card.rawAadh.replace(/'/g, "\\'");
+        const reqBadge = card.hasReRequestedSlot
+          ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(245,158,11,0.18); color:#fbbf24; border:1px solid rgba(245,158,11,0.45);"><i class="fa-solid fa-rotate-right"></i> Re-requested (${selectedMonthLabel})</span>`
+          : (card.hasMonthRequest
+              ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.38);"><i class="fa-solid fa-paper-plane"></i> Requested (${selectedMonthLabel})</span>`
+              : `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(148,163,184,0.14); color:var(--text-muted); border:1px solid var(--glass-border);">Not Requested</span>`);
+
         return `
           <div style="background:rgba(15,23,42,0.68); border:1.5px solid var(--glass-border); border-radius:14px; padding:15px;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
@@ -18608,23 +19123,31 @@ function formatMonthLabel(rawVal) {
                   <i class="fa-solid fa-building"></i> ${card.propName || "--"} — Flat ${card.flatName || "--"}
                 </span>
               </div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span class="${isAct ? 'badge-paid' : 'badge-unpaid'}" style="font-size:0.7rem;">${isAct ? 'Active Renter' : 'Past Renter'}</span>
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span class="badge-paid" style="font-size:0.7rem;">Active Renter</span>
+                ${reqBadge}
                 <span style="font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35);">
-                  ${card.uploadedCount} / 4 Photos Uploaded
+                  ${card.uploadedCount} / 4 Uploaded (${selectedMonthLabel})
                 </span>
+                ${isStrictAdmin ? `
+                  <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#34d399; border-color:rgba(16,185,129,0.45);" onclick="sendAdminMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
+                    <i class="fa-solid fa-paper-plane"></i> ${card.hasMonthRequest ? "Resend Month Request" : "Request Month"}
+                  </button>
+                ` : ""}
               </div>
             </div>
 
-            <!-- 4x4 Grid Column Layout for the Renter's 4 Uploaded Photos (Click any photo to zoom) -->
-            <div style="display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px;">
               ${card.photoSlots.map(slot => {
                 const safeUrl = String(slot.url || "").replace(/'/g, "\\'");
-                const safeTitle = `${safeName} (${card.formattedAadh}) — ${slot.label}`.replace(/'/g, "\\'");
+                const safeTitle = `${safeName} (${card.formattedAadh}) — ${slot.label} (${selectedMonthLabel})`.replace(/'/g, "\\'");
+                const safeLabel = slot.label.replace(/'/g, "\\'");
+                const downloadFileName = `${card.rName}_${card.propName}_${card.flatName}_${selectedMonth}_${slot.key}`.replace(/[^a-zA-Z0-9._-]/g, "_");
                 return `
-                  <div style="background:var(--bg-input); border:1.5px solid ${slot.url ? 'rgba(16,185,129,0.45)' : 'var(--glass-border)'}; border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:7px;">
+                  <div style="background:var(--bg-input); border:1.5px solid ${slot.isReRequested ? 'rgba(245,158,11,0.6)' : (slot.url ? 'rgba(16,185,129,0.45)' : 'var(--glass-border)')}; border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:7px;">
                     <div style="font-size:0.72rem; font-weight:800; color:${slot.color}; display:flex; align-items:center; justify-content:space-between; gap:4px;">
                       <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><i class="fa-solid ${slot.icon}"></i> ${slot.label}</span>
+                      ${slot.isReRequested ? `<span style="font-size:0.62rem; font-weight:800; color:#fbbf24; white-space:nowrap;"><i class="fa-solid fa-rotate-right"></i> Re-requested</span>` : ""}
                     </div>
                     ${slot.url ? `
                       <div
@@ -18637,10 +19160,28 @@ function formatMonthLabel(rawVal) {
                           <i class="fa-solid fa-magnifying-glass-plus"></i> Zoom
                         </span>
                       </div>
+                      ${isStrictAdmin ? `
+                        <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:5px; margin-top:2px;">
+                          <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#38bdf8; border-color:rgba(56,189,248,0.4);" onclick="triggerImageFileDownload('${safeUrl}', '${downloadFileName}')" title="Download uploaded photo">
+                            <i class="fa-solid fa-download"></i> Save
+                          </button>
+                          <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#fbbf24; border-color:rgba(245,158,11,0.45);" onclick="reRequestAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')" title="Ask renter to retake and re-upload this photo">
+                            <i class="fa-solid fa-rotate-right"></i> Re-req
+                          </button>
+                          <button type="button" class="btn-ledger-action" style="padding:5px 4px; font-size:0.66rem; font-weight:800; color:#ef4444; border-color:rgba(239,68,68,0.45);" onclick="adminDeleteMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')" title="Delete photo (Admin Only)">
+                            <i class="fa-solid fa-trash-can"></i> Del
+                          </button>
+                        </div>
+                      ` : ""}
                     ` : `
-                      <div style="width:100%; height:130px; border-radius:9px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; color:var(--text-muted); font-size:0.7rem; text-align:center; padding:8px;">
-                        <i class="fa-solid ${slot.icon}" style="font-size:1.2rem; opacity:0.45; color:${slot.color};"></i>
-                        <span>No Photo Uploaded</span>
+                      <div style="width:100%; height:130px; border-radius:9px; border:1px dashed ${slot.isReRequested ? 'rgba(245,158,11,0.5)' : 'var(--glass-border)'}; background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); font-size:0.7rem; text-align:center; padding:8px;">
+                        <i class="fa-solid ${slot.icon}" style="font-size:1.2rem; opacity:0.55; color:${slot.color};"></i>
+                        <span>${slot.isReRequested ? "Re-requested — Awaiting Renter Live Camera" : (card.hasMonthRequest ? "Awaiting Renter Capture" : "No Photo Uploaded")}</span>
+                        ${isStrictAdmin ? `
+                          <button type="button" class="btn-ledger-action" style="padding:4px 8px; font-size:0.65rem; font-weight:800; color:#fbbf24; border-color:rgba(245,158,11,0.4);" onclick="reRequestAdminMonthlyPhotoSlot('${slot.key}', '${safeLabel}', '${selectedMonth}', '${safeProp}', '${safeFlat}', '${safeRenterId}', '${safeAadh}', '${safeName}')">
+                            <i class="fa-solid fa-camera"></i> Request Slot
+                          </button>
+                        ` : ""}
                       </div>
                     `}
                   </div>
@@ -18650,6 +19191,161 @@ function formatMonthLabel(rawVal) {
           </div>
         `;
       }).join("");
+    }
+
+    async function sendAdminMonthlyScreenshotRequest(targetRenterId = "", targetProp = "", targetFlat = "", targetAadhaar = "", targetName = "") {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Only", "Only the Admin can send monthly photo requests.", false);
+      }
+      const monthInput = document.getElementById("screenshotVerifyMonthInput");
+      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
+      if (monthInput) monthInput.value = selectedMonth;
+      window.selectedAdminScreenshotVerifyMonth = selectedMonth;
+      const monthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(selectedMonth) : selectedMonth;
+
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      if (!DB.globalConfig.screenshotRequests || typeof DB.globalConfig.screenshotRequests !== "object") {
+        DB.globalConfig.screenshotRequests = {};
+      }
+
+      const isSingleRenter = Boolean(targetRenterId || (targetProp && targetFlat) || targetAadhaar);
+      const normProp = String(targetProp || "").trim().toLowerCase();
+      const normFlat = String(targetFlat || "").trim().toLowerCase();
+      const cleanAadh = String(targetAadhaar || "").replace(/\D/g, "").slice(0, 12);
+      const cleanRenterId = String(targetRenterId || "").trim();
+
+      const reqKey = isSingleRenter
+        ? `RENTER__${normProp}__${normFlat}__${cleanRenterId || cleanAadh || "r"}__${selectedMonth}`
+        : `ALL_ACTIVE__${selectedMonth}`;
+
+      const reqEntry = {
+        requestKey: reqKey,
+        scope: isSingleRenter ? "RENTER" : "ALL_ACTIVE",
+        status: "requested",
+        monthYear: selectedMonth,
+        propertyName: targetProp || "",
+        flatName: targetFlat || "",
+        renterId: cleanRenterId,
+        aadhaar: cleanAadh,
+        renterName: targetName || "",
+        requestedBy: activeUser || "Admin",
+        requestedAt: new Date().toISOString()
+      };
+
+      DB.globalConfig.screenshotRequests[reqKey] = reqEntry;
+      saveLocalGlobalConfigMaster(DB.globalConfig);
+      saveDbSnapshotToCache();
+      renderAdminScreenshotVerificationGrid();
+      renderAllDashboardUI();
+
+      triggerSideToast(
+        "Photo Request Sent",
+        isSingleRenter
+          ? `Live camera photo upload enabled for ${targetName || "renter"} (${monthLabel}).`
+          : `Live camera photo upload enabled for all active renters for ${monthLabel}.`,
+        true
+      );
+
+      await sendFirebaseAction({
+        action: "requestMonthlyPhoto",
+        requesterRole: activeRole || "Admin",
+        requesterUsername: activeUser || "Admin",
+        requestKey: reqKey,
+        requestEntry: reqEntry,
+        monthYear: selectedMonth,
+        scope: reqEntry.scope,
+        propertyName: reqEntry.propertyName,
+        flatName: reqEntry.flatName,
+        renterId: reqEntry.renterId,
+        aadhaar: reqEntry.aadhaar,
+        renterName: reqEntry.renterName,
+        screenshotRequests: DB.globalConfig.screenshotRequests
+      });
+    }
+
+    async function reRequestAdminMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Only", "Only the Admin can send a photo re-request.", false);
+      }
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || new Date().toISOString().slice(0, 7);
+      const cleanCat = String(categoryKey || "").trim().toLowerCase();
+      const normProp = String(propName || "").trim().toLowerCase();
+      const normFlat = String(flatName || "").trim().toLowerCase();
+      const normAadh = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
+      const cleanRenterId = String(renterId || "").trim();
+      const monthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(cleanMonth) : cleanMonth;
+
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      if (!DB.globalConfig.screenshotRequests || typeof DB.globalConfig.screenshotRequests !== "object") {
+        DB.globalConfig.screenshotRequests = {};
+      }
+
+      const reReqKey = `REREQ__${normProp}__${normFlat}__${cleanRenterId || normAadh || "r"}__${cleanMonth}__${cleanCat}`;
+      const reReqEntry = {
+        requestKey: reReqKey,
+        scope: "SLOT",
+        status: "re-requested",
+        monthYear: cleanMonth,
+        category: cleanCat,
+        categoryLabel: categoryLabel || cleanCat,
+        propertyName: propName || "",
+        flatName: flatName || "",
+        renterId: cleanRenterId,
+        aadhaar: normAadh,
+        renterName: renterName || "",
+        requestedBy: activeUser || "Admin",
+        requestedAt: new Date().toISOString()
+      };
+
+      DB.globalConfig.screenshotRequests[reReqKey] = reReqEntry;
+      saveLocalGlobalConfigMaster(DB.globalConfig);
+      saveDbSnapshotToCache();
+      renderAdminScreenshotVerificationGrid();
+      renderAllDashboardUI();
+
+      triggerSideToast(
+        "Re-request Sent",
+        `Asked ${renterName || "renter"} to capture a fresh ${categoryLabel || cleanCat} photo for ${monthLabel}.`,
+        true
+      );
+
+      await sendFirebaseAction({
+        action: "reRequestMonthlyPhoto",
+        requesterRole: activeRole || "Admin",
+        requesterUsername: activeUser || "Admin",
+        requestKey: reReqKey,
+        requestEntry: reReqEntry,
+        monthYear: cleanMonth,
+        category: cleanCat,
+        categoryLabel: categoryLabel || cleanCat,
+        propertyName: propName || "",
+        flatName: flatName || "",
+        renterId: cleanRenterId,
+        aadhaar: normAadh,
+        renterName: renterName || "",
+        screenshotRequests: DB.globalConfig.screenshotRequests
+      });
+    }
+
+    function adminDeleteMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Permission Denied", "Only the Admin has permission to delete uploaded photos.", false);
+      }
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || new Date().toISOString().slice(0, 7);
+      const monthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(cleanMonth) : cleanMonth;
+      openCenteredConfirmModal(
+        "Delete Uploaded Photo?",
+        `Are you sure you want to permanently delete "${categoryLabel}" (${monthLabel}) uploaded by ${renterName || "this renter"}? Only Admin can delete uploaded photos.`,
+        () => {
+          deleteRenterMonthlyPhotoSlot(categoryKey, categoryLabel, cleanMonth, propName, flatName, renterId, aadhaarNum);
+        },
+        {
+          yesText: "Yes, Delete Photo",
+          noText: "Cancel",
+          iconClass: "fa-solid fa-trash-can"
+        }
+      );
     }
 
     function switchSettingsSubTab(evt, subTabId) {
@@ -18789,11 +19485,44 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    let isSubmittingCreateUser = false;
+
+    function setCreateUserBannerState(mode, message) {
+      const banner = document.getElementById("createUserSubmitStatusBanner");
+      if (!banner) return;
+      if (!mode || !message) {
+        banner.style.display = "none";
+        banner.innerHTML = "";
+        return;
+      }
+      banner.style.display = "flex";
+      if (mode === "loading") {
+        banner.style.background = "rgba(56,189,248,0.14)";
+        banner.style.color = "#38bdf8";
+        banner.style.border = "1px solid rgba(56,189,248,0.38)";
+        banner.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${message}</span>`;
+      } else if (mode === "success") {
+        banner.style.background = "rgba(16,185,129,0.15)";
+        banner.style.color = "#34d399";
+        banner.style.border = "1px solid rgba(16,185,129,0.4)";
+        banner.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${message}</span>`;
+      } else {
+        banner.style.background = "rgba(239,68,68,0.14)";
+        banner.style.color = "#f87171";
+        banner.style.border = "1px solid rgba(239,68,68,0.4)";
+        banner.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${message}</span>`;
+      }
+    }
+
     async function submitCreateNewUser() {
+      if (isSubmittingCreateUser) return;
+      setCreateUserBannerState("", "");
+
       const fullName = document.getElementById("createUserName").value.trim();
       const rawMobile = document.getElementById("createUserMobile").value.trim();
       const digitsMob = extractIndianMobile10Digits(rawMobile);
       if (rawMobile && rawMobile !== "+91" && digitsMob.length > 0 && digitsMob.length !== 10) {
+        setCreateUserBannerState("error", "Please enter a valid 10-digit Indian mobile number.");
         return triggerSideToast("Invalid Mobile Number", "Please enter a valid 10-digit Indian mobile number.", false);
       }
       const mobile = (digitsMob.length === 10) ? ("+91 " + digitsMob) : "";
@@ -18809,11 +19538,13 @@ function formatMonthLabel(rawVal) {
       if (role === "Renter") {
         assignedAadhaar = String(document.getElementById("createUserAssignedAadhaar")?.value || "").replace(/\D/g, "").slice(0, 12);
         if (assignedAadhaar.length !== 12) {
+          setCreateUserBannerState("error", "Please select a Renter or enter their 12-digit Aadhaar Card number.");
           return triggerSideToast("Aadhaar Card Required", "Please select a Renter or enter their 12-digit Aadhaar Card number so their receipts and profile are strictly isolated.", false);
         }
         const existingAadhaarUser = findExistingRenterUserByAadhaar(assignedAadhaar);
         if (existingAadhaarUser) {
           checkCreateRenterAadhaarUniquenessLive(assignedAadhaar);
+          setCreateUserBannerState("error", `User ID @${existingAadhaarUser.Username} already exists for Aadhaar ${assignedAadhaar}.`);
           return triggerSideToast("Duplicate Aadhaar Blocked", `A Renter User ID (@${existingAadhaarUser.Username}) already exists for Aadhaar ${assignedAadhaar}. Only one unique ID can be created per Aadhaar number.`, false);
         }
         assignedProperty = (document.getElementById("createUserAssignedProp")?.value || "").trim();
@@ -18822,6 +19553,7 @@ function formatMonthLabel(rawVal) {
         if (role === "Manager") {
           managerPermissions = getSelectedManagerPermissionsFromContainer("createManagerPermsList");
           if (managerPermissions.length === 0) {
+            setCreateUserBannerState("error", "Please select at least one feature or control permission to grant to this Manager.");
             return triggerSideToast("Select Manager Features", "Please select at least one feature or control permission to grant to this Manager.", false);
           }
         }
@@ -18839,62 +19571,110 @@ function formatMonthLabel(rawVal) {
       }
 
       if (!fullName || !newU || !newP) {
+        setCreateUserBannerState("error", "Please fill in Name, Username, and Password.");
         return triggerSideToast("Missing Fields", "Please fill in Name, Username, and Password.", false);
       }
 
       if (role === "Viewer" || role === "Renter" || role === "Manager") {
         const roleLabel = role === "Renter" ? "Renter" : (role === "Manager" ? "Manager" : "Viewer");
         if ((role === "Viewer" || role === "Manager") && scopeMode === "SELECTED" && !assignedProperty) {
+          setCreateUserBannerState("error", `Please select at least one Property for this ${roleLabel} account.`);
           return triggerSideToast("Select Properties", `Please select at least one Property for this ${roleLabel} account.`, false);
         }
         if ((role === "Renter" || scopeMode === "FLAT") && (!assignedProperty || !assignedFlat)) {
+          setCreateUserBannerState("error", `Please select which Property and specific Flat this ${roleLabel} account is allowed to access.`);
           return triggerSideToast(`Select Flat for ${roleLabel}`, `Please select which Property and specific Flat this ${roleLabel} account is allowed to access.`, false);
         }
       }
 
       if (DB.users && DB.users.some(u => String(u.Username).toLowerCase() === newU.toLowerCase())) {
+        setCreateUserBannerState("error", "This username already exists. Please choose another.");
         return triggerSideToast("Duplicate Username", "This username already exists. Please choose another.", false);
       }
 
-      const res = await sendFirebaseAction({
-        action: "createUser",
-        requesterUsername: activeUser,
-        fullName: fullName,
-        mobile: mobile,
-        newUsername: newU,
-        newPassword: newP,
-        role: role,
-        theme: "system",
-        assignedProperty: assignedProperty,
-        assignedFlat: assignedFlat,
-        assignedAadhaar: assignedAadhaar,
-        managerPermissions: managerPermissions
-      });
+      const submitBtn = document.getElementById("btnCreateUserSubmit");
+      const origBtnHtml = submitBtn ? submitBtn.innerHTML : "";
+      isSubmittingCreateUser = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.75";
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Creating user...`;
+      }
+      setCreateUserBannerState("loading", "Creating user... Please wait while saving to database.");
 
-      if (res.status === "success") {
-        DB.users.push({
-          Username: newU,
-          Password: newP,
-          FullName: fullName,
-          Role: role,
-          Theme: "system",
-          MobileNumber: mobile,
-          AssignedProperty: assignedProperty,
-          AssignedFlat: assignedFlat,
-          AssignedAadhaar: assignedAadhaar,
-          ManagerPermissions: managerPermissions
+      try {
+        const res = await sendFirebaseAction({
+          action: "createUser",
+          requesterUsername: activeUser,
+          fullName: fullName,
+          mobile: mobile,
+          newUsername: newU,
+          newPassword: newP,
+          role: role,
+          theme: "system",
+          assignedProperty: assignedProperty,
+          assignedFlat: assignedFlat,
+          assignedAadhaar: assignedAadhaar,
+          managerPermissions: managerPermissions
         });
-        saveDbSnapshotToCache();
-        document.getElementById("createUserName").value = "";
-        document.getElementById("createUserMobile").value = "";
-        document.getElementById("createUserLoginId").value = "";
-        document.getElementById("createUserPass").value = "";
-        const aadhEl = document.getElementById("createUserAssignedAadhaar");
-        if (aadhEl) aadhEl.value = "";
-        triggerSideToast("Account Created", res.message, true);
-        openSettingsModal("setSubCreateUser");
-      } else {
-        triggerSideToast("Error", res.message, false);
+
+        if (res && res.status === "success") {
+          if (!Array.isArray(DB.users)) DB.users = [];
+          const alreadyExists = DB.users.some(u => String(u.Username || "").trim().toLowerCase() === newU.toLowerCase());
+          if (!alreadyExists) {
+            DB.users.push(res.user || {
+              Username: newU,
+              Password: newP,
+              FullName: fullName,
+              Role: role,
+              Theme: "system",
+              MobileNumber: mobile,
+              AssignedProperty: assignedProperty,
+              AssignedFlat: assignedFlat,
+              AssignedAadhaar: assignedAadhaar,
+              ManagerPermissions: managerPermissions,
+              Status: "Active",
+              AccountStatus: "Active"
+            });
+          }
+          saveDbSnapshotToCache();
+
+          document.getElementById("createUserName").value = "";
+          document.getElementById("createUserMobile").value = "";
+          document.getElementById("createUserLoginId").value = "";
+          document.getElementById("createUserPass").value = "";
+          const aadhEl = document.getElementById("createUserAssignedAadhaar");
+          if (aadhEl) aadhEl.value = "";
+          const quickSel = document.getElementById("createUserRenterQuickSelect");
+          if (quickSel) quickSel.value = "";
+          const badgeEl = document.getElementById("createUsernameAvailabilityBadge");
+          if (badgeEl) { badgeEl.style.display = "none"; badgeEl.innerHTML = ""; }
+          const iconEl = document.getElementById("createUsernameInlineIcon");
+          if (iconEl) { iconEl.style.display = "none"; iconEl.innerHTML = ""; }
+          const aadhStatusEl = document.getElementById("createRenterAadhaarUniqueStatus");
+          if (aadhStatusEl) { aadhStatusEl.style.display = "none"; aadhStatusEl.innerHTML = ""; }
+
+          if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
+          if (typeof populateRenterQuickSelectDropdowns === "function") populateRenterQuickSelectDropdowns();
+
+          setCreateUserBannerState("success", "User Created Successfully");
+          triggerSideToast("Account Created", "User Created Successfully", true);
+        } else {
+          const errMsg = (res && res.message) ? res.message : "Could not create user. Please try again.";
+          setCreateUserBannerState("error", errMsg);
+          triggerSideToast("Error", errMsg, false);
+        }
+      } catch (err) {
+        const errMsg = (err && err.message) ? err.message : "Failed to create user. Please check your connection and try again.";
+        setCreateUserBannerState("error", errMsg);
+        triggerSideToast("Error", errMsg, false);
+      } finally {
+        isSubmittingCreateUser = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = "";
+          submitBtn.innerHTML = origBtnHtml || `<i class="fa-solid fa-user-check"></i> Create User Account`;
+        }
       }
     }
 
@@ -21271,7 +22051,7 @@ function formatMonthLabel(rawVal) {
         modal.querySelectorAll(".flat-nav-item").forEach((el, idx) => el.classList.toggle("active", idx === 2));
         modal.querySelectorAll(".tab-content").forEach((el, idx) => el.classList.toggle("active", idx === 2));
         const titleEl = document.getElementById("modalHeaderTitle");
-        if (titleEl) titleEl.innerText = "My KYC Profile";
+        if (titleEl) titleEl.innerText = "My Profile";
         modal.querySelectorAll("#tabProfile input, #tabProfile select, #tabProfile textarea").forEach(inp => {
           inp.setAttribute("readonly", "readonly");
           if (inp.tagName === "SELECT" || inp.type === "file" || inp.type === "date") {
@@ -21361,7 +22141,7 @@ function formatMonthLabel(rawVal) {
       }
 
       const titleEl = document.getElementById("modalHeaderTitle");
-      if (titleEl) titleEl.innerText = "My KYC Profile";
+      if (titleEl) titleEl.innerText = "My Profile";
       const qrBtn = document.getElementById("btnFlatHeaderQrCollect");
       if (qrBtn) qrBtn.style.display = "none";
     }
@@ -28206,13 +28986,20 @@ function formatMonthLabel(rawVal) {
 
     // Requirement 8 & 9: Complete Session Scrub on Logout so Admin or other roles can log in seamlessly on same device
     function performConfirmedLogout() {
-      const prevUser = String(activeUser || sessionStorage.getItem("active_session_user") || "").trim().toLowerCase();
+      const prevUser = String(activeUser || sessionStorage.getItem("active_session_user") || localStorage.getItem("active_session_user") || "").trim().toLowerCase();
+      const prevRole = String(activeRole || sessionStorage.getItem("active_session_role") || localStorage.getItem("active_session_role") || "").trim();
       authSessionEpoch++;
 
       if (syncTimer) {
         clearInterval(syncTimer);
         syncTimer = null;
       }
+      if (realtimePollTimer) {
+        clearInterval(realtimePollTimer);
+        realtimePollTimer = null;
+      }
+      inFlightGasFetchPromise = null;
+      lastGasSheetDataCache = null;
 
       try { saveDbSnapshotToCache(); } catch (e) {}
 
@@ -28224,6 +29011,7 @@ function formatMonthLabel(rawVal) {
       activeAssignedProperty = "";
       activeAssignedFlat = "";
       activeAssignedAadhaar = "";
+      activeManagerPermissions = [];
       activeSessionToken = "";
       selectedProperty = null;
       selectedFlat = null;
@@ -28232,6 +29020,7 @@ function formatMonthLabel(rawVal) {
       activeSelectedTargetAdminUsername = "";
       isSessionConflictModalOpen = false;
       isSubmittingLogin = false;
+      isLoginWriteInFlight = false;
 
       // Wipe session storage and device login tokens — set explicit logout flag so refresh NEVER auto-logs back in
       try {
@@ -28248,6 +29037,12 @@ function formatMonthLabel(rawVal) {
           localStorage.removeItem("portal_device_session_" + prevUser);
           localStorage.removeItem("portal_session_pass_" + prevUser);
         }
+        if (prevRole) {
+          localStorage.removeItem(getRoleSessionStorageKey(prevRole));
+        }
+        ["admin", "renter", "manager", "viewer"].forEach(rk => {
+          localStorage.removeItem(getRoleSessionStorageKey(rk));
+        });
       } catch (e) {}
 
       // Remove role-specific CSS classes from document
@@ -28574,13 +29369,25 @@ function formatMonthLabel(rawVal) {
 
     async function sendFirebaseAction(data) {
       pendingWriteCount++;
-      const isGasWrite = Boolean(data && data.action && typeof GAS_SHEET_ACTIONS !== "undefined" && GAS_SHEET_ACTIONS.has(data.action));
+      const actName = String(data?.action || "");
+      const isGasWrite = Boolean(actName && typeof GAS_SHEET_ACTIONS !== "undefined" && GAS_SHEET_ACTIONS.has(actName)) || [
+        "createUser",
+        "addUser",
+        "updateUserRole",
+        "toggleUserBlock",
+        "deleteUser",
+        "requestMonthlyPhoto",
+        "reRequestMonthlyPhoto",
+        "saveScreenshotRequests",
+        "uploadBackgroundPhoto",
+        "saveBackgrounds"
+      ].includes(actName);
       try {
         const result = await handleFirebaseAction(data);
         setTimeout(() => {
           if (typeof syncDataLive === "function") syncDataLive(true);
-        }, isGasWrite ? 1800 : 80);
-        return result || { status: "success", message: isGasWrite ? "Saved in Google Sheets." : "Saved in Google Sheets." };
+        }, isGasWrite ? 2200 : 120);
+        return result || { status: "success", message: "Saved in Google Sheets." };
       } catch (err) {
         console.warn("Dual-server action warning:", err);
         return { status: "network_offline", message: "Saved locally." };
