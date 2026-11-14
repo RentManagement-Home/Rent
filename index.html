@@ -18,6 +18,52 @@
   <!-- Include html2canvas for receipt image rendering & QRious for 100% reliable client-side UPI QR code generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script>
+    function extractGoogleDriveFileId(rawUrl) {
+      if (!rawUrl) return "";
+      const str = String(rawUrl).trim();
+      if (!str || str.startsWith("data:image/")) return "";
+      const fileDMatch = str.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/);
+      const lh3Match = str.match(/googleusercontent\.com\/d\/([a-zA-Z0-9_-]{10,})/);
+      const idParamMatch = str.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+      const dMatch = str.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+      if (fileDMatch && fileDMatch[1]) return fileDMatch[1];
+      if (lh3Match && lh3Match[1]) return lh3Match[1];
+      if (idParamMatch && idParamMatch[1]) return idParamMatch[1];
+      if (dMatch && dMatch[1]) return dMatch[1];
+      return "";
+    }
+    function handleDriveImgFallback(imgEl) {
+      if (!imgEl) return;
+      const src = imgEl.getAttribute("src") || "";
+      const driveId = extractGoogleDriveFileId(src);
+      if (!driveId) {
+        imgEl.onerror = null;
+        return;
+      }
+      const fallbacks = [
+        "https://drive.google.com/thumbnail?id=" + driveId + "&sz=w1600",
+        "https://drive.google.com/uc?export=view&id=" + driveId,
+        "https://lh3.googleusercontent.com/d/" + driveId + "=w1200"
+      ];
+      const idx = parseInt(imgEl.dataset.driveFallbackIdx || "0", 10);
+      if (idx < fallbacks.length) {
+        imgEl.dataset.driveFallbackIdx = String(idx + 1);
+        if (imgEl.src !== fallbacks[idx]) {
+          imgEl.src = fallbacks[idx];
+        } else if (idx + 1 < fallbacks.length) {
+          imgEl.dataset.driveFallbackIdx = String(idx + 2);
+          imgEl.src = fallbacks[idx + 1];
+        } else {
+          imgEl.onerror = null;
+        }
+      } else {
+        imgEl.onerror = null;
+      }
+    }
+    window.extractGoogleDriveFileId = extractGoogleDriveFileId;
+    window.handleDriveImgFallback = handleDriveImgFallback;
+  </script>
   <style>
     /* ==========================================================================
        STRICT BLACK, WHITE & SYSTEM THEME ENGINE
@@ -1860,8 +1906,21 @@
     }
 
     /* Viewer Role Lock Styling */
-    body.role-viewer .admin-only {
+    body.role-viewer .admin-only,
+    body.role-viewer button[onclick*="toggleSplitPaymentLedgerDrawer"],
+    body.role-viewer button[onclick*="openSubmitPaymentProofModal"],
+    body.role-viewer button[onclick*="applyScheduledRentEscalationNow"],
+    body.role-viewer button[onclick*="saveFlatApplianceChecklist"],
+    body.role-viewer #btnFlatHeaderQrCollect,
+    body.role-viewer .pencil-lock-btn {
       display: none !important;
+    }
+    body.role-viewer #floatingChatInput,
+    body.role-viewer #btnSendFloatingChat {
+      display: none !important;
+    }
+    body.role-viewer #chatViewerReadOnlyNote {
+      display: block !important;
     }
 
     /* ==========================================================================
@@ -4779,7 +4838,7 @@
         </div>
       </div>
       <div style="max-height: 72vh; overflow: auto; border-radius: 14px; background: #f8fafc !important; border: 1.5px solid #cbd5e1 !important; padding: 16px; display:flex; align-items:center; justify-content:center;">
-        <img id="photoZoomModalImg" src="" alt="Zoomed Photo" style="max-width:100%; max-height:66vh; object-fit:contain; border-radius:10px; background:#ffffff; transition: transform 0.2s ease; transform-origin: center center; cursor: grab;">
+        <img id="photoZoomModalImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Zoomed Photo" onerror="handleDriveImgFallback(this)" style="max-width:100%; max-height:66vh; object-fit:contain; border-radius:10px; background:#ffffff; transition: transform 0.2s ease; transform-origin: center center; cursor: grab;">
       </div>
     </div>
   </div>
@@ -5872,6 +5931,9 @@
 
       <!-- Private Chat Input Bar -->
       <div style="padding:10px 12px; border-top:1px solid var(--glass-border); display:flex; align-items:center; gap:8px; background:var(--bg-input); flex-shrink:0; width:100%; box-sizing:border-box;">
+        <div id="chatViewerReadOnlyNote" style="display:none; width:100%; text-align:center; font-size:0.74rem; font-weight:700; color:var(--text-muted); padding:6px 8px;">
+          <i class="fa-solid fa-eye"></i> View-Only Mode: Messaging is disabled for Viewer accounts.
+        </div>
         <input type="text" id="floatingChatInput" class="form-control" style="flex:1 1 auto !important; width:100% !important; min-width:0 !important; height:40px !important; padding:8px 12px !important; font-size:0.84rem !important; margin:0 !important;" placeholder="Write a private message..." onkeydown="if(event.key==='Enter'){event.preventDefault(); sendLiveChatMessage('floating');}">
         <button type="button" id="btnSendFloatingChat" class="btn-primary" style="width:44px !important; min-width:44px !important; max-width:44px !important; height:40px !important; padding:0 !important; flex:0 0 44px !important; border-radius:10px !important; background:linear-gradient(135deg, #059669, #0284c7); display:inline-flex !important; align-items:center !important; justify-content:center !important;" onclick="sendLiveChatMessage('floating')" title="Send Message">
           <i class="fa-solid fa-paper-plane" style="font-size:0.9rem;"></i>
@@ -6811,7 +6873,7 @@
                 <i class="fa-solid fa-lock"></i> Close
               </button>
               <input type="text" id="screenshotVerifySearchInput" class="form-control" style="width:190px; padding:6px 11px; font-size:0.75rem;" placeholder="Search Active Renter / Aadhaar..." oninput="renderAdminScreenshotVerificationGrid(this.value)">
-              <button type="button" class="btn-ledger-action" style="padding:6px 11px; font-size:0.74rem; color:#10b981; border-color:rgba(16,185,129,0.4);" onclick="syncDataLive(true).then(() => renderAdminScreenshotVerificationGrid())">
+              <button type="button" id="btnRefreshScreenshotVerify" class="btn-ledger-action" style="padding:6px 11px; font-size:0.74rem; color:#10b981; border-color:rgba(16,185,129,0.4);" onclick="refreshAdminScreenshotVerification(this)">
                 <i class="fa-solid fa-rotate"></i> Refresh
               </button>
             </div>
@@ -7972,7 +8034,7 @@
             </div>
             <div class="calc-field-col">
               <label><i class="fa-regular fa-calendar-days"></i> Billing Date</label>
-              <input type="date" id="calcBillDatePicker" class="form-control">
+              <input type="date" id="calcBillDatePicker" class="form-control" onchange="handleBillingDatePeriodChange()">
             </div>
             <div class="calc-field-col">
               <label><i class="fa-solid fa-house-chimney"></i> Base Rent (₹) <span style="font-size:0.68rem; font-weight:600; color:var(--text-muted);">(This Month Only)</span></label>
@@ -8470,7 +8532,7 @@
                 <span id="profileCloudStatusBadge" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">No Photo</span>
               </div>
               <div class="image-frame-container zoomable-photo-frame" style="height: 165px; margin-bottom: 10px;" onclick="openPhotoZoomModal(document.getElementById('profilePicturePreview')?.src, (document.getElementById('renterName')?.value || 'Renter') + ' — Profile Photo')">
-                <img id="profilePicturePreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Renter Profile Photo">
+                <img id="profilePicturePreview" onerror="handleDriveImgFallback(this)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Renter Profile Photo">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
               </div>
               <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -8504,7 +8566,7 @@
                 <span id="identityCloudStatusBadge" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">No Front Photo</span>
               </div>
               <div class="image-frame-container zoomable-photo-frame" style="height: 165px; margin-bottom: 10px;" onclick="openPhotoZoomModal(document.getElementById('identityPicturePreview')?.src, (document.getElementById('renterName')?.value || 'Renter') + ' — Aadhaar Card (Front Side)')">
-                <img id="identityPicturePreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2225%22%20width%3D%2270%22%20height%3D%2275%22%20rx%3D%226%22%20fill%3D%22%23334155%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2252%22%20r%3D%2214%22%20fill%3D%22%2364748b%22%2F%3E%3Cpath%20d%3D%22M35%2090c0-11%209-18%2020-18s20%207%2020%2018%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2232%22%20width%3D%22165%22%20height%3D%2212%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2254%22%20width%3D%22130%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2274%22%20width%3D%22150%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Aadhaar%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Aadhaar / ID Document (Front)">
+                <img id="identityPicturePreview" onerror="handleDriveImgFallback(this)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2225%22%20width%3D%2270%22%20height%3D%2275%22%20rx%3D%226%22%20fill%3D%22%23334155%22%2F%3E%3Ccircle%20cx%3D%2255%22%20cy%3D%2252%22%20r%3D%2214%22%20fill%3D%22%2364748b%22%2F%3E%3Cpath%20d%3D%22M35%2090c0-11%209-18%2020-18s20%207%2020%2018%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2232%22%20width%3D%22165%22%20height%3D%2212%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2254%22%20width%3D%22130%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%22108%22%20y%3D%2274%22%20width%3D%22150%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Aadhaar%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Aadhaar / ID Document (Front)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
               </div>
               <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -8538,7 +8600,7 @@
                 <span id="identityBackCloudStatusBadge" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">No Back Photo</span>
               </div>
               <div class="image-frame-container zoomable-photo-frame" style="height: 165px; margin-bottom: 10px;" onclick="openPhotoZoomModal(document.getElementById('identityBackPicturePreview')?.src, (document.getElementById('renterName')?.value || 'Renter') + ' — Aadhaar Card (Back Side)')">
-                <img id="identityBackPicturePreview" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2228%22%20width%3D%22252%22%20height%3D%2214%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2252%22%20width%3D%22170%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2270%22%20width%3D%22195%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Back%20Photo%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Aadhaar / ID Document (Back)">
+                <img id="identityBackPicturePreview" onerror="handleDriveImgFallback(this)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22150%22%20viewBox%3D%220%200%20300%20150%22%3E%3Crect%20width%3D%22300%22%20height%3D%22150%22%20rx%3D%228%22%20fill%3D%22%231e293b%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2228%22%20width%3D%22252%22%20height%3D%2214%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2252%22%20width%3D%22170%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23475569%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2270%22%20width%3D%22195%22%20height%3D%2210%22%20rx%3D%224%22%20fill%3D%22%23334155%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Back%20Photo%20Uploaded%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Aadhaar / ID Document (Back)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
               </div>
               <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -8848,7 +8910,7 @@
      * - Maintenance Tickets, Payment Proofs, Appliance Checklists, Master Meter Logs & Admin Audit Logs
      * ============================================================================
      */
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykSO9r3PQE_kPx96LRVlfPclDQDJKr95ZEbZjYZBs52AwJB2bciD5jh5ZKAWXFHi1u/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8WgnMCZPLIprncnWEXnN501O-kiAvwsAd7FV6fZhar8pDbUoq6N_jO_JcJXcnU8Gh/exec";
 
 
 
@@ -10568,6 +10630,35 @@
         return "https://lh3.googleusercontent.com/d/" + driveId + "=s0";
       }
       return str;
+    }
+
+    function handleDriveImgFallback(imgEl) {
+      if (!imgEl) return;
+      const src = imgEl.getAttribute("src") || "";
+      const driveId = extractGoogleDriveFileId(src);
+      if (!driveId) {
+        imgEl.onerror = null;
+        return;
+      }
+      const fallbacks = [
+        "https://drive.google.com/thumbnail?id=" + driveId + "&sz=w1600",
+        "https://drive.google.com/uc?export=view&id=" + driveId,
+        "https://lh3.googleusercontent.com/d/" + driveId + "=w1200"
+      ];
+      const idx = parseInt(imgEl.dataset.driveFallbackIdx || "0", 10);
+      if (idx < fallbacks.length) {
+        imgEl.dataset.driveFallbackIdx = String(idx + 1);
+        if (imgEl.src !== fallbacks[idx]) {
+          imgEl.src = fallbacks[idx];
+        } else if (idx + 1 < fallbacks.length) {
+          imgEl.dataset.driveFallbackIdx = String(idx + 2);
+          imgEl.src = fallbacks[idx + 1];
+        } else {
+          imgEl.onerror = null;
+        }
+      } else {
+        imgEl.onerror = null;
+      }
     }
 
     // Ultra-High-Definition (4K / Full HD 3840px @ 0.98 quality) reader for background photos — crystal clear HD
@@ -13056,29 +13147,122 @@ function formatMonthLabel(rawVal) {
       }];
     }
 
+    function resolveRenterForFlatPeriod(propName, flatName, billDateStr, monthYearStr) {
+      const flatRenters = (DB.renters || []).filter(r =>
+        isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName)
+      );
+      const activeRenters = flatRenters.filter(r => String(r.Status || "Active").trim().toLowerCase() === "active");
+      const activeRenter = activeRenters[0] || null;
+      const prevRenters = flatRenters.filter(r => String(r.Status || "").trim().toLowerCase() !== "active");
+
+      const refDate = toInputDateValue(billDateStr || "");
+      const refMonth = normalizeMonthYear(monthYearStr || (refDate ? refDate.slice(0, 7) : ""));
+      const activeJoinDate = activeRenter ? toInputDateValue(activeRenter.JoinDate || "") : "";
+      const activeJoinMonth = activeJoinDate ? activeJoinDate.slice(0, 7) : "";
+
+      if (activeRenter) {
+        const isAfterOrOnActiveJoin = activeJoinDate
+          ? (refDate ? (refDate >= activeJoinDate) : (!refMonth || refMonth >= activeJoinMonth))
+          : true;
+
+        if (isAfterOrOnActiveJoin) {
+          return { mode: "ACTIVE", renter: activeRenter };
+        }
+      }
+
+      // Prior to active renter's JoinDate (or when flat currently has no active renter):
+      // Match a previous renter whose stay period [JoinDate .. EndDate] covers this date/month
+      const sortedPrev = [...prevRenters].sort((a, b) => {
+        const aj = toInputDateValue(a.JoinDate || "") || "";
+        const bj = toInputDateValue(b.JoinDate || "") || "";
+        return bj.localeCompare(aj);
+      });
+
+      const matchedPrev = sortedPrev.find(pr => {
+        const pJoin = toInputDateValue(pr.JoinDate || "");
+        const pEnd = toInputDateValue(pr.EndDate || "");
+        const pJoinMonth = pJoin ? pJoin.slice(0, 7) : "";
+        const pEndMonth = pEnd ? pEnd.slice(0, 7) : "";
+
+        if (refDate) {
+          if (pJoin && refDate < pJoin) return false;
+          if (pEnd && refDate > pEnd) return false;
+          if (activeJoinDate && refDate >= activeJoinDate && !pEnd) return false;
+          return true;
+        }
+        if (refMonth) {
+          if (pJoinMonth && refMonth < pJoinMonth) return false;
+          if (pEndMonth && refMonth > pEndMonth) return false;
+          if (activeJoinMonth && refMonth >= activeJoinMonth && !pEndMonth) return false;
+          return true;
+        }
+        return false;
+      });
+
+      if (matchedPrev) {
+        return { mode: "PREVIOUS", renter: matchedPrev };
+      }
+
+      return { mode: "VACANT", renter: null };
+    }
+
     function isBillLinkedToLoggedInRenterAadhaar(bill) {
       if (String(activeRole || "").trim().toLowerCase() !== "renter") return true;
       if (!bill) return false;
+
+      const billRenterId = String(bill.RenterID || "").trim();
+      const bTenant = String(bill.TenantName || "").trim().toLowerCase();
+      const bAadhaar = normalizeAadhaar12(bill.TenantAadhaar || bill.AadhaarNumber || "");
+
+      // Bills created during a vacant period carry no renter linkage and must never link to any renter's Aadhaar
+      if (!billRenterId && !bTenant && !bAadhaar) {
+        return false;
+      }
+
+      const myAadhaar = getNormalizedActiveRenterAadhaar();
+      if (bAadhaar && myAadhaar && bAadhaar !== myAadhaar) {
+        return false;
+      }
+
       const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
       if (matchedProfiles.length === 0) return false;
 
-      const realIds = matchedProfiles
-        .map(r => String(r.RenterID || "").trim())
-        .filter(id => id && !id.startsWith("RENTER-SESSION-"));
-      const allowedIds = new Set(realIds);
-      const billRenterId = String(bill.RenterID || "").trim();
-      if (billRenterId && allowedIds.size > 0 && allowedIds.has(billRenterId)) {
+      const billDateVal = toInputDateValue(bill.BillDate || bill.PaymentDate || "");
+      const billMonthVal = normalizeMonthYear(bill.MonthYear || billDateVal);
+
+      const matchesProfilePeriod = (r) => {
+        const rJoin = toInputDateValue(r.JoinDate || "");
+        const rEnd = toInputDateValue(r.EndDate || "");
+        const rIsActive = String(r.Status || "Active").trim().toLowerCase() === "active";
+        if (rJoin) {
+          if (billDateVal && billDateVal < rJoin) return false;
+          if (!billDateVal && billMonthVal && billMonthVal < rJoin.slice(0, 7)) return false;
+        }
+        if (!rIsActive && rEnd) {
+          if (billDateVal && billDateVal > rEnd) return false;
+          if (!billDateVal && billMonthVal && billMonthVal > rEnd.slice(0, 7)) return false;
+        }
         return true;
+      };
+
+      if (billRenterId) {
+        const byId = matchedProfiles.find(r => String(r.RenterID || "").trim() === billRenterId);
+        if (byId) return matchesProfilePeriod(byId);
       }
 
-      // Fallback when older bill has no RenterID or different RenterID for the same tenant + Property + Flat
-      const bTenant = String(bill.TenantName || "").trim().toLowerCase();
+      if (bAadhaar && myAadhaar && bAadhaar === myAadhaar) {
+        return matchedProfiles.some(r =>
+          isSamePropAndFlat(r.PropertyName, r.FlatName, bill.PropertyName, bill.FlatName) &&
+          matchesProfilePeriod(r)
+        );
+      }
+
+      // Fallback when older bill has no RenterID/TenantAadhaar for the same tenant + Property + Flat
       return matchedProfiles.some(r => {
         const sameUnit = isSamePropAndFlat(r.PropertyName, r.FlatName, bill.PropertyName, bill.FlatName);
-        if (!sameUnit) return false;
+        if (!sameUnit || !matchesProfilePeriod(r)) return false;
         const rName = String(r.RenterName || "").trim().toLowerCase();
         if (bTenant && rName && bTenant === rName) return true;
-        if (!billRenterId && (!bTenant || String(r.RenterID || "").startsWith("RENTER-SESSION-"))) return true;
         return false;
       });
     }
@@ -14156,10 +14340,17 @@ function formatMonthLabel(rawVal) {
       );
     }
 
-    async function uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, fileName, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
+    async function uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, fileName, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName, explicitMimeType = "") {
       const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
       const cleanCat = String(categoryKey || "").trim().toLowerCase();
       const btnEl = document.getElementById("btnRenterMonthlyUpload_" + cleanCat);
+
+      const mimeMatch = String(compressedDataUrl || "").match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
+      const detectedMime = explicitMimeType || (mimeMatch ? mimeMatch[1].toLowerCase() : "image/jpeg");
+      const ext = detectedMime === "image/png" ? "png" : (detectedMime === "image/webp" ? "webp" : "jpg");
+      const normalizedFileName = fileName
+        ? (/\.(png|jpe?g|webp)$/i.test(fileName) ? fileName : `${fileName}.${ext}`)
+        : `Camera_${cleanCat}_${cleanMonth}.${ext}`;
 
       try {
         if (btnEl) {
@@ -14198,9 +14389,36 @@ function formatMonthLabel(rawVal) {
           identityDocNumber: normAadhaar,
           uploadedAt: new Date().toISOString()
         };
-        DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] = optimisticSlot;
-        DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = optimisticSlot;
-        if (aadhaarSlotKey) DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = optimisticSlot;
+
+        window.__recentMonthlyPhotoUploads = window.__recentMonthlyPhotoUploads || {};
+        const trackKeys = [monthlySlotKey, flatSlotKey];
+        if (aadhaarSlotKey) trackKeys.push(aadhaarSlotKey);
+
+        const catFieldMap = {
+          electricity_meter: "Photo1URL",
+          photo_1: "Photo1URL",
+          completed_payment: "Photo2URL",
+          photo_2: "Photo2URL",
+          water_meter_bill: "Photo3URL",
+          photo_3: "Photo3URL",
+          png_gas_meter: "Photo4URL",
+          photo_4: "Photo4URL"
+        };
+        const targetPhotoCol = catFieldMap[cleanCat] || "Photo1URL";
+
+        trackKeys.forEach(tk => {
+          DB.globalConfig.renterMonthlyPhotos[tk] = optimisticSlot;
+          if (window.__deletedMonthlyPhotoSlots) delete window.__deletedMonthlyPhotoSlots[tk];
+          window.__recentMonthlyPhotoUploads[tk] = {
+            slot: optimisticSlot,
+            targetPhotoCol,
+            propName,
+            flatName,
+            renterId,
+            aadhaar: normAadhaar,
+            at: Date.now()
+          };
+        });
 
         // Clear slot-level re-request status once renter submits a new photo
         if (DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object") {
@@ -14232,8 +14450,8 @@ function formatMonthLabel(rawVal) {
           monthYear: cleanMonth,
           category: cleanCat,
           categoryLabel: categoryLabel,
-          fileName: fileName || `Camera_${cleanCat}_${cleanMonth}.jpg`,
-          mimeType: "image/jpeg",
+          fileName: normalizedFileName,
+          mimeType: detectedMime,
           base64Data: compressedDataUrl
         });
 
@@ -14254,27 +14472,26 @@ function formatMonthLabel(rawVal) {
           previewUrl: driveUrl,
           fileId: res?.fileId || res?.driveFileId || ""
         };
-        DB.globalConfig.renterMonthlyPhotos[monthlySlotKey] = savedSlot;
-        DB.globalConfig.renterMonthlyPhotos[flatSlotKey] = savedSlot;
-        if (aadhaarSlotKey) DB.globalConfig.renterMonthlyPhotos[aadhaarSlotKey] = savedSlot;
+        trackKeys.forEach(tk => {
+          DB.globalConfig.renterMonthlyPhotos[tk] = savedSlot;
+          window.__recentMonthlyPhotoUploads[tk] = {
+            slot: savedSlot,
+            targetPhotoCol,
+            propName,
+            flatName,
+            renterId,
+            aadhaar: normAadhaar,
+            driveUrl,
+            at: Date.now()
+          };
+        });
 
-        const catFieldMap = {
-          electricity_meter: "Photo1URL",
-          photo_1: "Photo1URL",
-          completed_payment: "Photo2URL",
-          photo_2: "Photo2URL",
-          water_meter_bill: "Photo3URL",
-          photo_3: "Photo3URL",
-          png_gas_meter: "Photo4URL",
-          photo_4: "Photo4URL"
-        };
-        const targetPhotoCol = catFieldMap[cleanCat] || "Photo1URL";
         (DB.renters || []).forEach(r => {
           const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
           const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
           const sameId = renterId && String(r.RenterID || "") === String(renterId);
           const sameAadh = normAadhaar.length === 12 && rAadh === normAadhaar;
-          if (sameId || sameAadh || (sameFlat && String(r.Status || "").toLowerCase() === "active")) {
+          if (sameId || (sameAadh && String(r.Status || "").toLowerCase() === "active") || (sameFlat && String(r.Status || "").toLowerCase() === "active")) {
             r[targetPhotoCol] = driveUrl;
           }
         });
@@ -14301,7 +14518,9 @@ function formatMonthLabel(rawVal) {
       const file = inputEl && inputEl.files && inputEl.files[0];
       if (!file) return;
       const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
-      await uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, file.name, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName);
+      const mimeMatch = String(compressedDataUrl || "").match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
+      const resolvedMime = mimeMatch ? mimeMatch[1].toLowerCase() : (file.type || "image/jpeg");
+      await uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, file.name, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName, resolvedMime);
     }
 
     async function deleteRenterMonthlyPhotoSlot(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum) {
@@ -14316,6 +14535,12 @@ function formatMonthLabel(rawVal) {
       const monthlySlotKey = `MONTHLY__${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
       const flatSlotKey = `${normProp}__${normFlat}__${cleanMonth}__${cleanCat}`;
       const aadhaarSlotKey = normAadhaar.length === 12 ? `${normAadhaar}__${cleanMonth}__${cleanCat}` : "";
+
+      window.__deletedMonthlyPhotoSlots = window.__deletedMonthlyPhotoSlots || {};
+      [monthlySlotKey, flatSlotKey, aadhaarSlotKey].filter(Boolean).forEach(k => {
+        window.__deletedMonthlyPhotoSlots[k] = Date.now();
+        if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[k];
+      });
 
       let fileIdToDelete = "";
       if (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos) {
@@ -15100,9 +15325,11 @@ function formatMonthLabel(rawVal) {
         }
 
         const requestedMonthsList = getAllRequestedMonthsForRenter(targetProp, targetFlat, primaryRenter.RenterID, effectiveAadhaar);
+        const preferredMonth = requestedMonthsList.includes(normalizeMonthYear(window.selectedRenterMonthlyUploadMonth))
+          ? normalizeMonthYear(window.selectedRenterMonthlyUploadMonth)
+          : (requestedMonthsList.length > 0 ? requestedMonthsList[0] : "");
         const defaultMonthlyUploadMonth = normalizeMonthYear(
-          window.selectedRenterMonthlyUploadMonth ||
-          (requestedMonthsList.length > 0 ? requestedMonthsList[0] : "") ||
+          preferredMonth ||
           (currentMonthBill && currentMonthBill.MonthYear) ||
           (latestBill && latestBill.MonthYear) ||
           new Date().toISOString().slice(0, 7)
@@ -15118,7 +15345,7 @@ function formatMonthLabel(rawVal) {
         const normFlatKey = String(targetFlat || "").trim().toLowerCase();
         const normAadhaarKey = String(effectiveAadhaar || "").replace(/\D/g, "").slice(0, 12);
 
-        const resolveRenterMonthlyPhotoSlot = (catKey) => {
+        const resolveRenterMonthlyPhotoSlot = (catKey, colKey = "") => {
           const cleanCat = String(catKey || "").trim().toLowerCase();
           const candidateKeys = [];
           if (normAadhaarKey.length === 12) {
@@ -15133,6 +15360,15 @@ function formatMonthLabel(rawVal) {
               slot.imageUrl = rawImg.startsWith("data:image") ? rawImg : normalizeGoogleDriveImageUrl(rawImg);
               return slot;
             }
+          }
+          const isCurrentOrRequestedDefault = defaultMonthlyUploadMonth === getCurrentCalendarYearMonth() ||
+            (requestedMonthsList.length > 0 && defaultMonthlyUploadMonth === requestedMonthsList[0]);
+          if (colKey && primaryRenter && primaryRenter[colKey] && !isPlaceholderImageUrl(primaryRenter[colKey]) && isCurrentOrRequestedDefault) {
+            const rawColImg = String(primaryRenter[colKey]).trim();
+            return {
+              imageUrl: rawColImg.startsWith("data:image") ? rawColImg : normalizeGoogleDriveImageUrl(rawColImg),
+              monthYear: defaultMonthlyUploadMonth
+            };
           }
           return null;
         };
@@ -15207,20 +15443,6 @@ function formatMonthLabel(rawVal) {
                   </h3>
                 </div>
               </div>
-
-              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <label for="renterMonthlyUploadMonthPicker" style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">
-                  <i class="fa-regular fa-calendar-days" style="color:#38bdf8; margin-right:4px;"></i>Select Month:
-                </label>
-                <input
-                  type="month"
-                  id="renterMonthlyUploadMonthPicker"
-                  value="${defaultMonthlyUploadMonth}"
-                  onchange="changeRenterMonthlyUploadMonth(this.value)"
-                  class="form-control"
-                  style="width:auto; min-width:155px; padding:7px 12px; font-size:0.82rem; font-weight:800; border-radius:10px; background:var(--bg-input); color:var(--text-main); border:1.5px solid rgba(56,189,248,0.4); cursor:pointer;"
-                />
-              </div>
             </div>
 
             ${requestedMonthsPillsHtml}
@@ -15242,7 +15464,7 @@ function formatMonthLabel(rawVal) {
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(235px, 1fr)); gap:16px;">
               ${monthlyUploadCategories.map(cat => {
-                const slotObj = resolveRenterMonthlyPhotoSlot(cat.key);
+                const slotObj = resolveRenterMonthlyPhotoSlot(cat.key, cat.colKey);
                 const rawImgUrl = slotObj && slotObj.imageUrl ? String(slotObj.imageUrl) : "";
                 const displayImgUrl = rawImgUrl ? normalizeGoogleDriveImageUrl(rawImgUrl) : "";
                 const safeZoomUrl = displayImgUrl.replace(/'/g, "\\'");
@@ -15288,7 +15510,7 @@ function formatMonthLabel(rawVal) {
                           title="Click to view full photo"
                           style="width:100%; height:148px; border-radius:11px; overflow:hidden; border:1px solid ${cat.border}; background:#0f172a; cursor:zoom-in; position:relative; margin-bottom:8px;"
                         >
-                          <img src="${displayImgUrl}" alt="${cat.title}" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                          <img src="${displayImgUrl}" alt="${cat.title}" onerror="handleDriveImgFallback(this)" style="width:100%; height:100%; object-fit:cover; display:block;" />
                           <div style="position:absolute; bottom:6px; right:6px; background:rgba(15,23,42,0.82); color:#fff; font-size:0.65rem; font-weight:800; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
                             <i class="fa-solid fa-magnifying-glass-plus"></i> View Photo
                           </div>
@@ -15391,7 +15613,7 @@ function formatMonthLabel(rawVal) {
                       class="renter-hero-avatar"
                       ${profileImgUrl ? `style="cursor:zoom-in;" title="Click to view full photo" onclick="openPhotoZoomModal('${safeProfileImgArg}', '${safeRenterNameArg}')"` : ""}
                     >
-                      ${profileImgUrl ? `<img src="${profileImgUrl}" alt="${renterNameDisplay}" />` : avatarInitials}
+                      ${profileImgUrl ? `<img src="${profileImgUrl}" alt="${renterNameDisplay}" onerror="handleDriveImgFallback(this)" />` : avatarInitials}
                     </div>
                     <div>
                       <div class="renter-verified-pill">
@@ -15963,6 +16185,12 @@ function formatMonthLabel(rawVal) {
         if (rawProf) r.ProfileImageURL = rawProf.startsWith("data:image") ? rawProf : normalizeGoogleDriveImageUrl(rawProf);
         if (rawId) r.IdentityImageURL = rawId.startsWith("data:image") ? rawId : normalizeGoogleDriveImageUrl(rawId);
         if (rawIdBack) r.IdentityBackImageURL = rawIdBack.startsWith("data:image") ? rawIdBack : normalizeGoogleDriveImageUrl(rawIdBack);
+        ["Photo1URL", "Photo2URL", "Photo3URL", "Photo4URL"].forEach(col => {
+          const val = r[col] || prevMatch?.[col] || "";
+          if (val && !isPlaceholderImageUrl(val)) {
+            r[col] = String(val).startsWith("data:image") ? val : normalizeGoogleDriveImageUrl(val);
+          }
+        });
         if (r.IdentityDocNumber) r.IdentityDocNumber = formatAadhaarWithHyphens(r.IdentityDocNumber);
         if (r.MobileNumber) r.MobileNumber = sanitizeContactPhoneDisplay(r.MobileNumber);
         if (r.AltMobileNumber) r.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
@@ -16066,6 +16294,23 @@ function formatMonthLabel(rawVal) {
       const storageKey = getLoginLockoutKey(u);
       const defaultState = { username: u, stage: 0, failedInStage: 0, lockedUntil: 0, lockedTierLabel: "", isPermanentlyBlocked: false };
       try {
+        const knownUser = (Array.isArray(DB.users) ? DB.users : []).find(usr => String(usr.Username || "").trim().toLowerCase() === u);
+        const knownStatus = knownUser ? String(knownUser.Status || knownUser.AccountStatus || "Active").trim().toLowerCase() : "";
+        const sheetLocks = (DB.globalConfig && DB.globalConfig.loginLockouts) || {};
+        const sheetLock = sheetLocks[u] || null;
+        if (knownUser && knownStatus === "active" && !sheetLock?.isPermanentlyBlocked) {
+          // If live Google Sheet says the user is Active and not locked there, discard stale local block cache
+          let blockedList = [];
+          try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
+          if (blockedList.includes(u)) {
+            localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList.filter(item => item !== u)));
+          }
+          if (!sheetLock?.lockedUntil || Number(sheetLock.lockedUntil) <= Date.now()) {
+            try { localStorage.removeItem(storageKey); } catch (e) {}
+            return defaultState;
+          }
+        }
+
         let blockedList = [];
         try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
         if (u && blockedList.includes(u)) {
@@ -16106,11 +16351,25 @@ function formatMonthLabel(rawVal) {
       } catch (e) {}
     }
 
-    function resetLoginLockoutState(username) {
+    function clearUserLocalBlockedCache(username) {
+      const u = String(username || "").trim().toLowerCase();
+      if (!u) return;
       try {
-        const storageKey = getLoginLockoutKey(username);
-        localStorage.removeItem(storageKey);
+        const blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+        if (Array.isArray(blockedList) && blockedList.includes(u)) {
+          localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList.filter(x => x !== u)));
+        }
       } catch (e) {}
+      try {
+        localStorage.removeItem(getLoginLockoutKey(u));
+      } catch (e) {}
+      if (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[u]) {
+        delete DB.globalConfig.loginLockouts[u];
+      }
+    }
+
+    function resetLoginLockoutState(username) {
+      clearUserLocalBlockedCache(username);
       if (loginLockoutCountdownTimer) {
         clearInterval(loginLockoutCountdownTimer);
         loginLockoutCountdownTimer = null;
@@ -16337,8 +16596,11 @@ function formatMonthLabel(rawVal) {
       }
 
       try {
-        if (!Array.isArray(DB.users) || DB.users.length === 0) {
-          await fetchGasSheetData(false).catch(() => {});
+        const localCachedState = getLoginLockoutState(cleanVal);
+        const needsLiveVerify = !Array.isArray(DB.users) || DB.users.length === 0 || localCachedState.isPermanentlyBlocked || localCachedState.lockedUntil > Date.now();
+        if (needsLiveVerify) {
+          inFlightGasFetchPromise = null;
+          await fetchGasSheetData(true, true).catch(() => {});
         } else {
           fetchGasSheetData(false).catch(() => {});
         }
@@ -16410,6 +16672,8 @@ function formatMonthLabel(rawVal) {
           return;
         }
 
+        // Server confirms account is Active and not locked -> purge any stale local block/lockout cache
+        resetLoginLockoutState(cleanVal);
         if (badgeEl) { badgeEl.style.display = "none"; badgeEl.innerHTML = ""; }
         if (noteEl) { noteEl.style.display = "none"; noteEl.innerHTML = ""; }
       } catch (e) {
@@ -16458,14 +16722,31 @@ function formatMonthLabel(rawVal) {
 
       const cleanU = user.toLowerCase();
       if (updateLoginLockoutUI(cleanU)) {
-        const lockState = getLoginLockoutState(cleanU);
-        if (lockState.isPermanentlyBlocked) {
-          triggerSideToast("User Blocked", `This user account (@${cleanU}) has been permanently blocked due to repeated failed login attempts.`, false);
+        // Re-check live Google Sheet first in case the Admin unblocked this account
+        inFlightGasFetchPromise = null;
+        await fetchGasSheetData(true, true).catch(() => {});
+        const liveUsers = Array.isArray(DB.users) ? DB.users : [];
+        const liveMatchedU = liveUsers.find(u => String(u.Username || "").trim().toLowerCase() === cleanU);
+        const liveStatus = String(liveMatchedU?.Status || liveMatchedU?.AccountStatus || "Active").trim().toLowerCase();
+        const sheetLocks = (DB.globalConfig && DB.globalConfig.loginLockouts) || {};
+        const sheetLock = sheetLocks[cleanU] || null;
+        const stillBlockedOnServer = liveMatchedU
+          ? (liveStatus === "blocked" || liveStatus === "suspended" || liveStatus === "inactive" || Boolean(sheetLock?.isPermanentlyBlocked))
+          : false;
+        const stillTimedLockedOnServer = Boolean(sheetLock?.lockedUntil && Number(sheetLock.lockedUntil) > Date.now());
+
+        if (!stillBlockedOnServer && !stillTimedLockedOnServer) {
+          resetLoginLockoutState(cleanU);
+        } else {
+          const lockState = getLoginLockoutState(cleanU);
+          if (lockState.isPermanentlyBlocked || stillBlockedOnServer) {
+            triggerSideToast("User Blocked", `This user account (@${cleanU}) is currently blocked. Contact Administrator.`, false);
+            return;
+          }
+          const rem = formatLockoutRemainingTime((sheetLock?.lockedUntil || lockState.lockedUntil) - Date.now());
+          triggerSideToast("Login Locked", `Username @${cleanU} is currently locked for ${sheetLock?.tierLabel || lockState.lockedTierLabel}. Please wait ${rem} before trying again.`, false);
           return;
         }
-        const rem = formatLockoutRemainingTime(lockState.lockedUntil - Date.now());
-        triggerSideToast("Login Locked", `Username @${cleanU} is currently locked for ${lockState.lockedTierLabel}. Please wait ${rem} before trying again.`, false);
-        return;
       }
 
       isSubmittingLogin = true;
@@ -16697,14 +16978,15 @@ function formatMonthLabel(rawVal) {
         return;
       }
       const syncEpochAtStart = authSessionEpoch;
+      const syncStartedAt = Date.now();
       const syncUserAtStart = activeUser;
       const syncTokenAtStart = activeSessionToken || "";
       isSyncingLive = true;
       try {
         const res = await firebaseGetInitialData(syncUserAtStart, syncTokenAtStart);
 
-        // Guard against race condition where user logged out while firebaseGetInitialData was in flight
-        if (!activeUser || authSessionEpoch !== syncEpochAtStart || activeUser !== syncUserAtStart) {
+        // Guard against race condition where user logged out or a newer write finished while GET was in flight
+        if (!activeUser || authSessionEpoch !== syncEpochAtStart || activeUser !== syncUserAtStart || (!forceRender && lastWriteCompletedAt > syncStartedAt)) {
           return;
         }
         try {
@@ -16791,6 +17073,12 @@ function formatMonthLabel(rawVal) {
             if (rawProf) r.ProfileImageURL = rawProf.startsWith("data:image") ? rawProf : normalizeGoogleDriveImageUrl(rawProf);
             if (rawId) r.IdentityImageURL = rawId.startsWith("data:image") ? rawId : normalizeGoogleDriveImageUrl(rawId);
             if (rawIdBack) r.IdentityBackImageURL = rawIdBack.startsWith("data:image") ? rawIdBack : normalizeGoogleDriveImageUrl(rawIdBack);
+            ["Photo1URL", "Photo2URL", "Photo3URL", "Photo4URL"].forEach(col => {
+              const val = r[col] || prevMatch?.[col] || "";
+              if (val && !isPlaceholderImageUrl(val)) {
+                r[col] = String(val).startsWith("data:image") ? val : normalizeGoogleDriveImageUrl(val);
+              }
+            });
             if (r.IdentityDocNumber) r.IdentityDocNumber = formatAadhaarWithHyphens(r.IdentityDocNumber);
             if (r.MobileNumber) r.MobileNumber = sanitizeContactPhoneDisplay(r.MobileNumber);
             if (r.AltMobileNumber) r.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
@@ -16851,11 +17139,49 @@ function formatMonthLabel(rawVal) {
             if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
             const trustServerMonthly = Boolean(res._liveSheetVerified && !pendingWriteCount);
             const mergedMonthlyPhotos = trustServerMonthly
-              ? ((res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object") ? res.globalConfig.renterMonthlyPhotos : {})
+              ? { ...((res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object") ? res.globalConfig.renterMonthlyPhotos : {}) }
               : {
                   ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
                   ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
                 };
+
+            // Preserve any photos uploaded in the last 90s against slower sheet reads, and respect admin deletes in the last 30s
+            const nowSyncTs = Date.now();
+            if (window.__deletedMonthlyPhotoSlots) {
+              Object.keys(window.__deletedMonthlyPhotoSlots).forEach(dk => {
+                if (nowSyncTs - window.__deletedMonthlyPhotoSlots[dk] < 30000) {
+                  delete mergedMonthlyPhotos[dk];
+                } else {
+                  delete window.__deletedMonthlyPhotoSlots[dk];
+                }
+              });
+            }
+            if (window.__recentMonthlyPhotoUploads) {
+              Object.keys(window.__recentMonthlyPhotoUploads).forEach(uk => {
+                const entry = window.__recentMonthlyPhotoUploads[uk];
+                if (entry && entry.slot && (nowSyncTs - entry.at < 90000)) {
+                  const serverSlot = mergedMonthlyPhotos[uk];
+                  if (!serverSlot || !(serverSlot.imageUrl || serverSlot.previewUrl)) {
+                    mergedMonthlyPhotos[uk] = entry.slot;
+                  }
+                  if (entry.targetPhotoCol && (entry.driveUrl || entry.slot.imageUrl)) {
+                    const fallbackUrl = entry.driveUrl || entry.slot.imageUrl;
+                    (DB.renters || []).forEach(r => {
+                      const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+                      const sameId = entry.renterId && String(r.RenterID || "") === String(entry.renterId);
+                      const sameAadh = entry.aadhaar && entry.aadhaar.length === 12 && rAadh === entry.aadhaar && String(r.Status || "").toLowerCase() === "active";
+                      const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, entry.propName, entry.flatName) && String(r.Status || "").toLowerCase() === "active";
+                      if ((sameId || sameAadh || sameFlat) && !r[entry.targetPhotoCol]) {
+                        r[entry.targetPhotoCol] = fallbackUrl;
+                      }
+                    });
+                  }
+                } else {
+                  delete window.__recentMonthlyPhotoUploads[uk];
+                }
+              });
+            }
+
             const mergedScreenshotReqs = trustServerMonthly
               ? ((res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object") ? res.globalConfig.screenshotRequests : {})
               : {
@@ -17315,7 +17641,7 @@ function formatMonthLabel(rawVal) {
             </div>
             <div class="renter-identity">
               <div class="renter-avatar">
-                <img src="${renter?.ProfileImageURL || 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E'}" alt="Avatar">
+                <img onerror="handleDriveImgFallback(this)" src="${renter?.ProfileImageURL ? normalizeGoogleDriveImageUrl(renter.ProfileImageURL) : 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E'}" alt="Avatar">
               </div>
               <div class="renter-name">${renter ? renter.RenterName : 'Vacant / Ready'}</div>
             </div>
@@ -17513,7 +17839,7 @@ function formatMonthLabel(rawVal) {
             </div>
             <div class="renter-identity">
               <div class="renter-avatar">
-                <img src="${renter?.ProfileImageURL || 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E'}" alt="Avatar">
+                <img onerror="handleDriveImgFallback(this)" src="${renter?.ProfileImageURL ? normalizeGoogleDriveImageUrl(renter.ProfileImageURL) : 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E'}" alt="Avatar">
               </div>
               <div class="renter-name">${renter ? renter.RenterName : 'Vacant / Ready'}</div>
             </div>
@@ -19000,6 +19326,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function openSettingsModal(initialSubTabId = "") {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       const isAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
       const isManager = String(activeRole || "").trim().toLowerCase() === "manager";
       if (!isAdmin && (!isManager || !hasAnySettingsPermission())) {
@@ -19170,9 +19499,22 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      // Strictly display ONLY Active renters — left/past/vacated renters are automatically excluded
+      // Strictly display ONLY Active renters who ALSO have an Active registered Renter User Account
+      const registeredRenterAccounts = (Array.isArray(DB.users) ? DB.users : []).filter(u => {
+        const uRole = String(u.Role || "").trim().toLowerCase();
+        const uSt = String(u.Status || u.AccountStatus || "Active").trim().toLowerCase();
+        return uRole === "renter" && uSt === "active";
+      });
       const activeRentersOnly = (Array.isArray(DB.renters) ? DB.renters : []).filter(r => {
-        return String(r.Status || "Active").trim().toLowerCase() === "active";
+        if (String(r.Status || "Active").trim().toLowerCase() !== "active") return false;
+        if (registeredRenterAccounts.length === 0) return false;
+        const rAadh = normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "");
+        return registeredRenterAccounts.some(u => {
+          const uAadh = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "");
+          if (rAadh.length === 12 && uAadh.length === 12 && rAadh === uAadh) return true;
+          if (u.AssignedProperty && u.AssignedFlat && isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, r.PropertyName, r.FlatName)) return true;
+          return false;
+        });
       });
 
       const cardsData = [];
@@ -19252,6 +19594,16 @@ function formatMonthLabel(rawVal) {
               ? matchingProof.screenshotUrl
               : normalizeGoogleDriveImageUrl(matchingProof.screenshotUrl);
           }
+        }
+
+        // 2b. Fallback to Renter row Photo1URL..Photo4URL columns for the current/latest month if slot still empty
+        if (selectedMonth === currentMonthDefault) {
+          photoSlots.forEach(slot => {
+            if (!slot.url && r[slot.col] && !isPlaceholderImageUrl(r[slot.col])) {
+              const rawCol = String(r[slot.col]).trim();
+              slot.url = rawCol.startsWith("data:image") ? rawCol : normalizeGoogleDriveImageUrl(rawCol);
+            }
+          });
         }
 
         // 3. Check request / re-request state for this active renter & month
@@ -19349,7 +19701,7 @@ function formatMonthLabel(rawVal) {
                         title="Click to zoom in on ${slot.label}"
                         style="width:100%; height:130px; border-radius:9px; overflow:hidden; background:#090d16; border:1px solid rgba(56,189,248,0.35); cursor:zoom-in; position:relative;"
                       >
-                        <img src="${slot.url}" alt="${slot.label}" style="width:100%; height:100%; object-fit:cover; display:block;" />
+                        <img src="${slot.url}" alt="${slot.label}" onerror="handleDriveImgFallback(this)" style="width:100%; height:100%; object-fit:cover; display:block;" />
                         <span style="position:absolute; bottom:5px; right:5px; background:rgba(15,23,42,0.85); color:#fff; font-size:0.62rem; font-weight:800; padding:2px 7px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
                           <i class="fa-solid fa-magnifying-glass-plus"></i> Zoom
                         </span>
@@ -19599,6 +19951,67 @@ function formatMonthLabel(rawVal) {
           iconClass: "fa-solid fa-trash-can"
         }
       );
+    }
+
+    async function refreshAdminScreenshotVerification(btnEl = null) {
+      const btn = btnEl || document.getElementById("btnRefreshScreenshotVerify");
+      const prevHtml = btn ? btn.innerHTML : "";
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-rotate fa-spin"></i> Refreshing...`;
+      }
+      try {
+        inFlightGasFetchPromise = null;
+        lastGasSheetDataCache = null;
+        const freshRes = await fetchGasSheetData(true, true);
+        if (freshRes && freshRes.status === "success") {
+          if (Array.isArray(freshRes.users)) {
+            DB.users = freshRes.users;
+            saveLocalUsersMaster(freshRes.users);
+          }
+          if (Array.isArray(freshRes.renters)) {
+            DB.renters = freshRes.renters.map(r => {
+              ["Photo1URL", "Photo2URL", "Photo3URL", "Photo4URL", "ProfileImageURL", "IdentityImageURL", "IdentityBackImageURL"].forEach(col => {
+                if (r[col] && !isPlaceholderImageUrl(r[col])) {
+                  r[col] = String(r[col]).startsWith("data:image") ? r[col] : normalizeGoogleDriveImageUrl(r[col]);
+                }
+              });
+              return r;
+            });
+          }
+          if (freshRes.globalConfig && typeof freshRes.globalConfig === "object") {
+            if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+            DB.globalConfig = {
+              ...DB.globalConfig,
+              ...freshRes.globalConfig,
+              renterMonthlyPhotos: (freshRes.globalConfig.renterMonthlyPhotos && typeof freshRes.globalConfig.renterMonthlyPhotos === "object")
+                ? freshRes.globalConfig.renterMonthlyPhotos
+                : (DB.globalConfig.renterMonthlyPhotos || {}),
+              screenshotRequests: (freshRes.globalConfig.screenshotRequests && typeof freshRes.globalConfig.screenshotRequests === "object")
+                ? freshRes.globalConfig.screenshotRequests
+                : (DB.globalConfig.screenshotRequests || {}),
+              paymentProofs: Array.isArray(freshRes.globalConfig.paymentProofs)
+                ? freshRes.globalConfig.paymentProofs
+                : (DB.globalConfig.paymentProofs || [])
+            };
+            saveLocalGlobalConfigMaster(DB.globalConfig);
+          }
+          saveDbSnapshotToCache();
+        } else {
+          await syncDataLive(true);
+        }
+        renderAdminScreenshotVerificationGrid();
+        if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
+        renderAllDashboardUI();
+        triggerSideToast("Verification Refreshed", "Synced latest active renters & Google Drive photos from Google Sheets.", true);
+      } catch (err) {
+        triggerSideToast("Refresh Failed", "Could not reach Google Sheets right now. Please try again.", false);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = prevHtml || `<i class="fa-solid fa-rotate"></i> Refresh`;
+        }
+      }
     }
 
     function switchSettingsSubTab(evt, subTabId) {
@@ -20245,6 +20658,46 @@ function formatMonthLabel(rawVal) {
       runBillMath();
     }
 
+    function handleBillingDatePeriodChange() {
+      if (!selectedFlat) return;
+      const dateStr = toInputDateValue(document.getElementById("calcBillDatePicker")?.value || "");
+      const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
+      const periodRes = resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, dateStr, chosenMonth);
+      const statusTag = document.getElementById("calcMonthStatusTag");
+      const allFlatBills = (DB.bills || []).filter(b =>
+        isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)
+      );
+      const autoCarryBalance = periodRes.renter
+        ? calculateNetBalanceForRenterBeforeMonth(selectedFlat.PropertyName, selectedFlat.FlatName, periodRes.renter, chosenMonth)
+        : 0;
+      const matchedPeriodBill = allFlatBills.find(b => {
+        if (normalizeMonthYear(b.MonthYear) !== chosenMonth) return false;
+        if (periodRes.mode === "VACANT") return !b.RenterID && !b.TenantName && !b.TenantAadhaar;
+        return String(b.RenterID || "") === String(periodRes.renter?.RenterID || "");
+      }) || null;
+
+      if (matchedPeriodBill) {
+        currentEditingBillId = String(matchedPeriodBill.BillID || "");
+      } else {
+        currentEditingBillId = null;
+      }
+
+      if (!matchedPeriodBill && statusTag) {
+        const periodBadge = periodRes.mode === "VACANT"
+          ? "Vacant Period (Blank / No Renter Aadhaar)"
+          : (periodRes.mode === "PREVIOUS"
+              ? `Previous Renter: ${periodRes.renter?.RenterName || "Former Tenant"}`
+              : `Active Renter: ${periodRes.renter?.RenterName || "Current Tenant"}`);
+        statusTag.innerText = `${formatMonthLabel(chosenMonth)} • ${periodBadge}`;
+      }
+      const carryEl = document.getElementById("calcPrevCarryBalance");
+      if (carryEl && !matchedPeriodBill) {
+        carryEl.value = periodRes.renter && autoCarryBalance !== 0 ? autoCarryBalance : "";
+      }
+      renderPrevMonthPendingRentDetailsBox(chosenMonth, matchedPeriodBill, autoCarryBalance, allFlatBills);
+      runBillMath();
+    }
+
     function handleBillingMonthChange() {
       if (!selectedFlat) return;
       isExplicitBillEditMode = false;
@@ -20264,19 +20717,32 @@ function formatMonthLabel(rawVal) {
         normalizeMonthYear(b.MonthYear) === chosenMonth
       );
 
-      const existingBill = allFlatBillsForMonth.find(b =>
-        activeFlatRenterObj && String(b.RenterID || "") === String(activeFlatRenterObj.RenterID || "")
-      ) || allFlatBillsForMonth[0] || null;
+      const defaultPeriodDate = chosenMonth === currentCalMonth ? getLocalTodayIsoDate() : `${chosenMonth}-01`;
+      const periodResForMonth = resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, defaultPeriodDate, chosenMonth);
+
+      const existingBill = (currentEditingBillId && allFlatBillsForMonth.find(b => String(b.BillID || "") === currentEditingBillId))
+        || allFlatBillsForMonth.find(b => {
+            if (periodResForMonth.mode === "VACANT") return !b.RenterID && !b.TenantName && !b.TenantAadhaar;
+            return periodResForMonth.renter && String(b.RenterID || "") === String(periodResForMonth.renter.RenterID || "");
+          })
+        || allFlatBillsForMonth[0]
+        || null;
 
       const hasSubsequentBill = allFlatBills.some(b => normalizeMonthYear(b.MonthYear) > chosenMonth);
       const isPreviousMonth = (chosenMonth < currentCalMonth) || hasSubsequentBill;
 
-      const autoCarryBalance = calculateNetBalanceForRenterBeforeMonth(
-        selectedFlat.PropertyName,
-        selectedFlat.FlatName,
-        activeFlatRenterObj,
-        chosenMonth
-      );
+      const effectivePeriodRes = existingBill
+        ? resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, existingBill.BillDate || existingBill.PaymentDate || defaultPeriodDate, chosenMonth)
+        : periodResForMonth;
+
+      const autoCarryBalance = effectivePeriodRes.renter
+        ? calculateNetBalanceForRenterBeforeMonth(
+            selectedFlat.PropertyName,
+            selectedFlat.FlatName,
+            effectivePeriodRes.renter,
+            chosenMonth
+          )
+        : 0;
 
       renderPrevMonthPendingRentDetailsBox(chosenMonth, existingBill, autoCarryBalance, allFlatBills);
 
@@ -20567,7 +21033,9 @@ function formatMonthLabel(rawVal) {
         scaleLabelEl.innerText = "100%";
       }
       if (imgEl) {
-        imgEl.src = imgSrc;
+        imgEl.dataset.driveFallbackIdx = "0";
+        imgEl.onerror = function() { handleDriveImgFallback(this); };
+        imgEl.src = normalizeGoogleDriveImageUrl(imgSrc) || imgSrc;
         imgEl.style.transform = "scale(1)";
         imgEl.style.cursor = "zoom-in";
         imgEl.onclick = function() {
@@ -22378,6 +22846,28 @@ function formatMonthLabel(rawVal) {
             inp.setAttribute("disabled", "disabled");
           }
         });
+      } else if (activeRole === "Viewer") {
+        // Strict Read-Only Mode for Viewer across Calculation, History, Profile, Renter History & Graph
+        const navItems = modal.querySelectorAll(".flat-nav-item");
+        const tabContents = modal.querySelectorAll(".tab-content");
+        if (navItems[0]) navItems[0].style.display = "";
+        if (navBar) {
+          navBar.style.display = "";
+          navBar.style.gridTemplateColumns = window.innerWidth <= 768 ? "repeat(2, 1fr)" : "repeat(5, 1fr)";
+        }
+        navItems.forEach((el, idx) => el.classList.toggle("active", idx === 0));
+        tabContents.forEach((el, idx) => el.classList.toggle("active", idx === 0));
+
+        // Lock all inputs in Calculation & Profile (keep search/date filters, pagination & graph filters interactive)
+        modal.querySelectorAll("#tabCalc input, #tabCalc select, #tabCalc textarea, #tabProfile input, #tabProfile select, #tabProfile textarea").forEach(inp => {
+          inp.setAttribute("readonly", "readonly");
+          if (inp.tagName === "SELECT" || inp.type === "file" || inp.type === "date") {
+            inp.setAttribute("disabled", "disabled");
+          }
+        });
+        modal.querySelectorAll(".admin-only, #tabCalc button:not([onclick*='previewCurrentMeterProof']):not([onclick*='toggleMasterMeterReconDrawer']):not([onclick*='toggleLateFeeCalcDrawer']), #tabProfile button:not([onclick*='downloadRenterDocumentPhoto'])").forEach(el => {
+          el.style.display = "none";
+        });
       } else {
         const canBill = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
         const canEditProf = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("renterProfile"));
@@ -22627,14 +23117,41 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitBillCalculation() {
-      if (activeRole === "Viewer") return;
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
+
+      if (window.meterProofUploadPromise) {
+        try { await window.meterProofUploadPromise; } catch (e) {}
+      }
 
       const now = new Date();
       const fallbackMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker").value || fallbackMonth);
 
-      const currentRenterId = activeFlatRenterObj?.RenterID || "";
-      const currentTenantName = document.getElementById("renterName").value || activeFlatRenterObj?.RenterName || "Current Tenant";
+      const billDateInputVal = toInputDateValue(document.getElementById("calcBillDatePicker")?.value || "");
+      const effectiveBillDate = billDateInputVal || (chosenMonth === getCurrentCalendarYearMonth() ? getLocalTodayIsoDate() : `${chosenMonth}-01`);
+
+      const periodRes = resolveRenterForFlatPeriod(selectedFlat.PropertyName, selectedFlat.FlatName, effectiveBillDate, chosenMonth);
+      const periodRenter = periodRes.renter || null;
+      const isVacantPeriod = periodRes.mode === "VACANT";
+
+      const resolvedRenterId = isVacantPeriod ? "" : String(periodRenter?.RenterID || "");
+      const resolvedTenantName = isVacantPeriod
+        ? ""
+        : (periodRes.mode === "ACTIVE"
+            ? (document.getElementById("renterName")?.value?.trim() || periodRenter?.RenterName || "Current Tenant")
+            : (periodRenter?.RenterName || ""));
+      const resolvedTenantAadhaar = isVacantPeriod
+        ? ""
+        : normalizeAadhaar12(
+            periodRes.mode === "ACTIVE"
+              ? (document.getElementById("renterIdentityNum")?.value || periodRenter?.IdentityDocNumber || "")
+              : (periodRenter?.IdentityDocNumber || "")
+          );
+      const resolvedTenantMobile = isVacantPeriod
+        ? ""
+        : (periodRenter?.MobileNumber || periodRenter?.AltMobileNumber || "");
 
       const existingBillIdx = DB.bills.findIndex(b => {
         if (!isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) return false;
@@ -22644,10 +23161,13 @@ function formatMonthLabel(rawVal) {
           return true;
         }
         const bRenterId = String(b.RenterID || "").trim();
-        const sameRenter = (bRenterId && currentRenterId)
-          ? (bRenterId === currentRenterId)
-          : (String(b.TenantName || "").trim().toLowerCase() === String(currentTenantName).trim().toLowerCase());
-        return sameRenter;
+        if (isVacantPeriod) {
+          return !bRenterId && !String(b.TenantName || "").trim() && !String(b.TenantAadhaar || "").trim();
+        }
+        if (bRenterId && resolvedRenterId) {
+          return bRenterId === resolvedRenterId;
+        }
+        return String(b.TenantName || "").trim().toLowerCase() === String(resolvedTenantName).trim().toLowerCase();
       });
 
       if (existingBillIdx !== -1 && isCalculatorMonthLockedForEdits(chosenMonth)) {
@@ -22691,16 +23211,14 @@ function formatMonthLabel(rawVal) {
       const resolvedSnapshotContact = resolveFlatUpiAndContact(
         selectedFlat.PropertyName,
         selectedFlat,
-        activeFlatRenterObj
+        periodRenter
       );
       const snapshotUpiName = (existingBillRecord && existingBillRecord.UPIName) ? existingBillRecord.UPIName : (resolvedSnapshotContact.upiName || "");
       const snapshotUpiId = (existingBillRecord && existingBillRecord.UPIID) ? existingBillRecord.UPIID : (resolvedSnapshotContact.upiId || "");
       const snapshotContractMobile = (existingBillRecord && existingBillRecord.ContractMobile) ? existingBillRecord.ContractMobile : (resolvedSnapshotContact.contractMobile || "");
-      const snapshotTenantMobile = (existingBillRecord && existingBillRecord.TenantMobile) ? existingBillRecord.TenantMobile : (activeFlatRenterObj?.MobileNumber || activeFlatRenterObj?.AltMobileNumber || "");
-      const snapshotTenantName = (existingBillRecord && existingBillRecord.TenantName) ? existingBillRecord.TenantName : currentTenantName;
 
       const typedMeterProof = (document.getElementById("calcMeterProofUrl")?.value || "").trim();
-      const meterProofVal = typedMeterProof || (window.currentMeterProofDeletedExplicitly ? "" : (existingBillRecord?.MeterProofUrl || ""));
+      const meterProofVal = typedMeterProof || window.currentMeterProofPreviewDataUrl || (window.currentMeterProofDeletedExplicitly ? "" : (existingBillRecord?.MeterProofUrl || ""));
       window.currentMeterProofDeletedExplicitly = false;
       const collectedSplits = typeof collectSplitPaymentsFromDOM === "function"
         ? collectSplitPaymentsFromDOM()
@@ -22711,7 +23229,8 @@ function formatMonthLabel(rawVal) {
         PropertyName: selectedFlat.PropertyName,
         FlatName: selectedFlat.FlatName,
         MonthYear: chosenMonth,
-        TenantName: snapshotTenantName,
+        TenantName: resolvedTenantName,
+        TenantAadhaar: resolvedTenantAadhaar,
         BaseRent: parseFloat(document.getElementById("calcRent").value) || 0,
         ElecPrev: elecPrev,
         ElecCurr: elecCurr,
@@ -22732,17 +23251,17 @@ function formatMonthLabel(rawVal) {
         AdditionalAmount: netAddAmt,
         TotalBilled: totalBilled,
         PaidAmount: paidAmount,
-        PaymentDate: toInputDateValue(document.getElementById("calcPaymentDate")?.value || existingBillRecord?.PaymentDate) || getLocalTodayIsoDate(),
+        PaymentDate: toInputDateValue(document.getElementById("calcPaymentDate")?.value || existingBillRecord?.PaymentDate) || effectiveBillDate,
         PaymentMode: document.getElementById("calcPayMode").value,
         Status: billStatus,
         Notes: document.getElementById("calcNotes").value,
-        BillDate: toInputDateValue(document.getElementById("calcBillDatePicker")?.value || existingBillRecord?.BillDate) || getLocalTodayIsoDate(),
-        RenterID: existingBillRecord?.RenterID || currentRenterId,
+        BillDate: effectiveBillDate,
+        RenterID: resolvedRenterId,
         PrevCarryBalance: prevCarryBalance,
         UPIName: snapshotUpiName,
         UPIID: snapshotUpiId,
         ContractMobile: snapshotContractMobile,
-        TenantMobile: snapshotTenantMobile,
+        TenantMobile: resolvedTenantMobile,
         MeterProofUrl: meterProofVal,
         SplitPayments: collectedSplits,
         CalculationDone: true,
@@ -22779,13 +23298,14 @@ function formatMonthLabel(rawVal) {
       renderAllRentersGraphForFlat(selectedFlat.PropertyName, selectedFlat.FlatName);
       if (typeof computeMoveOutSettlementPreview === "function") computeMoveOutSettlementPreview();
 
-      await sendFirebaseAction({
+      const billRes = await sendFirebaseAction({
         action: "recordBill",
         billId: newBillObj.BillID,
         propertyName: newBillObj.PropertyName,
         flatName: newBillObj.FlatName,
         monthYear: chosenMonth,
         tenantName: newBillObj.TenantName,
+        tenantAadhaar: newBillObj.TenantAadhaar,
         baseRent: newBillObj.BaseRent,
         elecPrev: newBillObj.ElecPrev,
         elecCurr: newBillObj.ElecCurr,
@@ -22817,10 +23337,26 @@ function formatMonthLabel(rawVal) {
         upiName: snapshotUpiName,
         upiId: snapshotUpiId,
         contractMobile: snapshotContractMobile,
-        tenantMobile: snapshotTenantMobile,
+        tenantMobile: resolvedTenantMobile,
+        meterProofBase64: String(meterProofVal).startsWith("data:image") ? meterProofVal : "",
         meterProofUrl: meterProofVal,
         splitPayments: collectedSplits
       });
+
+      if (billRes && billRes.meterProofUrl) {
+        const finalProofUrl = String(billRes.meterProofUrl).startsWith("data:image")
+          ? billRes.meterProofUrl
+          : normalizeGoogleDriveImageUrl(billRes.meterProofUrl);
+        newBillObj.MeterProofUrl = finalProofUrl;
+        window.currentMeterProofPreviewDataUrl = finalProofUrl;
+        const mUrlEl = document.getElementById("calcMeterProofUrl");
+        if (mUrlEl && normalizeMonthYear(document.getElementById("calcMonthPicker")?.value) === chosenMonth) {
+          mUrlEl.value = finalProofUrl;
+          if (typeof syncMeterProofButtonsVisibility === "function") syncMeterProofButtonsVisibility();
+        }
+        saveDbSnapshotToCache();
+        populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
+      }
     }
 
     /**
@@ -22955,7 +23491,7 @@ function formatMonthLabel(rawVal) {
                 <i class="fa-solid fa-receipt"></i> Receipt
               </button>
               ${(activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"))) ? `
-              <button type="button" class="btn-ledger-action edit-btn admin-only" onclick="editBillMonthFromHistory('${cleanMonth}')" title="Edit Everything for This Month">
+              <button type="button" class="btn-ledger-action edit-btn admin-only" onclick="editBillMonthFromHistory('${cleanMonth}', '${String(bill.BillID || "").replace(/'/g, "\\'")}')" title="Edit Everything for This Month">
                 <i class="fa-solid fa-pen-to-square"></i> Edit
               </button>
               ` : ""}
@@ -22969,12 +23505,20 @@ function formatMonthLabel(rawVal) {
     // Helper: Finds the matching renter profile and extracts their saved mobile number
     function findRenterForBill(bill) {
       if (!bill) return null;
+      // Bills generated during a vacant period must remain unlinked (normal/blank receipt)
+      if (!bill.RenterID && !bill.TenantName && !bill.TenantAadhaar) {
+        return null;
+      }
       // 1. Match by explicit RenterID on the bill
       if (bill.RenterID) {
         const byId = (DB.renters || []).find(r => String(r.RenterID || "").trim() === String(bill.RenterID).trim());
         if (byId) return byId;
       }
-      // 2. Match by TenantName within the same Property & Flat
+      // 2. Match by period JoinDate/EndDate so bills before active renter JoinDate map to the historical renter or vacant
+      const periodRes = resolveRenterForFlatPeriod(bill.PropertyName, bill.FlatName, bill.BillDate || bill.PaymentDate || "", bill.MonthYear);
+      if (periodRes.mode === "VACANT") return null;
+      if (periodRes.renter) return periodRes.renter;
+      // 3. Match by TenantName within the same Property & Flat
       if (bill.TenantName) {
         const targetName = String(bill.TenantName).trim().toLowerCase();
         const byName = (DB.renters || []).find(r =>
@@ -22983,37 +23527,27 @@ function formatMonthLabel(rawVal) {
         );
         if (byName) return byName;
       }
-      // 3. Requirement 8: Fallback to the currently active renter of this flat so active renters always auto-fetch their profile mobile number
-      const activeInFlat = (DB.renters || []).find(r =>
-        isSamePropAndFlat(r.PropertyName, r.FlatName, bill.PropertyName, bill.FlatName) &&
-        String(r.Status || "").trim().toLowerCase() === "active"
-      );
-      if (activeInFlat) return activeInFlat;
-      if (activeFlatRenterObj) return activeFlatRenterObj;
       return null;
     }
 
-    // Requirement 8: Automatically resolve the active renter's mobile number from their profile
+    // Requirement 8: Automatically resolve the renter's mobile number (returns blank for vacant-period receipts)
     function resolveReceiptTargetMobile(bill, renterObj) {
-      const domRenterMobile = document.getElementById("renterMobile")?.value?.trim() || "";
-      const domRenterAltMobile = document.getElementById("renterAltMobile")?.value?.trim() || "";
+      if (!renterObj && !bill?.TenantName && !bill?.RenterID) return "";
       const activeInFlat = bill
         ? (DB.renters || []).find(r =>
             isSamePropAndFlat(r.PropertyName, r.FlatName, bill.PropertyName, bill.FlatName) &&
             String(r.Status || "").trim().toLowerCase() === "active"
           )
         : null;
+      const isSameRenterAsActive = Boolean(
+        renterObj && activeInFlat && String(renterObj.RenterID || "") === String(activeInFlat.RenterID || "")
+      );
 
       return (
         renterObj?.MobileNumber ||
         renterObj?.AltMobileNumber ||
-        activeInFlat?.MobileNumber ||
-        activeInFlat?.AltMobileNumber ||
-        activeFlatRenterObj?.MobileNumber ||
-        activeFlatRenterObj?.AltMobileNumber ||
         bill?.TenantMobile ||
-        domRenterMobile ||
-        domRenterAltMobile ||
+        (isSameRenterAsActive ? (activeInFlat?.MobileNumber || activeInFlat?.AltMobileNumber || "") : "") ||
         ""
       );
     }
@@ -24426,14 +24960,17 @@ function formatMonthLabel(rawVal) {
     }
 
     // Action Button 2: Edit Everything for That Month (Switches to Calculator & Unlocks All Details for Editing)
-    function editBillMonthFromHistory(monthYear) {
-      if (activeRole === "Viewer") return;
+    function editBillMonthFromHistory(monthYear, billId = "") {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       const cleanM = normalizeMonthYear(monthYear);
 
-      const matchedBill = (DB.bills || []).find(b =>
-        isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
-        normalizeMonthYear(b.MonthYear) === cleanM
-      );
+      const matchedBill = (billId && (DB.bills || []).find(b => String(b.BillID || "").trim() === String(billId).trim()))
+        || (DB.bills || []).find(b =>
+          isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+          normalizeMonthYear(b.MonthYear) === cleanM
+        );
       currentEditingBillId = matchedBill ? String(matchedBill.BillID || "") : null;
 
       const modal = document.getElementById("flatDetailsModal");
@@ -24608,7 +25145,7 @@ function formatMonthLabel(rawVal) {
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px; padding:8px 12px; cursor:pointer;" onclick="event.stopPropagation(); openTenantProfileByHistorySearchIndex(${idx})">
                       <div style="display:flex; align-items:center; gap:10px;">
                         <div class="renter-avatar" style="width:40px; height:40px; flex-shrink:0;">
-                          <img src="${avatarSrc}" alt="${r.RenterName || 'Tenant'}">
+                          <img src="${avatarSrc}" alt="${r.RenterName || 'Tenant'}" onerror="handleDriveImgFallback(this)">
                         </div>
                         <div>
                           <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
@@ -24794,7 +25331,7 @@ function formatMonthLabel(rawVal) {
             <!-- Requirement 8: Concise Renter Card (Name, Mobile, Aadhaar, Stay Month/Year Only) -->
             <div style="display:flex; flex-wrap:wrap; align-items:center; gap:14px;">
               <div class="renter-avatar" style="width:52px; height:52px; flex-shrink:0; cursor:pointer;" onclick="openTenantFullProfilePopup('${safeId}', '${safeProp}', '${safeFlat}', '${safeName}')">
-                <img src="${avatarSrc}" alt="${targetRenter.RenterName || 'Tenant'}">
+                <img src="${avatarSrc}" alt="${targetRenter.RenterName || 'Tenant'}" onerror="handleDriveImgFallback(this)">
               </div>
               <div style="flex:1; min-width:200px;">
                 <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
@@ -25045,7 +25582,7 @@ function formatMonthLabel(rawVal) {
         contentEl.innerHTML = `
           <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding-bottom:14px; border-bottom:1px solid var(--glass-border); margin-bottom:14px; padding-right:34px;">
             <div class="renter-avatar" style="width:64px; height:64px; flex-shrink:0;">
-              <img src="${profileImgSrc}" alt="${targetRenter.RenterName || 'Tenant'}">
+              <img src="${profileImgSrc}" alt="${targetRenter.RenterName || 'Tenant'}" onerror="handleDriveImgFallback(this)">
             </div>
             <div style="flex:1; min-width:200px;">
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -25082,7 +25619,7 @@ function formatMonthLabel(rawVal) {
             <div class="matrix-col photo-card-profile" style="padding:10px; text-align:center;">
               <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">1. Renter Profile Photo</div>
               <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${profileImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Profile Photo')">
-                <img src="${profileImgSrc}" alt="Profile Photo">
+                <img src="${profileImgSrc}" alt="Profile Photo" onerror="handleDriveImgFallback(this)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
               </div>
               ${!isPlaceholderImageUrl(profileImgSrc) ? `<button type="button" class="btn-ledger-action" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('profile', '${profileImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Photo</button>` : ''}
@@ -25090,7 +25627,7 @@ function formatMonthLabel(rawVal) {
             <div class="matrix-col photo-card-aadhaar" style="padding:10px; text-align:center;">
               <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">2. Aadhaar Card (Front Side)</div>
               <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Aadhaar Card (Front Side)')">
-                <img src="${identityImgSrc}" alt="Aadhaar / ID Document (Front)">
+                <img src="${identityImgSrc}" alt="Aadhaar / ID Document (Front)" onerror="handleDriveImgFallback(this)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
               </div>
               ${!isPlaceholderImageUrl(identityImgSrc) ? `<button type="button" class="btn-ledger-action" style="background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity', '${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Front</button>` : ''}
@@ -25098,7 +25635,7 @@ function formatMonthLabel(rawVal) {
             <div class="matrix-col photo-card-aadhaar" style="padding:10px; text-align:center;">
               <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">3. Aadhaar Card (Back Side)</div>
               <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${identityBackImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Aadhaar Card (Back Side)')">
-                <img src="${identityBackImgSrc}" alt="Aadhaar / ID Document (Back)">
+                <img src="${identityBackImgSrc}" alt="Aadhaar / ID Document (Back)" onerror="handleDriveImgFallback(this)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
               </div>
               ${!isPlaceholderImageUrl(identityBackImgSrc) ? `<button type="button" class="btn-ledger-action" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity_back', '${identityBackImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Back</button>` : ''}
@@ -29453,15 +29990,16 @@ function formatMonthLabel(rawVal) {
       );
     }
 
-    // Requirement 1 & 2: Compress (Strictly <= 38,000 chars so Firebase Firestore cell storage NEVER drops Aadhaar or Profile photos), Preview, Auto-Upload to Cloud Drive & Delete Document Slot
+    // Requirement 1 & 2: Compress (Preserve PNG format when uploaded, optimize size for Drive/Sheets), Preview & Upload
     function compressImageFileToDataUrl(file, maxDimension = 760, quality = 0.78) {
+      const isPng = String(file?.type || "").toLowerCase() === "image/png" || /\.png$/i.test(String(file?.name || ""));
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const img = new Image();
           img.onload = () => {
             const canvas = document.createElement("canvas");
-            let curMax = maxDimension;
+            let curMax = isPng ? Math.max(maxDimension, 1080) : maxDimension;
             let curQuality = quality;
             let dataUrl = "";
 
@@ -29480,15 +30018,21 @@ function formatMonthLabel(rawVal) {
               canvas.width = Math.max(1, width);
               canvas.height = Math.max(1, height);
               const ctx = canvas.getContext("2d");
-              ctx.fillStyle = "#ffffff";
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-              dataUrl = canvas.toDataURL("image/jpeg", curQuality);
-              if (dataUrl.length <= 38000) {
-                break;
+              if (!isPng) {
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                dataUrl = canvas.toDataURL("image/jpeg", curQuality);
+                if (dataUrl.length <= 38000) break;
+                curMax = Math.round(curMax * 0.8);
+                curQuality = Math.max(0.45, curQuality - 0.1);
+              } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                dataUrl = canvas.toDataURL("image/png");
+                if (dataUrl.length <= 420000) break;
+                curMax = Math.round(curMax * 0.75);
               }
-              curMax = Math.round(curMax * 0.8);
-              curQuality = Math.max(0.45, curQuality - 0.1);
             }
             resolve(dataUrl);
           };
@@ -29644,6 +30188,8 @@ function formatMonthLabel(rawVal) {
           "warning"
         );
 
+        const mimeMatch = String(compressedDataUrl || "").match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
+        const docMime = mimeMatch ? mimeMatch[1].toLowerCase() : (file.type || "image/jpeg");
         const res = await sendFirebaseAction({
           action: "uploadRenterDocument",
           propertyName: selectedFlat.PropertyName,
@@ -29654,7 +30200,7 @@ function formatMonthLabel(rawVal) {
           rentAmount: selectedFlat.RentAmount || 0,
           docType: docType,
           fileName: file.name,
-          mimeType: "image/jpeg",
+          mimeType: docMime,
           base64Data: compressedDataUrl
         });
 
@@ -29697,7 +30243,10 @@ function formatMonthLabel(rawVal) {
     }
 
     async function deleteRenterDocumentFromCloud(docType) {
-      if (activeRole === "Viewer" || !selectedFlat) return;
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
+      if (!selectedFlat) return;
       const isIdentityBack = docType === "identity_back" || docType === "aadhaar_back";
       const isIdentityFront = docType === "identity" || docType === "aadhaar";
       const docLabel = isIdentityBack ? "Aadhaar Card (Back Side)" : (isIdentityFront ? "Aadhaar Card (Front Side)" : "Profile Photo");
@@ -30954,7 +31503,9 @@ function formatMonthLabel(rawVal) {
       updateLiveChatUnreadBadge();
 
       setTimeout(() => {
-        document.getElementById("floatingChatInput")?.focus();
+        if (activeRole !== "Viewer") {
+          document.getElementById("floatingChatInput")?.focus();
+        }
       }, 60);
     }
 
@@ -30992,7 +31543,7 @@ function formatMonthLabel(rawVal) {
           <div style="text-align:center; padding:30px 14px; color:var(--text-muted); font-size:0.8rem;">
             <i class="fa-solid fa-lock" style="font-size:1.5rem; color:#10b981; margin-bottom:8px; display:block;"></i>
             <strong style="color:var(--text-main); display:block; margin-bottom:4px;">Private 1-on-1 Conversation</strong>
-            Send a message below to start chatting directly.
+            ${activeRole === "Viewer" ? "View-only mode: messaging is disabled." : "Send a message below to start chatting directly."}
           </div>
         `;
         return;
@@ -31025,6 +31576,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function sendLiveChatMessage(source = "floating") {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access and cannot send messages.", false);
+      }
       const inputEl = document.getElementById("floatingChatInput") || document.getElementById("chatWidgetInput") || document.getElementById("settingsChatInput");
       if (!inputEl) return;
       const text = inputEl.value.trim();
@@ -31275,6 +31829,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function openSubmitPaymentProofModalForBill(billId = "") {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       let bill = billId ? (DB.bills || []).find(b => String(b.BillID || "") === String(billId)) : null;
       const propName = bill?.PropertyName || selectedFlat?.PropertyName || selectedProperty || "";
       const flatName = bill?.FlatName || selectedFlat?.FlatName || "";
@@ -31354,6 +31911,9 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitRenterPaymentProofRecord() {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       const billId = document.getElementById("proofTargetBillId")?.value || "";
       const propName = document.getElementById("proofTargetProp")?.value || "";
       const flatName = document.getElementById("proofTargetFlat")?.value || "";
@@ -31370,43 +31930,48 @@ function formatMonthLabel(rawVal) {
       }
 
       const proofId = "PROOF-" + Date.now();
+      let finalScreenshotUrl = attachedScreenshot;
+      const cleanMonth = normalizeMonthYear(monthYear) || new Date().toISOString().slice(0, 7);
+
+      if (attachedScreenshot && attachedScreenshot.startsWith("data:image")) {
+        const mimeMatch = String(attachedScreenshot).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
+        const proofMime = mimeMatch ? mimeMatch[1].toLowerCase() : "image/jpeg";
+        const ext = proofMime === "image/png" ? "png" : (proofMime === "image/webp" ? "webp" : "jpg");
+        const upRes = await sendFirebaseAction({
+          action: "uploadRenterMonthlyPhoto",
+          username: activeUser || "",
+          propertyName: propName,
+          flatName: flatName,
+          renterName: tenantName,
+          monthYear: cleanMonth,
+          category: "completed_payment",
+          fileName: `PaymentProof_${propName}_Flat_${flatName}_${utr}.${ext}`,
+          mimeType: proofMime,
+          base64Data: attachedScreenshot
+        });
+        finalScreenshotUrl = upRes && (upRes.imageUrl || upRes.previewUrl)
+          ? normalizeGoogleDriveImageUrl(upRes.imageUrl || upRes.previewUrl)
+          : attachedScreenshot;
+      }
+
       const list = getStoredPaymentProofs();
       const newProof = {
         id: proofId,
         billId,
         propertyName: propName,
         flatName: flatName,
-        monthYear: monthYear,
+        monthYear: cleanMonth,
         tenantName: tenantName,
         submittedBy: activeUser || tenantName,
         amount: amount,
         utr: utr,
         mode: mode,
-        screenshotUrl: attachedScreenshot,
+        screenshotUrl: finalScreenshotUrl,
         status: "Pending",
         submittedAt: new Date().toLocaleString("en-IN")
       };
       list.unshift(newProof);
       saveStoredPaymentProofs(list);
-
-      if (attachedScreenshot && attachedScreenshot.startsWith("data:image")) {
-        const upRes = await sendFirebaseAction({
-          action: "uploadRenterMonthlyPhoto",
-          propertyName: propName,
-          flatName: flatName,
-          renterName: tenantName,
-          monthYear: normalizeMonthYear(monthYear) || new Date().toISOString().slice(0, 7),
-          category: "completed_payment",
-          fileName: `PaymentProof_${propName}_Flat_${flatName}_${utr}.jpg`,
-          mimeType: "image/jpeg",
-          base64Data: attachedScreenshot
-        });
-        const driveProofUrl = upRes && (upRes.imageUrl || upRes.previewUrl)
-          ? normalizeGoogleDriveImageUrl(upRes.imageUrl || upRes.previewUrl)
-          : attachedScreenshot;
-        newProof.screenshotUrl = driveProofUrl;
-        saveStoredPaymentProofs(list);
-      }
 
       const overlay = document.getElementById("submitPaymentProofModalOverlay");
       if (overlay) overlay.classList.remove("active");
@@ -31593,6 +32158,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function applyComputedLateFeeToBill() {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       const { overdueDays, penalty } = computeAutomatedLateFeePreview();
       if (penalty <= 0) {
         return triggerSideToast("No Late Fee Applicable", "Current bill is not past the configured due date or penalty is ₹0.", "warning");
@@ -31619,6 +32187,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function addSplitPaymentInstallmentRow(data = null) {
+      if (!data && activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       const container = document.getElementById("splitInstallmentsListContainer") || document.getElementById("splitPaymentRowsContainer");
       if (!container) return;
       let d = data;
@@ -31835,6 +32406,9 @@ function formatMonthLabel(rawVal) {
     }
 
     async function applyScheduledRentEscalationNow() {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       if (!selectedFlat) return;
       const baseRent = parseFloat(document.getElementById("profRent")?.value) || 0;
       const pct = parseFloat(document.getElementById("profEscalationPct")?.value) || 0;
@@ -31868,6 +32442,9 @@ function formatMonthLabel(rawVal) {
     }
 
     async function saveFlatApplianceChecklist() {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       if (!selectedFlat) return;
       const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
       const notesEl = document.getElementById("invExtraNotes") || document.getElementById("invConditionNotes");
@@ -31939,43 +32516,65 @@ function formatMonthLabel(rawVal) {
     }
 
     async function handleMeterProofUpload(inputEl) {
+      if (activeRole === "Viewer" || activeRole === "Renter") {
+        return triggerSideToast("View-Only Mode", "You do not have permission to upload sub-meter proof here.", false);
+      }
       const file = inputEl?.files?.[0];
       if (!file) return;
-      try {
-        const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
-        window.currentMeterProofPreviewDataUrl = compressedDataUrl;
-        window.currentMeterProofDeletedExplicitly = false;
-        const urlEl = document.getElementById("calcMeterProofUrl");
-        if (urlEl) urlEl.value = "";
-        syncMeterProofButtonsVisibility();
-        triggerSideToast("Uploading Meter Photo", "Saving sub-meter reading photo directly to Google Drive folder...", "warning");
-        if (selectedFlat) {
-          const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "") || new Date().toISOString().slice(0, 7);
-          const res = await sendFirebaseAction({
-            action: "uploadRenterMonthlyPhoto",
-            username: activeUser || "",
-            propertyName: selectedFlat.PropertyName,
-            flatName: selectedFlat.FlatName,
-            renterId: activeFlatRenterObj?.RenterID || "",
-            identityDocNumber: activeFlatRenterObj?.IdentityDocNumber || "",
-            renterName: document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Tenant",
-            monthYear: chosenMonth,
-            category: "electricity_meter",
-            fileName: `MeterProof_${selectedFlat.PropertyName}_Flat_${selectedFlat.FlatName}_${chosenMonth}.jpg`,
-            mimeType: "image/jpeg",
-            base64Data: compressedDataUrl
-          });
-          if (res && (res.imageUrl || res.url)) {
-            const driveUrl = normalizeGoogleDriveImageUrl(res.imageUrl || res.url);
-            window.currentMeterProofPreviewDataUrl = driveUrl;
-            if (urlEl) urlEl.value = driveUrl;
-          }
+      const uploadTask = (async () => {
+        try {
+          const compressedDataUrl = await compressImageFileToDataUrl(file, 1080, 0.82);
+          const mimeMatch = String(compressedDataUrl || "").match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
+          const meterMime = mimeMatch ? mimeMatch[1].toLowerCase() : (file.type || "image/jpeg");
+          const ext = meterMime === "image/png" ? "png" : (meterMime === "image/webp" ? "webp" : "jpg");
+          window.currentMeterProofPreviewDataUrl = compressedDataUrl;
+          window.currentMeterProofDeletedExplicitly = false;
+          const urlEl = document.getElementById("calcMeterProofUrl");
+          if (urlEl) urlEl.value = "";
           syncMeterProofButtonsVisibility();
-          triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder & linked to Google Sheet!", true);
+          triggerSideToast("Uploading Meter Photo", "Saving sub-meter reading photo directly to Google Drive folder...", "warning");
+          if (selectedFlat) {
+            const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "") || new Date().toISOString().slice(0, 7);
+            const res = await sendFirebaseAction({
+              action: "uploadRenterMonthlyPhoto",
+              username: activeUser || "",
+              propertyName: selectedFlat.PropertyName,
+              flatName: selectedFlat.FlatName,
+              renterId: activeFlatRenterObj?.RenterID || "",
+              identityDocNumber: activeFlatRenterObj?.IdentityDocNumber || "",
+              renterName: document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Tenant",
+              monthYear: chosenMonth,
+              category: "electricity_meter",
+              fileName: `MeterProof_${selectedFlat.PropertyName}_Flat_${selectedFlat.FlatName}_${chosenMonth}.${ext}`,
+              mimeType: meterMime,
+              base64Data: compressedDataUrl
+            });
+            const resolvedUrl = res && (res.imageUrl || res.previewUrl || res.url)
+              ? normalizeGoogleDriveImageUrl(res.imageUrl || res.previewUrl || res.url)
+              : "";
+            if (resolvedUrl) {
+              window.currentMeterProofPreviewDataUrl = resolvedUrl;
+              if (urlEl) urlEl.value = resolvedUrl;
+              const existingBillObj = (DB.bills || []).find(b =>
+                isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+                normalizeMonthYear(b.MonthYear) === chosenMonth
+              );
+              if (existingBillObj) {
+                existingBillObj.MeterProofUrl = resolvedUrl;
+                saveDbSnapshotToCache();
+              }
+            }
+            syncMeterProofButtonsVisibility();
+            triggerSideToast("Saved to Google Drive", "Sub-meter photo saved directly in your Google Drive folder & linked to Google Sheet!", true);
+          }
+        } catch (e) {
+          triggerSideToast("Upload Error", "Could not process meter photo.", false);
+        } finally {
+          window.meterProofUploadPromise = null;
         }
-      } catch (e) {
-        triggerSideToast("Upload Error", "Could not process meter photo.", false);
-      }
+      })();
+      window.meterProofUploadPromise = uploadTask;
+      return uploadTask;
     }
 
     function previewCurrentMeterProof() {
@@ -32067,6 +32666,9 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitRenterMaintenanceTicket() {
+      if (activeRole === "Viewer") {
+        return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
       const cat = document.getElementById("renterTicketCategory")?.value || "Plumbing";
       const prio = document.getElementById("renterTicketPriority")?.value || "Normal";
       const desc = (document.getElementById("renterTicketDesc")?.value || "").trim();
