@@ -3576,11 +3576,11 @@
     border-color: #e2e8f0;
   }
   body.theme-white .renter-history-row-item:hover {
-    background: rgba(255, 255, 255, 0.10) !important;
+    background: rgba(255, 255, 255, 0.20) !important;
     border-color: #6366f1;
   }
 
-  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 90% transparent (10% opacity) */
+  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 80% transparent (20% opacity) */
   :where(.renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box)) {
     background: transparent !important;
     background-color: transparent !important;
@@ -3618,8 +3618,8 @@
   .renter-modern-portal label[style*="border"],
   .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(15, 23, 42, 0.10) !important;
-    background-color: rgba(15, 23, 42, 0.10) !important;
+    background: rgba(15, 23, 42, 0.20) !important;
+    background-color: rgba(15, 23, 42, 0.20) !important;
     background-image: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -3654,8 +3654,8 @@
   body.theme-white .renter-modern-portal label[style*="border"],
   body.theme-white .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(255, 255, 255, 0.10) !important;
-    background-color: rgba(255, 255, 255, 0.10) !important;
+    background: rgba(255, 255, 255, 0.20) !important;
+    background-color: rgba(255, 255, 255, 0.20) !important;
     background-image: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -16419,10 +16419,10 @@ function formatMonthLabel(rawVal) {
         const latestBillFlatLabel = latestBill ? String(latestBill.SnapshotFlatName || latestBill.FlatName || targetFlat || "") : targetFlat;
 
         const dashboardPaymentCircleBoxHtml = `
-          <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="margin: 14px auto 0 0; width: 100%; max-width: 410px; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.10); border: 1.5px solid var(--glass-border);">
+          <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="margin: 14px auto 0 0; width: 100%; max-width: 410px; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.20); border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:9px;">
-                <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.10); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.20); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                   <i class="fa-solid fa-chart-pie"></i>
                 </div>
                 <div>
@@ -16434,7 +16434,7 @@ function formatMonthLabel(rawVal) {
                   </div>
                 </div>
               </div>
-              <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.10); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+              <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.20); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
                 ${latestBillDateLabel}
               </span>
             </div>
@@ -16471,7 +16471,7 @@ function formatMonthLabel(rawVal) {
                     ></circle>
                   ` : ""}
                 </svg>
-                <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.10); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
+                <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.20); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
                   <span style="font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
                   <strong style="font-size:1.05rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                   <span style="font-size:0.6rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
@@ -16480,29 +16480,29 @@ function formatMonthLabel(rawVal) {
 
               <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
               <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
-                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.10); border:1px solid rgba(99,102,241,0.38); text-align:center;">
+                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.20); border:1px solid rgba(99,102,241,0.38); text-align:center;">
                   <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
                   <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                 </div>
-                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.10); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
+                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.20); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
                   <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
                   <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
                 </div>
-                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.10); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
+                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.20); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
                   <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
                   <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
                 </div>
               </div>
 
               ${chartAdvanceAmt > 0 ? `
-                <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.10); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.20); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
                   <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
                   <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
                 </div>
               ` : ""}
 
               <!-- Latest Receipt Box inside Left-Side Latest Receipt Payment Overview -->
-              <div id="renterDashboardLatestReceiptBar" style="width:100%; padding:10px 12px; border-radius:12px; background:rgba(15,23,42,0.10); border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+              <div id="renterDashboardLatestReceiptBar" style="width:100%; padding:10px 12px; border-radius:12px; background:rgba(15,23,42,0.20); border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                 <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
                   <div style="width:30px; height:30px; border-radius:8px; border:1px solid rgba(56,189,248,0.38); color:#38bdf8; display:flex; align-items:center; justify-content:center; font-size:0.85rem; flex-shrink:0;">
                     <i class="fa-solid fa-receipt"></i>
@@ -17087,15 +17087,11 @@ function formatMonthLabel(rawVal) {
                   </div>
                 </div>
 
-                <!-- Right Side of Verified Residential Portal: Icon + Heading, Aadhaar Card WebP Image, 'Aadhaar Card' Text, Verified Number -->
-                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:transparent; border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
+                <!-- Right Side of Verified Residential Portal: Icon + Heading & Verified Aadhaar Number -->
+                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.20); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
                   <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38bdf8;">
                     <i class="fa-solid fa-id-card" style="color:#f97316; font-size:0.86rem;"></i>
                     <span>Aadhaar Card</span>
-                  </div>
-                  <img src="${aadhaarHeroImageSrc}" alt="Aadhaar Card" style="width:94px; height:60px; border-radius:9px; object-fit:contain; display:block;" />
-                  <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#38bdf8; margin-top:-2px;">
-                    Aadhaar Card
                   </div>
                   <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.86rem; font-weight:900; color:var(--text-main); font-variant-numeric:tabular-nums;">
                     <span>${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "Not Linked"}</span>
