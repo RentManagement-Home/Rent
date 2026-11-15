@@ -3527,7 +3527,24 @@
   body.admin-ops-hub-open #dashboardScreen #flatsList,
   body.admin-portfolio-hub-open #dashboardScreen .properties-bar,
   body.admin-portfolio-hub-open #dashboardScreen #flatsList,
-  body.admin-portfolio-hub-open #dashboardScreen #homeKhetSectionContainer {
+  body.admin-portfolio-hub-open #dashboardScreen #homeKhetSectionContainer,
+  body.admin-flat-hub-open #dashboardScreen .properties-bar,
+  body.admin-flat-hub-open #dashboardScreen #flatsList,
+  body.admin-flat-hub-open #dashboardScreen #homeKhetSectionContainer {
+    display: none !important;
+  }
+  #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    border-radius: 20px !important;
+    padding: 20px 22px !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace > .modal-close-btn {
     display: none !important;
   }
   .admin-ops-hub-section {
@@ -3978,7 +3995,7 @@
     border-color: #6366f1;
   }
 
-  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 65% transparent (35% opacity) & keep all text crystal clear */
+  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment, Profile & Download App 67% transparent (33% opacity) & keep all text crystal clear */
   :where(.renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box)) {
     background: transparent !important;
     background-color: transparent !important;
@@ -4009,14 +4026,16 @@
   .renter-modern-portal #renterInstantUpiPaymentCard,
   .renter-modern-portal #renterPaymentPhotoAndUtrCard,
   .renter-modern-portal #renterInlineProfileCard,
+  .renter-modern-portal #renterDownloadAppCard,
+  .renter-modern-portal .renter-download-app-box,
   .renter-modern-portal #renterUploadPhotoAdminWarningBanner,
   .renter-modern-portal div[style*="border-radius"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   .renter-modern-portal div[style*="border:"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   .renter-modern-portal label[style*="border"],
   .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(15, 23, 42, 0.35) !important;
-    background-color: rgba(15, 23, 42, 0.35) !important;
+    background: rgba(15, 23, 42, 0.33) !important;
+    background-color: rgba(15, 23, 42, 0.33) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -4046,14 +4065,16 @@
   body.theme-white .renter-modern-portal #renterInstantUpiPaymentCard,
   body.theme-white .renter-modern-portal #renterPaymentPhotoAndUtrCard,
   body.theme-white .renter-modern-portal #renterInlineProfileCard,
+  body.theme-white .renter-modern-portal #renterDownloadAppCard,
+  body.theme-white .renter-modern-portal .renter-download-app-box,
   body.theme-white .renter-modern-portal #renterUploadPhotoAdminWarningBanner,
   body.theme-white .renter-modern-portal div[style*="border-radius"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   body.theme-white .renter-modern-portal div[style*="border:"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   body.theme-white .renter-modern-portal label[style*="border"],
   body.theme-white .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(255, 255, 255, 0.35) !important;
-    background-color: rgba(255, 255, 255, 0.35) !important;
+    background: rgba(255, 255, 255, 0.33) !important;
+    background-color: rgba(255, 255, 255, 0.33) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -4168,6 +4189,124 @@
   body.theme-white .utr-reject-reason-chip {
     color: #b91c1c;
     background: rgba(239, 68, 68, 0.08);
+  }
+
+  /* Sunburst / Radiating Payment Circle Redesign */
+  .renter-sunburst-wrap {
+    position: relative;
+    width: 196px;
+    height: 196px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin: 2px auto;
+  }
+  .renter-sunburst-svg {
+    width: 196px;
+    height: 196px;
+    overflow: visible;
+    filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.25));
+  }
+  .renter-sunburst-rays {
+    animation: renterSunburstPulse 3.6s ease-in-out infinite;
+    transform-origin: 110px 110px;
+  }
+  @keyframes renterSunburstPulse {
+    0%, 100% { opacity: 0.86; }
+    50% { opacity: 1; }
+  }
+
+  /* Renter Download App 2-Column Side-by-Side Grid */
+  .renter-download-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .renter-download-app-box {
+    border-radius: 16px;
+    padding: 20px 16px;
+    border: 1.5px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    gap: 12px;
+    transition: transform 0.18s ease, border-color 0.18s ease;
+    cursor: pointer;
+  }
+  .renter-download-app-box:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.65);
+  }
+  .renter-download-app-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem;
+    border: 1.5px solid var(--glass-border);
+  }
+
+  /* Screenshot, Screen Recording & Print Deterrent Protection */
+  html, body {
+    -webkit-touch-callout: none;
+  }
+  #loginScreen,
+  #dashboardScreen,
+  .modal-overlay {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+  input,
+  textarea,
+  select,
+  [contenteditable="true"] {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    user-select: text !important;
+  }
+  img {
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+  @media print {
+    html, body, body * {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+  }
+  body.screen-privacy-blur #loginScreen,
+  body.screen-privacy-blur #dashboardScreen,
+  body.screen-privacy-blur .modal-overlay {
+    filter: blur(22px) brightness(0.22) !important;
+    transition: filter 0.08s ease !important;
+    pointer-events: none !important;
+  }
+  #screenCaptureShieldOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 24px;
+    background: rgba(2, 6, 23, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    color: #f8fafc;
+  }
+  #screenCaptureShieldOverlay.active {
+    display: flex;
   }
 
 
@@ -6922,6 +7061,10 @@
             <span class="admin-ops-card-label">Maintenance Tickets</span>
             <span id="adminOpsCarouselTicketsBadge" class="admin-ops-card-badge" style="display:none;">0</span>
           </button>
+          <button type="button" class="admin-ops-carousel-card" data-ops-tab="applinks" onclick="switchAdminOpsHubTab('applinks')">
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
+            <span class="admin-ops-card-label">App Links</span>
+          </button>
         </div>
 
         <!-- Active Option Workspace Body -->
@@ -6951,6 +7094,43 @@
           <div id="adminOpsHubPanelSlot_notifications" class="admin-ops-hub-slot" style="display:none;"></div>
           <div id="adminOpsHubPanelSlot_contact" class="admin-ops-hub-slot" style="display:none;"></div>
           <div id="adminOpsHubPanelSlot_tickets" class="admin-ops-hub-slot" style="display:none;"></div>
+          <div id="adminOpsHubPanelSlot_applinks" class="admin-ops-hub-slot" style="display:none;">
+            <div class="stat-pill" style="text-align:left; padding:18px; border-radius:16px; border:1.5px solid rgba(16,185,129,0.38);">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
+                <div>
+                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#34d399;">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Mobile App Distribution Links
+                  </div>
+                  <h4 style="margin:3px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
+                    Manage Android APK &amp; iOS App Download Links
+                  </h4>
+                </div>
+                <span style="font-size:0.72rem; font-weight:700; color:var(--text-muted);">
+                  Synced live to Renters' Download App tab
+                </span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; margin-bottom:16px;">
+                <div>
+                  <label for="adminAndroidApkUrlInput" style="display:block; font-size:0.74rem; font-weight:800; color:#4ade80; text-transform:uppercase; margin-bottom:6px;">
+                    <i class="fa-brands fa-android"></i> Android APK Download Link
+                  </label>
+                  <input type="url" id="adminAndroidApkUrlInput" class="form-control" placeholder="https://example.com/app-release.apk" style="font-size:0.84rem;" />
+                </div>
+                <div>
+                  <label for="adminIosAppUrlInput" style="display:block; font-size:0.74rem; font-weight:800; color:#38bdf8; text-transform:uppercase; margin-bottom:6px;">
+                    <i class="fa-brands fa-apple"></i> iOS App Download / Store Link
+                  </label>
+                  <input type="url" id="adminIosAppUrlInput" class="form-control" placeholder="https://apps.apple.com/..." style="font-size:0.84rem;" />
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                <span id="adminAppLinksSavedNote" style="font-size:0.74rem; color:var(--text-muted);">Enter valid URLs and click Save App Links.</span>
+                <button type="button" class="btn-primary" style="width:auto; padding:10px 18px; font-size:0.84rem;" onclick="saveAdminAppDownloadLinks()">
+                  <i class="fa-solid fa-floppy-disk"></i> Save App Links
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -6997,6 +7177,28 @@
       </div>
     </section>
 
+    <!-- Admin/Non-Renter Inline Flat Workspace (Embedded Below Header When a Flat Card Is Clicked) -->
+    <section id="adminFlatDetailsHubSection" class="admin-ops-hub-section admin-flat-hub-section" style="display:none;" aria-label="Flat Workspace">
+      <div class="admin-ops-hub-shell">
+        <div class="admin-ops-hub-topbar" style="margin-bottom: 14px;">
+          <div style="display:flex; align-items:center; gap:11px; min-width:0;">
+            <div class="admin-ops-hub-title-icon">
+              <i class="fa-solid fa-door-open"></i>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34d399;">Home Dashboard • Flat Management Workspace</div>
+              <h3 id="inlineFlatHubHeading" style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">Flat Space Details</h3>
+            </div>
+          </div>
+          <button type="button" id="btnCloseInlineFlatHub" class="admin-ops-hub-close-btn" onclick="closeInlineFlatWorkspace()" title="Back to Flats">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to Flats</span>
+          </button>
+        </div>
+        <div id="adminFlatDetailsWorkspaceHost"></div>
+      </div>
+    </section>
+
     <!-- Renter Quick Navigation Row (Manual Left-to-Right Scroll Only) -->
     <section id="renterQuickScrollNavBar" class="renter-quick-scroll-bar" style="display:none;" aria-label="Renter Quick Navigation">
       <div class="renter-quick-scroll-track" id="renterQuickScrollTrack">
@@ -7023,6 +7225,10 @@
         <button type="button" class="renter-quick-box" data-renter-nav="profile" onclick="navigateRenterQuickNav('profile')">
           <span class="renter-quick-box-icon" style="background:rgba(168,85,247,0.18); color:#c084fc;"><i class="fa-solid fa-user-shield"></i></span>
           <span class="renter-quick-box-label">Profile</span>
+        </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="download_app" onclick="navigateRenterQuickNav('download_app')">
+          <span class="renter-quick-box-icon" style="background:rgba(56,189,248,0.18); color:#38bdf8;"><i class="fa-solid fa-mobile-screen-button"></i></span>
+          <span class="renter-quick-box-label">Download App</span>
         </button>
       </div>
     </section>
@@ -9174,7 +9380,7 @@
 
   <!-- Detailed 4-Tab Flat Popup Modal -->
   <div id="flatDetailsModal" class="modal-overlay">
-    <div class="modal-window modal-flat-details">
+    <div id="sharedFlatDetailsWorkspace" class="modal-window modal-flat-details">
       <button class="modal-close-btn" onclick="closeModal('flatDetailsModal')"><i class="fa-solid fa-xmark"></i></button>
 
       <div style="display:flex; justify-content:space-between; align-items:center; padding-right: 36px; flex-wrap:wrap; gap:8px;">
@@ -10119,6 +10325,17 @@
       </div>
     </div>
   </div>
+
+  <!-- Screen Capture & Recording Privacy Veil -->
+  <div id="screenCaptureShieldOverlay" aria-hidden="true">
+    <div style="width:74px; height:74px; border-radius:20px; background:rgba(239,68,68,0.18); border:2px solid #ef4444; display:flex; align-items:center; justify-content:center; color:#f87171; font-size:2rem; box-shadow:0 0 30px rgba(239,68,68,0.35);">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <h3 style="margin:0; font-size:1.3rem; font-weight:900; color:#ffffff;">Screenshots &amp; Screen Recording Disabled</h3>
+    <p style="margin:0; font-size:0.88rem; color:#cbd5e1; max-width:440px; line-height:1.5;">
+      Capturing screenshots, screen recording, or printing sensitive resident and financial data is restricted on this platform.
+    </p>
+  </div>
 <script>
     
     /**
@@ -10483,6 +10700,7 @@
                 broadcastNotices: Array.isArray(incCfg.broadcastNotices) ? incCfg.broadcastNotices : [],
                 paymentProofs: Array.isArray(incCfg.paymentProofs) ? incCfg.paymentProofs : [],
                 maintenanceTickets: Array.isArray(incCfg.maintenanceTickets) ? incCfg.maintenanceTickets : [],
+                appDownloadLinks: (incCfg.appDownloadLinks && typeof incCfg.appDownloadLinks === "object") ? incCfg.appDownloadLinks : { androidApkUrl: "", iosAppUrl: "" },
                 auditLogs: Array.isArray(incCfg.auditLogs) ? incCfg.auditLogs.slice(0, 30) : []
               };
               saveLocalGlobalConfigMaster(mergedCfg);
@@ -11659,6 +11877,35 @@
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
             return { status: "success", message: "Payment proofs synced to Google Sheet." };
+          }
+
+          case "deletePaymentProof": {
+            const targetId = String(data.proofId || "").trim();
+            const updatedProofs = Array.isArray(data.updatedPaymentProofs)
+              ? data.updatedPaymentProofs
+              : (Array.isArray(globalConfig.paymentProofs) ? globalConfig.paymentProofs.filter(p => String(p?.id || p?.ProofID || "").trim() !== targetId) : []);
+            globalConfig = {
+              ...globalConfig,
+              paymentProofs: updatedProofs,
+              updatedAt: new Date().toISOString()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            return await sendGasSheetAction({ ...data, updatedPaymentProofs: updatedProofs, globalConfig: globalConfig });
+          }
+
+          case "saveAppDownloadLinks": {
+            const nextLinks = {
+              androidApkUrl: String(data.androidApkUrl || "").trim(),
+              iosAppUrl: String(data.iosAppUrl || "").trim(),
+              updatedAt: new Date().toISOString()
+            };
+            globalConfig = {
+              ...globalConfig,
+              appDownloadLinks: nextLinks,
+              updatedAt: new Date().toISOString()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            return await sendGasSheetAction({ ...data, appDownloadLinks: nextLinks, globalConfig: globalConfig });
           }
 
           case "saveMaintenanceTickets": {
@@ -15004,11 +15251,67 @@ function formatMonthLabel(rawVal) {
       return [];
     }
 
+    function getNotificationSignatureKeys(n) {
+      if (!n || typeof n !== "object") return [];
+      const keys = [];
+      if (n.id) keys.push(String(n.id).trim());
+      const t = String(n.title || "").trim().toLowerCase();
+      const b = String(n.body || n.message || "").trim().toLowerCase();
+      const ts = String(n.timestamp || "").trim();
+      if (t || b) keys.push(`SIG::${t}::${b}::${ts}`);
+      return keys.filter(Boolean);
+    }
+
+    function getReadNotifStorageKey() {
+      const u = String(activeUser || "guest").trim().toLowerCase() || "guest";
+      return "portal_read_notif_ids_v1_" + u;
+    }
+
+    function getToastedNotifStorageKey() {
+      const u = String(activeUser || "guest").trim().toLowerCase() || "guest";
+      return "portal_toasted_notif_ids_v1_" + u;
+    }
+
     function getReadNotificationIds() {
-      if (Array.isArray(window._readNotificationIdsInMemory)) {
-        return window._readNotificationIdsInMemory;
-      }
-      return [];
+      const merged = new Set(Array.isArray(window._readNotificationIdsInMemory) ? window._readNotificationIdsInMemory : []);
+      try {
+        const raw = localStorage.getItem(getReadNotifStorageKey());
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) parsed.forEach(k => { if (k) merged.add(String(k)); });
+        }
+      } catch (e) {}
+      return Array.from(merged);
+    }
+
+    function saveReadNotificationIds(ids) {
+      const unique = Array.from(new Set((Array.isArray(ids) ? ids : []).filter(Boolean).map(String))).slice(-300);
+      window._readNotificationIdsInMemory = unique;
+      try {
+        localStorage.setItem(getReadNotifStorageKey(), JSON.stringify(unique));
+      } catch (e) {}
+      return unique;
+    }
+
+    function getToastedNotificationIds() {
+      const merged = new Set(Array.isArray(window._toastedNotificationIdsInMemory) ? window._toastedNotificationIdsInMemory : []);
+      try {
+        const raw = localStorage.getItem(getToastedNotifStorageKey());
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) parsed.forEach(k => { if (k) merged.add(String(k)); });
+        }
+      } catch (e) {}
+      return Array.from(merged);
+    }
+
+    function saveToastedNotificationIds(ids) {
+      const unique = Array.from(new Set((Array.isArray(ids) ? ids : []).filter(Boolean).map(String))).slice(-300);
+      window._toastedNotificationIdsInMemory = unique;
+      try {
+        localStorage.setItem(getToastedNotifStorageKey(), JSON.stringify(unique));
+      } catch (e) {}
+      return unique;
     }
 
     function canCurrentUserManageNotifications() {
@@ -15089,6 +15392,7 @@ function formatMonthLabel(rawVal) {
       if (typeof closeActionMenu === "function") closeActionMenu();
       if (typeof closeHomePortfolioMenu === "function") closeHomePortfolioMenu();
       if (typeof closeAdminPortfolioHub === "function") closeAdminPortfolioHub(true);
+      if (typeof closeInlineFlatWorkspace === "function") closeInlineFlatWorkspace(true);
 
       const hubSection = document.getElementById("adminResidentOpsHubSection");
       document.body.classList.add("admin-ops-hub-open");
@@ -15138,6 +15442,7 @@ function formatMonthLabel(rawVal) {
       if (typeof closeActionMenu === "function") closeActionMenu();
       if (typeof closeHomePortfolioMenu === "function") closeHomePortfolioMenu();
       if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
+      if (typeof closeInlineFlatWorkspace === "function") closeInlineFlatWorkspace(true);
       document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
 
       const allowedTabs = ["kharch", "khet", "fd"];
@@ -15175,7 +15480,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function switchAdminOpsHubTab(tabKey) {
-      const allowedTabs = ["screenshot", "utr", "notifications", "contact", "tickets"];
+      const allowedTabs = ["screenshot", "utr", "notifications", "contact", "tickets", "applinks"];
       const activeKey = allowedTabs.includes(tabKey) ? tabKey : "screenshot";
       window.activeAdminOpsHubTab = activeKey;
 
@@ -15225,8 +15530,65 @@ function formatMonthLabel(rawVal) {
         if (typeof renderAdminMaintenanceTickets === "function") {
           renderAdminMaintenanceTickets();
         }
+      } else if (activeKey === "applinks") {
+        initAdminAppDownloadLinksForm();
       }
       syncAdminOpsHubBadges();
+    }
+
+    function getStoredAppDownloadLinks() {
+      const raw = (DB && DB.globalConfig && DB.globalConfig.appDownloadLinks && typeof DB.globalConfig.appDownloadLinks === "object")
+        ? DB.globalConfig.appDownloadLinks
+        : {};
+      return {
+        androidApkUrl: String(raw.androidApkUrl || "").trim(),
+        iosAppUrl: String(raw.iosAppUrl || "").trim(),
+        updatedAt: String(raw.updatedAt || "").trim()
+      };
+    }
+
+    function initAdminAppDownloadLinksForm() {
+      const links = getStoredAppDownloadLinks();
+      const androidIn = document.getElementById("adminAndroidApkUrlInput");
+      const iosIn = document.getElementById("adminIosAppUrlInput");
+      const noteEl = document.getElementById("adminAppLinksSavedNote");
+      if (androidIn && document.activeElement !== androidIn) androidIn.value = links.androidApkUrl;
+      if (iosIn && document.activeElement !== iosIn) iosIn.value = links.iosAppUrl;
+      if (noteEl) {
+        noteEl.innerText = (links.androidApkUrl || links.iosAppUrl)
+          ? "Saved app links are live on Renters' Download App tab."
+          : "Enter valid URLs and click Save App Links.";
+      }
+    }
+
+    async function saveAdminAppDownloadLinks() {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Access Only", "Only Admin accounts can update app download links.", false);
+      }
+      const androidUrl = String(document.getElementById("adminAndroidApkUrlInput")?.value || "").trim();
+      const iosUrl = String(document.getElementById("adminIosAppUrlInput")?.value || "").trim();
+      const isValidLink = (u) => !u || /^(https?:\/\/|\/)/i.test(u);
+      if (!isValidLink(androidUrl) || !isValidLink(iosUrl)) {
+        return triggerSideToast("Invalid URL", "Please enter valid http(s):// links for Android APK and iOS App.", false);
+      }
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      DB.globalConfig.appDownloadLinks = {
+        androidApkUrl: androidUrl,
+        iosAppUrl: iosUrl,
+        updatedAt: new Date().toISOString()
+      };
+      saveLocalGlobalConfigMaster(DB.globalConfig);
+      saveDbSnapshotToCache();
+      const noteEl = document.getElementById("adminAppLinksSavedNote");
+      if (noteEl) noteEl.innerText = "App download links saved and synced live!";
+
+      await sendFirebaseAction({
+        action: "saveAppDownloadLinks",
+        requesterRole: activeRole || "Admin",
+        androidApkUrl: androidUrl,
+        iosAppUrl: iosUrl
+      });
+      triggerSideToast("App Links Saved", "Android APK & iOS App links updated for all Renters.", true);
     }
 
     async function refreshAdminUtrVerificationHub(btn) {
@@ -15252,12 +15614,40 @@ function formatMonthLabel(rawVal) {
     }
 
     let hasLoadedInitialBroadcastNotices = false;
+    let hasBaselineBroadcastNoticesSynced = false;
     function syncServerBroadcastNoticesToLocal(serverNotices, allowLiveToast = false) {
       if (!Array.isArray(serverNotices)) return;
       const prevNotices = getStoredBroadcastNotifications();
       const prevIds = new Set(prevNotices.map(n => n && n.id).filter(Boolean));
       const prevRaw = JSON.stringify(prevNotices);
       const nextRaw = JSON.stringify(serverNotices);
+
+      const readIds = new Set(getReadNotificationIds());
+      const toastedIds = new Set(getToastedNotificationIds());
+      let didUpdateToasted = false;
+
+      if (!allowLiveToast || !hasBaselineBroadcastNoticesSynced) {
+        serverNotices.forEach(n => {
+          getNotificationSignatureKeys(n).forEach(k => {
+            if (!toastedIds.has(k)) {
+              toastedIds.add(k);
+              didUpdateToasted = true;
+            }
+          });
+        });
+        if (didUpdateToasted) {
+          saveToastedNotificationIds(Array.from(toastedIds));
+        }
+        hasBaselineBroadcastNoticesSynced = true;
+        hasLoadedInitialBroadcastNotices = true;
+        if (prevRaw !== nextRaw) {
+          if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+          DB.globalConfig.broadcastNotices = serverNotices;
+          syncNotificationsBadgeUI();
+          renderNotificationsListUI();
+        }
+        return;
+      }
 
       if (prevRaw !== nextRaw) {
         if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
@@ -15268,13 +15658,28 @@ function formatMonthLabel(rawVal) {
         const isAdminViewer = String(activeRole || "").trim().toLowerCase() === "admin";
         if (allowLiveToast && hasLoadedInitialBroadcastNotices && activeUser && !isAdminViewer) {
           const myCleanName = String(activeUserFullName || activeUser || "").trim().toLowerCase();
-          const newlyAdded = serverNotices.filter(n => n && n.id && !prevIds.has(n.id) && isNoticeVisibleToCurrentUser(n));
+          const sessionStart = Number(window.__portalSessionStartedAt || 0);
+          const newlyAdded = serverNotices.filter(n => {
+            if (!n || !n.id || prevIds.has(n.id) || !isNoticeVisibleToCurrentUser(n)) return false;
+            const sigKeys = getNotificationSignatureKeys(n);
+            if (sigKeys.some(k => readIds.has(k) || toastedIds.has(k))) return false;
+            const nTs = Number(n.timestamp || 0);
+            if (sessionStart > 0 && nTs > 0 && nTs < (sessionStart - 120000)) return false;
+            return true;
+          });
           newlyAdded.forEach(n => {
+            getNotificationSignatureKeys(n).forEach(k => {
+              toastedIds.add(k);
+              didUpdateToasted = true;
+            });
             const senderClean = String(n.sender || "").trim().toLowerCase();
             if (senderClean !== myCleanName && senderClean !== String(activeUser || "").trim().toLowerCase()) {
               triggerSideToast(`New Notice: ${n.title || "Announcement"}`, String(n.body || n.message || "").slice(0, 90), true);
             }
           });
+          if (didUpdateToasted) {
+            saveToastedNotificationIds(Array.from(toastedIds));
+          }
         }
       }
       hasLoadedInitialBroadcastNotices = true;
@@ -15288,7 +15693,10 @@ function formatMonthLabel(rawVal) {
       const readIds = getReadNotificationIds();
 
       const relevantNotices = allNotices.filter(n => isNoticeVisibleToCurrentUser(n));
-      const unreadCount = isAdminViewer ? 0 : relevantNotices.filter(n => !readIds.includes(n.id)).length;
+      const unreadCount = isAdminViewer ? 0 : relevantNotices.filter(n => {
+        const sigKeys = getNotificationSignatureKeys(n);
+        return !sigKeys.some(k => readIds.includes(k));
+      }).length;
       const badgeLabel = unreadCount > 9 ? "9+" : String(unreadCount);
 
       if (badge) {
@@ -15322,6 +15730,7 @@ function formatMonthLabel(rawVal) {
         composeBox.style.display = "none";
       }
 
+      markAllVisibleNotificationsRead();
       renderNotificationsListUI();
       openModal("notificationsModal");
     }
@@ -15356,7 +15765,8 @@ function formatMonthLabel(rawVal) {
 
       const isAdminViewer = String(activeRole || "").trim().toLowerCase() === "admin";
       container.innerHTML = relevant.map(n => {
-        const isRead = isAdminViewer || readIds.includes(n.id);
+        const sigKeys = getNotificationSignatureKeys(n);
+        const isRead = isAdminViewer || sigKeys.some(k => readIds.includes(k));
         const timeStr = n.timestamp ? new Date(n.timestamp).toLocaleDateString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
         const safeTitle = String(n.title || "Announcement").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const safeBody = String(n.body || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -15397,8 +15807,14 @@ function formatMonthLabel(rawVal) {
 
     function markAllVisibleNotificationsRead() {
       const allNotices = getStoredBroadcastNotifications();
-      const allIds = allNotices.map(n => n.id).filter(Boolean);
-      window._readNotificationIdsInMemory = allIds;
+      const existingRead = getReadNotificationIds();
+      const existingToasted = getToastedNotificationIds();
+      const allSigKeys = [];
+      allNotices.forEach(n => {
+        getNotificationSignatureKeys(n).forEach(k => allSigKeys.push(k));
+      });
+      saveReadNotificationIds(existingRead.concat(allSigKeys));
+      saveToastedNotificationIds(existingToasted.concat(allSigKeys));
       syncNotificationsBadgeUI();
     }
 
@@ -16405,7 +16821,7 @@ function formatMonthLabel(rawVal) {
     window.activeRenterHomeSection = "dashboard";
 
     function syncRenterQuickNavButtonsUI(activeKey) {
-      const validKeys = ["dashboard", "receipt", "maintenance", "upload_photo", "payment", "profile"];
+      const validKeys = ["dashboard", "receipt", "maintenance", "upload_photo", "payment", "profile", "download_app"];
       const resolvedKey = validKeys.includes(activeKey) ? activeKey : "dashboard";
       window.activeRenterHomeSection = resolvedKey;
       const track = document.getElementById("renterQuickScrollTrack");
@@ -17629,13 +18045,62 @@ function formatMonthLabel(rawVal) {
         const latestBillAddLabel = latestBill && latestBill.AdditionalName && latestBill.AdditionalName !== "None" ? String(latestBill.AdditionalName) : "Additional";
         const latestBillIdDisplay = latestBill && latestBill.BillID ? String(latestBill.BillID) : "--";
 
+        const sunburstChartRadius = 54;
+        const sunburstChartCirc = Number((2 * Math.PI * sunburstChartRadius).toFixed(2));
+        let sbPaidArcLen = 0;
+        let sbDueArcLen = 0;
+        if (hasLatestReceiptForChart) {
+          if (isChartOverpaid || isChartExactPaid) {
+            sbPaidArcLen = sunburstChartCirc;
+            sbDueArcLen = 0;
+          } else if (chartTotalAmt > 0) {
+            const sbRatio = Math.max(0, Math.min(1, chartPaidAmt / chartTotalAmt));
+            sbPaidArcLen = Number((sbRatio * sunburstChartCirc).toFixed(2));
+            sbDueArcLen = Number((sunburstChartCirc - sbPaidArcLen).toFixed(2));
+          } else if (chartDueAmt > 0) {
+            sbPaidArcLen = 0;
+            sbDueArcLen = sunburstChartCirc;
+          }
+        }
+        const sunburstRaysSvgMarkup = Array.from({ length: 24 }, (_, idx) => {
+          const deg = idx * 15;
+          const isCardinal = deg % 90 === 0;
+          const isDiagonal = deg % 90 === 45;
+          const rad = (deg * Math.PI) / 180;
+          const innerR = isCardinal ? 69 : (isDiagonal ? 70 : 71);
+          const outerR = isCardinal ? 105 : (isDiagonal ? 93 : 83);
+          const x1 = (110 + Math.cos(rad) * innerR).toFixed(1);
+          const y1 = (110 + Math.sin(rad) * innerR).toFixed(1);
+          const x2 = (110 + Math.cos(rad) * outerR).toFixed(1);
+          const y2 = (110 + Math.sin(rad) * outerR).toFixed(1);
+          if (isCardinal) {
+            const perp = rad + Math.PI / 2;
+            const halfW = 4.2;
+            const bx1 = (110 + Math.cos(rad) * (innerR - 1) + Math.cos(perp) * halfW).toFixed(1);
+            const by1 = (110 + Math.sin(rad) * (innerR - 1) + Math.sin(perp) * halfW).toFixed(1);
+            const bx2 = (110 + Math.cos(rad) * (innerR - 1) - Math.cos(perp) * halfW).toFixed(1);
+            const by2 = (110 + Math.sin(rad) * (innerR - 1) - Math.sin(perp) * halfW).toFixed(1);
+            return `<polygon points="${bx1},${by1} ${x2},${y2} ${bx2},${by2}" fill="${circlePrimaryStroke}" opacity="0.92"></polygon>`;
+          }
+          if (isDiagonal) {
+            const perp = rad + Math.PI / 2;
+            const halfW = 2.6;
+            const bx1 = (110 + Math.cos(rad) * innerR + Math.cos(perp) * halfW).toFixed(1);
+            const by1 = (110 + Math.sin(rad) * innerR + Math.sin(perp) * halfW).toFixed(1);
+            const bx2 = (110 + Math.cos(rad) * innerR - Math.cos(perp) * halfW).toFixed(1);
+            const by2 = (110 + Math.sin(rad) * innerR - Math.sin(perp) * halfW).toFixed(1);
+            return `<polygon points="${bx1},${by1} ${x2},${y2} ${bx2},${by2}" fill="#38bdf8" opacity="0.78"></polygon>`;
+          }
+          return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${idx % 2 === 0 ? "#818cf8" : circlePrimaryStroke}" stroke-width="1.6" stroke-linecap="round" opacity="0.62"></line>`;
+        }).join("");
+
         const dashboardPaymentCircleBoxHtml = `
           <div id="renterDashboardOverviewRow" style="margin-top: 14px; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-between; gap: 16px;">
             <!-- Left Side: Half-Size Latest Receipt Payment Overview -->
-            <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="flex: 1 1 320px; max-width: 410px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.35); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="flex: 1 1 320px; max-width: 410px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.33); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between;">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                 <div style="display:flex; align-items:center; gap:9px;">
-                  <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.35); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                  <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.33); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                     <i class="fa-solid fa-chart-pie"></i>
                   </div>
                   <div>
@@ -17647,68 +18112,81 @@ function formatMonthLabel(rawVal) {
                     </div>
                   </div>
                 </div>
-                <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.35); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.33); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
                   ${latestBillDateLabel}
                 </span>
               </div>
 
               <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
-                <!-- Compact Circular Donut Chart: Yellow = Overpaid, Green = Paid, Red = Due -->
-                <div style="position:relative; width:144px; height:144px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                  <svg viewBox="0 0 140 140" width="144" height="144" style="transform:rotate(-90deg); overflow:visible;" aria-label="Latest receipt payment chart">
-                    <circle cx="70" cy="70" r="${chartRadius}" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="14"></circle>
-                    ${dueArcLen > 0 ? `
-                      <circle
-                        cx="70"
-                        cy="70"
-                        r="${chartRadius}"
-                        fill="none"
-                        stroke="#ef4444"
-                        stroke-width="14"
-                        stroke-dasharray="${dueArcLen} ${chartCirc}"
-                        stroke-dashoffset="${-paidArcLen}"
-                        stroke-linecap="butt"
-                      ></circle>
-                    ` : ""}
-                    ${paidArcLen > 0 ? `
-                      <circle
-                        cx="70"
-                        cy="70"
-                        r="${chartRadius}"
-                        fill="none"
-                        stroke="${circlePrimaryStroke}"
-                        stroke-width="14"
-                        stroke-dasharray="${paidArcLen} ${chartCirc}"
-                        stroke-dashoffset="0"
-                        stroke-linecap="${paidArcLen >= chartCirc - 0.5 ? "butt" : "round"}"
-                      ></circle>
-                    ` : ""}
+                <!-- Stylized Sunburst / Radiating Payment Circle: Cardinal Spikes, Diagonal Rays & Glowing Aura -->
+                <div class="renter-sunburst-wrap">
+                  <svg class="renter-sunburst-svg" viewBox="0 0 220 220" width="196" height="196" aria-label="Latest receipt sunburst payment chart">
+                    <defs>
+                      <radialGradient id="sunburstAuraGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="55%" stop-color="${circlePrimaryStroke}" stop-opacity="0.22"></stop>
+                        <stop offset="100%" stop-color="${circlePrimaryStroke}" stop-opacity="0"></stop>
+                      </radialGradient>
+                    </defs>
+                    <circle cx="110" cy="110" r="88" fill="url(#sunburstAuraGrad)"></circle>
+                    <g class="renter-sunburst-rays">
+                      ${sunburstRaysSvgMarkup}
+                    </g>
+                    <circle cx="110" cy="110" r="66" fill="none" stroke="rgba(129,140,248,0.45)" stroke-width="1.5" stroke-dasharray="4 4"></circle>
+                    <g transform="rotate(-90 110 110)">
+                      <circle cx="110" cy="110" r="${sunburstChartRadius}" fill="none" stroke="rgba(148,163,184,0.22)" stroke-width="11"></circle>
+                      ${sbDueArcLen > 0 ? `
+                        <circle
+                          cx="110"
+                          cy="110"
+                          r="${sunburstChartRadius}"
+                          fill="none"
+                          stroke="#ef4444"
+                          stroke-width="11"
+                          stroke-dasharray="${sbDueArcLen} ${sunburstChartCirc}"
+                          stroke-dashoffset="${-sbPaidArcLen}"
+                          stroke-linecap="butt"
+                        ></circle>
+                      ` : ""}
+                      ${sbPaidArcLen > 0 ? `
+                        <circle
+                          cx="110"
+                          cy="110"
+                          r="${sunburstChartRadius}"
+                          fill="none"
+                          stroke="${circlePrimaryStroke}"
+                          stroke-width="11"
+                          stroke-dasharray="${sbPaidArcLen} ${sunburstChartCirc}"
+                          stroke-dashoffset="0"
+                          stroke-linecap="${sbPaidArcLen >= sunburstChartCirc - 0.5 ? "butt" : "round"}"
+                        ></circle>
+                      ` : ""}
+                    </g>
                   </svg>
-                  <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
-                    <span style="font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
-                    <strong style="font-size:1.05rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
-                    <span style="font-size:0.6rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
+                  <div style="position:absolute; width:96px; height:96px; border-radius:50%; background:rgba(15,23,42,0.33); border:1.5px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
+                    <span style="font-size:0.54rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
+                    <strong style="font-size:1rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
+                    <span style="font-size:0.58rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
                   </div>
                 </div>
 
                 <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
                 <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid rgba(99,102,241,0.38); text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.33); border:1px solid rgba(99,102,241,0.38); text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                   </div>
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.33); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
                   </div>
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.33); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
                   </div>
                 </div>
 
                 ${chartAdvanceAmt > 0 ? `
-                  <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                  <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.33); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
                     <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
                     <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
                   </div>
@@ -17718,11 +18196,11 @@ function formatMonthLabel(rawVal) {
             </div>
 
             <!-- Right Side: Latest Receipt Summary Card -->
-            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.35); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.33); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
               <div>
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                   <div style="display:flex; align-items:center; gap:9px;">
-                    <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.35); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                    <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.33); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                       <i class="fa-solid fa-receipt"></i>
                     </div>
                     <div>
@@ -17734,14 +18212,14 @@ function formatMonthLabel(rawVal) {
                       </div>
                     </div>
                   </div>
-                  <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.35); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                  <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.33); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
                     ${chartCenterBadgeText}
                   </span>
                 </div>
 
                 ${latestBill ? `
                   <div style="display:flex; flex-direction:column; gap:8px;">
-                    <div style="padding:9px 11px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                    <div style="padding:9px 11px; border-radius:11px; background:rgba(15,23,42,0.33); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
                       <span style="font-size:0.74rem; font-weight:800; color:var(--text-main);">
                         <i class="fa-solid fa-building" style="color:#38bdf8; margin-right:5px;"></i>Flat ${escapeHtml(latestBillFlatLabel)} (${escapeHtml(latestBillPropLabel)})
                       </span>
@@ -17751,33 +18229,33 @@ function formatMonthLabel(rawVal) {
                     </div>
 
                     <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;">
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.33); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Base Rent</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillBaseRentAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.33); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#38bdf8; text-transform:uppercase;">Electricity</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillElecAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.33); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#f59e0b; text-transform:uppercase;">PNG Gas</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillPngAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.33); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#06b6d4; text-transform:uppercase;">Water</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillWaterAmt.toLocaleString("en-IN")}</strong>
                       </div>
                     </div>
 
                     ${latestBillAddAmt > 0 ? `
-                      <div style="padding:7px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.74rem;">
+                      <div style="padding:7px 10px; border-radius:10px; background:rgba(15,23,42,0.33); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.74rem;">
                         <span style="font-weight:700; color:#c084fc;">${escapeHtml(latestBillAddLabel)}</span>
                         <strong style="font-weight:900; color:var(--text-main); font-variant-numeric:tabular-nums;">₹${latestBillAddAmt.toLocaleString("en-IN")}</strong>
                       </div>
                     ` : ""}
                   </div>
                 ` : `
-                  <div style="padding:26px 14px; border-radius:12px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.35); text-align:center; color:var(--text-muted); font-size:0.78rem;">
+                  <div style="padding:26px 14px; border-radius:12px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.33); text-align:center; color:var(--text-muted); font-size:0.78rem;">
                     <i class="fa-solid fa-file-invoice" style="font-size:1.35rem; color:#38bdf8; display:block; margin-bottom:8px;"></i>
                     No receipt generated for your account yet.
                   </div>
@@ -17788,7 +18266,7 @@ function formatMonthLabel(rawVal) {
                 type="button"
                 id="renterDashboardLatestReceiptBtn"
                 onclick="${latestBill ? `selectRenterHomeAvailableReceipt('${latestBillIdArg}', '${latestBillMonthArg}'); openBillReceiptModal('${latestBillIdArg}', '${latestBillMonthArg}');` : `navigateRenterQuickNav('receipt');`}"
-                style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(56,189,248,0.45); background:rgba(15,23,42,0.35); color:#38bdf8; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
+                style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(56,189,248,0.45); background:rgba(15,23,42,0.33); color:#38bdf8; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
               >
                 <i class="fa-solid fa-eye"></i>
                 <span>${latestBill ? "View Latest Receipt" : "Open All Receipts"}</span>
@@ -18236,6 +18714,7 @@ function formatMonthLabel(rawVal) {
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:20px;">
               <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
+                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Renter ID</span><strong id="renterInlineProfileRenterId" style="font-size:0.92rem; color:#38bdf8; letter-spacing:0.03em;">${escapeHtml(String(primaryRenter.RenterID || consolidatedProfile.RenterID || "N/A"))}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Permanent Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(consolidatedProfile.Address || primaryRenter.Address || "N/A")}</strong></div>
               </div>
@@ -18289,10 +18768,73 @@ function formatMonthLabel(rawVal) {
           </div>
         `;
 
+        // Build Isolated Download App Section (2-Column Side-by-Side Grid: Box 1 Android APK + Box 2 iOS App)
+        const appDownloadLinks = typeof getStoredAppDownloadLinks === "function"
+          ? getStoredAppDownloadLinks()
+          : { androidApkUrl: "", iosAppUrl: "" };
+        const hasAndroidLink = Boolean(appDownloadLinks.androidApkUrl);
+        const hasIosLink = Boolean(appDownloadLinks.iosAppUrl);
+        const renterIsolatedDownloadAppHtml = `
+          <div class="renter-kpi-summary-box" id="renterDownloadAppCard" style="padding: 24px; border-radius: 18px; background: rgba(15,23,42,0.33); border: 1.5px solid var(--glass-border);">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:42px; height:42px; border-radius:12px; background:rgba(15,23,42,0.33); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+                  <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#38bdf8;">
+                    Resident Mobile Application
+                  </div>
+                  <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
+                    Download Official App
+                  </h3>
+                </div>
+              </div>
+              <span style="font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:999px; border:1px solid var(--glass-border); color:var(--text-muted);">
+                Android &amp; iOS
+              </span>
+            </div>
+
+            <div class="renter-download-grid">
+              <div class="renter-download-app-box" id="renterDownloadAndroidBox" role="button" tabindex="0" onclick="triggerRenterAppDownload('android')">
+                <div class="renter-download-app-icon" style="color:#4ade80; border-color:rgba(74,222,128,0.45);">
+                  <i class="fa-brands fa-android"></i>
+                </div>
+                <div>
+                  <div style="font-size:1rem; font-weight:900; color:var(--text-main);">Android APK</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
+                    ${hasAndroidLink ? "Official APK installer ready" : "Link not uploaded yet"}
+                  </div>
+                </div>
+                <button type="button" class="btn-primary" style="width:100%; padding:10px 14px; font-size:0.82rem; background:linear-gradient(135deg,#10b981,#059669);" onclick="event.stopPropagation(); triggerRenterAppDownload('android')">
+                  <i class="fa-brands fa-android"></i>
+                  <span>Download Android APK</span>
+                </button>
+              </div>
+
+              <div class="renter-download-app-box" id="renterDownloadIosBox" role="button" tabindex="0" onclick="triggerRenterAppDownload('ios')">
+                <div class="renter-download-app-icon" style="color:#38bdf8; border-color:rgba(56,189,248,0.45);">
+                  <i class="fa-brands fa-apple"></i>
+                </div>
+                <div>
+                  <div style="font-size:1rem; font-weight:900; color:var(--text-main);">iOS App</div>
+                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
+                    ${hasIosLink ? "Official iOS app link ready" : "Link not uploaded yet"}
+                  </div>
+                </div>
+                <button type="button" class="btn-primary" style="width:100%; padding:10px 14px; font-size:0.82rem; background:linear-gradient(135deg,#38bdf8,#2563eb);" onclick="event.stopPropagation(); triggerRenterAppDownload('ios')">
+                  <i class="fa-brands fa-apple"></i>
+                  <span>Download iOS App</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
         // Regenerated Aadhaar Card WebP image for Verified Residential Portal right side
         const aadhaarHeroImageSrc = window.__aadhaarCardRegenImgUrl || "src/assets/images/regenerated_image_1794745526539.webp";
 
-        // Select ONLY the active 1-of-6 section so the other 5 stay hidden!
+        // Select ONLY the active section so the others stay hidden!
         let activeRenterSectionContentHtml = "";
         if (activeRenterSection === "receipt") {
           activeRenterSectionContentHtml = renterIsolatedReceiptSectionHtml;
@@ -18304,6 +18846,8 @@ function formatMonthLabel(rawVal) {
           activeRenterSectionContentHtml = renterIsolatedPaymentHtml;
         } else if (activeRenterSection === "profile") {
           activeRenterSectionContentHtml = renterIsolatedProfileHtml;
+        } else if (activeRenterSection === "download_app") {
+          activeRenterSectionContentHtml = renterIsolatedDownloadAppHtml;
         } else {
           // Default: "dashboard" -> Verified Resident Portal (with right-side Aadhaar Card box) + Left-Side Half-Size Latest Receipt Overview
           activeRenterSectionContentHtml = `
@@ -18324,7 +18868,7 @@ function formatMonthLabel(rawVal) {
                 </div>
 
                 <!-- Right Side of Verified Residential Portal: Icon + Heading & Verified Aadhaar Number -->
-                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.35); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
+                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.33); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
                   <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38bdf8;">
                     <i class="fa-solid fa-id-card" style="color:#f97316; font-size:0.86rem;"></i>
                     <span>Aadhaar Card</span>
@@ -18803,6 +19347,8 @@ function formatMonthLabel(rawVal) {
     }
 
     function unlockDashboardInstant(skipImmediateSync = false) {
+      window.__portalSessionStartedAt = window.__portalSessionStartedAt || Date.now();
+      if (typeof closeInlineFlatWorkspace === "function") closeInlineFlatWorkspace(true);
       const loginScr = document.getElementById("loginScreen");
       const dashScr = document.getElementById("dashboardScreen");
       if (loginScr) loginScr.classList.remove("active");
@@ -19114,6 +19660,7 @@ function formatMonthLabel(rawVal) {
           ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
           ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
         };
+        window.__portalSessionStartedAt = Date.now();
         DB.globalConfig = {
           ...DB.globalConfig,
           ...res.globalConfig,
@@ -19124,6 +19671,9 @@ function formatMonthLabel(rawVal) {
           privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
           paymentProofs: Array.isArray(res.globalConfig.paymentProofs) ? res.globalConfig.paymentProofs : [],
           maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
+          appDownloadLinks: (res.globalConfig.appDownloadLinks && typeof res.globalConfig.appDownloadLinks === "object")
+            ? res.globalConfig.appDownloadLinks
+            : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" }),
           auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
         };
         try {
@@ -19998,7 +20548,8 @@ function formatMonthLabel(rawVal) {
             rmp: res.globalConfig?.renterMonthlyPhotos || {},
             srq: res.globalConfig?.screenshotRequests || {},
             pp: res.globalConfig?.paymentProofs || [],
-            mt: res.globalConfig?.maintenanceTickets || []
+            mt: res.globalConfig?.maintenanceTickets || [],
+            adl: res.globalConfig?.appDownloadLinks || null
           });
 
           const hasDataChanged = incomingHash !== lastSyncedDataHash;
@@ -20091,8 +20642,14 @@ function formatMonthLabel(rawVal) {
               privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
               paymentProofs: filteredServerProofs,
               maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
+              appDownloadLinks: (res.globalConfig.appDownloadLinks && typeof res.globalConfig.appDownloadLinks === "object")
+                ? res.globalConfig.appDownloadLinks
+                : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" }),
               auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
             };
+            if (typeof initAdminAppDownloadLinksForm === "function" && document.body.classList.contains("admin-ops-hub-open") && window.activeAdminOpsHubTab === "applinks") {
+              initAdminAppDownloadLinksForm();
+            }
             if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
             const contactModalEl = document.getElementById("contactUsModal");
             if (contactModalEl && contactModalEl.classList.contains("active") && typeof renderContactUsDynamicBody === "function") {
@@ -20487,6 +21044,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function selectProperty(name) {
+      if (typeof closeInlineFlatWorkspace === "function") closeInlineFlatWorkspace(true);
       const clickedClean = String(name || "").trim().toLowerCase();
       const currentClean = String(selectedProperty || "").trim().toLowerCase();
       const flatsContainer = document.getElementById("flatsList");
@@ -26323,6 +26881,81 @@ function formatMonthLabel(rawVal) {
       );
     }
 
+    function getFlatDetailsWorkspaceRoot() {
+      return document.getElementById("sharedFlatDetailsWorkspace") || document.getElementById("flatDetailsModal");
+    }
+
+    function closeInlineFlatWorkspace(silent = false) {
+      const ws = document.getElementById("sharedFlatDetailsWorkspace");
+      const modalOverlay = document.getElementById("flatDetailsModal");
+      if (ws && modalOverlay && ws.parentElement !== modalOverlay) {
+        modalOverlay.appendChild(ws);
+      }
+      document.body.classList.remove("admin-flat-hub-open", "flat-details-open");
+      const hub = document.getElementById("adminFlatDetailsHubSection");
+      if (hub) hub.style.display = "none";
+      if (typeof syncFloatingCornerButtonsByRole === "function") syncFloatingCornerButtonsByRole();
+      if (!silent && typeof renderAllDashboardUI === "function" && activeUser && String(activeRole || "").trim().toLowerCase() !== "renter") {
+        renderAllDashboardUI();
+      }
+    }
+
+    function mountInlineFlatWorkspaceForAdmin(flat) {
+      if (typeof closeActionMenu === "function") closeActionMenu();
+      if (typeof closeHomePortfolioMenu === "function") closeHomePortfolioMenu();
+      if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
+      if (typeof closeAdminPortfolioHub === "function") closeAdminPortfolioHub(true);
+      const modalOverlay = document.getElementById("flatDetailsModal");
+      if (modalOverlay) modalOverlay.classList.remove("active");
+      document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
+      document.body.classList.remove("modal-open-hide-chat");
+
+      const ws = document.getElementById("sharedFlatDetailsWorkspace");
+      const host = document.getElementById("adminFlatDetailsWorkspaceHost");
+      const hub = document.getElementById("adminFlatDetailsHubSection");
+      const heading = document.getElementById("inlineFlatHubHeading");
+      if (heading && flat) {
+        heading.innerText = `${flat.PropertyName || ""} — Flat ${flat.FlatName || ""}`;
+      }
+      if (ws && host && ws.parentElement !== host) {
+        host.appendChild(ws);
+      }
+      document.body.classList.add("admin-flat-hub-open", "flat-details-open");
+      if (hub) hub.style.display = "block";
+      if (typeof syncFloatingCornerButtonsByRole === "function") syncFloatingCornerButtonsByRole();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function triggerRenterAppDownload(platform) {
+      const links = typeof getStoredAppDownloadLinks === "function"
+        ? getStoredAppDownloadLinks()
+        : { androidApkUrl: "", iosAppUrl: "" };
+      const isAndroid = String(platform || "").toLowerCase() === "android";
+      const targetUrl = isAndroid ? links.androidApkUrl : links.iosAppUrl;
+      if (!targetUrl) {
+        return triggerSideToast(
+          isAndroid ? "Android APK Unavailable" : "iOS App Unavailable",
+          `Admin has not configured the ${isAndroid ? "Android APK" : "iOS App"} download link yet.`,
+          "warning"
+        );
+      }
+      const a = document.createElement("a");
+      a.href = targetUrl;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      if (isAndroid && /\.apk(\?|#|$)/i.test(targetUrl)) {
+        a.download = "RentPortal-Android.apk";
+      }
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      triggerSideToast(
+        isAndroid ? "Downloading Android APK" : "Opening iOS App Link",
+        `Starting ${isAndroid ? "Android APK" : "iOS App"} download...`,
+        true
+      );
+    }
+
     function openFlatDetailsModal(flat, renter) {
       const viewerScope = resolveViewerAssignedScope();
       if (activeRole === "Renter") {
@@ -26443,7 +27076,7 @@ function formatMonthLabel(rawVal) {
       if (typeof computeMoveOutSettlementPreview === "function") computeMoveOutSettlementPreview();
       if (typeof loadFlatApplianceChecklist === "function") loadFlatApplianceChecklist(flat.PropertyName, flat.FlatName);
 
-      const modal = document.getElementById("flatDetailsModal");
+      const modal = getFlatDetailsWorkspaceRoot();
       const navBar = document.getElementById("flatModalNavBar");
       const qrHeaderBtn = document.getElementById("btnFlatHeaderQrCollect");
       if (qrHeaderBtn) {
@@ -26518,11 +27151,23 @@ function formatMonthLabel(rawVal) {
         });
       }
 
-      openModal('flatDetailsModal');
+      if (String(activeRole || "").trim().toLowerCase() === "renter") {
+        const ws = document.getElementById("sharedFlatDetailsWorkspace");
+        const modalOverlay = document.getElementById("flatDetailsModal");
+        if (ws && modalOverlay && ws.parentElement !== modalOverlay) {
+          modalOverlay.appendChild(ws);
+        }
+        document.body.classList.remove("admin-flat-hub-open");
+        const hub = document.getElementById("adminFlatDetailsHubSection");
+        if (hub) hub.style.display = "none";
+        openModal('flatDetailsModal');
+      } else {
+        mountInlineFlatWorkspaceForAdmin(flat);
+      }
     }
 
     function switchFlatTab(evt, tabId) {
-      const modal = document.getElementById("flatDetailsModal");
+      const modal = getFlatDetailsWorkspaceRoot();
       modal.querySelectorAll(".flat-nav-item").forEach(item => item.classList.remove("active"));
       modal.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
       evt.currentTarget.classList.add("active");
@@ -26542,7 +27187,7 @@ function formatMonthLabel(rawVal) {
 
       openFlatDetailsModal(flatObj, primaryRenter);
 
-      const modal = document.getElementById("flatDetailsModal");
+      const modal = getFlatDetailsWorkspaceRoot();
       const navBar = document.getElementById("flatModalNavBar");
       const tabHistoryNav = document.getElementById("flatNavTabHistory");
       const tabProfileNav = document.getElementById("flatNavTabProfile");
@@ -26604,7 +27249,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function switchFlatTabToProfile() {
-      const modal = document.getElementById("flatDetailsModal");
+      const modal = getFlatDetailsWorkspaceRoot();
       const navItems = modal.querySelectorAll(".flat-nav-item");
       const tabs = modal.querySelectorAll(".tab-content");
       navItems.forEach((item, i) => item.classList.toggle("active", i === 2));
@@ -28761,7 +29406,7 @@ function formatMonthLabel(rawVal) {
         );
       currentEditingBillId = matchedBill ? String(matchedBill.BillID || "") : null;
 
-      const modal = document.getElementById("flatDetailsModal");
+      const modal = getFlatDetailsWorkspaceRoot();
       const navItems = modal.querySelectorAll(".flat-nav-item");
       const tabs = modal.querySelectorAll(".tab-content");
       navItems.forEach((item, i) => item.classList.toggle("active", i === 0));
@@ -32708,6 +33353,9 @@ function formatMonthLabel(rawVal) {
         el.classList.remove("active");
         if (el.id === "flatDetailsModal") {
           document.body.classList.remove("flat-details-open");
+          if (document.body.classList.contains("admin-flat-hub-open") && typeof closeInlineFlatWorkspace === "function") {
+            closeInlineFlatWorkspace(true);
+          }
           const navBar = document.getElementById("flatModalNavBar");
           if (navBar) navBar.style.display = "";
           const tabHistoryNav = document.getElementById("flatNavTabHistory");
@@ -33757,7 +34405,13 @@ function formatMonthLabel(rawVal) {
       if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
       if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
       if (typeof closeAdminPortfolioHub === "function") closeAdminPortfolioHub(true);
+      if (typeof closeInlineFlatWorkspace === "function") closeInlineFlatWorkspace(true);
       if (typeof hideInlineForgotPasswordPanel === "function") hideInlineForgotPasswordPanel();
+      hasLoadedInitialBroadcastNotices = false;
+      hasBaselineBroadcastNoticesSynced = false;
+      window._readNotificationIdsInMemory = null;
+      window._toastedNotificationIdsInMemory = null;
+      window.__portalSessionStartedAt = 0;
 
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
@@ -34140,7 +34794,9 @@ function formatMonthLabel(rawVal) {
         "closeMonthlyPhotoRequest",
         "saveScreenshotRequests",
         "uploadBackgroundPhoto",
-        "saveBackgrounds"
+        "saveBackgrounds",
+        "deletePaymentProof",
+        "saveAppDownloadLinks"
       ].includes(actName);
       try {
         const result = await handleFirebaseAction(data);
@@ -34169,9 +34825,9 @@ function formatMonthLabel(rawVal) {
 
     function syncFloatingCornerButtonsByRole() {
       const chatWidget = document.getElementById("modularLiveChatWidget");
-      const isFlatModalOpen = document.getElementById("flatDetailsModal")?.classList.contains("active");
+      const isFlatModalOpen = Boolean(document.getElementById("flatDetailsModal")?.classList.contains("active") || document.body.classList.contains("admin-flat-hub-open"));
 
-      document.body.classList.toggle("flat-details-open", Boolean(isFlatModalOpen));
+      document.body.classList.toggle("flat-details-open", isFlatModalOpen);
 
       if (chatWidget && isFlatModalOpen) {
         chatWidget.style.display = "none";
@@ -36068,23 +36724,100 @@ function formatMonthLabel(rawVal) {
 
       const utrLabel = proof.utr || proof.UTRNumber || "UTR";
       const amtLabel = `₹${Number(proof.amount || 0).toLocaleString("en-IN")}`;
-      const desc = `Delete UTR ${utrLabel} (${amtLabel}) submitted by ${proof.tenantName || "Tenant"} for ${proof.propertyName || ""} Flat ${proof.flatName || ""}?`;
+      const desc = `Delete UTR ${utrLabel} (${amtLabel}) submitted by ${proof.tenantName || "Tenant"} for ${proof.propertyName || ""} Flat ${proof.flatName || ""} and permanently remove its payment screenshot from Google Drive?`;
 
       const executeDelete = () => {
         if (!window.__deletedPaymentProofIds) window.__deletedPaymentProofIds = {};
         window.__deletedPaymentProofIds[String(proofId)] = Date.now();
+
+        const screenshotUrl = String(proof.screenshotUrl || proof.ScreenshotURL || proof.imageUrl || "").trim();
+        const extractDriveId = (raw) => {
+          const m1 = String(raw || "").match(/[?&]id=([a-zA-Z0-9_-]{15,})/i);
+          if (m1) return m1[1];
+          const m2 = String(raw || "").match(/\/d\/([a-zA-Z0-9_-]{15,})/i);
+          return m2 ? m2[1] : "";
+        };
+        const driveFileId = String(proof.driveFileId || proof.fileId || extractDriveId(screenshotUrl) || "").trim();
+        const normProp = String(proof.propertyName || "").trim().toLowerCase();
+        const normFlat = String(proof.flatName || "").trim().toLowerCase();
+        const cleanMonth = normalizeMonthYear(proof.monthYear || "");
+        const normAadhaar = normalizeAadhaar12(proof.aadhaar || proof.identityDocNumber || "");
+        const proofRenterId = String(proof.renterId || "").trim();
+
+        // Also remove matching payment screenshot from renterMonthlyPhotos & Renters.Photo2URL locally
+        if (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object") {
+          window.__deletedMonthlyPhotoSlots = window.__deletedMonthlyPhotoSlots || {};
+          Object.keys(DB.globalConfig.renterMonthlyPhotos).forEach(k => {
+            const slot = DB.globalConfig.renterMonthlyPhotos[k];
+            if (!slot || typeof slot !== "object") return;
+            const sUrl = String(slot.imageUrl || slot.previewUrl || "").trim();
+            const sFileId = String(slot.fileId || slot.driveFileId || extractDriveId(sUrl) || "").trim();
+            const sameFile = (driveFileId && sFileId && sFileId === driveFileId) || (screenshotUrl && sUrl && sUrl === screenshotUrl);
+            const samePaymentSlot = canonicalMonthlyPhotoCategory(slot.category || "") === "completed_payment" &&
+              (!cleanMonth || normalizeMonthYear(slot.monthYear || slot.MonthYear) === cleanMonth) &&
+              ((normProp && normFlat && String(slot.propertyName || "").trim().toLowerCase() === normProp && String(slot.flatName || "").trim().toLowerCase() === normFlat) ||
+               (normAadhaar.length === 12 && normalizeAadhaar12(slot.aadhaar || slot.identityDocNumber || "") === normAadhaar));
+            if (sameFile || samePaymentSlot) {
+              window.__deletedMonthlyPhotoSlots[k] = Date.now();
+              if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[k];
+              delete DB.globalConfig.renterMonthlyPhotos[k];
+            }
+          });
+        }
+        (DB.renters || []).forEach(r => {
+          const rPhoto2 = String(r.Photo2URL || "").trim();
+          const rFileId = extractDriveId(rPhoto2);
+          if ((driveFileId && rFileId === driveFileId) || (screenshotUrl && rPhoto2 === screenshotUrl)) {
+            r.Photo2URL = "";
+          }
+        });
+
         const updatedList = getStoredPaymentProofs().filter(p => String(p.id || p.ProofID || "") !== String(proofId));
-        saveStoredPaymentProofs(updatedList);
+        if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+        DB.globalConfig.paymentProofs = updatedList;
+        saveLocalGlobalConfigMaster(DB.globalConfig);
+        saveDbSnapshotToCache();
+
         if (typeof recordAdminAuditLog === "function") {
-          recordAdminAuditLog("DELETE_PAYMENT_PROOF", `${proof.propertyName || ""} Flat ${proof.flatName || ""}`, `Deleted UTR ${utrLabel} (${amtLabel})`);
+          recordAdminAuditLog("DELETE_PAYMENT_PROOF", `${proof.propertyName || ""} Flat ${proof.flatName || ""}`, `Deleted UTR ${utrLabel} (${amtLabel}) & Drive Screenshot`);
         }
         renderAdminPaymentProofQueue();
+        if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
         if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
-        triggerSideToast("UTR Record Deleted", `UTR ${utrLabel} has been permanently removed.`, true);
+        renderAllDashboardUI();
+        triggerSideToast("UTR & Screenshot Deleted", `UTR ${utrLabel} and its uploaded payment photo are being permanently deleted from Google Drive.`, true);
+
+        sendFirebaseAction({
+          action: "deletePaymentProof",
+          requesterRole: activeRole || "Admin",
+          proofId: String(proofId),
+          screenshotUrl: screenshotUrl,
+          imageUrl: screenshotUrl,
+          driveFileId: driveFileId,
+          fileId: driveFileId,
+          propertyName: proof.propertyName || "",
+          flatName: proof.flatName || "",
+          monthYear: cleanMonth,
+          renterId: proofRenterId,
+          aadhaar: normAadhaar,
+          updatedPaymentProofs: updatedList
+        }).then(res => {
+          if (res && typeof res === "object") {
+            if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+            if (Array.isArray(res.paymentProofs)) DB.globalConfig.paymentProofs = res.paymentProofs;
+            if (res.renterMonthlyPhotos && typeof res.renterMonthlyPhotos === "object") {
+              DB.globalConfig.renterMonthlyPhotos = { ...res.renterMonthlyPhotos };
+            }
+            saveLocalGlobalConfigMaster(DB.globalConfig);
+            saveDbSnapshotToCache();
+            renderAdminPaymentProofQueue();
+            if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
+          }
+        }).catch(() => {});
       };
 
       if (typeof openCenteredConfirmModal === "function") {
-        openCenteredConfirmModal("Delete UTR Record", desc, executeDelete, {
+        openCenteredConfirmModal("Delete UTR & Payment Photo", desc, executeDelete, {
           yesText: "Yes, Delete",
           noText: "Cancel"
         });
@@ -37247,6 +37980,100 @@ function formatMonthLabel(rawVal) {
         triggerSideToast("Sync Notice", "Setup command sent to Google Sheets.", true);
       }
     }
+
+    function initAntiScreenCaptureProtection() {
+      if (window.__antiScreenCaptureInitialized) return;
+      window.__antiScreenCaptureInitialized = true;
+
+      let shieldTimer = null;
+      const flashScreenCaptureShield = (msgText, durationMs = 2400) => {
+        document.body.classList.add("screen-privacy-blur");
+        const overlay = document.getElementById("screenCaptureShieldOverlay");
+        const msgEl = document.getElementById("screenCaptureShieldMsg");
+        if (msgEl && msgText) msgEl.innerText = msgText;
+        if (overlay) overlay.style.display = "flex";
+        if (shieldTimer) clearTimeout(shieldTimer);
+        shieldTimer = setTimeout(() => {
+          shieldTimer = null;
+          if (!document.hidden) {
+            document.body.classList.remove("screen-privacy-blur");
+          }
+          if (overlay) overlay.style.display = "none";
+        }, durationMs);
+      };
+
+      try {
+        if (navigator.mediaDevices && typeof navigator.mediaDevices.getDisplayMedia === "function") {
+          const blockedDisplayMedia = () => {
+            flashScreenCaptureShield("Screen recording is disabled across this platform.", 2600);
+            return Promise.reject(new DOMException("Screen recording is disabled on this platform.", "NotAllowedError"));
+          };
+          try {
+            Object.defineProperty(navigator.mediaDevices, "getDisplayMedia", {
+              value: blockedDisplayMedia,
+              configurable: true,
+              writable: false
+            });
+          } catch (defineErr) {
+            navigator.mediaDevices.getDisplayMedia = blockedDisplayMedia;
+          }
+        }
+      } catch (e) {}
+
+      window.addEventListener("keydown", function(e) {
+        const keyLower = String(e.key || "").toLowerCase();
+        const isPrintScreen = e.key === "PrintScreen" || e.code === "PrintScreen" || e.keyCode === 44;
+        const isCaptureShortcut = (e.ctrlKey || e.metaKey) && e.shiftKey && ["s", "3", "4", "5", "i", "j", "c"].includes(keyLower);
+        const isPrintOrSave = (e.ctrlKey || e.metaKey) && ["p", "s", "u"].includes(keyLower);
+        const isDevToolsKey = e.key === "F12";
+        if (isPrintScreen || isCaptureShortcut || isPrintOrSave || isDevToolsKey) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (isPrintScreen && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+            navigator.clipboard.writeText("").catch(() => {});
+          }
+          flashScreenCaptureShield("Screenshots, screen recording, and printing are disabled across this platform.", 2400);
+        }
+      }, true);
+
+      document.addEventListener("contextmenu", function(e) {
+        const tag = String(e.target?.tagName || "").toUpperCase();
+        const isEditable = tag === "INPUT" || tag === "TEXTAREA" || Boolean(e.target?.isContentEditable);
+        if (!isEditable) {
+          e.preventDefault();
+        }
+      }, true);
+
+      const blockClipboardCopy = function(e) {
+        const tag = String(e.target?.tagName || "").toUpperCase();
+        const isEditable = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || Boolean(e.target?.isContentEditable);
+        if (!isEditable) {
+          e.preventDefault();
+        }
+      };
+      document.addEventListener("copy", blockClipboardCopy, true);
+      document.addEventListener("cut", blockClipboardCopy, true);
+
+      window.addEventListener("beforeprint", function() {
+        document.body.classList.add("screen-privacy-blur");
+        flashScreenCaptureShield("Printing and PDF capture of screens are disabled.", 2500);
+      });
+      window.addEventListener("afterprint", function() {
+        if (!document.hidden && !shieldTimer) {
+          document.body.classList.remove("screen-privacy-blur");
+        }
+      });
+
+      document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+          document.body.classList.add("screen-privacy-blur");
+        } else if (!shieldTimer) {
+          document.body.classList.remove("screen-privacy-blur");
+        }
+      });
+    }
+
+    initAntiScreenCaptureProtection();
 
   </script>
 
