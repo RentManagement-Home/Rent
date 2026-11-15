@@ -17444,11 +17444,6 @@ function formatMonthLabel(rawVal) {
                   </div>
                 ` : ""}
 
-                <div style="width:100%; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; font-size:0.66rem; color:var(--text-muted); padding-top:2px;">
-                  <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; margin-right:4px;"></span>Paid</span>
-                  <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; margin-right:4px;"></span>Due</span>
-                  <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#eab308; margin-right:4px;"></span>Overpaid</span>
-                </div>
               </div>
             </div>
 
@@ -17970,48 +17965,7 @@ function formatMonthLabel(rawVal) {
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:20px;">
               <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
-                <div style="font-size:0.78rem; font-weight:800; color:#34d399; text-transform:uppercase; letter-spacing:0.05em;">Resident Identity Details</div>
-
-                <div>
-                  <label for="renterInlineProfName" style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:4px; font-weight:700;">Full Name *</label>
-                  <input type="text" id="renterInlineProfName" class="form-control" value="${escapeHtml(profNameVal)}" placeholder="Enter full name" style="padding:8px 10px; font-size:0.86rem;" oninput="if(window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === 'inline') resetPendingProfileEmailOtpState('inline')">
-                </div>
-
-                <div>
-                  <label for="renterInlineProfPhone" style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:4px; font-weight:700;">Phone Number *</label>
-                  <input type="tel" id="renterInlineProfPhone" class="form-control" maxlength="14" inputmode="tel" value="${escapeHtml(profPhoneVal)}" placeholder="+91 9876543210" style="padding:8px 10px; font-size:0.86rem;" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value); if(window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === 'inline') resetPendingProfileEmailOtpState('inline')">
-                </div>
-
-                <div>
-                  <label for="renterInlineProfEmail" style="font-size:0.7rem; color:#38bdf8; display:block; margin-bottom:4px; font-weight:800;">Email ID *</label>
-                  <input type="email" id="renterInlineProfEmail" class="form-control" value="${escapeHtml(profEmailVal)}" placeholder="Enter Email ID (e.g. name@gmail.com)" style="padding:8px 10px; font-size:0.86rem;" oninput="if(window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === 'inline') resetPendingProfileEmailOtpState('inline')">
-                </div>
-
-                <button type="button" id="btnRenterInlineProfileSave" class="btn-primary" style="width:100%; padding:9px 14px; font-size:0.84rem; background:linear-gradient(135deg, #10b981 0%, #059669 100%); font-weight:800;" onclick="submitRenterInlineProfileSave()">
-                  <i class="fa-solid fa-check-circle"></i> Save
-                </button>
-
-                <div id="renterInlineEmailOtpBox" style="display:${isInlineEmailOtpActive ? "block" : "none"}; padding:12px; border-radius:12px; border:1.5px solid rgba(56,189,248,0.5); background:rgba(56,189,248,0.1);">
-                  <div style="font-size:0.76rem; font-weight:800; color:#38bdf8; margin-bottom:4px;">
-                    <i class="fa-solid fa-shield-halved"></i> Enter 4-Digit Email OTP
-                  </div>
-                  <div id="renterInlineEmailOtpSentInfo" style="font-size:0.71rem; color:var(--text-muted); margin-bottom:8px;">
-                    A 4-digit OTP was sent to <strong>${escapeHtml(window.__pendingProfileEmailOtp?.email || profEmailVal)}</strong>. Verify to save your profile.
-                  </div>
-                  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                    <input type="text" id="renterInlineEmailOtpInput" class="form-control" maxlength="4" inputmode="numeric" placeholder="4-digit OTP" style="flex:1; min-width:110px; text-align:center; font-size:0.95rem; font-weight:900; letter-spacing:5px;" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 4)">
-                    <button type="button" id="btnVerifyRenterInlineEmailOtp" class="btn-primary" style="width:auto; padding:8px 12px; font-size:0.78rem; background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); font-weight:800;" onclick="verifyAndSaveProfileWithEmailOtp('inline')">
-                      <i class="fa-solid fa-circle-check"></i> Verify OTP &amp; Save
-                    </button>
-                    <button type="button" id="btnResendRenterInlineEmailOtp" class="btn-ledger-action" style="padding:8px 10px; font-size:0.72rem;" onclick="resendProfileEmailOtp('inline')">
-                      <i class="fa-solid fa-rotate"></i> Resend
-                    </button>
-                  </div>
-                </div>
-
-                <div id="renterInlineProfileMsg" class="bottom-status-msg"></div>
-
-                <div style="padding-top:6px; border-top:1px dashed var(--glass-border);"><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
+                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Permanent Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(consolidatedProfile.Address || primaryRenter.Address || "N/A")}</strong></div>
               </div>
 
@@ -18092,27 +18046,9 @@ function formatMonthLabel(rawVal) {
                     ${profileImgUrl ? `<img src="${profileImgUrl}" alt="${renterNameDisplay}" onerror="handleDriveImgFallback(this)" />` : avatarInitials}
                   </div>
                   <div>
-                    <div class="renter-verified-pill" style="background:transparent;">
-                      <i class="fa-solid fa-circle-check"></i> Verified Resident Portal • Personal Ledger
-                    </div>
                     <h2 style="margin:0; font-size:1.8rem; font-weight:900; color:var(--text-main); letter-spacing:-0.025em; line-height:1.15;">
                       ${renterNameDisplay}
                     </h2>
-                    <div class="renter-meta-chips">
-                      <span class="renter-meta-chip" style="background:transparent;">
-                        <i class="fa-solid fa-building" style="color:#38bdf8;"></i>
-                        <span>${targetProp}</span>
-                      </span>
-                      <span class="renter-meta-chip" style="background:transparent;">
-                        <i class="fa-solid fa-door-open" style="color:#fbbf24;"></i>
-                        <span>Flat ${targetFlat}</span>
-                      </span>
-                      ${renterPhoneDisplay ? `
-                      <span class="renter-meta-chip" style="background:transparent;">
-                        <i class="fa-solid fa-phone" style="color:#a855f7;"></i>
-                        <span>${renterPhoneDisplay}</span>
-                      </span>` : ""}
-                    </div>
                   </div>
                 </div>
 
@@ -22565,9 +22501,8 @@ function formatMonthLabel(rawVal) {
 
         const photoSlots = [
           { idx: 1, key: "electricity_meter", col: "Photo1URL", label: "Photo 1 (Electricity Meter)", icon: "fa-bolt", color: "#38bdf8", url: "", fileName: "", updatedAt: "", isReRequested: false },
-          { idx: 2, key: "completed_payment", col: "Photo2URL", label: "Photo 2 (Payment Screenshot)", icon: "fa-receipt", color: "#10b981", url: "", fileName: "", updatedAt: "", isReRequested: false },
-          { idx: 3, key: "water_meter_bill", col: "Photo3URL", label: "Photo 3 (Water Meter / Bill)", icon: "fa-faucet-drip", color: "#06b6d4", url: "", fileName: "", updatedAt: "", isReRequested: false },
-          { idx: 4, key: "png_gas_meter", col: "Photo4URL", label: "Photo 4 (PNG Gas Meter)", icon: "fa-fire-flame-simple", color: "#f59e0b", url: "", fileName: "", updatedAt: "", isReRequested: false }
+          { idx: 2, key: "water_meter_bill", col: "Photo3URL", label: "Photo 2 (Water Meter / Bill)", icon: "fa-faucet-drip", color: "#06b6d4", url: "", fileName: "", updatedAt: "", isReRequested: false },
+          { idx: 3, key: "png_gas_meter", col: "Photo4URL", label: "Photo 3 (PNG Gas Meter)", icon: "fa-fire-flame-simple", color: "#f59e0b", url: "", fileName: "", updatedAt: "", isReRequested: false }
         ];
 
         const normProp = propName.toLowerCase();
@@ -22612,25 +22547,7 @@ function formatMonthLabel(rawVal) {
           }
         });
 
-        // 2. Fallback to PaymentProofs for selectedMonth when Photo 2 is empty
-        if (!photoSlots[1].url) {
-          const matchingProof = paymentProofs.find(p => {
-            if (!p || !p.screenshotUrl || isPlaceholderImageUrl(p.screenshotUrl)) return false;
-            const pMonth = normalizeMonthYear(p.billMonth || p.monthYear || "");
-            if (pMonth && pMonth !== selectedMonth) return false;
-            const pAadh = String(p.aadhaar || p.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-            return (rawAadh.length === 12 && pAadh === rawAadh) ||
-                   (normProp && normFlat && normFlat !== "--" && isSamePropAndFlat(p.propertyName, p.flatName, propName, flatName)) ||
-                   (String(p.tenantName || "").trim().toLowerCase() === rName.toLowerCase());
-          });
-          if (matchingProof && matchingProof.screenshotUrl) {
-            photoSlots[1].url = matchingProof.screenshotUrl.startsWith("data:image")
-              ? matchingProof.screenshotUrl
-              : normalizeGoogleDriveImageUrl(matchingProof.screenshotUrl);
-          }
-        }
-
-        // 2b. Fallback to Renter row Photo1URL..Photo4URL columns for the current/latest month if slot still empty
+        // 2. Fallback to Renter row Photo1URL..Photo4URL columns for the current/latest month if slot still empty
         if (selectedMonth === currentMonthDefault) {
           photoSlots.forEach(slot => {
             if (!slot.url && r[slot.col] && !isPlaceholderImageUrl(r[slot.col])) {
@@ -22771,7 +22688,7 @@ function formatMonthLabel(rawVal) {
                 <span class="badge-paid" style="font-size:0.7rem;">Active Renter</span>
                 ${reqBadge}
                 <span style="font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(16,185,129,0.16); color:#10b981; border:1px solid rgba(16,185,129,0.35);">
-                  ${card.uploadedCount} / 4 Uploaded (${selectedMonthLabel})
+                  ${card.uploadedCount} / 3 Uploaded (${selectedMonthLabel})
                 </span>
                 ${isStrictAdmin ? `
                   <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#10b981; border-color:rgba(16,185,129,0.45);" onclick="sendAdminMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
