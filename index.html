@@ -1028,18 +1028,22 @@
       border-color: #6366f1 !important;
     }
 
-    /* 100% Solid & Visible Modal Background for All Three Triggers */
+    /* 100% Solid & Visible Modal & Inline Workspace Background for All Three Triggers */
     #fdModal .modal-window,
     #khetModal .modal-window,
-    #kharchModal .modal-window {
+    #kharchModal .modal-window,
+    #adminPortfolioHubSection .admin-ops-hub-body {
       background: #0b1120 !important;
       opacity: 1 !important;
       border: 1.5px solid rgba(148, 163, 184, 0.35) !important;
+      border-radius: 20px !important;
+      padding: 20px !important;
       box-shadow: 0 25px 65px rgba(0, 0, 0, 0.88), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
     }
     body.theme-white #fdModal .modal-window,
     body.theme-white #khetModal .modal-window,
-    body.theme-white #kharchModal .modal-window {
+    body.theme-white #kharchModal .modal-window,
+    body.theme-white #adminPortfolioHubSection .admin-ops-hub-body {
       background: #ffffff !important;
       opacity: 1 !important;
       border: 1.5px solid #cbd5e1 !important;
@@ -1055,7 +1059,16 @@
     #khetModal textarea.form-control,
     #kharchModal input.form-control,
     #kharchModal select.form-control,
-    #kharchModal textarea.form-control {
+    #kharchModal textarea.form-control,
+    #sharedFdWorkspace input.form-control,
+    #sharedFdWorkspace select.form-control,
+    #sharedFdWorkspace textarea.form-control,
+    #sharedKhetWorkspace input.form-control,
+    #sharedKhetWorkspace select.form-control,
+    #sharedKhetWorkspace textarea.form-control,
+    #sharedKharchWorkspace input.form-control,
+    #sharedKharchWorkspace select.form-control,
+    #sharedKharchWorkspace textarea.form-control {
       background: #1e293b !important;
       border: 1.5px solid rgba(148, 163, 184, 0.32) !important;
       border-radius: 12px !important;
@@ -1074,7 +1087,16 @@
     body.theme-white #khetModal textarea.form-control,
     body.theme-white #kharchModal input.form-control,
     body.theme-white #kharchModal select.form-control,
-    body.theme-white #kharchModal textarea.form-control {
+    body.theme-white #kharchModal textarea.form-control,
+    body.theme-white #sharedFdWorkspace input.form-control,
+    body.theme-white #sharedFdWorkspace select.form-control,
+    body.theme-white #sharedFdWorkspace textarea.form-control,
+    body.theme-white #sharedKhetWorkspace input.form-control,
+    body.theme-white #sharedKhetWorkspace select.form-control,
+    body.theme-white #sharedKhetWorkspace textarea.form-control,
+    body.theme-white #sharedKharchWorkspace input.form-control,
+    body.theme-white #sharedKharchWorkspace select.form-control,
+    body.theme-white #sharedKharchWorkspace textarea.form-control {
       background: #ffffff !important;
       border: 1.5px solid #cbd5e1 !important;
       color: #0f172a !important;
@@ -1082,27 +1104,38 @@
     }
     #fdModal .form-control:hover,
     #khetModal .form-control:hover,
-    #kharchModal .form-control:hover {
+    #kharchModal .form-control:hover,
+    #sharedFdWorkspace .form-control:hover,
+    #sharedKhetWorkspace .form-control:hover,
+    #sharedKharchWorkspace .form-control:hover {
       border-color: rgba(99, 102, 241, 0.6) !important;
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22) !important;
     }
     body.theme-white #fdModal .form-control:hover,
     body.theme-white #khetModal .form-control:hover,
-    body.theme-white #kharchModal .form-control:hover {
+    body.theme-white #kharchModal .form-control:hover,
+    body.theme-white #sharedFdWorkspace .form-control:hover,
+    body.theme-white #sharedKhetWorkspace .form-control:hover,
+    body.theme-white #sharedKharchWorkspace .form-control:hover {
       border-color: #6366f1 !important;
     }
     #fdModal .form-control:focus,
     #khetModal .form-control:focus,
-    #kharchModal .form-control:focus {
+    #kharchModal .form-control:focus,
+    #sharedFdWorkspace .form-control:focus,
+    #sharedKhetWorkspace .form-control:focus,
+    #sharedKharchWorkspace .form-control:focus {
       border-color: #6366f1 !important;
       box-shadow: 0 0 0 3.5px rgba(99, 102, 241, 0.28), 0 4px 16px rgba(99, 102, 241, 0.2) !important;
       outline: none !important;
     }
-    #khetModal .form-control:focus {
+    #khetModal .form-control:focus,
+    #sharedKhetWorkspace .form-control:focus {
       border-color: #10b981 !important;
       box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.28), 0 4px 16px rgba(16, 185, 129, 0.2) !important;
     }
-    #kharchModal .form-control:focus {
+    #kharchModal .form-control:focus,
+    #sharedKharchWorkspace .form-control:focus {
       border-color: #f59e0b !important;
       box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.28), 0 4px 16px rgba(245, 158, 11, 0.2) !important;
     }
@@ -3479,17 +3512,22 @@
     transition: box-shadow 0.3s ease !important;
   }
 
-  /* Admin Person Icon Operations Hub — Embedded Inline Right on the Home Page */
-  body.admin-ops-hub-open .admin-ops-hub-btn {
+  /* Admin Person Icon Operations Hub & Home Portfolio Hub — Embedded Inline Right on the Home Page */
+  body.admin-ops-hub-open .admin-ops-hub-btn,
+  body.admin-portfolio-hub-open .stylish-house-trigger {
     border-color: #34d399 !important;
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.45) 0%, rgba(6, 182, 212, 0.34) 100%) !important;
     box-shadow: 0 0 0 2.5px rgba(52, 211, 153, 0.42), 0 8px 24px rgba(16, 185, 129, 0.48) !important;
   }
-  body.admin-ops-hub-open .admin-ops-hub-btn i {
+  body.admin-ops-hub-open .admin-ops-hub-btn i,
+  body.admin-portfolio-hub-open .stylish-house-trigger .house-main-svg {
     color: #ffffff !important;
   }
   body.admin-ops-hub-open #dashboardScreen .properties-bar,
-  body.admin-ops-hub-open #dashboardScreen #flatsList {
+  body.admin-ops-hub-open #dashboardScreen #flatsList,
+  body.admin-portfolio-hub-open #dashboardScreen .properties-bar,
+  body.admin-portfolio-hub-open #dashboardScreen #flatsList,
+  body.admin-portfolio-hub-open #dashboardScreen #homeKhetSectionContainer {
     display: none !important;
   }
   .admin-ops-hub-section {
@@ -4145,21 +4183,25 @@
     color: #0f172a !important;
     border: 1.5px solid #cbd5e1 !important;
   }
-  body.theme-white #fdModal label {
+  body.theme-white #fdModal label,
+  body.theme-white #sharedFdWorkspace label {
     color: #334155 !important;
     font-weight: 700 !important;
   }
-  body.theme-white #fdModal .form-control {
+  body.theme-white #fdModal .form-control,
+  body.theme-white #sharedFdWorkspace .form-control {
     background: #ffffff !important;
     color: #0f172a !important;
     border: 1.5px solid #cbd5e1 !important;
     box-shadow: none !important;
   }
-  body.theme-white #fdModal .form-control:focus {
+  body.theme-white #fdModal .form-control:focus,
+  body.theme-white #sharedFdWorkspace .form-control:focus {
     border-color: #4f46e5 !important;
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12) !important;
   }
-  body.theme-white #fdModal .btn-ledger-action {
+  body.theme-white #fdModal .btn-ledger-action,
+  body.theme-white #sharedFdWorkspace .btn-ledger-action {
     background: #ffffff !important;
     color: #1e293b !important;
     border: 1.5px solid #cbd5e1 !important;
@@ -4253,7 +4295,10 @@
   #settingsModal h3, #settingsModal h4,
   #fdModal h3, #fdModal h4,
   #khetModal h3, #khetModal h4,
-  #kharchModal h3, #kharchModal h4 {
+  #kharchModal h3, #kharchModal h4,
+  #sharedFdWorkspace h3, #sharedFdWorkspace h4,
+  #sharedKhetWorkspace h3, #sharedKhetWorkspace h4,
+  #sharedKharchWorkspace h3, #sharedKharchWorkspace h4 {
     color: #ffffff !important;
     font-weight: 800 !important;
   }
@@ -4261,7 +4306,10 @@
   body.theme-white #settingsModal h3, body.theme-white #settingsModal h4,
   body.theme-white #fdModal h3, body.theme-white #fdModal h4,
   body.theme-white #khetModal h3, body.theme-white #khetModal h4,
-  body.theme-white #kharchModal h3, body.theme-white #kharchModal h4 {
+  body.theme-white #kharchModal h3, body.theme-white #kharchModal h4,
+  body.theme-white #sharedFdWorkspace h3, body.theme-white #sharedFdWorkspace h4,
+  body.theme-white #sharedKhetWorkspace h3, body.theme-white #sharedKhetWorkspace h4,
+  body.theme-white #sharedKharchWorkspace h3, body.theme-white #sharedKharchWorkspace h4 {
     color: #0f172a !important;
   }
 
@@ -4269,7 +4317,10 @@
   #settingsModal label,
   #fdModal label,
   #khetModal label,
-  #kharchModal label {
+  #kharchModal label,
+  #sharedFdWorkspace label,
+  #sharedKhetWorkspace label,
+  #sharedKharchWorkspace label {
     color: #f1f5f9 !important;
     font-weight: 700 !important;
     font-size: 0.75rem !important;
@@ -4279,7 +4330,10 @@
   body.theme-white #settingsModal label,
   body.theme-white #fdModal label,
   body.theme-white #khetModal label,
-  body.theme-white #kharchModal label {
+  body.theme-white #kharchModal label,
+  body.theme-white #sharedFdWorkspace label,
+  body.theme-white #sharedKhetWorkspace label,
+  body.theme-white #sharedKharchWorkspace label {
     color: #1e293b !important;
     text-shadow: none !important;
   }
@@ -4288,7 +4342,10 @@
   #settingsModal p, #settingsModal .text-muted,
   #fdModal p, #fdModal .text-muted,
   #khetModal p, #khetModal .text-muted,
-  #kharchModal p, #kharchModal .text-muted {
+  #kharchModal p, #kharchModal .text-muted,
+  #sharedFdWorkspace p, #sharedFdWorkspace .text-muted,
+  #sharedKhetWorkspace p, #sharedKhetWorkspace .text-muted,
+  #sharedKharchWorkspace p, #sharedKharchWorkspace .text-muted {
     color: #cbd5e1 !important;
     font-weight: 500 !important;
   }
@@ -4296,7 +4353,10 @@
   body.theme-white #settingsModal p, body.theme-white #settingsModal .text-muted,
   body.theme-white #fdModal p, body.theme-white #fdModal .text-muted,
   body.theme-white #khetModal p, body.theme-white #khetModal .text-muted,
-  body.theme-white #kharchModal p, body.theme-white #kharchModal .text-muted {
+  body.theme-white #kharchModal p, body.theme-white #kharchModal .text-muted,
+  body.theme-white #sharedFdWorkspace p, body.theme-white #sharedFdWorkspace .text-muted,
+  body.theme-white #sharedKhetWorkspace p, body.theme-white #sharedKhetWorkspace .text-muted,
+  body.theme-white #sharedKharchWorkspace p, body.theme-white #sharedKharchWorkspace .text-muted {
     color: #334155 !important;
   }
 
@@ -4304,7 +4364,10 @@
   #settingsModal input:not([type="checkbox"]), #settingsModal select, #settingsModal textarea,
   #fdModal input:not([type="checkbox"]), #fdModal select, #fdModal textarea,
   #khetModal input:not([type="checkbox"]), #khetModal select, #khetModal textarea,
-  #kharchModal input:not([type="checkbox"]), #kharchModal select, #kharchModal textarea {
+  #kharchModal input:not([type="checkbox"]), #kharchModal select, #kharchModal textarea,
+  #sharedFdWorkspace input:not([type="checkbox"]), #sharedFdWorkspace select, #sharedFdWorkspace textarea,
+  #sharedKhetWorkspace input:not([type="checkbox"]), #sharedKhetWorkspace select, #sharedKhetWorkspace textarea,
+  #sharedKharchWorkspace input:not([type="checkbox"]), #sharedKharchWorkspace select, #sharedKharchWorkspace textarea {
     background: #1e293b !important;
     color: #ffffff !important;
     border: 1.5px solid #475569 !important;
@@ -4315,7 +4378,10 @@
   body.theme-white #settingsModal input:not([type="checkbox"]), body.theme-white #settingsModal select, body.theme-white #settingsModal textarea,
   body.theme-white #fdModal input:not([type="checkbox"]), body.theme-white #fdModal select, body.theme-white #fdModal textarea,
   body.theme-white #khetModal input:not([type="checkbox"]), body.theme-white #khetModal select, body.theme-white #khetModal textarea,
-  body.theme-white #kharchModal input:not([type="checkbox"]), body.theme-white #kharchModal select, body.theme-white #kharchModal textarea {
+  body.theme-white #kharchModal input:not([type="checkbox"]), body.theme-white #kharchModal select, body.theme-white #kharchModal textarea,
+  body.theme-white #sharedFdWorkspace input:not([type="checkbox"]), body.theme-white #sharedFdWorkspace select, body.theme-white #sharedFdWorkspace textarea,
+  body.theme-white #sharedKhetWorkspace input:not([type="checkbox"]), body.theme-white #sharedKhetWorkspace select, body.theme-white #sharedKhetWorkspace textarea,
+  body.theme-white #sharedKharchWorkspace input:not([type="checkbox"]), body.theme-white #sharedKharchWorkspace select, body.theme-white #sharedKharchWorkspace textarea {
     background: #ffffff !important;
     color: #0f172a !important;
     border: 1.5px solid #94a3b8 !important;
@@ -5862,10 +5928,11 @@
     </div>
   </div>
 
-  <!-- FD (FIXED DEPOSIT & FUND UTILIZATION PORTFOLIO) POP-UP MODAL -->
+  <!-- FD (FIXED DEPOSIT & FUND UTILIZATION PORTFOLIO) WORKSPACE HOST -->
   <div id="fdModal" class="modal-overlay" style="z-index: 2800;">
     <div class="modal-window" style="max-width: 1020px; width: 96%;">
       <button class="modal-close-btn" onclick="closeModal('fdModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div id="sharedFdWorkspace">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding-right:36px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1.5px solid var(--glass-border);">
         <div>
           <h3 style="display:flex; align-items:center; gap:8px; margin:0; font-size:1.15rem; color:var(--text-main); font-weight:800;">
@@ -6066,13 +6133,15 @@
       <div id="fdTabProjectionContent" class="manual-horiz-scroll-container" style="display:none; overflow-x:auto; -webkit-overflow-scrolling:touch;">
         <div id="fdCashflowProjectionContainer" style="min-width:740px; background:var(--bg-input); border:1.5px solid var(--glass-border); border-radius:16px; padding:16px;"></div>
       </div>
+      </div>
     </div>
   </div>
 
-  <!-- KHET (FARMLAND REGISTRY, PARTNER KYC & SETTLEMENT) POP-UP MODAL -->
+  <!-- KHET (FARMLAND REGISTRY, PARTNER KYC & SETTLEMENT) WORKSPACE HOST -->
   <div id="khetModal" class="modal-overlay" style="z-index: 2800;">
     <div class="modal-window" style="max-width: 1080px; width: 96%;">
       <button class="modal-close-btn" onclick="closeModal('khetModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div id="sharedKhetWorkspace">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding-right:36px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1.5px solid var(--glass-border);">
         <div>
           <h3 style="display:flex; align-items:center; gap:8px; margin:0; font-size:1.15rem; color:var(--text-main);">
@@ -6328,13 +6397,15 @@
 
         <div id="khetRecordsList" style="max-height: 440px; overflow-y: auto; display:flex; flex-direction:column; gap:10px;"></div>
       </div>
+      </div>
     </div>
   </div>
 
-  <!-- REQUIREMENT 8: KHARCH (EXPENSES) POP-UP MODAL -->
+  <!-- REQUIREMENT 8: KHARCH (EXPENSES) WORKSPACE HOST -->
   <div id="kharchModal" class="modal-overlay" style="z-index: 2800;">
     <div class="modal-window" style="max-width: 1020px; width: 96%;">
       <button class="modal-close-btn" onclick="closeModal('kharchModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div id="sharedKharchWorkspace">
       
       <!-- Modal Header -->
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; padding-right:36px; margin-bottom: 12px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">
@@ -6555,6 +6626,7 @@
           <div id="kharchPropertyRoiTableContainer" style="overflow-x:auto; -webkit-overflow-scrolling:touch;"></div>
         </div>
       </div>
+      </div>
     </div>
   </div>
 
@@ -6595,7 +6667,67 @@
           <span>Log In</span>
           <i class="fa-solid fa-arrow-right-to-bracket"></i>
         </button>
+        <div style="margin-top:12px; display:flex; justify-content:center;">
+          <button type="button" id="btnShowForgotPasswordInline" onclick="showInlineForgotPasswordPanel()" style="background:rgba(15,23,42,0.55); border:1px solid rgba(255,255,255,0.28); color:#e2e8f0; border-radius:999px; padding:6px 14px; font-size:0.8rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; backdrop-filter:blur(8px); transition:all 0.2s ease;">
+            <i class="fa-solid fa-key" style="color:#a78bfa;"></i> Forgot Password?
+          </button>
+        </div>
       </form>
+
+      <!-- Inline Forgot Password Panel (Renders right on the login screen without any popup) -->
+      <div id="forgotPasswordInlinePanel" style="display:none; text-align:left; background:rgba(15,23,42,0.72); border:1.5px solid rgba(255,255,255,0.28); border-radius:18px; padding:18px 16px; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); box-shadow:0 12px 32px rgba(0,0,0,0.45);">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.16);">
+          <div>
+            <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#a78bfa;">Account Recovery</div>
+            <h3 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:#ffffff;">Forgot Password</h3>
+          </div>
+          <button type="button" onclick="hideInlineForgotPasswordPanel()" style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#ffffff; border-radius:10px; padding:6px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+            <i class="fa-solid fa-arrow-left"></i> Back
+          </button>
+        </div>
+
+        <div id="fpCredentialsStepBox">
+          <div class="form-group" style="margin-bottom:12px;">
+            <label for="fpAadhaarInput" style="color:#f8fafc; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-id-card" style="color:#38bdf8;"></i> Aadhaar Number</label>
+            <div class="login-input-shell">
+              <i class="fa-solid fa-id-card login-field-icon"></i>
+              <input type="text" id="fpAadhaarInput" class="form-control" maxlength="14" inputmode="numeric" placeholder="XXXX-XXXX-XXXX" autocomplete="off" oninput="this.value = formatAadhaarWithHyphens(this.value)">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px;">
+            <label for="fpEmailInput" style="color:#f8fafc; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-envelope" style="color:#a78bfa;"></i> Registered Email ID</label>
+            <div class="login-input-shell">
+              <i class="fa-solid fa-envelope login-field-icon"></i>
+              <input type="email" id="fpEmailInput" class="form-control" placeholder="Enter your registered email ID" autocomplete="off">
+            </div>
+          </div>
+          <button type="button" id="btnFpSendOtp" onclick="submitInlineForgotPasswordSendOtp()" style="width:100%; padding:12px 16px; border-radius:12px; border:none; background:linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color:#ffffff; font-size:0.9rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 8px 20px rgba(79,70,229,0.4);">
+            <i class="fa-solid fa-paper-plane"></i> <span>Send 4-Digit OTP</span>
+          </button>
+        </div>
+
+        <div id="fpOtpStepBox" style="display:none; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.22);">
+          <div id="fpOtpSentHint" style="font-size:0.75rem; color:#93c5fd; font-weight:700; margin-bottom:8px;">
+            <i class="fa-solid fa-envelope-circle-check"></i> Enter the 4-digit OTP sent to your Email ID.
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <div class="login-input-shell">
+              <i class="fa-solid fa-shield-halved login-field-icon"></i>
+              <input type="text" id="fpOtpInput" class="form-control" maxlength="4" inputmode="numeric" placeholder="Enter 4-digit OTP" autocomplete="off" style="letter-spacing:6px; font-weight:900; text-align:center;" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 4)">
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" id="btnFpVerifyOtp" onclick="submitInlineForgotPasswordVerifyOtp()" style="flex:1; min-width:160px; padding:11px 14px; border-radius:12px; border:none; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:#ffffff; font-size:0.86rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px;">
+              <i class="fa-solid fa-circle-check"></i> <span>Verify OTP</span>
+            </button>
+            <button type="button" id="btnFpResendOtp" onclick="submitInlineForgotPasswordSendOtp()" style="padding:11px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:#ffffff; font-size:0.76rem; font-weight:800; cursor:pointer;">
+              Resend
+            </button>
+          </div>
+        </div>
+
+        <div id="fpStatusMsg" style="display:none; margin-top:10px; padding:9px 11px; border-radius:10px; font-size:0.76rem; font-weight:700; line-height:1.4;"></div>
+      </div>
     </div>
   </section>
 
@@ -6819,6 +6951,48 @@
           <div id="adminOpsHubPanelSlot_notifications" class="admin-ops-hub-slot" style="display:none;"></div>
           <div id="adminOpsHubPanelSlot_contact" class="admin-ops-hub-slot" style="display:none;"></div>
           <div id="adminOpsHubPanelSlot_tickets" class="admin-ops-hub-slot" style="display:none;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Portfolio Hub (Inline Home Workspace Below Header When Expenses, Land Records, or FD Is Clicked) -->
+    <section id="adminPortfolioHubSection" class="admin-ops-hub-section" style="display:none;" aria-label="Admin Portfolio Workspace">
+      <div class="admin-ops-hub-shell">
+        <div class="admin-ops-hub-topbar">
+          <div style="display:flex; align-items:center; gap:11px; min-width:0;">
+            <div class="admin-ops-hub-title-icon">
+              <i class="fa-solid fa-house-chimney"></i>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34d399;">Home Dashboard • Portfolio &amp; Financial Records</div>
+              <h3 id="adminPortfolioHubTitle" style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">Expenses, Land Records &amp; Fixed Deposit (FD)</h3>
+            </div>
+          </div>
+          <button type="button" id="btnCloseAdminPortfolioHub" class="admin-ops-hub-close-btn" onclick="closeAdminPortfolioHub()" title="Close &amp; Return to Properties">
+            <i class="fa-solid fa-xmark"></i>
+            <span>Close</span>
+          </button>
+        </div>
+
+        <div class="admin-ops-hub-carousel" id="adminPortfolioHubCarouselTrack" role="tablist" aria-label="Portfolio Sections">
+          <button type="button" class="admin-ops-carousel-card active" data-portfolio-tab="kharch" onclick="openAdminPortfolioHub('kharch')">
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-wallet" style="color:#f59e0b;"></i></span>
+            <span class="admin-ops-card-label">Expenses</span>
+          </button>
+          <button type="button" class="admin-ops-carousel-card" data-portfolio-tab="khet" onclick="openAdminPortfolioHub('khet')">
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-seedling" style="color:#10b981;"></i></span>
+            <span class="admin-ops-card-label">Land Records (Khiyat)</span>
+          </button>
+          <button type="button" class="admin-ops-carousel-card" data-portfolio-tab="fd" onclick="openAdminPortfolioHub('fd')">
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-building-columns" style="color:#818cf8;"></i></span>
+            <span class="admin-ops-card-label">Fixed Deposit (FD)</span>
+          </button>
+        </div>
+
+        <div class="admin-ops-hub-body" id="adminPortfolioHubBody">
+          <div id="adminPortfolioSlot_kharch" class="admin-ops-hub-slot" style="display:none;"></div>
+          <div id="adminPortfolioSlot_khet" class="admin-ops-hub-slot" style="display:none;"></div>
+          <div id="adminPortfolioSlot_fd" class="admin-ops-hub-slot" style="display:none;"></div>
         </div>
       </div>
     </section>
@@ -7554,7 +7728,6 @@
             <i class="fa-solid fa-bullhorn"></i> Official Notice Board
           </span>
           <h3 class="exec-modal-title">Admin Notifications</h3>
-          <p class="exec-modal-subtitle">Important announcements, rent updates, and maintenance alerts sent by your Administrator.</p>
         </div>
       </div>
       <div id="notificationsModalBody" class="exec-modal-body">
@@ -10011,8 +10184,7 @@
               activeSessionToken &&
               String(activeUser).trim().toLowerCase() === targetU &&
               newTok &&
-              newTok !== activeSessionToken &&
-              !isSessionTokenOnSameDevice(newTok, activeSessionToken)
+              newTok !== activeSessionToken
             ) {
               triggerSingleDeviceSessionConflict();
             }
@@ -10025,15 +10197,10 @@
               if (
                 me &&
                 me.ActiveSessionToken &&
-                String(me.ActiveSessionToken).trim() !== String(activeSessionToken).trim() &&
-                !isSessionTokenOnSameDevice(me.ActiveSessionToken, activeSessionToken)
+                String(me.ActiveSessionToken).trim() !== String(activeSessionToken).trim()
               ) {
-                const remoteTs = extractSessionTokenTimestamp(me.ActiveSessionToken);
-                const localTs = extractSessionTokenTimestamp(activeSessionToken);
-                if (remoteTs === 0 || localTs === 0 || remoteTs > localTs) {
-                  triggerSingleDeviceSessionConflict();
-                  return;
-                }
+                triggerSingleDeviceSessionConflict();
+                return;
               }
             }
             if (typeof renderAllDashboardUI === "function") renderAllDashboardUI();
@@ -10274,7 +10441,7 @@
                 saveLocalUsersMaster(remoteUsers);
               }
             } else if (remoteUsers && remoteUsers.length > 0) {
-              const withinRecentLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 12000;
+              const withinRecentLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 8000;
               let detectedRemoteConflict = Boolean(json.sessionConflict) && !withinRecentLoginGrace;
 
               remoteUsers = remoteUsers.map(function(u) {
@@ -10285,13 +10452,7 @@
                   if (withinRecentLoginGrace) {
                     resolvedTok = activeSessionToken;
                   } else if (resolvedTok && resolvedTok !== String(activeSessionToken).trim()) {
-                    const remoteTs = extractSessionTokenTimestamp(resolvedTok);
-                    const localTs = extractSessionTokenTimestamp(activeSessionToken);
-                    if (!isSessionTokenOnSameDevice(resolvedTok, activeSessionToken) && (remoteTs === 0 || localTs === 0 || remoteTs > localTs)) {
-                      detectedRemoteConflict = true;
-                    } else {
-                      resolvedTok = activeSessionToken;
-                    }
+                    detectedRemoteConflict = true;
                   }
                 }
                 return Object.assign({}, u, {
@@ -10386,7 +10547,7 @@
         String(data?.pngProofBase64 || "").startsWith("data:") ||
         String(data?.waterProofBase64 || "").startsWith("data:")
       ));
-      const requiresStrictJson = isDrivePhotoUpload || actName === "sendProfileEmailOtp" || actName === "verifyProfileEmailOtp";
+      const requiresStrictJson = isDrivePhotoUpload || actName === "sendProfileEmailOtp" || actName === "verifyProfileEmailOtp" || actName === "sendForgotPasswordOtp" || actName === "verifyForgotPasswordOtp";
 
       // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
       const runSheetPost = async function() {
@@ -10873,7 +11034,7 @@
       lastLoginCompletedAt = Date.now();
       isLoginWriteInFlight = true;
 
-      // Record login session & reset lockout in Google Apps Script and wait up to 4.5s so sheet sync never reads stale token
+      // Record login session & reset lockout in Google Apps Script and wait up to 10s so sheet sync reflects ActiveSessionToken immediately
       const loginPayloadObj = {
         action: "loginUser",
         username: liveMatch.Username,
@@ -10902,7 +11063,7 @@
 
       await Promise.race([
         gasLoginPromise,
-        new Promise(function(resolve) { setTimeout(resolve, 4500); })
+        new Promise(function(resolve) { setTimeout(resolve, 10000); })
       ]);
 
       return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, liveSheetData);
@@ -10957,6 +11118,8 @@
       "uploadPhotoToDriveOnly",
       "sendProfileEmailOtp",
       "verifyProfileEmailOtp",
+      "sendForgotPasswordOtp",
+      "verifyForgotPasswordOtp",
       "recordBill",
       "updateSingleBill",
       "deleteBill",
@@ -13295,6 +13458,41 @@
       return "--";
     }
 
+    function formatUtrDateOnly(rawDate) {
+      if (!rawDate) return "";
+      const s = String(rawDate).trim().replace(/^'+/, "");
+      if (!s || s === "undefined" || s === "null" || s === "--") return "";
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const formatParts = (yr, moIdx, da) => {
+        if (!yr || moIdx < 0 || moIdx > 11 || da < 1 || da > 31) return "";
+        return `${String(da).padStart(2, "0")} ${months[moIdx]} ${yr}`;
+      };
+      // Handle D/M/YYYY or DD/MM/YYYY with optional ", time" (e.g. "15/11/2026, 10:30:12 am")
+      const dmyTimeMatch = s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+      if (dmyTimeMatch) {
+        return formatParts(Number(dmyTimeMatch[3]), Number(dmyTimeMatch[2]) - 1, Number(dmyTimeMatch[1])) || s.split(",")[0].trim();
+      }
+      // Handle ISO or YYYY-MM-DD
+      const ymdMatch = s.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);
+      if (ymdMatch) {
+        return formatParts(Number(ymdMatch[1]), Number(ymdMatch[2]) - 1, Number(ymdMatch[3])) || s.substring(0, 10);
+      }
+      // Handle "15 Nov 2026, ..." or "15-Nov-2026 ..."
+      const dMonYMatch = s.match(/^(\d{1,2})[\s-]+([A-Za-z]{3,9})[\s-,]+(\d{4})/);
+      if (dMonYMatch) {
+        const mName = dMonYMatch[2].slice(0, 3).toLowerCase();
+        const mIdx = months.findIndex(m => m.toLowerCase() === mName);
+        if (mIdx !== -1) {
+          return formatParts(Number(dMonYMatch[3]), mIdx, Number(dMonYMatch[1]));
+        }
+      }
+      const parsed = new Date(s);
+      if (!isNaN(parsed.getTime())) {
+        return formatParts(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
+      }
+      return s.split(",")[0].trim();
+    }
+
     
 
 function formatMonthLabel(rawVal) {
@@ -13922,8 +14120,7 @@ function formatMonthLabel(rawVal) {
         if (
           ev.key === expectedKey &&
           ev.newValue &&
-          ev.newValue !== activeSessionToken &&
-          !isSessionTokenOnSameDevice(ev.newValue, activeSessionToken)
+          ev.newValue !== activeSessionToken
         ) {
           triggerSingleDeviceSessionConflict();
         }
@@ -14113,6 +14310,9 @@ function formatMonthLabel(rawVal) {
 
       const renterQuickNavEl = document.getElementById("renterQuickScrollNavBar");
       if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
+      if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
+      if (typeof closeAdminPortfolioHub === "function") closeAdminPortfolioHub(true);
+      if (typeof hideInlineForgotPasswordPanel === "function") hideInlineForgotPasswordPanel();
 
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
@@ -14841,7 +15041,10 @@ function formatMonthLabel(rawVal) {
       const openTickets = (typeof getStoredMaintenanceTickets === "function" ? getStoredMaintenanceTickets() : []).filter(t => t && t.status !== "Resolved").length;
       const allNotices = typeof getStoredBroadcastNotifications === "function" ? getStoredBroadcastNotifications() : [];
       const readIds = typeof getReadNotificationIds === "function" ? getReadNotificationIds() : [];
-      const unreadNotices = allNotices.filter(n => n && typeof isNoticeVisibleToCurrentUser === "function" && isNoticeVisibleToCurrentUser(n) && !readIds.includes(n.id)).length;
+      const isAdminUser = String(activeRole || "").trim().toLowerCase() === "admin";
+      const unreadNotices = isAdminUser
+        ? 0
+        : allNotices.filter(n => n && typeof isNoticeVisibleToCurrentUser === "function" && isNoticeVisibleToCurrentUser(n) && !readIds.includes(n.id)).length;
 
       const utrBadge = document.getElementById("adminOpsCarouselUtrBadge");
       const notifBadge = document.getElementById("adminOpsCarouselNotifBadge");
@@ -14862,7 +15065,7 @@ function formatMonthLabel(rawVal) {
       }
       const totalPending = pendingUtr + openTickets;
       if (topBadge) {
-        if (totalPending > 0 && String(activeRole || "").trim().toLowerCase() === "admin") {
+        if (totalPending > 0 && isAdminUser) {
           topBadge.innerText = totalPending > 9 ? "9+" : String(totalPending);
           topBadge.style.display = "flex";
         } else {
@@ -14885,6 +15088,7 @@ function formatMonthLabel(rawVal) {
       }
       if (typeof closeActionMenu === "function") closeActionMenu();
       if (typeof closeHomePortfolioMenu === "function") closeHomePortfolioMenu();
+      if (typeof closeAdminPortfolioHub === "function") closeAdminPortfolioHub(true);
 
       const hubSection = document.getElementById("adminResidentOpsHubSection");
       document.body.classList.add("admin-ops-hub-open");
@@ -14902,6 +15106,71 @@ function formatMonthLabel(rawVal) {
       if (hubSection) hubSection.style.display = "none";
       if (!silent) {
         syncAdminOpsHubBadges();
+      }
+    }
+
+    window.activeAdminPortfolioHubTab = window.activeAdminPortfolioHubTab || "kharch";
+
+    function mountPortfolioWorkspaceInto(workspaceId, targetContainer) {
+      const ws = document.getElementById(workspaceId);
+      if (ws && targetContainer && ws.parentElement !== targetContainer) {
+        targetContainer.appendChild(ws);
+      }
+    }
+
+    function restoreSharedPortfolioWorkspacesToHosts() {
+      mountPortfolioWorkspaceInto("sharedKharchWorkspace", document.querySelector("#kharchModal .modal-window"));
+      mountPortfolioWorkspaceInto("sharedKhetWorkspace", document.querySelector("#khetModal .modal-window"));
+      mountPortfolioWorkspaceInto("sharedFdWorkspace", document.querySelector("#fdModal .modal-window"));
+    }
+
+    function closeAdminPortfolioHub(silent = false) {
+      restoreSharedPortfolioWorkspacesToHosts();
+      document.body.classList.remove("admin-portfolio-hub-open");
+      const portfolioSection = document.getElementById("adminPortfolioHubSection");
+      if (portfolioSection) portfolioSection.style.display = "none";
+      if (!silent && typeof renderAllDashboardUI === "function" && activeUser) {
+        renderAllDashboardUI();
+      }
+    }
+
+    function openAdminPortfolioHub(tabKey = "kharch") {
+      if (typeof closeActionMenu === "function") closeActionMenu();
+      if (typeof closeHomePortfolioMenu === "function") closeHomePortfolioMenu();
+      if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
+      document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
+
+      const allowedTabs = ["kharch", "khet", "fd"];
+      const activeKey = allowedTabs.includes(tabKey) ? tabKey : "kharch";
+      window.activeAdminPortfolioHubTab = activeKey;
+
+      const portfolioSection = document.getElementById("adminPortfolioHubSection");
+      document.body.classList.add("admin-portfolio-hub-open");
+      if (portfolioSection) portfolioSection.style.display = "block";
+
+      document.querySelectorAll("#adminPortfolioHubCarouselTrack .admin-ops-carousel-card").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-portfolio-tab") === activeKey);
+      });
+      document.querySelectorAll("#adminPortfolioHubBody .admin-ops-hub-slot").forEach(slot => {
+        slot.style.display = "none";
+      });
+
+      const activeSlot = document.getElementById("adminPortfolioSlot_" + activeKey);
+      if (activeSlot) activeSlot.style.display = "block";
+
+      if (activeKey !== "kharch") mountPortfolioWorkspaceInto("sharedKharchWorkspace", document.querySelector("#kharchModal .modal-window"));
+      if (activeKey !== "khet") mountPortfolioWorkspaceInto("sharedKhetWorkspace", document.querySelector("#khetModal .modal-window"));
+      if (activeKey !== "fd") mountPortfolioWorkspaceInto("sharedFdWorkspace", document.querySelector("#fdModal .modal-window"));
+
+      if (activeKey === "kharch") {
+        mountPortfolioWorkspaceInto("sharedKharchWorkspace", activeSlot);
+        if (typeof initKharchInlineWorkspace === "function") initKharchInlineWorkspace();
+      } else if (activeKey === "khet") {
+        mountPortfolioWorkspaceInto("sharedKhetWorkspace", activeSlot);
+        if (typeof initKhetInlineWorkspace === "function") initKhetInlineWorkspace();
+      } else if (activeKey === "fd") {
+        mountPortfolioWorkspaceInto("sharedFdWorkspace", activeSlot);
+        if (typeof initFdInlineWorkspace === "function") initFdInlineWorkspace();
       }
     }
 
@@ -14996,7 +15265,8 @@ function formatMonthLabel(rawVal) {
         syncNotificationsBadgeUI();
         renderNotificationsListUI();
 
-        if (allowLiveToast && hasLoadedInitialBroadcastNotices && activeUser) {
+        const isAdminViewer = String(activeRole || "").trim().toLowerCase() === "admin";
+        if (allowLiveToast && hasLoadedInitialBroadcastNotices && activeUser && !isAdminViewer) {
           const myCleanName = String(activeUserFullName || activeUser || "").trim().toLowerCase();
           const newlyAdded = serverNotices.filter(n => n && n.id && !prevIds.has(n.id) && isNoticeVisibleToCurrentUser(n));
           newlyAdded.forEach(n => {
@@ -15013,11 +15283,12 @@ function formatMonthLabel(rawVal) {
     function syncNotificationsBadgeUI() {
       const badge = document.getElementById("navNotificationBadge");
       const settingsBadge = document.getElementById("settingsNotificationBadge");
+      const isAdminViewer = String(activeRole || "").trim().toLowerCase() === "admin";
       const allNotices = getStoredBroadcastNotifications();
       const readIds = getReadNotificationIds();
 
       const relevantNotices = allNotices.filter(n => isNoticeVisibleToCurrentUser(n));
-      const unreadCount = relevantNotices.filter(n => !readIds.includes(n.id)).length;
+      const unreadCount = isAdminViewer ? 0 : relevantNotices.filter(n => !readIds.includes(n.id)).length;
       const badgeLabel = unreadCount > 9 ? "9+" : String(unreadCount);
 
       if (badge) {
@@ -15063,6 +15334,7 @@ function formatMonthLabel(rawVal) {
       const allNotices = getStoredBroadcastNotifications();
       const readIds = getReadNotificationIds();
       const canManage = canCurrentUserManageNotifications();
+      const isInNotificationsModal = Boolean(container.closest("#notificationsModalBody"));
 
       const relevant = allNotices.filter(n => isNoticeVisibleToCurrentUser(n));
 
@@ -15082,8 +15354,9 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
+      const isAdminViewer = String(activeRole || "").trim().toLowerCase() === "admin";
       container.innerHTML = relevant.map(n => {
-        const isRead = readIds.includes(n.id);
+        const isRead = isAdminViewer || readIds.includes(n.id);
         const timeStr = n.timestamp ? new Date(n.timestamp).toLocaleDateString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
         const safeTitle = String(n.title || "Announcement").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const safeBody = String(n.body || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -15097,9 +15370,9 @@ function formatMonthLabel(rawVal) {
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span style="width:8px; height:8px; border-radius:50%; background:${isRead ? "#64748b" : "#f59e0b"}; flex-shrink:0;"></span>
                 <strong style="font-size:0.88rem; color:var(--text-main);">${safeTitle}</strong>
-                <span style="font-size:0.64rem; font-weight:800; padding:2px 7px; border-radius:6px; background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.35);">
+                ${isInNotificationsModal ? "" : `<span style="font-size:0.64rem; font-weight:800; padding:2px 7px; border-radius:6px; background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.35);">
                   <i class="fa-solid fa-building"></i> ${targetPropsLabel}
-                </span>
+                </span>`}
               </div>
               <span style="font-size:0.68rem; color:var(--text-muted); font-weight:600; white-space:nowrap;">${timeStr}</span>
             </div>
@@ -15426,58 +15699,20 @@ function formatMonthLabel(rawVal) {
     }
 
     function enforceClientMonthlyPhotoFifo(monthlyPhotosMap, normAadhaar, propName, flatName, renterId, categoryKey, maxPerCategory = 3) {
-      if (!monthlyPhotosMap || typeof monthlyPhotosMap !== "object") return [];
-      const targetCat = canonicalMonthlyPhotoCategory(categoryKey);
-      const normProp = String(propName || "").trim().toLowerCase();
-      const normFlat = String(flatName || "").trim().toLowerCase();
-      const normRenterId = String(renterId || "").trim().toLowerCase();
-      const cleanAadh = normalizeAadhaar12(normAadhaar || "");
-      const groupsByMonth = {};
+      // Uploaded photos must never be deleted automatically unless Admin manually deletes them
+      return [];
+    }
 
-      Object.keys(monthlyPhotosMap).forEach(k => {
-        const entry = monthlyPhotosMap[k];
-        if (!entry || typeof entry !== "object") return;
-        const entryUrl = String(entry.imageUrl || entry.previewUrl || entry.shareableUrl || "").trim();
-        if (!entryUrl) return;
-        const entryCat = canonicalMonthlyPhotoCategory(entry.category || "");
-        if (entryCat !== targetCat) return;
-
-        const eAadh = normalizeAadhaar12(entry.aadhaar || entry.identityDocNumber || "");
-        const eRId = String(entry.renterId || "").trim().toLowerCase();
-        const eProp = String(entry.propertyName || "").trim().toLowerCase();
-        const eFlat = String(entry.flatName || "").trim().toLowerCase();
-
-        const belongsToTarget = cleanAadh.length === 12
-          ? (eAadh === cleanAadh || String(k).includes(cleanAadh))
-          : ((normRenterId && eRId === normRenterId) || (normProp && normFlat && normFlat !== "--" && eProp === normProp && eFlat === normFlat));
-        if (!belongsToTarget) return;
-
-        const mKey = normalizeMonthYear(entry.monthYear || entry.MonthYear || "") || String(k);
-        const ts = Date.parse(entry.updatedAt || entry.uploadedAt || "") || 0;
-        if (!groupsByMonth[mKey]) {
-          groupsByMonth[mKey] = { monthYear: mKey, ts, keys: [] };
-        }
-        if (ts > groupsByMonth[mKey].ts) groupsByMonth[mKey].ts = ts;
-        groupsByMonth[mKey].keys.push(k);
-      });
-
-      const orderedGroups = Object.values(groupsByMonth).sort((a, b) => {
-        const mCmp = String(b.monthYear || "").localeCompare(String(a.monthYear || ""));
-        if (mCmp !== 0) return mCmp;
-        return b.ts - a.ts;
-      });
-
-      const prunedKeys = [];
-      if (orderedGroups.length > maxPerCategory) {
-        orderedGroups.slice(maxPerCategory).forEach(grp => {
-          grp.keys.forEach(pk => {
-            delete monthlyPhotosMap[pk];
-            if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[pk];
-            prunedKeys.push(pk);
-          });
-        });
-      }
-      return prunedKeys;
+    function doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, normAadh) {
+      if (!tr || typeof tr !== "object") return false;
+      const trId = String(tr.renterId || "").trim().toLowerCase();
+      const trAadh = String(tr.aadhaar || "").replace(/\D/g, "").slice(0, 12);
+      const trProp = String(tr.propertyName || "").trim().toLowerCase();
+      const trFlat = String(tr.flatName || "").trim().toLowerCase();
+      if (normRenterId && trId && normRenterId === trId) return true;
+      if (normAadh.length === 12 && trAadh.length === 12 && trAadh === normAadh) return true;
+      if (normProp && normFlat && normFlat !== "--" && trProp && trFlat && trFlat !== "--" && trProp === normProp && trFlat === normFlat) return true;
+      return false;
     }
 
     function getMatchingScreenshotRequestsForRenter(monthYear, propName, flatName, renterId, aadhaarNum) {
@@ -15512,11 +15747,25 @@ function formatMonthLabel(rawVal) {
         const eProp = String(entry.propertyName || "").trim().toLowerCase();
         const eFlat = String(entry.flatName || "").trim().toLowerCase();
 
-        const matchesRenter =
-          scopeType === "ALL_ACTIVE" ||
-          (normRenterId && eRenterId && normRenterId === eRenterId) ||
-          (normAadh.length === 12 && eAadh === normAadh) ||
-          (normProp && normFlat && eProp === normProp && eFlat === normFlat);
+        const validFlatMatch = Boolean(
+          normProp && normFlat && normFlat !== "--" &&
+          eProp && eFlat && eFlat !== "--" &&
+          eProp === normProp && eFlat === normFlat
+        );
+
+        let matchesRenter = false;
+        if (scopeType === "ALL_ACTIVE") {
+          if (Array.isArray(entry.targetRenters) && entry.targetRenters.length > 0) {
+            matchesRenter = entry.targetRenters.some(tr => doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, normAadh));
+          } else {
+            matchesRenter = true;
+          }
+        } else {
+          matchesRenter =
+            (normRenterId && eRenterId && normRenterId === eRenterId) ||
+            (normAadh.length === 12 && eAadh === normAadh) ||
+            validFlatMatch;
+        }
 
         if (!matchesRenter) return;
         const st = String(entry.status || "").toLowerCase();
@@ -15556,7 +15805,8 @@ function formatMonthLabel(rawVal) {
       Object.keys(reqMap).forEach(k => {
         const entry = reqMap[k];
         if (!entry || typeof entry !== "object") return;
-        if (String(entry.status || "").toLowerCase() === "closed") return;
+        const st = String(entry.status || "").toLowerCase();
+        if (st === "closed" || st === "submitted") return;
         const entryMonth = normalizeMonthYear(entry.monthYear);
         if (!entryMonth) return;
         const scopeType = String(entry.scope || "").toUpperCase();
@@ -15564,12 +15814,28 @@ function formatMonthLabel(rawVal) {
         const eAadh = String(entry.aadhaar || entry.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
         const eProp = String(entry.propertyName || "").trim().toLowerCase();
         const eFlat = String(entry.flatName || "").trim().toLowerCase();
-        if (
-          scopeType === "ALL_ACTIVE" ||
-          (normRenterId && eRenterId && normRenterId === eRenterId) ||
-          (normAadh.length === 12 && eAadh === normAadh) ||
-          (normProp && normFlat && eProp === normProp && eFlat === normFlat)
-        ) {
+
+        const validFlatMatch = Boolean(
+          normProp && normFlat && normFlat !== "--" &&
+          eProp && eFlat && eFlat !== "--" &&
+          eProp === normProp && eFlat === normFlat
+        );
+
+        let matches = false;
+        if (scopeType === "ALL_ACTIVE") {
+          if (Array.isArray(entry.targetRenters) && entry.targetRenters.length > 0) {
+            matches = entry.targetRenters.some(tr => doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, normAadh));
+          } else {
+            matches = true;
+          }
+        } else {
+          matches =
+            (normRenterId && eRenterId && normRenterId === eRenterId) ||
+            (normAadh.length === 12 && eAadh === normAadh) ||
+            validFlatMatch;
+        }
+
+        if (matches) {
           monthsSet.add(entryMonth);
         }
       });
@@ -15878,7 +16144,6 @@ function formatMonthLabel(rawVal) {
             }
           });
         }
-        enforceClientMonthlyPhotoFifo(DB.globalConfig.renterMonthlyPhotos, normAadhaar, propName, flatName, renterId, cleanCat, 3);
         renderAllDashboardUI();
 
         const res = await sendFirebaseAction({
@@ -15924,12 +16189,6 @@ function formatMonthLabel(rawVal) {
         }
         const driveUrl = normalizeGoogleDriveImageUrl(rawReturnedUrl);
 
-        if (Array.isArray(res.prunedSlotKeys)) {
-          res.prunedSlotKeys.forEach(pk => {
-            delete DB.globalConfig.renterMonthlyPhotos[pk];
-            if (window.__recentMonthlyPhotoUploads) delete window.__recentMonthlyPhotoUploads[pk];
-          });
-        }
         if (res.renterMonthlyPhotos && typeof res.renterMonthlyPhotos === "object") {
           DB.globalConfig.renterMonthlyPhotos = { ...res.renterMonthlyPhotos };
         }
@@ -15966,11 +16225,6 @@ function formatMonthLabel(rawVal) {
           };
         });
 
-        const clientPruned = enforceClientMonthlyPhotoFifo(DB.globalConfig.renterMonthlyPhotos, normAadhaar, propName, flatName, renterId, cleanCat, 3);
-        if (clientPruned.length > 0 && window.__recentMonthlyPhotoUploads) {
-          clientPruned.forEach(pk => delete window.__recentMonthlyPhotoUploads[pk]);
-        }
-
         (DB.renters || []).forEach(r => {
           const rAadh = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
           const sameFlat = propName && flatName && flatName !== "--" && isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName);
@@ -15998,7 +16252,7 @@ function formatMonthLabel(rawVal) {
             mode: "UPI",
             screenshotUrl: driveUrl,
             status: "Pending",
-            submittedAt: new Date().toLocaleString("en-IN")
+            submittedAt: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
           };
           saveStoredPaymentProofs([proofEntry, ...existingProofs]);
         }
@@ -16304,7 +16558,7 @@ function formatMonthLabel(rawVal) {
           mode: "UPI",
           screenshotUrl: finalPhotoUrl,
           status: "Pending",
-          submittedAt: new Date().toLocaleString("en-IN")
+          submittedAt: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
         };
         if (typeof saveStoredPaymentProofs === "function") {
           saveStoredPaymentProofs([newProof, ...list]);
@@ -16516,6 +16770,22 @@ function formatMonthLabel(rawVal) {
         let paymentRightHtml = "";
         let qrRenderData = null;
 
+        // Dynamic Payment QR Code computed strictly from the renter's LATEST receipt balance due
+        const latestQrPropName = (latestBill && (latestBill.SnapshotPropertyName || latestBill.PropertyName)) || targetProp;
+        const latestQrFlatName = (latestBill && (latestBill.SnapshotFlatName || latestBill.FlatName)) || targetFlat;
+        const latestQrContact = resolveFlatUpiAndContact(latestQrPropName, assignedFlatObj, primaryRenter);
+        const latestQrUpiName = String((latestBill && latestBill.UPIName) || latestQrContact.upiName || "").trim();
+        const latestQrUpiId = String((latestBill && latestBill.UPIID) || latestQrContact.upiId || "").trim();
+        const latestQrDueAmount = latestBill ? Math.max(0, Number(latestDueAmt) || 0) : 0;
+        const latestQrRenderData = {
+          upiId: latestQrUpiId,
+          upiName: latestQrUpiName || "N/A",
+          amount: latestQrDueAmount,
+          note: `Rent ${latestQrPropName} Flat ${latestQrFlatName} (${latestReceiptMonthLabel})`,
+          monthLabel: latestReceiptMonthLabel,
+          billId: latestBill ? String(latestBill.BillID || "") : ""
+        };
+
         const aadhaarPageSize = 6;
         const totalAadhaarReceipts = myBills.length;
         const totalAadhaarPages = Math.max(1, Math.ceil(totalAadhaarReceipts / aadhaarPageSize));
@@ -16661,7 +16931,7 @@ function formatMonthLabel(rawVal) {
             resolvedContact.contractMobile ||
             "N/A";
 
-          const payableAmt = billDue > 0 ? billDue : billTotal;
+          const payableAmt = Math.max(0, Number(billDue) || 0);
           qrRenderData = {
             upiId,
             upiName: upiName || "N/A",
@@ -17698,16 +17968,17 @@ function formatMonthLabel(rawVal) {
         // Build Isolated Upload Photo Section (ONLY the meter photo upload card — Photo 2 removed!)
         const isolatedUploadPhotoCardHtml = renterMonthlyPhotoUploadsSectionHtml.replace("margin-top: 22px;", "margin-top: 0;");
 
-        // Build Isolated Payment Section (Instant UPI Payment Hub + Moved Payment Photo Upload + UTR Verification Input)
-        const activePayAmt = qrRenderData ? (Number(qrRenderData.amount) || 0) : 0;
-        const activePayUpiId = qrRenderData ? String(qrRenderData.upiId || "").trim() : "";
-        const activePayUpiName = qrRenderData ? String(qrRenderData.upiName || "N/A").trim() : "N/A";
-        const activePayNote = qrRenderData ? String(qrRenderData.note || "Monthly Rent").trim() : "Monthly Rent";
+        // Build Isolated Payment Section (Dynamic UPI QR from Latest Receipt + Payment Screenshot Upload + UTR Verification)
+        const activePayAmt = latestQrRenderData ? Math.max(0, Number(latestQrRenderData.amount) || 0) : 0;
+        const activePayUpiId = latestQrRenderData ? String(latestQrRenderData.upiId || "").trim() : "";
+        const activePayUpiName = latestQrRenderData ? String(latestQrRenderData.upiName || "N/A").trim() : "N/A";
+        const activePayNote = latestQrRenderData ? String(latestQrRenderData.note || "Monthly Rent").trim() : "Monthly Rent";
+        const activePayMonthLabel = latestQrRenderData ? String(latestQrRenderData.monthLabel || activeMonthLabel).trim() : activeMonthLabel;
         const safePayUpiIdArg = activePayUpiId.replace(/'/g, "\\'");
         const safePayUpiNameArg = activePayUpiName.replace(/'/g, "\\'");
         const safePayNoteArg = activePayNote.replace(/'/g, "\\'");
 
-        window.__activeRenterPaymentBillId = currentMonthBill ? String(currentMonthBill.BillID || "") : "";
+        window.__activeRenterPaymentBillId = latestQrRenderData ? String(latestQrRenderData.billId || "") : "";
         const paymentSlotObj = resolveRenterMonthlyPhotoSlot("completed_payment", "Photo2URL");
         const rawPayPhotoUrl = paymentSlotObj && paymentSlotObj.imageUrl ? String(paymentSlotObj.imageUrl) : "";
         const displayPayPhotoUrl = rawPayPhotoUrl ? normalizeGoogleDriveImageUrl(rawPayPhotoUrl) : "";
@@ -17741,7 +18012,7 @@ function formatMonthLabel(rawVal) {
                     <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
                   </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
-                    Pay Rent &amp; Utilities (${activeMonthLabel})
+                    Pay Rent &amp; Utilities (${escapeHtml(activePayMonthLabel)})
                   </h3>
                 </div>
                 <span style="font-size:0.88rem; font-weight:900; padding:6px 13px; border-radius:10px; background:transparent; color:#34d399; border:1px solid rgba(16,185,129,0.35); font-variant-numeric:tabular-nums;">
@@ -17896,7 +18167,7 @@ function formatMonthLabel(rawVal) {
                           <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                             <div>
                               <div style="font-weight:800; color:var(--text-main);">UTR: <span style="color:#38bdf8;">${escapeHtml(pr.utr || "--")}</span> • ₹${(Number(pr.amount) || 0).toLocaleString("en-IN")}</div>
-                              <div style="font-size:0.68rem; color:var(--text-muted);">${pr.monthYear ? formatMonthLabel(pr.monthYear) + " • " : ""}${escapeHtml(pr.submittedAt || "")}</div>
+                              <div style="font-size:0.68rem; color:var(--text-muted);">${pr.monthYear ? formatMonthLabel(pr.monthYear) + " • " : ""}${escapeHtml(formatUtrDateOnly(pr.submittedAt || pr.SubmittedAt || ""))}</div>
                             </div>
                             <div style="display:flex; align-items:center; gap:6px;">
                               ${safePrImg ? `<button type="button" class="btn-ledger-action" style="padding:3px 8px; font-size:0.68rem; background:transparent;" onclick="openPhotoZoomModal('${safePrImg}', 'Payment Proof — UTR ${safePrUtr}')"><i class="fa-solid fa-image"></i> Photo</button>` : ""}
@@ -18127,17 +18398,17 @@ function formatMonthLabel(rawVal) {
           if (activeRenterSection === "payment") {
             const qrCanvasEl = document.getElementById("renterHomeInlineQrCanvas");
             if (qrCanvasEl) {
-              const nextQrSig = qrRenderData
-                ? `${qrRenderData.upiId}|${qrRenderData.upiName}|${qrRenderData.amount}|${qrRenderData.note}`
+              const nextQrSig = latestQrRenderData
+                ? `${latestQrRenderData.upiId}|${latestQrRenderData.upiName}|${latestQrRenderData.amount}|${latestQrRenderData.note}`
                 : "NO_UPI";
               if (qrCanvasEl.dataset.qrKey !== nextQrSig) {
                 qrCanvasEl.dataset.qrKey = nextQrSig;
-                if (qrRenderData && qrRenderData.upiId && typeof generatePropertyRentQrCode === "function") {
+                if (latestQrRenderData && latestQrRenderData.upiId && typeof generatePropertyRentQrCode === "function") {
                   generatePropertyRentQrCode({
-                    upiId: qrRenderData.upiId,
-                    upiName: qrRenderData.upiName === "N/A" ? "Rent Receiver" : qrRenderData.upiName,
-                    amount: qrRenderData.amount,
-                    note: qrRenderData.note,
+                    upiId: latestQrRenderData.upiId,
+                    upiName: latestQrRenderData.upiName === "N/A" ? "Rent Receiver" : latestQrRenderData.upiName,
+                    amount: latestQrRenderData.amount,
+                    note: latestQrRenderData.note,
                     canvasEl: qrCanvasEl,
                     size: 140
                   });
@@ -18294,6 +18565,172 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    // Inline Forgot Password Handlers (Renders right inside #loginScreen without any popup)
+    function setInlineForgotPasswordStatus(msg, type = "info") {
+      const box = document.getElementById("fpStatusMsg");
+      if (!box) return;
+      if (!msg) {
+        box.style.display = "none";
+        box.innerText = "";
+        return;
+      }
+      box.style.display = "block";
+      box.innerText = msg;
+      if (type === "success") {
+        box.style.background = "rgba(16,185,129,0.2)";
+        box.style.border = "1px solid rgba(16,185,129,0.55)";
+        box.style.color = "#6ee7b7";
+      } else if (type === "error") {
+        box.style.background = "rgba(239,68,68,0.2)";
+        box.style.border = "1px solid rgba(239,68,68,0.55)";
+        box.style.color = "#fca5a5";
+      } else {
+        box.style.background = "rgba(56,189,248,0.18)";
+        box.style.border = "1px solid rgba(56,189,248,0.45)";
+        box.style.color = "#bae6fd";
+      }
+    }
+
+    function showInlineForgotPasswordPanel() {
+      const loginFormEl = document.getElementById("loginForm");
+      const panelEl = document.getElementById("forgotPasswordInlinePanel");
+      const otpBox = document.getElementById("fpOtpStepBox");
+      if (loginFormEl) loginFormEl.style.display = "none";
+      if (panelEl) panelEl.style.display = "block";
+      if (otpBox) otpBox.style.display = "none";
+      setInlineForgotPasswordStatus("", "info");
+      const aadhIn = document.getElementById("fpAadhaarInput");
+      if (aadhIn && typeof aadhIn.focus === "function") aadhIn.focus();
+    }
+
+    function hideInlineForgotPasswordPanel() {
+      const loginFormEl = document.getElementById("loginForm");
+      const panelEl = document.getElementById("forgotPasswordInlinePanel");
+      const otpBox = document.getElementById("fpOtpStepBox");
+      const aadhIn = document.getElementById("fpAadhaarInput");
+      const emailIn = document.getElementById("fpEmailInput");
+      const otpIn = document.getElementById("fpOtpInput");
+      if (aadhIn) aadhIn.value = "";
+      if (emailIn) emailIn.value = "";
+      if (otpIn) otpIn.value = "";
+      if (otpBox) otpBox.style.display = "none";
+      setInlineForgotPasswordStatus("", "info");
+      if (panelEl) panelEl.style.display = "none";
+      if (loginFormEl) loginFormEl.style.display = "block";
+    }
+
+    async function submitInlineForgotPasswordSendOtp() {
+      const aadhIn = document.getElementById("fpAadhaarInput");
+      const emailIn = document.getElementById("fpEmailInput");
+      const otpBox = document.getElementById("fpOtpStepBox");
+      const otpHint = document.getElementById("fpOtpSentHint");
+      const btn = document.getElementById("btnFpSendOtp");
+
+      const cleanAadh = String(aadhIn?.value || "").replace(/\D/g, "").slice(0, 12);
+      const cleanEmail = String(emailIn?.value || "").trim().toLowerCase();
+
+      if (cleanAadh.length !== 12) {
+        setInlineForgotPasswordStatus("Please enter a valid 12-digit Aadhaar Number.", "error");
+        return triggerSideToast("Invalid Aadhaar", "Please enter a valid 12-digit Aadhaar Number.", false);
+      }
+      if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+        setInlineForgotPasswordStatus("Please enter a valid registered Email ID.", "error");
+        return triggerSideToast("Invalid Email", "Please enter a valid registered Email ID.", false);
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending OTP...</span>`;
+      }
+      setInlineForgotPasswordStatus("Verifying Aadhaar Number and Email ID...", "info");
+
+      try {
+        const res = await sendFirebaseAction({
+          action: "sendForgotPasswordOtp",
+          aadhaar: cleanAadh,
+          email: cleanEmail
+        });
+        if (!res || res.status !== "success") {
+          const errMsg = res?.message || "Aadhaar Number and Email ID did not match our records.";
+          setInlineForgotPasswordStatus(errMsg, "error");
+          triggerSideToast("Verification Failed", errMsg, false);
+          return;
+        }
+        if (otpBox) otpBox.style.display = "block";
+        if (otpHint) {
+          otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter the 4-digit OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
+        }
+        setInlineForgotPasswordStatus(`4-digit OTP sent to ${cleanEmail}. Please check your Gmail/inbox and enter it below.`, "success");
+        triggerSideToast("OTP Sent", `4-digit OTP sent to ${cleanEmail}.`, true);
+        const otpIn = document.getElementById("fpOtpInput");
+        if (otpIn && typeof otpIn.focus === "function") otpIn.focus();
+      } catch (err) {
+        const msg = err?.message || "Could not verify details or send OTP right now.";
+        setInlineForgotPasswordStatus(msg, "error");
+        triggerSideToast("Recovery Error", msg, false);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Send 4-Digit OTP</span>`;
+        }
+      }
+    }
+
+    async function submitInlineForgotPasswordVerifyOtp() {
+      const aadhIn = document.getElementById("fpAadhaarInput");
+      const emailIn = document.getElementById("fpEmailInput");
+      const otpIn = document.getElementById("fpOtpInput");
+      const btn = document.getElementById("btnFpVerifyOtp");
+
+      const cleanAadh = String(aadhIn?.value || "").replace(/\D/g, "").slice(0, 12);
+      const cleanEmail = String(emailIn?.value || "").trim().toLowerCase();
+      const enteredOtp = String(otpIn?.value || "").replace(/\D/g, "").slice(0, 4);
+
+      if (cleanAadh.length !== 12 || !cleanEmail) {
+        setInlineForgotPasswordStatus("Please enter both Aadhaar Number and Email ID first.", "error");
+        return;
+      }
+      if (enteredOtp.length !== 4) {
+        setInlineForgotPasswordStatus("Please enter the 4-digit OTP sent to your Email ID.", "error");
+        return triggerSideToast("Invalid OTP", "Please enter the 4-digit OTP.", false);
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifying...</span>`;
+      }
+
+      try {
+        const res = await sendFirebaseAction({
+          action: "verifyForgotPasswordOtp",
+          aadhaar: cleanAadh,
+          email: cleanEmail,
+          otp: enteredOtp
+        });
+        if (!res || res.status !== "success") {
+          const errMsg = res?.message || "Invalid or expired OTP. Please try again.";
+          setInlineForgotPasswordStatus(errMsg, "error");
+          triggerSideToast("OTP Failed", errMsg, false);
+          return;
+        }
+        const okMsg = res.message || `OTP verified! Your User ID, Username, and Password have been sent to ${cleanEmail}.`;
+        setInlineForgotPasswordStatus(okMsg, "success");
+        triggerSideToast("Credentials Sent to Email", okMsg, true);
+        if (otpIn) otpIn.value = "";
+        const otpBox = document.getElementById("fpOtpStepBox");
+        if (otpBox) otpBox.style.display = "none";
+      } catch (err) {
+        const msg = err?.message || "Could not verify OTP right now.";
+        setInlineForgotPasswordStatus(msg, "error");
+        triggerSideToast("OTP Error", msg, false);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Verify OTP</span>`;
+        }
+      }
+    }
+
     // Requirement 7: Single-Device Session Conflict Handler & Redirect Modal (Enforced for ALL accounts)
     function triggerSingleDeviceSessionConflict() {
       if (isSessionConflictModalOpen) return;
@@ -18311,6 +18748,10 @@ function formatMonthLabel(rawVal) {
       const prevToken = String(activeSessionToken || "").trim();
       // Immediately clear active session credentials on this previous device
       activeSessionToken = "";
+      activeRole = "Admin";
+      activeUserFullName = "Administrator";
+      activeUserMobile = "";
+      activeUserEmail = "";
       sessionStorage.clear();
       try {
         localStorage.setItem(EXPLICIT_LOGOUT_FLAG_KEY, "1");
@@ -18326,6 +18767,8 @@ function formatMonthLabel(rawVal) {
 
       // Immediately log out the previous device & switch to Login Screen
       activeUser = null;
+      if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
+      if (typeof closeAdminPortfolioHub === "function") closeAdminPortfolioHub(true);
       document.getElementById("dashboardScreen")?.classList.remove("active");
       document.getElementById("loginScreen")?.classList.add("active");
       applyCustomBackgrounds();
@@ -19433,15 +19876,13 @@ function formatMonthLabel(rawVal) {
           // Single-Device Session Conflict: Check if this account logged in from another device
           const serverTok = matchedServerUser && matchedServerUser.ActiveSessionToken ? String(matchedServerUser.ActiveSessionToken).trim() : "";
           const localTok = String(activeSessionToken || "").trim();
-          const serverTokTs = extractSessionTokenTimestamp(serverTok);
-          const localTokTs = extractSessionTokenTimestamp(localTok);
-          const withinLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 12000;
+          const withinLoginGrace = isLoginWriteInFlight || (Date.now() - lastLoginCompletedAt) < 8000;
           if (
             isVerifiedSheetUsers &&
             !withinLoginGrace &&
             (
               res.sessionConflict === true ||
-              (serverTok && localTok && serverTok !== localTok && !isSessionTokenOnSameDevice(serverTok, localTok) && (serverTokTs === 0 || localTokTs === 0 || serverTokTs > localTokTs))
+              (serverTok && localTok && serverTok !== localTok)
             )
           ) {
             triggerSingleDeviceSessionConflict();
@@ -22319,8 +22760,7 @@ function formatMonthLabel(rawVal) {
             const mCmp = String(b.monthYear || "").localeCompare(String(a.monthYear || ""));
             if (mCmp !== 0) return mCmp;
             return b.ts - a.ts;
-          })
-          .slice(0, 3);
+          });
         return {
           ...c,
           items
@@ -22363,10 +22803,12 @@ function formatMonthLabel(rawVal) {
       });
       const specificReqCount = Object.keys(screenshotReqMap).filter(k => {
         const entry = screenshotReqMap[k];
+        const st = String(entry?.status || "").toLowerCase();
         return entry &&
           normalizeMonthYear(entry.monthYear) === selectedMonth &&
           String(entry.scope || "").toUpperCase() !== "ALL_ACTIVE" &&
-          String(entry.status || "").toLowerCase() !== "closed";
+          st !== "closed" &&
+          st !== "submitted";
       }).length;
       const hasAnyOpenReq = hasGlobalMonthReq || specificReqCount > 0;
       const isMonthExplicitlyClosed = !hasAnyOpenReq && Object.keys(screenshotReqMap).some(k => {
@@ -22629,7 +23071,7 @@ function formatMonthLabel(rawVal) {
         const historyDrawerHtml = card.totalHistoryCount > 0 ? `
           <details style="margin-top:12px; border-top:1px dashed var(--glass-border); padding-top:10px;">
             <summary style="cursor:pointer; font-size:0.74rem; font-weight:800; color:#38bdf8; display:flex; align-items:center; justify-content:space-between; gap:8px; list-style:none;">
-              <span><i class="fa-solid fa-clock-rotate-left"></i> 3-Month Aadhaar Photo History (${card.totalHistoryCount} saved • Max 3 Months/Category Auto-FIFO)</span>
+              <span><i class="fa-solid fa-clock-rotate-left"></i> Saved Aadhaar Photo History (${card.totalHistoryCount} saved)</span>
               <span style="font-size:0.66rem; color:var(--text-muted); font-weight:700;">Click to Expand / Collapse</span>
             </summary>
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(195px, 1fr)); gap:10px; margin-top:10px;">
@@ -22637,7 +23079,7 @@ function formatMonthLabel(rawVal) {
                 <div style="background:rgba(15,23,42,0.42); border:1px solid var(--glass-border); border-radius:10px; padding:8px; display:flex; flex-direction:column; gap:7px;">
                   <div style="font-size:0.69rem; font-weight:800; color:${catGrp.color}; display:flex; align-items:center; justify-content:space-between; gap:6px;">
                     <span><i class="fa-solid ${catGrp.icon}"></i> ${catGrp.shortLabel}</span>
-                    <span style="font-size:0.62rem; color:var(--text-muted);">${catGrp.items.length}/3</span>
+                    <span style="font-size:0.62rem; color:var(--text-muted);">${catGrp.items.length} saved</span>
                   </div>
                   ${catGrp.items.length === 0
                     ? `<div style="font-size:0.66rem; color:var(--text-muted); padding:10px 4px; text-align:center;">No saved history</div>`
@@ -22774,15 +23216,60 @@ function formatMonthLabel(rawVal) {
         DB.globalConfig.screenshotRequests = {};
       }
 
-      const isSingleRenter = Boolean(targetRenterId || (targetProp && targetFlat) || targetAadhaar);
-      const normProp = String(targetProp || "").trim().toLowerCase();
-      const normFlat = String(targetFlat || "").trim().toLowerCase();
+      const cleanPropRaw = String(targetProp || "").trim();
+      const cleanFlatRaw = String(targetFlat || "").trim();
+      const hasValidFlatTarget = Boolean(cleanPropRaw && cleanFlatRaw && cleanPropRaw !== "--" && cleanFlatRaw !== "--");
       const cleanAadh = String(targetAadhaar || "").replace(/\D/g, "").slice(0, 12);
       const cleanRenterId = String(targetRenterId || "").trim();
+      const isSingleRenter = Boolean(cleanRenterId || hasValidFlatTarget || cleanAadh);
+      const normProp = cleanPropRaw.toLowerCase();
+      const normFlat = cleanFlatRaw.toLowerCase();
 
       const reqKey = isSingleRenter
         ? `RENTER__${normProp}__${normFlat}__${cleanRenterId || cleanAadh || "r"}__${selectedMonth}`
         : `ALL_ACTIVE__${selectedMonth}`;
+
+      let targetRentersSnapshot = [];
+      if (!isSingleRenter) {
+        const allRenterUsers = (Array.isArray(DB.users) ? DB.users : []).filter(u => String(u.Role || "").trim().toLowerCase() === "renter");
+        const activeAccounts = allRenterUsers.filter(u => {
+          const uSt = String(u.Status || u.AccountStatus || "Active").trim().toLowerCase();
+          if (uSt === "blocked") return false;
+          if (typeof isRenterUserMovedOut === "function" && isRenterUserMovedOut(u)) return false;
+          return true;
+        });
+        const seenSnapKeys = new Set();
+        (Array.isArray(DB.renters) ? DB.renters : []).forEach(r => {
+          if (String(r.Status || "Active").trim().toLowerCase() !== "active") return;
+          const rAadh = normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "");
+          const rProp = String(r.PropertyName || "").trim();
+          const rFlat = String(r.FlatName || "").trim();
+          const rId = String(r.RenterID || "").trim();
+          const hasActAcct = activeAccounts.some(u => {
+            const uAadh = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "");
+            if (rAadh.length === 12 && uAadh.length === 12 && rAadh === uAadh) return true;
+            if (u.AssignedProperty && u.AssignedFlat && isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, rProp, rFlat)) return true;
+            return false;
+          });
+          if (!hasActAcct) return;
+          const dk = `${rId}__${rAadh}__${rProp.toLowerCase()}__${rFlat.toLowerCase()}`;
+          if (seenSnapKeys.has(dk)) return;
+          seenSnapKeys.add(dk);
+          targetRentersSnapshot.push({ renterId: rId, aadhaar: rAadh, propertyName: rProp, flatName: rFlat });
+        });
+        activeAccounts.forEach(u => {
+          const uAadh = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "");
+          if (uAadh.length !== 12) return;
+          if (targetRentersSnapshot.some(t => t.aadhaar === uAadh)) return;
+          targetRentersSnapshot.push({
+            renterId: "",
+            aadhaar: uAadh,
+            propertyName: String(u.AssignedProperty || "").trim(),
+            flatName: String(u.AssignedFlat || "").trim(),
+            username: String(u.Username || "").trim()
+          });
+        });
+      }
 
       const reqEntry = {
         requestKey: reqKey,
@@ -22794,6 +23281,7 @@ function formatMonthLabel(rawVal) {
         renterId: cleanRenterId,
         aadhaar: cleanAadh,
         renterName: targetName || "",
+        targetRenters: isSingleRenter ? undefined : targetRentersSnapshot,
         requestedBy: activeUser || "Admin",
         requestedAt: new Date().toISOString()
       };
@@ -26766,6 +27254,7 @@ function formatMonthLabel(rawVal) {
         .replace(/\s+/g, " ")
         .trim() || "Rent Payment";
       const encodedPn = encodeURIComponent(cleanPnRaw);
+      const hasExplicitAmount = exactAmount !== undefined && exactAmount !== null && exactAmount !== "" && Number.isFinite(Number(exactAmount));
       const cleanAmt = Math.max(0, Number(exactAmount) || 0);
       const cleanTnRaw = String(rawTransactionNote || "")
         .replace(/[^a-zA-Z0-9 .,#&-]/g, " ")
@@ -26774,7 +27263,7 @@ function formatMonthLabel(rawVal) {
       const tnParam = cleanTnRaw ? `&tn=${encodeURIComponent(cleanTnRaw.slice(0, 48))}` : "";
 
       // CRITICAL: Keep literal '@' in pa= parameter per NPCI UPI Linking Spec so GPay, PhonePe, Paytm & BHIM never say "Invalid QR Code"
-      if (cleanAmt > 0) {
+      if (hasExplicitAmount) {
         return `upi://pay?pa=${cleanPa}&pn=${encodedPn}&am=${cleanAmt.toFixed(2)}&cu=INR${tnParam}`;
       }
       return `upi://pay?pa=${cleanPa}&pn=${encodedPn}&cu=INR${tnParam}`;
@@ -29298,13 +29787,16 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    function openFdModal() {
+    function initFdInlineWorkspace() {
       updateFdTotalCollectionsDisplay();
       cancelFdEdit();
       renderFdMaturityAlerts();
       renderFdRecordsList();
       switchFdSectionTab("calc");
-      openModal("fdModal");
+    }
+
+    function openFdModal() {
+      openAdminPortfolioHub("fd");
     }
 
     function editFdRecord(id) {
@@ -30209,7 +30701,7 @@ function formatMonthLabel(rawVal) {
       triggerSideToast("Amount Applied", "Calculated utility expense ₹" + lastCalculatedKharchGrandTotal.toLocaleString("en-IN") + " copied into form!", true);
     }
 
-    function openKharchModal() {
+    function initKharchInlineWorkspace() {
       const propSel = document.getElementById("kharchPropertyName");
       if (propSel) {
         const opts = ['<option value="">-- Select Property (*) --</option>'];
@@ -30228,7 +30720,10 @@ function formatMonthLabel(rawVal) {
       renderKharchPropertyPills();
       renderKharchUtilityCalculation();
       renderKharchRecordsList();
-      openModal("kharchModal");
+    }
+
+    function openKharchModal() {
+      openAdminPortfolioHub("kharch");
     }
 
     function cancelKharchEdit() {
@@ -30680,14 +31175,17 @@ function formatMonthLabel(rawVal) {
         '</div>';
     }
 
-    function openKhetModal() {
+    function initKhetInlineWorkspace() {
       cancelKhetEdit();
       populateKhetPartnerFilterAndQuickFill();
       renderKhetMalguzariAlertBanner();
       renderKhetRecordsList();
       renderHomeKhetSection();
       switchKhetSectionTab("calc");
-      openModal("khetModal");
+    }
+
+    function openKhetModal() {
+      openAdminPortfolioHub("khet");
     }
 
     function editKhetRecord(id, openModalIfClosed = false) {
@@ -30695,8 +31193,12 @@ function formatMonthLabel(rawVal) {
       const target = list.find(item => String(item.id || item.KhetID) === String(id));
       if (!target) return;
 
-      if (openModalIfClosed) {
-        openModal("khetModal");
+      if (
+        openModalIfClosed ||
+        !document.body.classList.contains("admin-portfolio-hub-open") ||
+        window.activeAdminPortfolioHubTab !== "khet"
+      ) {
+        openAdminPortfolioHub("khet");
       }
       switchKhetSectionTab("calc");
 
@@ -33254,6 +33756,8 @@ function formatMonthLabel(rawVal) {
       const renterQuickNavEl = document.getElementById("renterQuickScrollNavBar");
       if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
       if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
+      if (typeof closeAdminPortfolioHub === "function") closeAdminPortfolioHub(true);
+      if (typeof hideInlineForgotPasswordPanel === "function") hideInlineForgotPasswordPanel();
 
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
@@ -35308,7 +35812,7 @@ function formatMonthLabel(rawVal) {
         mode: mode,
         screenshotUrl: finalScreenshotUrl,
         status: "Pending",
-        submittedAt: new Date().toLocaleString("en-IN")
+        submittedAt: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
       };
       list.unshift(newProof);
       saveStoredPaymentProofs(list);
@@ -35352,7 +35856,7 @@ function formatMonthLabel(rawVal) {
                 <strong style="color:#10b981;">₹${Number(p.amount || 0).toLocaleString("en-IN")}</strong>
               </div>
               <div style="color:var(--text-muted); font-size:0.72rem; margin-top:3px; overflow-wrap:anywhere;">
-                Tenant: ${escapeHtml(p.tenantName || "--")} | UTR: <strong style="color:#38bdf8;">${escapeHtml(p.utr || p.UTRNumber || "--")}</strong> (${escapeHtml(p.mode || p.paymentMode || "UPI")}) | ${escapeHtml(p.submittedAt || "")}
+                Tenant: ${escapeHtml(p.tenantName || "--")} | UTR: <strong style="color:#38bdf8;">${escapeHtml(p.utr || p.UTRNumber || "--")}</strong> (${escapeHtml(p.mode || p.paymentMode || "UPI")}) | ${escapeHtml(formatUtrDateOnly(p.submittedAt || p.SubmittedAt || ""))}
               </div>
               ${statusText === "Rejected" && rejReason ? `
                 <div class="utr-rejection-reason-box">
@@ -35393,7 +35897,6 @@ function formatMonthLabel(rawVal) {
         targetBill.PaymentDate = new Date().toISOString().split("T")[0];
         const totalB = parseFloat(targetBill.TotalBilled) || 0;
         targetBill.Status = targetBill.PaidAmount >= totalB ? "Fully Paid" : "Partial Paid";
-        targetBill.Notes = ((targetBill.Notes ? targetBill.Notes + " | " : "") + `Verified UTR: ${proof.utr}`).trim();
         if (!Array.isArray(targetBill.SplitPayments)) targetBill.SplitPayments = [];
         targetBill.SplitPayments.push({
           date: targetBill.PaymentDate,
