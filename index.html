@@ -8265,9 +8265,6 @@
                 Track Plumbing, Electrical, Carpentry &amp; Water tickets submitted by renters and update status live.
               </div>
             </div>
-            <button type="button" class="btn-ledger-action" style="padding:5px 11px; font-size:0.72rem; color:#10b981;" onclick="openCreateTicketModalForAdmin()">
-              <i class="fa-solid fa-plus"></i> Log New Ticket
-            </button>
           </div>
           <div id="adminMaintenanceTicketsList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
           </div>
@@ -31733,6 +31730,9 @@ function formatMonthLabel(rawVal) {
       if (e && typeof e.stopPropagation === "function") e.stopPropagation();
       document.getElementById("homePortfolioMenu")?.classList.remove("show");
       document.getElementById("actionMenu")?.classList.toggle("show");
+    }
+    function closeActionMenu() {
+      document.getElementById("actionMenu")?.classList.remove("show");
     }
     window.addEventListener("click", (e) => {
       if (!e.target.closest("#plusMenuDropdownAnchor")) {
