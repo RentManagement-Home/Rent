@@ -3940,13 +3940,11 @@
     border-color: #6366f1;
   }
 
-  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 70% transparent (30% opacity) */
+  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 65% transparent (35% opacity) & keep all text crystal clear */
   :where(.renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box)) {
     background: transparent !important;
     background-color: transparent !important;
     background-image: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
     box-shadow: none !important;
   }
   .renter-modern-portal .renter-hero-banner,
@@ -3973,16 +3971,17 @@
   .renter-modern-portal #renterInstantUpiPaymentCard,
   .renter-modern-portal #renterPaymentPhotoAndUtrCard,
   .renter-modern-portal #renterInlineProfileCard,
+  .renter-modern-portal #renterUploadPhotoAdminWarningBanner,
   .renter-modern-portal div[style*="border-radius"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   .renter-modern-portal div[style*="border:"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   .renter-modern-portal label[style*="border"],
   .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(15, 23, 42, 0.30) !important;
-    background-color: rgba(15, 23, 42, 0.30) !important;
+    background: rgba(15, 23, 42, 0.35) !important;
+    background-color: rgba(15, 23, 42, 0.35) !important;
     background-image: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
     box-shadow: none !important;
   }
   body.theme-white .renter-modern-portal .renter-hero-banner,
@@ -4009,20 +4008,128 @@
   body.theme-white .renter-modern-portal #renterInstantUpiPaymentCard,
   body.theme-white .renter-modern-portal #renterPaymentPhotoAndUtrCard,
   body.theme-white .renter-modern-portal #renterInlineProfileCard,
+  body.theme-white .renter-modern-portal #renterUploadPhotoAdminWarningBanner,
   body.theme-white .renter-modern-portal div[style*="border-radius"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   body.theme-white .renter-modern-portal div[style*="border:"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
   body.theme-white .renter-modern-portal label[style*="border"],
   body.theme-white .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(255, 255, 255, 0.30) !important;
-    background-color: rgba(255, 255, 255, 0.30) !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    background-color: rgba(255, 255, 255, 0.35) !important;
     background-image: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
     box-shadow: none !important;
+  }
+  .renter-modern-portal {
+    --text-main: #ffffff;
+    --text-muted: #e2e8f0;
+  }
+  .renter-modern-portal h2,
+  .renter-modern-portal h3,
+  .renter-modern-portal h4,
+  .renter-modern-portal strong,
+  .renter-modern-portal label,
+  .renter-modern-portal .form-control,
+  .renter-modern-portal button {
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  }
+  .renter-modern-portal div,
+  .renter-modern-portal span,
+  .renter-modern-portal p {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+  .renter-modern-portal .form-control::placeholder {
+    color: rgba(226, 232, 240, 0.82);
+  }
+  .renter-modern-portal select.form-control option {
+    background: #0f172a;
+    color: #f8fafc;
+  }
+  body.theme-white .renter-modern-portal {
+    --text-main: #0f172a;
+    --text-muted: #1e293b;
+  }
+  body.theme-white .renter-modern-portal h2,
+  body.theme-white .renter-modern-portal h3,
+  body.theme-white .renter-modern-portal h4,
+  body.theme-white .renter-modern-portal strong,
+  body.theme-white .renter-modern-portal label,
+  body.theme-white .renter-modern-portal .form-control,
+  body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
+    color: #0f172a !important;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.92);
+  }
+  body.theme-white .renter-modern-portal div,
+  body.theme-white .renter-modern-portal span,
+  body.theme-white .renter-modern-portal p {
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.88);
+  }
+  body.theme-white .renter-modern-portal .form-control::placeholder {
+    color: #334155;
+  }
+  body.theme-white .renter-modern-portal select.form-control option {
+    background: #ffffff;
+    color: #0f172a;
   }
   .renter-modern-portal .renter-hero-banner::before {
     display: none !important;
+  }
+  .renter-quick-box-warn-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    background: rgba(245, 158, 11, 0.24);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.55);
+    white-space: nowrap;
+  }
+  body.theme-white .renter-quick-box-warn-pill {
+    background: rgba(245, 158, 11, 0.18);
+    color: #b45309;
+    border-color: rgba(217, 119, 6, 0.55);
+  }
+  .utr-rejection-reason-box {
+    margin-top: 7px;
+    padding: 8px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(239, 68, 68, 0.48);
+    background: rgba(239, 68, 68, 0.14);
+    color: #fecaca;
+    font-size: 0.74rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  body.theme-white .utr-rejection-reason-box {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+    border-color: rgba(220, 38, 38, 0.45);
+  }
+  .utr-reject-reason-chip {
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .utr-reject-reason-chip:hover {
+    background: rgba(239, 68, 68, 0.24);
+    border-color: rgba(239, 68, 68, 0.65);
+  }
+  body.theme-white .utr-reject-reason-chip {
+    color: #b91c1c;
+    background: rgba(239, 68, 68, 0.08);
   }
 
 
@@ -7527,6 +7634,13 @@
               </button>
             </div>
           </div>
+
+          <div style="grid-column: 1 / -1; background:rgba(16,185,129,0.08); border:1.5px solid rgba(16,185,129,0.25); border-radius:14px; padding:10px 12px;">
+            <label style="font-size:0.7rem; font-weight:800; color:#34d399; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px; margin-bottom:4px;">
+              <i class="fa-solid fa-envelope"></i> Email ID
+            </label>
+            <input type="text" id="profViewEmail" class="form-control" readonly placeholder="Not set" style="background:transparent; border:none; padding:0; font-weight:800; font-size:0.92rem; color:var(--text-main); cursor:default; box-shadow:none;">
+          </div>
         </div>
 
         <!-- 4 Vibrant Action Switch Buttons (Password, Username, Name & Mobile, Theme) -->
@@ -7660,10 +7774,10 @@
           <div id="userChangeBottomMsg" class="bottom-status-msg"></div>
         </div>
 
-        <!-- Option C: Dedicated Change Name & Mobile No. Drawer -->
+        <!-- Option C: Dedicated Change Name, Mobile No. & Email ID Drawer -->
         <div id="drawerChangeName" class="profile-sub-drawer" style="border:1.5px solid rgba(16,185,129,0.4); border-radius:16px; background:linear-gradient(145deg, rgba(16,185,129,0.08) 0%, rgba(15,23,42,0.7) 100%);">
           <h4 style="margin-bottom: 12px; font-size: 0.92rem; color: #34d399; font-weight:800; display:flex; align-items:center; gap:7px;">
-            <i class="fa-solid fa-user-pen"></i> Update Full Name &amp; Phone
+            <i class="fa-solid fa-user-pen"></i> Update Full Name, Phone &amp; Email ID
           </h4>
           <div class="form-group">
             <label>New Full Name <span class="req-star">*</span></label>
@@ -7673,9 +7787,33 @@
             <label>Mobile No. <span class="req-star">*</span></label>
             <input type="tel" id="changeMobileOnlyInput" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)">
           </div>
-          <button class="btn-primary" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); font-weight:800;" onclick="submitChangeNameAndMobile()">
-            <i class="fa-solid fa-check-circle"></i> Save Name &amp; Mobile
+          <div class="form-group" id="changeEmailFieldGroup">
+            <label>Email ID <span id="changeEmailReqStar" class="req-star" style="display:none;">*</span></label>
+            <input type="email" id="changeEmailOnlyInput" class="form-control" placeholder="Enter your email ID (e.g. name@gmail.com)" oninput="resetPendingProfileEmailOtpState('modal')">
+          </div>
+          <button type="button" id="btnSaveNameMobileEmail" class="btn-primary" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%); font-weight:800;" onclick="submitChangeNameAndMobile()">
+            <i class="fa-solid fa-check-circle"></i> Save
           </button>
+
+          <!-- 4-Digit Email OTP Verification Box (Shown when Renter clicks Save) -->
+          <div id="profileEmailOtpVerifyBox" style="display:none; margin-top:12px; padding:12px; border-radius:12px; border:1.5px solid rgba(56,189,248,0.45); background:rgba(56,189,248,0.09);">
+            <div style="font-size:0.78rem; font-weight:800; color:#38bdf8; margin-bottom:4px;">
+              <i class="fa-solid fa-shield-halved"></i> Email OTP Verification Required
+            </div>
+            <div id="profileEmailOtpSentInfo" style="font-size:0.74rem; color:var(--text-muted); margin-bottom:10px;">
+              Enter the 4-digit OTP sent to your Email ID to save your profile.
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <input type="text" id="profileEmailOtpInput" class="form-control" maxlength="4" inputmode="numeric" placeholder="4-digit OTP" style="flex:1; min-width:120px; text-align:center; font-size:1rem; font-weight:900; letter-spacing:6px;" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 4)">
+              <button type="button" id="btnVerifyProfileEmailOtp" class="btn-primary" style="width:auto; padding:9px 14px; font-size:0.8rem; background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); font-weight:800;" onclick="verifyAndSaveProfileWithEmailOtp('modal')">
+                <i class="fa-solid fa-circle-check"></i> Verify OTP &amp; Save
+              </button>
+              <button type="button" id="btnResendProfileEmailOtp" class="btn-ledger-action" style="padding:9px 11px; font-size:0.74rem;" onclick="resendProfileEmailOtp('modal')">
+                <i class="fa-solid fa-rotate"></i> Resend
+              </button>
+            </div>
+          </div>
+
           <div id="nameChangeBottomMsg" class="bottom-status-msg"></div>
         </div>
 
@@ -10252,6 +10390,7 @@
         String(data?.pngProofBase64 || "").startsWith("data:") ||
         String(data?.waterProofBase64 || "").startsWith("data:")
       ));
+      const requiresStrictJson = isDrivePhotoUpload || actName === "sendProfileEmailOtp" || actName === "verifyProfileEmailOtp";
 
       // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
       const runSheetPost = async function() {
@@ -10270,10 +10409,10 @@
             result = null;
           }
           if (!response.ok || !result || typeof result !== "object") {
-            if (isDrivePhotoUpload) {
+            if (requiresStrictJson) {
               return {
                 status: "error",
-                message: `Google Drive / Sheet server returned an invalid response (HTTP ${response.status}). Please ensure Google Apps Script is deployed cleanly.`
+                message: `Server returned an invalid response (HTTP ${response.status}). Please ensure Google Apps Script is deployed cleanly.`
               };
             }
             return { status: "error", message: `Server returned HTTP ${response.status}.` };
@@ -10285,11 +10424,11 @@
           }
           return result;
         } catch (err) {
-          if (isDrivePhotoUpload) {
-            console.warn("Google Drive upload blocked by network/CORS:", err);
+          if (requiresStrictJson) {
+            console.warn("Strict GAS action blocked by network/CORS:", err);
             return {
               status: "error",
-              message: "Could not verify Google Drive upload due to network or CORS error. Please re-check your Apps Script Web App deployment."
+              message: "Could not reach Google Apps Script email/upload service due to network or CORS error. Please re-check your Apps Script Web App deployment."
             };
           }
           try {
@@ -10493,6 +10632,7 @@
         userRole: matchedUser?.Role || activeRole || "Admin",
         userFullName: matchedUser?.FullName || activeUserFullName || loggedUsername || "",
         userMobile: matchedUser?.MobileNumber || activeUserMobile || "",
+        userEmail: matchedUser?.Email || activeUserEmail || "",
         userTheme: matchedUser?.Theme || activeThemePref || "system",
         userAssignedProperty: matchedUser?.AssignedProperty ?? activeAssignedProperty ?? "",
         userAssignedFlat: matchedUser?.AssignedFlat ?? activeAssignedFlat ?? "",
@@ -10785,6 +10925,7 @@
         username: localMatch?.Username || cleanUser,
         fullName: localMatch?.FullName || activeUserFullName || cleanUser,
         mobile: localMatch?.MobileNumber || activeUserMobile || "",
+        email: localMatch?.Email || localMatch?.email || activeUserEmail || "",
         role: localMatch?.Role || activeRole || "Admin",
         theme: localMatch?.Theme || activeThemePref || "system",
         password: localMatch?.Password || ""
@@ -10818,6 +10959,8 @@
       "uploadRenterMonthlyPhoto",
       "deleteRenterMonthlyPhoto",
       "uploadPhotoToDriveOnly",
+      "sendProfileEmailOtp",
+      "verifyProfileEmailOtp",
       "recordBill",
       "updateSingleBill",
       "deleteBill",
@@ -11169,12 +11312,15 @@
           case "changeNameAndMobile": {
             const rawUser = String(data.loggedUsername || data.username || "").trim();
             const lowerU = rawUser.toLowerCase();
+            const hasNewEmail = data.newEmail !== undefined || data.email !== undefined;
+            const cleanEmail = String(data.newEmail !== undefined ? data.newEmail : (data.email || "")).trim();
             usersList = usersList.map(function(u) {
               if (String(u.Username || "").trim().toLowerCase() === lowerU) {
                 return {
                   ...u,
-                  FullName: String(data.newFullName || "").trim(),
-                  MobileNumber: cleanPhoneStr(data.newMobile || ""),
+                  FullName: String(data.newFullName || u.FullName || "").trim(),
+                  MobileNumber: cleanPhoneStr(data.newMobile || u.MobileNumber || ""),
+                  Email: hasNewEmail ? cleanEmail : (u.Email || ""),
                   UpdatedAt: new Date().toISOString()
                 };
               }
@@ -11182,7 +11328,7 @@
             });
             saveLocalUsersMaster(usersList);
             await sendGasSheetAction({ ...data, users: usersList });
-            return { status: "success", message: "Profile details updated in Google Sheet." };
+            return { status: "success", email: cleanEmail, message: "Profile details updated in Google Sheet." };
           }
 
           case "saveTheme":
@@ -11428,6 +11574,7 @@
     let activeUser = null;
     let activeUserFullName = "Administrator";
     let activeUserMobile = "";
+    let activeUserEmail = "";
     let activeRole = "Admin";
     let activeAssignedProperty = "";
     let activeAssignedFlat = "";
@@ -13797,6 +13944,7 @@ function formatMonthLabel(rawVal) {
         activeRole = restoredSession.role || "Admin";
         activeUserFullName = restoredSession.fullName || restoredSession.username;
         activeUserMobile = restoredSession.mobile || "";
+        activeUserEmail = restoredSession.email || "";
         activeAssignedProperty = restoredSession.assignedProperty || "";
         activeAssignedFlat = restoredSession.assignedFlat || "";
         activeAssignedAadhaar = normalizeAadhaar12(restoredSession.assignedAadhaar || "");
@@ -13860,6 +14008,7 @@ function formatMonthLabel(rawVal) {
           role: String(activeRole || "Admin").trim(),
           fullName: String(activeUserFullName || activeUser || "").trim(),
           mobile: String(activeUserMobile || "").trim(),
+          email: String(activeUserEmail || "").trim(),
           assignedProperty: String(activeAssignedProperty || "").trim(),
           assignedFlat: String(activeAssignedFlat || "").trim(),
           assignedAadhaar: normalizeAadhaar12(activeAssignedAadhaar || ""),
@@ -13879,6 +14028,7 @@ function formatMonthLabel(rawVal) {
         sessionStorage.setItem("active_session_role", sessionObj.role);
         sessionStorage.setItem("active_session_fullname", sessionObj.fullName);
         sessionStorage.setItem("active_session_mobile", sessionObj.mobile);
+        sessionStorage.setItem("active_session_email", sessionObj.email);
         sessionStorage.setItem("active_session_assigned_prop", sessionObj.assignedProperty);
         sessionStorage.setItem("active_session_assigned_flat", sessionObj.assignedFlat);
         sessionStorage.setItem("active_session_assigned_aadhaar", sessionObj.assignedAadhaar);
@@ -13907,6 +14057,7 @@ function formatMonthLabel(rawVal) {
             role: sessionStorage.getItem("active_session_role") || localStorage.getItem("active_session_role") || "Admin",
             fullName: sessionStorage.getItem("active_session_fullname") || ssUser,
             mobile: sessionStorage.getItem("active_session_mobile") || "",
+            email: sessionStorage.getItem("active_session_email") || "",
             assignedProperty: sessionStorage.getItem("active_session_assigned_prop") || "",
             assignedFlat: sessionStorage.getItem("active_session_assigned_flat") || "",
             assignedAadhaar: sessionStorage.getItem("active_session_assigned_aadhaar") || "",
@@ -13928,6 +14079,7 @@ function formatMonthLabel(rawVal) {
       activeRole = "Admin";
       activeUserFullName = "Administrator";
       activeUserMobile = "";
+      activeUserEmail = "";
       activeAssignedProperty = "";
       activeAssignedFlat = "";
       activeAssignedAadhaar = "";
@@ -16039,6 +16191,22 @@ function formatMonthLabel(rawVal) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+    function clearRenterPendingPaymentPhoto(silent = true) {
+      window.pendingRenterInlinePaymentPhotoDataUrl = "";
+      window.pendingRenterInlinePaymentPhotoName = "";
+      const fileInput = document.getElementById("renterPayPhotoFileInput");
+      if (fileInput) fileInput.value = "";
+      const prevBox = document.getElementById("renterInlinePayPhotoPendingBox");
+      const prevImg = document.getElementById("renterInlinePayPhotoPendingImg");
+      const prevName = document.getElementById("renterInlinePayPhotoPendingName");
+      if (prevImg) prevImg.removeAttribute("src");
+      if (prevName) prevName.innerText = "";
+      if (prevBox) prevBox.style.display = "none";
+      if (!silent) {
+        triggerSideToast("Photo Cleared", "Selected payment screenshot removed.", true);
+      }
+    }
+
     async function handleRenterPaymentInlinePhotoSelect(inputEl) {
       const file = inputEl && inputEl.files && inputEl.files[0];
       if (!file) return;
@@ -16052,9 +16220,9 @@ function formatMonthLabel(rawVal) {
         if (prevImg) prevImg.src = compressed;
         if (prevName) prevName.innerText = window.pendingRenterInlinePaymentPhotoName;
         if (prevBox) prevBox.style.display = "flex";
-        triggerSideToast("Payment Photo Attached", "Enter your UTR number and click Submit for Verification.", true);
+        triggerSideToast("Payment Screenshot Preview Ready", "Enter your UTR number below and click Submit.", true);
       } catch (e) {
-        triggerSideToast("Photo Error", "Could not read selected payment photo.", false);
+        triggerSideToast("Photo Error", "Could not read selected payment screenshot.", false);
       } finally {
         if (inputEl) inputEl.value = "";
       }
@@ -16081,7 +16249,7 @@ function formatMonthLabel(rawVal) {
       const renterName = String(primaryRenter.RenterName || activeUserFullName || activeUser || "Resident").trim();
       const targetMonth = normalizeMonthYear(window.selectedRenterMonthlyUploadMonth || window.selectedRenterHomeBillMonth) || new Date().toISOString().slice(0, 7);
       const pendingPhoto = window.pendingRenterInlinePaymentPhotoDataUrl || "";
-      const existingDrivePhoto = String(window.__activeRenterCompletedPaymentPhotoUrl || "").trim();
+      const pendingPhotoName = window.pendingRenterInlinePaymentPhotoName || `PaymentProof_${propName}_Flat_${flatName}_${utr}.jpg`;
 
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -16089,14 +16257,14 @@ function formatMonthLabel(rawVal) {
       }
 
       try {
-        let finalPhotoUrl = existingDrivePhoto;
+        let finalPhotoUrl = "";
 
         if (pendingPhoto && pendingPhoto.startsWith("data:image")) {
           window.__skipInlineUtrAutoRecord = true;
           try {
             await uploadRenterMonthlyPhotoDataUrl(
               pendingPhoto,
-              window.pendingRenterInlinePaymentPhotoName || `PaymentProof_${propName}_Flat_${flatName}_${utr}.jpg`,
+              pendingPhotoName,
               "completed_payment",
               "Completed Payment Photo",
               targetMonth,
@@ -16119,9 +16287,9 @@ function formatMonthLabel(rawVal) {
           });
           if (slotMatchKey && latestMap[slotMatchKey]) {
             finalPhotoUrl = normalizeGoogleDriveImageUrl(latestMap[slotMatchKey].imageUrl || latestMap[slotMatchKey].previewUrl || "");
+          } else {
+            finalPhotoUrl = pendingPhoto;
           }
-          window.pendingRenterInlinePaymentPhotoDataUrl = "";
-          window.pendingRenterInlinePaymentPhotoName = "";
         }
 
         const list = typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : [];
@@ -16145,6 +16313,7 @@ function formatMonthLabel(rawVal) {
         if (typeof saveStoredPaymentProofs === "function") {
           saveStoredPaymentProofs([newProof, ...list]);
         }
+        clearRenterPendingPaymentPhoto(true);
         if (utrInput) utrInput.value = "";
         renderAllDashboardUI();
         if (typeof renderAdminPaymentProofQueue === "function") renderAdminPaymentProofQueue();
@@ -16152,7 +16321,7 @@ function formatMonthLabel(rawVal) {
 
         triggerSideToast(
           "Payment & UTR Submitted",
-          `UTR ${utr}${finalPhotoUrl ? " and payment photo" : ""} sent to Admin for verification!`,
+          `UTR ${utr}${finalPhotoUrl ? " and payment screenshot" : ""} sent to Admin for verification! You can upload a new photo if needed.`,
           true
         );
       } catch (err) {
@@ -16970,6 +17139,25 @@ function formatMonthLabel(rawVal) {
              </div>`
           : "";
 
+        const hasActivePhotoRequestAnywhere = hasAnyReqForMonth || requestedMonthsList.some(m => {
+          const st = getMatchingScreenshotRequestsForRenter(m, targetProp, targetFlat, primaryRenter.RenterID, effectiveAadhaar);
+          return Boolean(st && st.hasAnyRequest);
+        });
+        const uploadPhotoNavBtn = document.querySelector('#renterQuickScrollTrack button[data-renter-nav="upload_photo"]');
+        if (uploadPhotoNavBtn) {
+          const existingWarnPill = uploadPhotoNavBtn.querySelector(".renter-quick-box-warn-pill");
+          if (hasActivePhotoRequestAnywhere) {
+            if (!existingWarnPill) {
+              const warnSpan = document.createElement("span");
+              warnSpan.className = "renter-quick-box-warn-pill";
+              warnSpan.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Please upload the photo.`;
+              uploadPhotoNavBtn.appendChild(warnSpan);
+            }
+          } else if (existingWarnPill) {
+            existingWarnPill.remove();
+          }
+        }
+
         const renterMonthlyPhotoUploadsSectionHtml = `
           <div class="renter-kpi-summary-box" id="renterMonthlyDrivePhotoUploadsCard" style="margin-top: 22px; padding: 22px; border-radius: 18px; background: transparent; border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
@@ -16989,6 +17177,13 @@ function formatMonthLabel(rawVal) {
             </div>
 
             ${requestedMonthsPillsHtml}
+
+            ${hasActivePhotoRequestAnywhere ? `
+              <div id="renterUploadPhotoAdminWarningBanner" style="padding:12px 14px; border-radius:12px; border:1.5px solid rgba(245,158,11,0.65); background:rgba(245,158,11,0.16); color:#fbbf24; font-size:0.84rem; font-weight:900; margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size:1.05rem;"></i>
+                <span>Please upload the photo. (Admin has sent a photo upload request${hasAnyReqForMonth ? ` for ${activeUploadMonthLabel}` : ""}.)</span>
+              </div>
+            ` : ""}
 
             ${!hasAnyReqForMonth ? `
               <div style="padding:20px; border-radius:14px; border:1.5px dashed rgba(245,158,11,0.45); background:transparent; text-align:center; margin-bottom:14px;">
@@ -17171,10 +17366,10 @@ function formatMonthLabel(rawVal) {
         const dashboardPaymentCircleBoxHtml = `
           <div id="renterDashboardOverviewRow" style="margin-top: 14px; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-between; gap: 16px;">
             <!-- Left Side: Half-Size Latest Receipt Payment Overview -->
-            <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="flex: 1 1 320px; max-width: 410px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.30); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="flex: 1 1 320px; max-width: 410px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.35); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between;">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                 <div style="display:flex; align-items:center; gap:9px;">
-                  <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.30); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                  <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.35); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                     <i class="fa-solid fa-chart-pie"></i>
                   </div>
                   <div>
@@ -17186,7 +17381,7 @@ function formatMonthLabel(rawVal) {
                     </div>
                   </div>
                 </div>
-                <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.30); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.35); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
                   ${latestBillDateLabel}
                 </span>
               </div>
@@ -17223,7 +17418,7 @@ function formatMonthLabel(rawVal) {
                       ></circle>
                     ` : ""}
                   </svg>
-                  <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
+                  <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
                     <span style="font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
                     <strong style="font-size:1.05rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                     <span style="font-size:0.6rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
@@ -17232,22 +17427,22 @@ function formatMonthLabel(rawVal) {
 
                 <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
                 <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid rgba(99,102,241,0.38); text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid rgba(99,102,241,0.38); text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                   </div>
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
                   </div>
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
                   </div>
                 </div>
 
                 ${chartAdvanceAmt > 0 ? `
-                  <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                  <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
                     <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
                     <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
                   </div>
@@ -17262,11 +17457,11 @@ function formatMonthLabel(rawVal) {
             </div>
 
             <!-- Right Side: Latest Receipt Summary Card -->
-            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.30); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.35); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
               <div>
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                   <div style="display:flex; align-items:center; gap:9px;">
-                    <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.30); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                    <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.35); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                       <i class="fa-solid fa-receipt"></i>
                     </div>
                     <div>
@@ -17278,14 +17473,14 @@ function formatMonthLabel(rawVal) {
                       </div>
                     </div>
                   </div>
-                  <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.30); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                  <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.35); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
                     ${chartCenterBadgeText}
                   </span>
                 </div>
 
                 ${latestBill ? `
                   <div style="display:flex; flex-direction:column; gap:8px;">
-                    <div style="padding:9px 11px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                    <div style="padding:9px 11px; border-radius:11px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
                       <span style="font-size:0.74rem; font-weight:800; color:var(--text-main);">
                         <i class="fa-solid fa-building" style="color:#38bdf8; margin-right:5px;"></i>Flat ${escapeHtml(latestBillFlatLabel)} (${escapeHtml(latestBillPropLabel)})
                       </span>
@@ -17295,33 +17490,33 @@ function formatMonthLabel(rawVal) {
                     </div>
 
                     <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;">
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Base Rent</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillBaseRentAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#38bdf8; text-transform:uppercase;">Electricity</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillElecAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#f59e0b; text-transform:uppercase;">PNG Gas</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillPngAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#06b6d4; text-transform:uppercase;">Water</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillWaterAmt.toLocaleString("en-IN")}</strong>
                       </div>
                     </div>
 
                     ${latestBillAddAmt > 0 ? `
-                      <div style="padding:7px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.74rem;">
+                      <div style="padding:7px 10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.74rem;">
                         <span style="font-weight:700; color:#c084fc;">${escapeHtml(latestBillAddLabel)}</span>
                         <strong style="font-weight:900; color:var(--text-main); font-variant-numeric:tabular-nums;">₹${latestBillAddAmt.toLocaleString("en-IN")}</strong>
                       </div>
                     ` : ""}
                   </div>
                 ` : `
-                  <div style="padding:26px 14px; border-radius:12px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.30); text-align:center; color:var(--text-muted); font-size:0.78rem;">
+                  <div style="padding:26px 14px; border-radius:12px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.35); text-align:center; color:var(--text-muted); font-size:0.78rem;">
                     <i class="fa-solid fa-file-invoice" style="font-size:1.35rem; color:#38bdf8; display:block; margin-bottom:8px;"></i>
                     No receipt generated for your account yet.
                   </div>
@@ -17332,7 +17527,7 @@ function formatMonthLabel(rawVal) {
                 type="button"
                 id="renterDashboardLatestReceiptBtn"
                 onclick="${latestBill ? `selectRenterHomeAvailableReceipt('${latestBillIdArg}', '${latestBillMonthArg}'); openBillReceiptModal('${latestBillIdArg}', '${latestBillMonthArg}');` : `navigateRenterQuickNav('receipt');`}"
-                style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(56,189,248,0.45); background:rgba(15,23,42,0.30); color:#38bdf8; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
+                style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(56,189,248,0.45); background:rgba(15,23,42,0.35); color:#38bdf8; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
               >
                 <i class="fa-solid fa-eye"></i>
                 <span>${latestBill ? "View Latest Receipt" : "Open All Receipts"}</span>
@@ -17600,7 +17795,7 @@ function formatMonthLabel(rawVal) {
               </div>
             </div>
 
-            <!-- Moved Payment Completion Photo Upload & UTR Verification Card -->
+            <!-- Moved Payment Completion Screenshot Upload & UTR Verification Card -->
             <div class="renter-payment-card" id="renterPaymentPhotoAndUtrCard" style="margin:0; background:transparent;">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
                 <div style="display:flex; align-items:center; gap:10px;">
@@ -17612,56 +17807,39 @@ function formatMonthLabel(rawVal) {
                       Payment Completion Photo &amp; UTR Verification
                     </div>
                     <h4 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
-                      Upload Payment Proof &amp; Enter UTR (${activeUploadMonthLabel})
+                      Upload Payment Screenshot &amp; Enter UTR (${activeUploadMonthLabel})
                     </h4>
                   </div>
                 </div>
-                <span style="font-size:0.68rem; font-weight:800; padding:4px 10px; border-radius:999px; background:transparent; color:${isPayPhotoReRequested ? "#fbbf24" : (isPayPhotoRequested && !displayPayPhotoUrl ? "#38bdf8" : (displayPayPhotoUrl ? "#34d399" : "var(--text-muted)"))}; border:1px solid ${isPayPhotoReRequested ? "rgba(245,158,11,0.42)" : (isPayPhotoRequested && !displayPayPhotoUrl ? "rgba(56,189,248,0.42)" : (displayPayPhotoUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"))};">
-                  ${isPayPhotoReRequested ? "Admin Re-requested Photo" : (isPayPhotoRequested && !displayPayPhotoUrl ? "Admin Requested Photo" : (displayPayPhotoUrl ? "Payment Photo Saved" : "Ready for Verification"))}
+                <span style="font-size:0.68rem; font-weight:800; padding:4px 10px; border-radius:999px; background:transparent; color:${isPayPhotoReRequested ? "#fbbf24" : (isPayPhotoRequested ? "#38bdf8" : "var(--text-muted)")}; border:1px solid ${isPayPhotoReRequested ? "rgba(245,158,11,0.42)" : (isPayPhotoRequested ? "rgba(56,189,248,0.42)" : "var(--glass-border)")};">
+                  ${isPayPhotoReRequested ? "Admin Re-requested Photo" : (isPayPhotoRequested ? "Admin Requested Photo" : "Ready for Verification")}
                 </span>
               </div>
 
-              ${displayPayPhotoUrl ? `
-                <div style="margin-bottom:14px;">
-                  <div
-                    onclick="openPhotoZoomModal('${safePayZoomUrl}', '${safePayZoomTitle}')"
-                    title="Click to view full payment photo"
-                    style="width:100%; max-height:190px; border-radius:12px; overflow:hidden; border:1.5px solid rgba(16,185,129,0.4); background:transparent; cursor:zoom-in; position:relative;"
-                  >
-                    <img src="${displayPayPhotoUrl}" alt="Completed Payment Photo" onerror="handleDriveImgFallback(this)" style="width:100%; height:175px; object-fit:cover; display:block;" />
-                    <div style="position:absolute; bottom:7px; right:7px; background:rgba(15,23,42,0.75); color:#fff; font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:6px; display:inline-flex; align-items:center; gap:5px;">
-                      <i class="fa-solid fa-magnifying-glass-plus"></i> View Saved Payment Photo
-                    </div>
+              <!-- Preview of Uploaded Payment Screenshot (displayed right above Upload Payment Screenshot; auto-clears on Submit) -->
+              <div id="renterInlinePayPhotoPendingBox" style="display:${window.pendingRenterInlinePaymentPhotoDataUrl ? "flex" : "none"}; flex-direction:column; gap:10px; padding:12px; border-radius:12px; background:transparent; border:1.5px solid rgba(16,185,129,0.48); margin-bottom:14px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+                  <div style="min-width:0; flex:1;">
+                    <div style="font-size:0.75rem; font-weight:800; color:#34d399;"><i class="fa-solid fa-image"></i> Uploaded Payment Screenshot Preview</div>
+                    <div id="renterInlinePayPhotoPendingName" style="font-size:0.7rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(window.pendingRenterInlinePaymentPhotoName || "Ready to submit")}</div>
                   </div>
-                  <div style="font-size:0.69rem; color:#34d399; font-weight:700; margin-top:5px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
-                    <span><i class="fa-brands fa-google-drive"></i> Saved on Google Drive (${activeUploadMonthLabel})</span>
-                    ${payUploadedDateStr ? `<span style="color:var(--text-muted);">${payUploadedDateStr}</span>` : ""}
-                  </div>
+                  <button type="button" class="btn-ledger-action" onclick="clearRenterPendingPaymentPhoto(false)" style="padding:4px 10px; font-size:0.7rem; color:#f87171; border-color:rgba(239,68,68,0.42);">
+                    <i class="fa-solid fa-xmark"></i> Remove
+                  </button>
                 </div>
-              ` : ""}
-
-              <!-- Pending Selected File Preview (before Submit) -->
-              <div id="renterInlinePayPhotoPendingBox" style="display:${window.pendingRenterInlinePaymentPhotoDataUrl ? "flex" : "none"}; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:transparent; border:1px solid rgba(16,185,129,0.4); margin-bottom:14px;">
-                <img id="renterInlinePayPhotoPendingImg" src="${window.pendingRenterInlinePaymentPhotoDataUrl || ""}" alt="Selected payment proof" style="width:52px; height:52px; border-radius:8px; object-fit:cover; border:1px solid rgba(16,185,129,0.4);" />
-                <div style="min-width:0; flex:1;">
-                  <div style="font-size:0.74rem; font-weight:800; color:#34d399;">Payment Photo Attached</div>
-                  <div id="renterInlinePayPhotoPendingName" style="font-size:0.7rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(window.pendingRenterInlinePaymentPhotoName || "Ready to upload")}</div>
-                </div>
+                <img
+                  id="renterInlinePayPhotoPendingImg"
+                  src="${window.pendingRenterInlinePaymentPhotoDataUrl || ""}"
+                  alt="Uploaded payment screenshot preview"
+                  onclick="if (this.src) openPhotoZoomModal(this.src, 'Uploaded Payment Screenshot Preview')"
+                  style="width:100%; max-height:220px; object-fit:contain; border-radius:10px; border:1px solid rgba(16,185,129,0.35); cursor:zoom-in; background:rgba(15,23,42,0.25);"
+                />
               </div>
 
-              <!-- Upload Payment Photo Buttons (Live Camera + Gallery/Screenshot File) -->
-              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(185px, 1fr)); gap:10px; margin-bottom:14px;">
-                <button
-                  type="button"
-                  id="btnRenterMonthlyUpload_completed_payment"
-                  onclick="openRenterLiveCameraCapture('completed_payment', 'Completed Payment Photo', '${defaultMonthlyUploadMonth}', '${safePayPropArg}', '${safePayFlatArg}', '${safePayRenterIdArg}', '${safePayAadhaarArg}', '${safePayRenterNameArg}')"
-                  style="padding:10px 12px; border-radius:11px; background:transparent; border:1.5px solid rgba(16,185,129,0.42); color:var(--text-main); font-size:0.8rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
-                >
-                  <i class="fa-solid fa-camera" style="color:#34d399;"></i>
-                  <span>${isPayPhotoReRequested ? "Re-Capture Payment (Camera)" : "Capture Payment Photo (Camera)"}</span>
-                </button>
+              <!-- Upload Payment Screenshot Option Only (Camera / Capture removed) -->
+              <div style="margin-bottom:14px;">
                 <label
-                  style="padding:10px 12px; border-radius:11px; background:transparent; border:1.5px solid rgba(56,189,248,0.42); color:var(--text-main); font-size:0.8rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px; margin:0;"
+                  style="width:100%; padding:11px 14px; border-radius:11px; background:transparent; border:1.5px solid rgba(56,189,248,0.48); color:var(--text-main); font-size:0.84rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin:0; box-sizing:border-box;"
                 >
                   <i class="fa-solid fa-image" style="color:#38bdf8;"></i>
                   <span>Upload Payment Screenshot</span>
@@ -17715,22 +17893,30 @@ function formatMonthLabel(rawVal) {
                   <div style="font-size:0.74rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">
                     <i class="fa-solid fa-clock-rotate-left" style="color:#818cf8; margin-right:5px;"></i> Your Submitted UTRs &amp; Payment Verifications
                   </div>
-                  <div style="display:flex; flex-direction:column; gap:7px;">
+                  <div style="display:flex; flex-direction:column; gap:8px;">
                     ${mySubmittedUtrProofs.map(pr => {
                       const pSt = String(pr.status || "Pending");
                       const pColor = pSt === "Approved" ? "#34d399" : (pSt === "Rejected" ? "#f87171" : "#fbbf24");
                       const safePrImg = pr.screenshotUrl ? normalizeGoogleDriveImageUrl(pr.screenshotUrl).replace(/'/g, "\\'") : "";
                       const safePrUtr = String(pr.utr || "").replace(/'/g, "\\'");
+                      const rejReason = String(pr.rejectionReason || pr.reason || pr.notes || pr.Notes || "").trim();
                       return `
-                        <div style="padding:9px 12px; border-radius:10px; background:transparent; border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:0.75rem;">
-                          <div>
-                            <div style="font-weight:800; color:var(--text-main);">UTR: <span style="color:#38bdf8;">${escapeHtml(pr.utr || "--")}</span> • ₹${(Number(pr.amount) || 0).toLocaleString("en-IN")}</div>
-                            <div style="font-size:0.68rem; color:var(--text-muted);">${pr.monthYear ? formatMonthLabel(pr.monthYear) + " • " : ""}${escapeHtml(pr.submittedAt || "")}</div>
+                        <div style="padding:10px 12px; border-radius:10px; background:transparent; border:1px solid ${pSt === "Rejected" ? "rgba(239,68,68,0.45)" : "var(--glass-border)"}; display:flex; flex-direction:column; gap:6px; font-size:0.75rem;">
+                          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                            <div>
+                              <div style="font-weight:800; color:var(--text-main);">UTR: <span style="color:#38bdf8;">${escapeHtml(pr.utr || "--")}</span> • ₹${(Number(pr.amount) || 0).toLocaleString("en-IN")}</div>
+                              <div style="font-size:0.68rem; color:var(--text-muted);">${pr.monthYear ? formatMonthLabel(pr.monthYear) + " • " : ""}${escapeHtml(pr.submittedAt || "")}</div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                              ${safePrImg ? `<button type="button" class="btn-ledger-action" style="padding:3px 8px; font-size:0.68rem; background:transparent;" onclick="openPhotoZoomModal('${safePrImg}', 'Payment Proof — UTR ${safePrUtr}')"><i class="fa-solid fa-image"></i> Photo</button>` : ""}
+                              <span style="padding:3px 9px; border-radius:999px; font-size:0.68rem; font-weight:800; background:transparent; color:${pColor}; border:1px solid ${pColor};">${escapeHtml(pSt)}</span>
+                            </div>
                           </div>
-                          <div style="display:flex; align-items:center; gap:6px;">
-                            ${safePrImg ? `<button type="button" class="btn-ledger-action" style="padding:3px 8px; font-size:0.68rem; background:transparent;" onclick="openPhotoZoomModal('${safePrImg}', 'Payment Proof — UTR ${safePrUtr}')"><i class="fa-solid fa-image"></i> Photo</button>` : ""}
-                            <span style="padding:3px 9px; border-radius:999px; font-size:0.68rem; font-weight:800; background:transparent; color:${pColor}; border:1px solid ${pColor};">${escapeHtml(pSt)}</span>
-                          </div>
+                          ${pSt === "Rejected" ? `
+                            <div class="utr-rejection-reason-box">
+                              <strong><i class="fa-solid fa-circle-exclamation"></i> Rejection Reason:</strong> ${escapeHtml(rejReason || "Rejected by Admin.")}
+                            </div>
+                          ` : ""}
                         </div>
                       `;
                     }).join("")}
@@ -17741,7 +17927,7 @@ function formatMonthLabel(rawVal) {
           </div>
         `;
 
-        // Build Isolated Read-Only Profile Section
+        // Build Isolated Profile Section (Full Name, Phone Number, Email ID + 4-Digit Email OTP Verification on Save)
         const consolidatedProfile = consolidateRenterHistoryDetailsByAadhaar(primaryRenter)?.merged || primaryRenter;
         const profJoinDate = toInputDateValue(consolidatedProfile.JoinDate || primaryRenter.JoinDate || "");
         const profEndDate = toInputDateValue(consolidatedProfile.EndDate || primaryRenter.EndDate || "");
@@ -17753,6 +17939,17 @@ function formatMonthLabel(rawVal) {
         const profPngRate = resolveExactRateValue(assignedFlatObj.PNGRate, primaryRenter.PNGFixedRate);
         const profWaterRate = resolveExactRateValue(assignedFlatObj.WaterRate, primaryRenter.WaterFixedRate);
         const profFamilyList = Array.isArray(consolidatedProfile.FamilyMembersList) ? consolidatedProfile.FamilyMembersList : (Array.isArray(primaryRenter.FamilyMembersList) ? primaryRenter.FamilyMembersList : []);
+        const matchedProfileUserRow = (DB.users || []).find(
+          u => String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase()
+        );
+        const profNameVal = String(activeUserFullName || matchedProfileUserRow?.FullName || renterNameDisplay || "").trim();
+        const profPhoneVal = sanitizeContactPhoneDisplay(activeUserMobile || matchedProfileUserRow?.MobileNumber || renterPhoneDisplay || "+91 ") || "+91 ";
+        const profEmailVal = String(activeUserEmail || matchedProfileUserRow?.Email || matchedProfileUserRow?.email || "").trim();
+        const isInlineEmailOtpActive = Boolean(
+          window.__pendingProfileEmailOtp &&
+          window.__pendingProfileEmailOtp.source === "inline" &&
+          window.__pendingProfileEmailOtp.awaitingVerify === true
+        );
 
         const renterIsolatedProfileHtml = `
           <div class="renter-kpi-summary-box" id="renterInlineProfileCard" style="padding: 24px; border-radius: 18px; background: transparent; border: 1.5px solid var(--glass-border);">
@@ -17763,7 +17960,7 @@ function formatMonthLabel(rawVal) {
                 </div>
                 <div>
                   <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#c084fc;">
-                    Verified Resident KYC Profile • Read-Only
+                    Verified Resident KYC Profile • Email OTP Verified Updates
                   </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
                     ${escapeHtml(renterNameDisplay)} — My Profile
@@ -17778,9 +17975,47 @@ function formatMonthLabel(rawVal) {
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:20px;">
               <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
                 <div style="font-size:0.78rem; font-weight:800; color:#34d399; text-transform:uppercase; letter-spacing:0.05em;">Resident Identity Details</div>
-                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Full Name</span><strong style="font-size:0.9rem; color:var(--text-main);">${escapeHtml(renterNameDisplay)}</strong></div>
-                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
-                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Mobile Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${escapeHtml(renterPhoneDisplay || "N/A")}</strong></div>
+
+                <div>
+                  <label for="renterInlineProfName" style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:4px; font-weight:700;">Full Name *</label>
+                  <input type="text" id="renterInlineProfName" class="form-control" value="${escapeHtml(profNameVal)}" placeholder="Enter full name" style="padding:8px 10px; font-size:0.86rem;" oninput="if(window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === 'inline') resetPendingProfileEmailOtpState('inline')">
+                </div>
+
+                <div>
+                  <label for="renterInlineProfPhone" style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:4px; font-weight:700;">Phone Number *</label>
+                  <input type="tel" id="renterInlineProfPhone" class="form-control" maxlength="14" inputmode="tel" value="${escapeHtml(profPhoneVal)}" placeholder="+91 9876543210" style="padding:8px 10px; font-size:0.86rem;" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value); if(window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === 'inline') resetPendingProfileEmailOtpState('inline')">
+                </div>
+
+                <div>
+                  <label for="renterInlineProfEmail" style="font-size:0.7rem; color:#38bdf8; display:block; margin-bottom:4px; font-weight:800;">Email ID *</label>
+                  <input type="email" id="renterInlineProfEmail" class="form-control" value="${escapeHtml(profEmailVal)}" placeholder="Enter Email ID (e.g. name@gmail.com)" style="padding:8px 10px; font-size:0.86rem;" oninput="if(window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === 'inline') resetPendingProfileEmailOtpState('inline')">
+                </div>
+
+                <button type="button" id="btnRenterInlineProfileSave" class="btn-primary" style="width:100%; padding:9px 14px; font-size:0.84rem; background:linear-gradient(135deg, #10b981 0%, #059669 100%); font-weight:800;" onclick="submitRenterInlineProfileSave()">
+                  <i class="fa-solid fa-check-circle"></i> Save
+                </button>
+
+                <div id="renterInlineEmailOtpBox" style="display:${isInlineEmailOtpActive ? "block" : "none"}; padding:12px; border-radius:12px; border:1.5px solid rgba(56,189,248,0.5); background:rgba(56,189,248,0.1);">
+                  <div style="font-size:0.76rem; font-weight:800; color:#38bdf8; margin-bottom:4px;">
+                    <i class="fa-solid fa-shield-halved"></i> Enter 4-Digit Email OTP
+                  </div>
+                  <div id="renterInlineEmailOtpSentInfo" style="font-size:0.71rem; color:var(--text-muted); margin-bottom:8px;">
+                    A 4-digit OTP was sent to <strong>${escapeHtml(window.__pendingProfileEmailOtp?.email || profEmailVal)}</strong>. Verify to save your profile.
+                  </div>
+                  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                    <input type="text" id="renterInlineEmailOtpInput" class="form-control" maxlength="4" inputmode="numeric" placeholder="4-digit OTP" style="flex:1; min-width:110px; text-align:center; font-size:0.95rem; font-weight:900; letter-spacing:5px;" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 4)">
+                    <button type="button" id="btnVerifyRenterInlineEmailOtp" class="btn-primary" style="width:auto; padding:8px 12px; font-size:0.78rem; background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); font-weight:800;" onclick="verifyAndSaveProfileWithEmailOtp('inline')">
+                      <i class="fa-solid fa-circle-check"></i> Verify OTP &amp; Save
+                    </button>
+                    <button type="button" id="btnResendRenterInlineEmailOtp" class="btn-ledger-action" style="padding:8px 10px; font-size:0.72rem;" onclick="resendProfileEmailOtp('inline')">
+                      <i class="fa-solid fa-rotate"></i> Resend
+                    </button>
+                  </div>
+                </div>
+
+                <div id="renterInlineProfileMsg" class="bottom-status-msg"></div>
+
+                <div style="padding-top:6px; border-top:1px dashed var(--glass-border);"><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Permanent Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(consolidatedProfile.Address || primaryRenter.Address || "N/A")}</strong></div>
               </div>
 
@@ -17886,7 +18121,7 @@ function formatMonthLabel(rawVal) {
                 </div>
 
                 <!-- Right Side of Verified Residential Portal: Icon + Heading & Verified Aadhaar Number -->
-                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.30); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
+                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.35); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
                   <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38bdf8;">
                     <i class="fa-solid fa-id-card" style="color:#f97316; font-size:0.86rem;"></i>
                     <span>Aadhaar Card</span>
@@ -17923,7 +18158,11 @@ function formatMonthLabel(rawVal) {
               "renterPayAmountInput",
               "renterInlineTicketDesc",
               "renterInlineTicketCategory",
-              "renterInlineTicketPriority"
+              "renterInlineTicketPriority",
+              "renterInlineProfName",
+              "renterInlineProfPhone",
+              "renterInlineProfEmail",
+              "renterInlineEmailOtpInput"
             ];
             const preservedValues = {};
             preservedFieldIds.forEach(fid => {
@@ -18403,6 +18642,7 @@ function formatMonthLabel(rawVal) {
       activeUser = res.username || uObj.Username || activeUser || "admin";
       activeUserFullName = res.fullName || uObj.FullName || activeUser;
       activeUserMobile = sanitizeContactPhoneDisplay(res.mobile || uObj.MobileNumber || "");
+      activeUserEmail = String(res.userEmail || res.email || uObj.Email || uObj.email || activeUserEmail || "").trim();
       activeRole = res.role || uObj.Role || "Admin";
       const sheetTheme = res.theme || uObj.Theme || "black";
 
@@ -18467,6 +18707,9 @@ function formatMonthLabel(rawVal) {
       DB.kharchRecords = Array.isArray(res.kharchRecords) ? res.kharchRecords : (Array.isArray(dbObj.kharchRecords) ? dbObj.kharchRecords : []);
 
       const matchedU = (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase());
+      if (!activeUserEmail && matchedU && (matchedU.Email || matchedU.email)) {
+        activeUserEmail = String(matchedU.Email || matchedU.email || "").trim();
+      }
       activeAssignedProperty = res.assignedProperty || res.userAssignedProperty || matchedU?.AssignedProperty || "";
       activeAssignedFlat = res.assignedFlat || res.userAssignedFlat || matchedU?.AssignedFlat || "";
       activeAssignedAadhaar = normalizeAadhaar12(res.assignedAadhaar ?? res.userAssignedAadhaar ?? matchedU?.AssignedAadhaar ?? matchedU?.AadhaarNumber);
@@ -19534,6 +19777,10 @@ function formatMonthLabel(rawVal) {
             activeUserMobile = sanitizeContactPhoneDisplay(res.userMobile);
             sessionStorage.setItem("active_session_mobile", activeUserMobile);
           }
+          if (res.userEmail !== undefined && res.userEmail !== null) {
+            activeUserEmail = String(res.userEmail || "").trim();
+            sessionStorage.setItem("active_session_email", activeUserEmail);
+          }
 
           if (activeUser && authSessionEpoch === syncEpochAtStart) {
             persistActiveAuthSession();
@@ -20236,6 +20483,9 @@ function formatMonthLabel(rawVal) {
       if (matchedLocalUser) {
         if (!activeUserFullName && matchedLocalUser.FullName) activeUserFullName = matchedLocalUser.FullName;
         if (!activeUserMobile && matchedLocalUser.MobileNumber) activeUserMobile = sanitizeContactPhoneDisplay(matchedLocalUser.MobileNumber);
+        if (!activeUserEmail && (matchedLocalUser.Email || matchedLocalUser.email)) {
+          activeUserEmail = String(matchedLocalUser.Email || matchedLocalUser.email || "").trim();
+        }
       }
 
       const heroDispName = activeUserFullName || activeUser || "User Profile";
@@ -20264,13 +20514,22 @@ function formatMonthLabel(rawVal) {
         profThemeBadge.innerText = isLightTheme ? "White Mode" : "Dark Mode";
       }
 
-
       activeUserMobile = sanitizeContactPhoneDisplay(activeUserMobile);
       document.getElementById("profViewFullName").value = activeUserFullName || activeUser || "";
       document.getElementById("profViewMobile").value = activeUserMobile || "";
+      if (document.getElementById("profViewEmail")) {
+        document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+      }
       document.getElementById("profViewUsername").value = activeUser || "";
       document.getElementById("changeNameOnlyInput").value = activeUserFullName || activeUser || "";
       document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "+91 ";
+      if (document.getElementById("changeEmailOnlyInput")) {
+        document.getElementById("changeEmailOnlyInput").value = activeUserEmail || "";
+      }
+      const emailReqStar = document.getElementById("changeEmailReqStar");
+      if (emailReqStar) {
+        emailReqStar.style.display = String(activeRole || "").trim().toLowerCase() === "renter" ? "inline" : "none";
+      }
 
       const passInput = document.getElementById("profViewPassword");
       const eyeIcon = document.getElementById("profPassEyeIcon");
@@ -20288,9 +20547,14 @@ function formatMonthLabel(rawVal) {
       document.getElementById("currentUsernameVerifyInput").value = activeUser || "";
       document.getElementById("newUsernameInput").value = "";
       document.getElementById("confirmNewUsernameInput").value = "";
+      resetPendingProfileEmailOtpState("modal");
 
       document.querySelectorAll(".profile-sub-drawer").forEach(d => d.classList.remove("active"));
       document.querySelectorAll(".btn-switch-option").forEach(b => b.classList.remove("active"));
+      if (String(activeRole || "").trim().toLowerCase() === "renter") {
+        document.getElementById("drawerChangeName")?.classList.add("active");
+        document.getElementById("btnShowChangeName")?.classList.add("active");
+      }
 
       openModal("profileModal");
 
@@ -20299,10 +20563,14 @@ function formatMonthLabel(rawVal) {
         if (res && res.status === "success") {
           activeUserFullName = res.fullName || activeUserFullName || activeUser;
           activeUserMobile = sanitizeContactPhoneDisplay(res.mobile || activeUserMobile || "");
+          if (res.email !== undefined && res.email !== null && String(res.email).trim() !== "") {
+            activeUserEmail = String(res.email).trim();
+          }
           if (res.role) activeRole = res.role;
 
           sessionStorage.setItem("active_session_fullname", activeUserFullName);
           sessionStorage.setItem("active_session_mobile", activeUserMobile);
+          sessionStorage.setItem("active_session_email", activeUserEmail || "");
           sessionStorage.setItem("active_session_role", activeRole);
 
           if (document.getElementById("profDisplayHeroName")) {
@@ -20320,9 +20588,16 @@ function formatMonthLabel(rawVal) {
 
           document.getElementById("profViewFullName").value = activeUserFullName;
           document.getElementById("profViewMobile").value = activeUserMobile;
+          if (document.getElementById("profViewEmail")) {
+            document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+          }
           document.getElementById("profViewUsername").value = res.username || activeUser;
           document.getElementById("changeNameOnlyInput").value = activeUserFullName;
           document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "+91 ";
+          const modalEmailIn = document.getElementById("changeEmailOnlyInput");
+          if (modalEmailIn && !modalEmailIn.value.trim() && activeUserEmail) {
+            modalEmailIn.value = activeUserEmail;
+          }
           passInput.value = res.password || (matchedLocalUser && matchedLocalUser.Password) || "";
           passInput.placeholder = passInput.value ? "" : "Password not set";
         }
@@ -20436,10 +20711,244 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    window.__pendingProfileEmailOtp = null;
+
+    function resetPendingProfileEmailOtpState(source) {
+      if (!source || (window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === source)) {
+        window.__pendingProfileEmailOtp = null;
+      }
+      if (!source || source === "modal") {
+        const otpBox = document.getElementById("profileEmailOtpVerifyBox");
+        const otpIn = document.getElementById("profileEmailOtpInput");
+        if (otpBox) otpBox.style.display = "none";
+        if (otpIn) otpIn.value = "";
+      }
+      if (!source || source === "inline") {
+        const inlineBox = document.getElementById("renterInlineEmailOtpBox");
+        const inlineIn = document.getElementById("renterInlineEmailOtpInput");
+        if (inlineBox) inlineBox.style.display = "none";
+        if (inlineIn) inlineIn.value = "";
+      }
+    }
+
+    function getProfileEmailUiEls(source) {
+      const isInline = source === "inline";
+      return {
+        msgBox: document.getElementById(isInline ? "renterInlineProfileMsg" : "nameChangeBottomMsg"),
+        otpBox: document.getElementById(isInline ? "renterInlineEmailOtpBox" : "profileEmailOtpVerifyBox"),
+        otpInfo: document.getElementById(isInline ? "renterInlineEmailOtpSentInfo" : "profileEmailOtpSentInfo"),
+        otpInput: document.getElementById(isInline ? "renterInlineEmailOtpInput" : "profileEmailOtpInput"),
+        saveBtn: document.getElementById(isInline ? "btnRenterInlineProfileSave" : "btnSaveNameMobileEmail"),
+        verifyBtn: document.getElementById(isInline ? "btnVerifyRenterInlineEmailOtp" : "btnVerifyProfileEmailOtp")
+      };
+    }
+
+    async function requestProfileEmailOtpAndShowBox(source, newFullName, newMobile, cleanEmail) {
+      const ui = getProfileEmailUiEls(source);
+      if (ui.msgBox) ui.msgBox.className = "bottom-status-msg";
+      if (ui.saveBtn) {
+        ui.saveBtn.disabled = true;
+        ui.saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending 4-Digit OTP...</span>`;
+      }
+      try {
+        const res = await sendFirebaseAction({
+          action: "sendProfileEmailOtp",
+          username: activeUser,
+          email: cleanEmail,
+          fullName: newFullName
+        });
+
+        if (res && res.status === "success" && res.otpDelivered === true) {
+          window.__pendingProfileEmailOtp = {
+            source,
+            username: activeUser,
+            fullName: newFullName,
+            mobile: newMobile,
+            email: cleanEmail,
+            awaitingVerify: true,
+            requestedAt: Date.now()
+          };
+          if (ui.otpBox) ui.otpBox.style.display = "block";
+          if (ui.otpInfo) {
+            ui.otpInfo.innerHTML = `A 4-digit OTP was sent to <strong>${escapeHtml(cleanEmail)}</strong>. Enter it below to verify &amp; save your profile.`;
+          }
+          if (ui.otpInput) {
+            ui.otpInput.value = "";
+            setTimeout(() => ui.otpInput.focus(), 60);
+          }
+          if (ui.msgBox) {
+            ui.msgBox.innerText = `4-digit OTP sent to ${cleanEmail}. Enter the OTP above to save your profile.`;
+            ui.msgBox.className = "bottom-status-msg success";
+          }
+          triggerSideToast("4-Digit OTP Sent", `Check ${cleanEmail} for your 4-digit verification OTP.`, true);
+        } else {
+          const errMsg = (res && res.message)
+            ? res.message
+            : "Could not send 4-digit OTP to your Email ID. Ensure the latest Code.gs is deployed to Google Apps Script (Settings → Sheet Auto-Create & Code.gs).";
+          if (ui.msgBox) {
+            ui.msgBox.innerText = errMsg;
+            ui.msgBox.className = "bottom-status-msg error";
+          }
+          triggerSideToast("OTP Delivery Failed", errMsg, false);
+        }
+      } catch (err) {
+        const errMsg = err?.message || "Network error sending 4-digit OTP.";
+        if (ui.msgBox) {
+          ui.msgBox.innerText = errMsg;
+          ui.msgBox.className = "bottom-status-msg error";
+        }
+        triggerSideToast("OTP Error", errMsg, false);
+      } finally {
+        if (ui.saveBtn) {
+          ui.saveBtn.disabled = false;
+          ui.saveBtn.innerHTML = `<i class="fa-solid fa-check-circle"></i> Save`;
+        }
+      }
+    }
+
+    async function verifyAndSaveProfileWithEmailOtp(source) {
+      const ui = getProfileEmailUiEls(source);
+      const pending = window.__pendingProfileEmailOtp;
+      if (!pending || !pending.awaitingVerify || !pending.email) {
+        return triggerSideToast("OTP Required", "Click Save first to send a 4-digit OTP to your Email ID.", false);
+      }
+      const enteredOtp = String(ui.otpInput?.value || "").replace(/\D/g, "").trim();
+      if (!/^\d{4}$/.test(enteredOtp)) {
+        if (ui.otpInput) ui.otpInput.focus();
+        if (ui.msgBox) {
+          ui.msgBox.innerText = "Please enter the valid 4-digit OTP sent to your Email ID.";
+          ui.msgBox.className = "bottom-status-msg error";
+        }
+        return triggerSideToast("Invalid OTP", "Enter the exact 4-digit numeric OTP sent to your Email ID.", false);
+      }
+
+      if (ui.verifyBtn) {
+        ui.verifyBtn.disabled = true;
+        ui.verifyBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifying...</span>`;
+      }
+      try {
+        const res = await sendFirebaseAction({
+          action: "verifyProfileEmailOtp",
+          username: activeUser,
+          email: pending.email,
+          otp: enteredOtp,
+          newFullName: pending.fullName,
+          newMobile: pending.mobile
+        });
+
+        if (res && res.status === "success" && res.verified === true) {
+          await finalizeVerifiedProfileSave(pending.fullName, pending.mobile, pending.email, source);
+        } else {
+          const failMsg = (res && res.message) || "Invalid or expired 4-digit OTP. Profile was not saved.";
+          if (ui.msgBox) {
+            ui.msgBox.innerText = failMsg;
+            ui.msgBox.className = "bottom-status-msg error";
+          }
+          triggerSideToast("OTP Verification Failed", failMsg, false);
+        }
+      } catch (err) {
+        const failMsg = err?.message || "Could not verify OTP. Profile was not saved.";
+        if (ui.msgBox) {
+          ui.msgBox.innerText = failMsg;
+          ui.msgBox.className = "bottom-status-msg error";
+        }
+        triggerSideToast("Verification Error", failMsg, false);
+      } finally {
+        if (ui.verifyBtn) {
+          ui.verifyBtn.disabled = false;
+          ui.verifyBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Verify OTP &amp; Save`;
+        }
+      }
+    }
+
+    async function resendProfileEmailOtp(source) {
+      const pending = window.__pendingProfileEmailOtp;
+      if (!pending || !pending.email) {
+        return triggerSideToast("Missing Details", "Enter Name, Phone Number & Email ID and click Save.", false);
+      }
+      await requestProfileEmailOtpAndShowBox(source, pending.fullName, pending.mobile, pending.email);
+    }
+
+    async function finalizeVerifiedProfileSave(newFullName, newMobile, cleanEmail, source = "modal") {
+      activeUserFullName = newFullName;
+      activeUserMobile = newMobile;
+      activeUserEmail = cleanEmail;
+      sessionStorage.setItem("active_session_fullname", activeUserFullName);
+      sessionStorage.setItem("active_session_mobile", activeUserMobile);
+      sessionStorage.setItem("active_session_email", activeUserEmail);
+
+      (DB.users || []).forEach(u => {
+        if (String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase()) {
+          u.FullName = newFullName;
+          u.MobileNumber = newMobile;
+          u.Email = cleanEmail;
+        }
+      });
+      saveDbSnapshotToCache();
+      persistActiveAuthSession();
+
+      if (document.getElementById("profDisplayHeroName")) {
+        document.getElementById("profDisplayHeroName").innerText = newFullName;
+      }
+      if (document.getElementById("profAvatarInitials")) {
+        document.getElementById("profAvatarInitials").innerText = (newFullName[0] || "U").toUpperCase();
+      }
+      if (document.getElementById("profViewFullName")) document.getElementById("profViewFullName").value = activeUserFullName;
+      if (document.getElementById("profViewMobile")) document.getElementById("profViewMobile").value = activeUserMobile;
+      if (document.getElementById("profViewEmail")) document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+      if (document.getElementById("changeNameOnlyInput")) document.getElementById("changeNameOnlyInput").value = activeUserFullName;
+      if (document.getElementById("changeMobileOnlyInput")) document.getElementById("changeMobileOnlyInput").value = activeUserMobile;
+      if (document.getElementById("changeEmailOnlyInput")) document.getElementById("changeEmailOnlyInput").value = activeUserEmail;
+
+      resetPendingProfileEmailOtpState(source);
+      const ui = getProfileEmailUiEls(source);
+      if (ui.msgBox) {
+        ui.msgBox.innerText = "Email OTP verified! Name, Phone No. & Email ID saved successfully.";
+        ui.msgBox.className = "bottom-status-msg success";
+      }
+      triggerSideToast("Profile Saved & Verified", "Your Name, Phone Number, and Email ID have been verified and saved!", true);
+      renderAllDashboardUI();
+      syncDataLive(true);
+    }
+
+    async function submitRenterInlineProfileSave() {
+      const nameEl = document.getElementById("renterInlineProfName");
+      const phoneEl = document.getElementById("renterInlineProfPhone");
+      const emailEl = document.getElementById("renterInlineProfEmail");
+      const msgBox = document.getElementById("renterInlineProfileMsg");
+      const newFullName = String(nameEl?.value || "").trim();
+      const rawPhone = String(phoneEl?.value || "").trim();
+      const cleanEmail = String(emailEl?.value || "").trim().toLowerCase();
+
+      if (msgBox) msgBox.className = "bottom-status-msg";
+      if (!newFullName) {
+        if (nameEl) nameEl.focus();
+        if (msgBox) { msgBox.innerText = "Please enter your Full Name."; msgBox.className = "bottom-status-msg error"; }
+        return triggerSideToast("Name Required", "Please enter your Full Name.", false);
+      }
+      if (!isValidIndianMobilePlus91(rawPhone)) {
+        if (phoneEl) phoneEl.focus();
+        if (msgBox) { msgBox.innerText = "Please enter a valid +91 10-digit Phone Number."; msgBox.className = "bottom-status-msg error"; }
+        return triggerSideToast("Invalid Phone Number", "Phone number must start with +91 and contain 10 digits.", false);
+      }
+      const newMobile = formatIndianMobilePlus91(rawPhone);
+      if (phoneEl) phoneEl.value = newMobile;
+
+      if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+        if (emailEl) emailEl.focus();
+        if (msgBox) { msgBox.innerText = "Please enter a valid Email ID to receive the 4-digit OTP."; msgBox.className = "bottom-status-msg error"; }
+        return triggerSideToast("Valid Email Required", "Enter a valid Email ID so we can send a 4-digit verification OTP.", false);
+      }
+
+      await requestProfileEmailOtpAndShowBox("inline", newFullName, newMobile, cleanEmail);
+    }
+
     async function submitChangeNameAndMobile() {
       const newFullName = document.getElementById("changeNameOnlyInput").value.trim();
       const rawMobileInput = document.getElementById("changeMobileOnlyInput").value.trim();
+      const cleanEmail = String(document.getElementById("changeEmailOnlyInput")?.value || "").trim().toLowerCase();
       const msgBox = document.getElementById("nameChangeBottomMsg");
+      const isRenterAccount = String(activeRole || "").trim().toLowerCase() === "renter";
 
       msgBox.className = "bottom-status-msg";
 
@@ -20459,6 +20968,18 @@ function formatMonthLabel(rawVal) {
       const newMobile = formatIndianMobilePlus91(rawMobileInput);
       document.getElementById("changeMobileOnlyInput").value = newMobile;
 
+      if (isRenterAccount) {
+        if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+          msgBox.innerText = "Please enter a valid Email ID to receive a 4-digit verification OTP.";
+          msgBox.className = "bottom-status-msg error";
+          document.getElementById("changeEmailOnlyInput")?.focus();
+          triggerSideToast("Email ID Required", "Please enter a valid Email ID so we can send your 4-digit OTP.", false);
+          return;
+        }
+        await requestProfileEmailOtpAndShowBox("modal", newFullName, newMobile, cleanEmail);
+        return;
+      }
+
       activeUserFullName = newFullName;
       if (document.getElementById("profDisplayHeroName")) {
         document.getElementById("profDisplayHeroName").innerText = newFullName;
@@ -20467,15 +20988,21 @@ function formatMonthLabel(rawVal) {
         document.getElementById("profAvatarInitials").innerText = (newFullName[0] || "U").toUpperCase();
       }
       activeUserMobile = newMobile;
+      if (cleanEmail) activeUserEmail = cleanEmail;
       sessionStorage.setItem("active_session_fullname", activeUserFullName);
       sessionStorage.setItem("active_session_mobile", activeUserMobile);
+      sessionStorage.setItem("active_session_email", activeUserEmail || "");
       document.getElementById("profViewFullName").value = activeUserFullName;
       document.getElementById("profViewMobile").value = activeUserMobile;
+      if (document.getElementById("profViewEmail")) {
+        document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+      }
 
       (DB.users || []).forEach(u => {
         if (String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase()) {
           u.FullName = newFullName;
           u.MobileNumber = newMobile;
+          if (cleanEmail) u.Email = cleanEmail;
         }
       });
       saveDbSnapshotToCache();
@@ -20484,13 +21011,14 @@ function formatMonthLabel(rawVal) {
         action: "changeNameAndMobile",
         loggedUsername: activeUser,
         newFullName: newFullName,
-        newMobile: newMobile
+        newMobile: newMobile,
+        newEmail: cleanEmail
       });
 
       if (res && res.status === "success") {
-        msgBox.innerText = "Name and Mobile No. updated successfully!";
+        msgBox.innerText = "Name, Mobile No. & Email updated successfully!";
         msgBox.className = "bottom-status-msg success";
-        triggerSideToast("Profile Updated", "Name and Mobile No. saved to Google Sheets!", true);
+        triggerSideToast("Profile Updated", "Profile saved to Google Sheets!", true);
         syncDataLive(true);
       } else {
         msgBox.innerText = (res && res.message) || "Could not update Name & Mobile No.";
@@ -32760,11 +33288,15 @@ function formatMonthLabel(rawVal) {
       activeRole = "Admin";
       activeUserFullName = "Administrator";
       activeUserMobile = "";
+      activeUserEmail = "";
       activeAssignedProperty = "";
       activeAssignedFlat = "";
       activeAssignedAadhaar = "";
       activeManagerPermissions = [];
       activeSessionToken = "";
+      window.__pendingProfileEmailOtp = null;
+      window.pendingRenterInlinePaymentPhotoDataUrl = "";
+      window.pendingRenterInlinePaymentPhotoName = "";
       selectedProperty = null;
       selectedFlat = null;
       activeFlatRenterObj = null;
@@ -34897,6 +35429,7 @@ function formatMonthLabel(rawVal) {
         const statusText = String(p.status || "Pending");
         const isPending = statusText === "Pending";
         const stColor = statusText === "Approved" ? "#10b981" : (statusText === "Rejected" ? "#ef4444" : "#f59e0b");
+        const rejReason = String(p.rejectionReason || p.reason || p.notes || p.Notes || "").trim();
         return `
           <div class="utr-proof-row">
             <div style="min-width:0; flex:1 1 220px;">
@@ -34908,6 +35441,11 @@ function formatMonthLabel(rawVal) {
               <div style="color:var(--text-muted); font-size:0.72rem; margin-top:3px; overflow-wrap:anywhere;">
                 Tenant: ${escapeHtml(p.tenantName || "--")} | UTR: <strong style="color:#38bdf8;">${escapeHtml(p.utr || p.UTRNumber || "--")}</strong> (${escapeHtml(p.mode || p.paymentMode || "UPI")}) | ${escapeHtml(p.submittedAt || "")}
               </div>
+              ${statusText === "Rejected" && rejReason ? `
+                <div class="utr-rejection-reason-box">
+                  <strong><i class="fa-solid fa-circle-exclamation"></i> Rejection Reason:</strong> ${escapeHtml(rejReason)}
+                </div>
+              ` : ""}
             </div>
             <div class="utr-proof-actions">
               ${safeScreenshot ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.7rem;" onclick="openPhotoZoomModal('${safeScreenshot}', 'Payment Proof — UTR ${safeUtr}')"><i class="fa-solid fa-image"></i> Proof</button>` : ""}
@@ -35001,18 +35539,107 @@ function formatMonthLabel(rawVal) {
       triggerSideToast("Proof Approved & Bill Updated", `Marked ₹${Number(proof.amount || 0).toLocaleString("en-IN")} paid (UTR: ${proof.utr}).`, true);
     }
 
-    function rejectPaymentProof(proofId) {
+    function openUtrRejectionReasonModal(proofId) {
       const list = getStoredPaymentProofs();
       const proof = list.find(p => String(p.id || p.ProofID || "") === String(proofId));
       if (!proof) return;
+
+      let overlay = document.getElementById("utrRejectionReasonModalOverlay");
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "utrRejectionReasonModalOverlay";
+        overlay.className = "modal-overlay";
+        document.body.appendChild(overlay);
+      }
+
+      const quickReasons = [
+        "Incorrect UTR / Reference Number",
+        "Payment Amount Mismatch",
+        "Payment Not Received in Bank",
+        "Unclear or Invalid Payment Screenshot"
+      ];
+      const existingReason = String(proof.rejectionReason || proof.reason || proof.notes || proof.Notes || "").trim();
+
+      overlay.innerHTML = `
+        <div class="modal-window" style="max-width:460px;">
+          <div class="modal-header">
+            <h3 style="font-size:1rem; color:#f87171;"><i class="fa-solid fa-circle-xmark"></i> Reject UTR &amp; Enter Reason</h3>
+            <button type="button" class="modal-close-btn" onclick="closeUtrRejectionReasonModal()"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px; padding:10px 12px; border-radius:10px; border:1px solid var(--glass-border);">
+            <div><strong>${escapeHtml(proof.propertyName || "")} — Flat ${escapeHtml(proof.flatName || "")}</strong> (${escapeHtml(formatMonthLabel(proof.monthYear))})</div>
+            <div style="margin-top:3px;">Tenant: <strong>${escapeHtml(proof.tenantName || "--")}</strong> • UTR: <strong style="color:#38bdf8;">${escapeHtml(proof.utr || proof.UTRNumber || "--")}</strong> • Amount: <strong style="color:#34d399;">₹${Number(proof.amount || 0).toLocaleString("en-IN")}</strong></div>
+          </div>
+          <input type="hidden" id="utrRejectTargetProofId" value="${escapeHtml(String(proofId))}">
+          <div style="margin-bottom:10px;">
+            <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Quick Select Reason (Optional)</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+              ${quickReasons.map(qr => `
+                <button type="button" class="utr-reject-reason-chip" onclick="selectQuickUtrRejectReason('${qr.replace(/'/g, "\\'")}')">${escapeHtml(qr)}</button>
+              `).join("")}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="utrRejectionReasonInput">Rejection Reason (Visible to Renter) <span class="req-star">*</span></label>
+            <textarea id="utrRejectionReasonInput" class="form-control" rows="3" placeholder="Write the exact reason why this UTR payment is rejected...">${escapeHtml(existingReason)}</textarea>
+          </div>
+          <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+            <button type="button" class="btn-ledger-action" onclick="closeUtrRejectionReasonModal()" style="padding:9px 14px;">Cancel</button>
+            <button type="button" class="btn-primary" onclick="submitUtrRejectionWithReason()" style="width:auto; padding:9px 16px; background:linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); font-weight:800;">
+              <i class="fa-solid fa-paper-plane"></i> Submit Rejection
+            </button>
+          </div>
+        </div>
+      `;
+      overlay.classList.add("active");
+      setTimeout(() => document.getElementById("utrRejectionReasonInput")?.focus(), 60);
+    }
+
+    function closeUtrRejectionReasonModal() {
+      const overlay = document.getElementById("utrRejectionReasonModalOverlay");
+      if (overlay) overlay.classList.remove("active");
+    }
+
+    function selectQuickUtrRejectReason(reasonText) {
+      const inputEl = document.getElementById("utrRejectionReasonInput");
+      if (inputEl) {
+        inputEl.value = reasonText;
+        inputEl.focus();
+      }
+    }
+
+    function submitUtrRejectionWithReason() {
+      const proofId = String(document.getElementById("utrRejectTargetProofId")?.value || "").trim();
+      const reasonInput = document.getElementById("utrRejectionReasonInput");
+      const reason = String(reasonInput?.value || "").trim();
+      if (!reason) {
+        if (reasonInput) reasonInput.focus();
+        return triggerSideToast("Reason Required", "Please write a rejection reason before submitting.", false);
+      }
+      const list = getStoredPaymentProofs();
+      const proof = list.find(p => String(p.id || p.ProofID || "") === String(proofId));
+      if (!proof) {
+        closeUtrRejectionReasonModal();
+        return;
+      }
       proof.status = "Rejected";
+      proof.rejectionReason = reason;
+      proof.notes = reason;
+      proof.rejectedBy = activeUser || "Admin";
+      proof.rejectedAt = new Date().toLocaleString("en-IN");
       saveStoredPaymentProofs(list);
       if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("REJECT_PAYMENT_PROOF", `${proof.propertyName} Flat ${proof.flatName}`, `Rejected UTR ${proof.utr}`);
+        recordAdminAuditLog("REJECT_PAYMENT_PROOF", `${proof.propertyName || ""} Flat ${proof.flatName || ""}`, `Rejected UTR ${proof.utr} — Reason: ${reason}`);
       }
+      closeUtrRejectionReasonModal();
       renderAdminPaymentProofQueue();
+      renderAllDashboardUI();
       if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
-      triggerSideToast("Proof Rejected", `Payment proof UTR ${proof.utr} marked as Rejected.`, "warning");
+      triggerSideToast("UTR Rejected", `UTR ${proof.utr} rejected with reason sent to Renter.`, "warning");
+    }
+
+    function rejectPaymentProof(proofId) {
+      openUtrRejectionReasonModal(proofId);
     }
 
     function deletePaymentProof(proofId) {
