@@ -3576,64 +3576,89 @@
     border-color: #e2e8f0;
   }
   body.theme-white .renter-history-row-item:hover {
-    background: transparent !important;
+    background: rgba(255, 255, 255, 0.10) !important;
     border-color: #6366f1;
   }
 
-  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 100% transparent */
+  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 90% transparent (10% opacity) */
+  :where(.renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box)) {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
   .renter-modern-portal .renter-hero-banner,
-  body.theme-white .renter-modern-portal .renter-hero-banner,
   .renter-modern-portal .renter-kpi-summary-box,
-  body.theme-white .renter-modern-portal .renter-kpi-summary-box,
   .renter-modern-portal .renter-statement-card,
-  body.theme-white .renter-modern-portal .renter-statement-card,
   .renter-modern-portal .renter-payment-card,
-  body.theme-white .renter-modern-portal .renter-payment-card,
   .renter-modern-portal .renter-recent-bills-card,
-  body.theme-white .renter-modern-portal .renter-recent-bills-card,
   .renter-modern-portal .renter-kpi-card,
-  body.theme-white .renter-modern-portal .renter-kpi-card,
   .renter-modern-portal .renter-utility-item,
-  body.theme-white .renter-modern-portal .renter-utility-item,
   .renter-modern-portal .renter-utility-item:hover,
-  body.theme-white .renter-modern-portal .renter-utility-item:hover,
   .renter-modern-portal .renter-history-row-item,
-  body.theme-white .renter-modern-portal .renter-history-row-item,
+  .renter-modern-portal .renter-history-row-item:hover,
   .renter-modern-portal .renter-meta-chip,
-  body.theme-white .renter-modern-portal .renter-meta-chip,
   .renter-modern-portal .renter-verified-pill,
-  body.theme-white .renter-modern-portal .renter-verified-pill,
   .renter-modern-portal .renter-action-btn.secondary,
-  body.theme-white .renter-modern-portal .renter-action-btn.secondary,
   .renter-modern-portal .form-control,
+  .renter-modern-portal #renterHeroAadhaarCardBox,
+  .renter-modern-portal #renterDashboardPaymentCircleCard,
+  .renter-modern-portal #renterDashboardLatestReceiptBar,
+  .renter-modern-portal #renterDashboardLatestReceiptBtn,
+  .renter-modern-portal #renterAadhaarLinkedReceiptsCard,
+  .renter-modern-portal #renterInlineMaintenanceCard,
+  .renter-modern-portal #renterMonthlyDrivePhotoUploadsCard,
+  .renter-modern-portal #renterInstantUpiPaymentCard,
+  .renter-modern-portal #renterPaymentPhotoAndUtrCard,
+  .renter-modern-portal #renterInlineProfileCard,
+  .renter-modern-portal div[style*="border-radius"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
+  .renter-modern-portal div[style*="border:"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
+  .renter-modern-portal label[style*="border"],
+  .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
+  .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
+    background: rgba(15, 23, 42, 0.10) !important;
+    background-color: rgba(15, 23, 42, 0.10) !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  body.theme-white .renter-modern-portal .renter-hero-banner,
+  body.theme-white .renter-modern-portal .renter-kpi-summary-box,
+  body.theme-white .renter-modern-portal .renter-statement-card,
+  body.theme-white .renter-modern-portal .renter-payment-card,
+  body.theme-white .renter-modern-portal .renter-recent-bills-card,
+  body.theme-white .renter-modern-portal .renter-kpi-card,
+  body.theme-white .renter-modern-portal .renter-utility-item,
+  body.theme-white .renter-modern-portal .renter-utility-item:hover,
+  body.theme-white .renter-modern-portal .renter-history-row-item,
+  body.theme-white .renter-modern-portal .renter-history-row-item:hover,
+  body.theme-white .renter-modern-portal .renter-meta-chip,
+  body.theme-white .renter-modern-portal .renter-verified-pill,
+  body.theme-white .renter-modern-portal .renter-action-btn.secondary,
   body.theme-white .renter-modern-portal .form-control,
-  .renter-modern-portal .renter-transparent-inner,
-  body.theme-white .renter-modern-portal .renter-transparent-inner {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    box-shadow: none !important;
-  }
-  .renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box),
-  body.theme-white .renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box) {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    box-shadow: none !important;
-  }
-  .renter-modern-portal span:not(.renter-chart-legend-dot),
-  body.theme-white .renter-modern-portal span:not(.renter-chart-legend-dot),
-  .renter-modern-portal label,
-  body.theme-white .renter-modern-portal label,
-  .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn),
+  body.theme-white .renter-modern-portal #renterHeroAadhaarCardBox,
+  body.theme-white .renter-modern-portal #renterDashboardPaymentCircleCard,
+  body.theme-white .renter-modern-portal #renterDashboardLatestReceiptBar,
+  body.theme-white .renter-modern-portal #renterDashboardLatestReceiptBtn,
+  body.theme-white .renter-modern-portal #renterAadhaarLinkedReceiptsCard,
+  body.theme-white .renter-modern-portal #renterInlineMaintenanceCard,
+  body.theme-white .renter-modern-portal #renterMonthlyDrivePhotoUploadsCard,
+  body.theme-white .renter-modern-portal #renterInstantUpiPaymentCard,
+  body.theme-white .renter-modern-portal #renterPaymentPhotoAndUtrCard,
+  body.theme-white .renter-modern-portal #renterInlineProfileCard,
+  body.theme-white .renter-modern-portal div[style*="border-radius"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
+  body.theme-white .renter-modern-portal div[style*="border:"]:not(.renter-modern-portal):not(.renter-hero-avatar):not(.renter-qr-canvas-box),
+  body.theme-white .renter-modern-portal label[style*="border"],
+  body.theme-white .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: transparent !important;
-    background-color: transparent !important;
+    background: rgba(255, 255, 255, 0.10) !important;
+    background-color: rgba(255, 255, 255, 0.10) !important;
     background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     box-shadow: none !important;
   }
   .renter-modern-portal .renter-hero-banner::before {
@@ -16387,11 +16412,17 @@ function formatMonthLabel(rawVal) {
           ? "rgba(234,179,8,0.45)"
           : (hasLatestReceiptForChart && chartDueAmt === 0 ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.35)");
 
+        const latestBillIdArg = latestBill ? String(latestBill.BillID || "").replace(/'/g, "\\'") : "";
+        const latestBillMonthArg = latestBill ? String(latestBill.MonthYear || "").replace(/'/g, "\\'") : "";
+        const latestBillDateLabel = latestBill ? (formatDateOnly(latestBill.BillDate || latestBill.PaymentDate) || "Latest") : "No Receipt";
+        const latestBillPropLabel = latestBill ? String(latestBill.SnapshotPropertyName || latestBill.PropertyName || targetProp || "") : targetProp;
+        const latestBillFlatLabel = latestBill ? String(latestBill.SnapshotFlatName || latestBill.FlatName || targetFlat || "") : targetFlat;
+
         const dashboardPaymentCircleBoxHtml = `
-          <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="margin: 14px auto 0 0; width: 100%; max-width: 410px; padding: 16px 18px; border-radius: 16px; background: transparent; border: 1.5px solid var(--glass-border);">
+          <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="margin: 14px auto 0 0; width: 100%; max-width: 410px; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.10); border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:9px;">
-                <div style="width:32px; height:32px; border-radius:9px; background:transparent; color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.10); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                   <i class="fa-solid fa-chart-pie"></i>
                 </div>
                 <div>
@@ -16403,8 +16434,8 @@ function formatMonthLabel(rawVal) {
                   </div>
                 </div>
               </div>
-              <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:transparent; color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
-                ${latestBill ? `${formatDateOnly(latestBill.BillDate || latestBill.PaymentDate) || "Latest"}` : "No Receipt"}
+              <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.10); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                ${latestBillDateLabel}
               </span>
             </div>
 
@@ -16440,7 +16471,7 @@ function formatMonthLabel(rawVal) {
                     ></circle>
                   ` : ""}
                 </svg>
-                <div style="position:absolute; inset:17px; border-radius:50%; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
+                <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.10); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
                   <span style="font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
                   <strong style="font-size:1.05rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                   <span style="font-size:0.6rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
@@ -16449,26 +16480,50 @@ function formatMonthLabel(rawVal) {
 
               <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
               <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
-                <div style="padding:9px 8px; border-radius:11px; background:transparent; border:1px solid rgba(99,102,241,0.38); text-align:center;">
+                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.10); border:1px solid rgba(99,102,241,0.38); text-align:center;">
                   <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
                   <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                 </div>
-                <div style="padding:9px 8px; border-radius:11px; background:transparent; border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
+                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.10); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
                   <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
                   <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
                 </div>
-                <div style="padding:9px 8px; border-radius:11px; background:transparent; border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
+                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.10); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
                   <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
                   <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
                 </div>
               </div>
 
               ${chartAdvanceAmt > 0 ? `
-                <div style="width:100%; padding:8px 12px; border-radius:10px; background:transparent; border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.10); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
                   <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
                   <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
                 </div>
               ` : ""}
+
+              <!-- Latest Receipt Box inside Left-Side Latest Receipt Payment Overview -->
+              <div id="renterDashboardLatestReceiptBar" style="width:100%; padding:10px 12px; border-radius:12px; background:rgba(15,23,42,0.10); border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
+                  <div style="width:30px; height:30px; border-radius:8px; border:1px solid rgba(56,189,248,0.38); color:#38bdf8; display:flex; align-items:center; justify-content:center; font-size:0.85rem; flex-shrink:0;">
+                    <i class="fa-solid fa-receipt"></i>
+                  </div>
+                  <div style="min-width:0;">
+                    <div style="font-size:0.64rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#38bdf8;">Latest Receipt</div>
+                    <div style="font-size:0.78rem; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                      ${latestBill ? `${latestReceiptMonthLabel} • Flat ${escapeHtml(latestBillFlatLabel)} (${escapeHtml(latestBillPropLabel)})` : "No Receipt Generated Yet"}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  id="renterDashboardLatestReceiptBtn"
+                  onclick="${latestBill ? `selectRenterHomeAvailableReceipt('${latestBillIdArg}', '${latestBillMonthArg}'); openBillReceiptModal('${latestBillIdArg}', '${latestBillMonthArg}');` : `navigateRenterQuickNav('receipt');`}"
+                  style="padding:6px 11px; border-radius:8px; border:1px solid rgba(56,189,248,0.45); color:#38bdf8; font-size:0.72rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                  <span>${latestBill ? "View Latest Receipt" : "All Receipts"}</span>
+                </button>
+              </div>
 
               <div style="width:100%; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; font-size:0.66rem; color:var(--text-muted); padding-top:2px;">
                 <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; margin-right:4px;"></span>Paid</span>
