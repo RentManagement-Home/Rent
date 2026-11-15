@@ -13519,13 +13519,50 @@ function formatMonthLabel(rawVal) {
     // Requirement 1 & 6: Helper functions for strict individual Renter data isolation
     function getNormalizedActiveRenterAadhaar() {
       let aadh = normalizeAadhaar12(activeAssignedAadhaar);
-      if (!aadh && activeUser) {
-        const matchedU = (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase());
+      const matchedU = activeUser
+        ? (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase())
+        : null;
+      if (!aadh && matchedU) {
         const rawUserAadh = matchedU?.AssignedAadhaar ?? matchedU?.AadhaarNumber ?? "";
         if (rawUserAadh !== "" && rawUserAadh !== null && rawUserAadh !== undefined) {
           aadh = normalizeAadhaar12(rawUserAadh);
-          activeAssignedAadhaar = aadh;
         }
+      }
+      if (!aadh && String(activeRole || "").trim().toLowerCase() === "renter" && Array.isArray(DB.renters) && DB.renters.length > 0) {
+        const prop = String(activeAssignedProperty || matchedU?.AssignedProperty || "").trim();
+        const flat = String(activeAssignedFlat || matchedU?.AssignedFlat || "").trim();
+        const uFullName = String(activeUserFullName || matchedU?.FullName || "").trim().toLowerCase();
+        const uHandle = String(activeUser || matchedU?.Username || "").trim().toLowerCase();
+        const extractRenterAadh = (list) => {
+          const ordered = [
+            ...list.filter(r => String(r.Status || "").trim().toLowerCase() === "active"),
+            ...list.filter(r => String(r.Status || "").trim().toLowerCase() !== "active")
+          ];
+          for (const r of ordered) {
+            const candidate = normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || r.AssignedAadhaar);
+            if (candidate && candidate.length === 12) return candidate;
+          }
+          return "";
+        };
+        if (prop && flat && prop.toUpperCase() !== "ALL") {
+          const flatRenters = DB.renters.filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, prop, flat));
+          const exactNameMatches = uFullName ? flatRenters.filter(r => String(r.RenterName || "").trim().toLowerCase() === uFullName) : [];
+          aadh = extractRenterAadh(exactNameMatches.length > 0 ? exactNameMatches : flatRenters);
+        } else if (prop && prop.toUpperCase() !== "ALL") {
+          const propRenters = DB.renters.filter(r => String(r.PropertyName || "").trim().toLowerCase() === prop.toLowerCase());
+          const propNameMatches = uFullName ? propRenters.filter(r => String(r.RenterName || "").trim().toLowerCase() === uFullName) : [];
+          aadh = extractRenterAadh(propNameMatches.length > 0 ? propNameMatches : propRenters);
+        }
+        if (!aadh && uFullName && uFullName !== "administrator" && uFullName !== "admin") {
+          aadh = extractRenterAadh(DB.renters.filter(r => String(r.RenterName || "").trim().toLowerCase() === uFullName));
+        }
+        if (!aadh && uHandle && uHandle !== "administrator" && uHandle !== "admin") {
+          aadh = extractRenterAadh(DB.renters.filter(r => String(r.RenterName || "").trim().toLowerCase() === uHandle));
+        }
+      }
+      if (aadh) {
+        activeAssignedAadhaar = aadh;
+        try { sessionStorage.setItem("active_session_assigned_aadhaar", aadh); } catch (e) {}
       }
       return aadh;
     }
@@ -15510,6 +15547,14 @@ function formatMonthLabel(rawVal) {
         const profileImgUrl = normalizeGoogleDriveImageUrl(rawProfileImg);
         const safeProfileImgArg = String(profileImgUrl || "").replace(/'/g, "\\'");
         const effectiveAadhaar = normalizeAadhaar12(primaryRenter.IdentityDocNumber || primaryRenter.AadhaarNumber || renterAadhaar);
+        if (effectiveAadhaar && effectiveAadhaar !== activeAssignedAadhaar) {
+          activeAssignedAadhaar = effectiveAadhaar;
+          try { sessionStorage.setItem("active_session_assigned_aadhaar", effectiveAadhaar); } catch (e) {}
+        }
+        const headerBadgeEl = document.getElementById("headerRoleBadge");
+        if (headerBadgeEl) {
+          headerBadgeEl.innerText = "Renter";
+        }
         const renterPhoneDisplay = sanitizeContactPhoneDisplay(primaryRenter.MobileNumber || primaryRenter.AltMobileNumber || activeUserMobile);
 
         // Strictly filter ONLY bills belonging to this logged-in renter
@@ -16855,15 +16900,6 @@ function formatMonthLabel(rawVal) {
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                   <span>Open System Chooser (Pay ₹${activePayAmt.toLocaleString("en-IN")})</span>
                 </button>
-                <button
-                  type="button"
-                  onclick="openRenterQuickPaymentModal();"
-                  class="renter-action-btn secondary"
-                  style="width:100%; justify-content:center; padding:11px 16px; background:transparent;"
-                >
-                  <i class="fa-solid fa-bolt" style="color:#34d399;"></i>
-                  <span>Open Full Quick Payment Modal</span>
-                </button>
               </div>
             </div>
 
@@ -17578,8 +17614,7 @@ function formatMonthLabel(rawVal) {
       if (badge) {
         const scope = resolveViewerAssignedScope();
         if (activeRole === "Renter") {
-          const aadh = getNormalizedActiveRenterAadhaar();
-          badge.innerText = aadh ? `Renter • Aadhaar ****${aadh.slice(-4)}` : `Renter`;
+          badge.innerText = "Renter";
         } else if (activeRole === "Manager") {
           if (scope && scope.mode === "SELECTED") badge.innerText = `Manager • ${scope.prop}`;
           else if (scope && scope.mode === "FLAT") badge.innerText = `Manager • ${scope.prop} (Flat ${scope.flat})`;
@@ -18729,8 +18764,13 @@ function formatMonthLabel(rawVal) {
             sessionStorage.setItem("active_session_assigned_flat", activeAssignedFlat);
           }
           if (res.userAssignedAadhaar !== undefined || matchedServerUser?.AssignedAadhaar !== undefined) {
-            activeAssignedAadhaar = normalizeAadhaar12(res.userAssignedAadhaar ?? matchedServerUser?.AssignedAadhaar ?? matchedServerUser?.AadhaarNumber);
-            sessionStorage.setItem("active_session_assigned_aadhaar", activeAssignedAadhaar);
+            const serverAadh = normalizeAadhaar12(res.userAssignedAadhaar ?? matchedServerUser?.AssignedAadhaar ?? matchedServerUser?.AadhaarNumber);
+            if (serverAadh) {
+              activeAssignedAadhaar = serverAadh;
+              sessionStorage.setItem("active_session_assigned_aadhaar", activeAssignedAadhaar);
+            } else {
+              getNormalizedActiveRenterAadhaar();
+            }
           }
           if (res.userManagerPermissions !== undefined || matchedServerUser?.ManagerPermissions !== undefined) {
             activeManagerPermissions = normalizeManagerPermissionsList(res.userManagerPermissions || matchedServerUser?.ManagerPermissions || []);
