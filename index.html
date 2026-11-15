@@ -939,44 +939,63 @@
         transform: translateY(0) scale(1);
       }
     }
-    .home-portfolio-menu {
+    .action-menu.home-portfolio-menu,
+    #actionMenu.action-menu {
       width: 280px;
-      top: 50px;
+      top: 52px;
       right: 0;
       padding: 12px;
       background: #0f172a !important;
       opacity: 1 !important;
-      border: 1.5px solid rgba(52, 211, 153, 0.5) !important;
+      border: 1.5px solid rgba(52, 211, 153, 0.55) !important;
       border-radius: 18px !important;
       box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08) inset !important;
       gap: 10px;
       z-index: 3100 !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
     }
-    body.theme-white .home-portfolio-menu {
+    body.theme-white .action-menu.home-portfolio-menu,
+    body.theme-white #actionMenu.action-menu {
       background: #ffffff !important;
       opacity: 1 !important;
-      border: 1.5px solid rgba(16, 185, 129, 0.5) !important;
+      border: 1.5px solid rgba(16, 185, 129, 0.55) !important;
       box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18), 0 4px 16px rgba(16, 185, 129, 0.15) !important;
     }
-    .home-portfolio-menu .menu-item {
-      padding: 12px 14px;
+    .home-portfolio-menu .menu-item,
+    #actionMenu .menu-item {
+      padding: 11px 13px;
       border-radius: 14px !important;
-      background: #1e293b !important;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(15, 23, 42, 0.92) 100%) !important;
       opacity: 1 !important;
-      border: 1.5px solid rgba(148, 163, 184, 0.28) !important;
+      border: 1.5px solid rgba(52, 211, 153, 0.38) !important;
       display: flex !important;
       align-items: center;
-      gap: 13px;
+      gap: 12px;
       transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       text-shadow: none !important;
       cursor: pointer;
     }
-    body.theme-white .home-portfolio-menu .menu-item {
-      background: #f8fafc !important;
+    .home-portfolio-menu .menu-item:hover,
+    #actionMenu .menu-item:hover {
+      transform: translateX(4px) translateY(-1px) !important;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.34) 0%, rgba(6, 182, 212, 0.26) 100%) !important;
+      border-color: #34d399 !important;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.32) !important;
+    }
+    body.theme-white .home-portfolio-menu .menu-item,
+    body.theme-white #actionMenu .menu-item {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, #f8fafc 100%) !important;
       opacity: 1 !important;
-      border: 1.5px solid #cbd5e1 !important;
+      border: 1.5px solid rgba(16, 185, 129, 0.38) !important;
       color: #0f172a !important;
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    }
+    body.theme-white .home-portfolio-menu .menu-item:hover,
+    body.theme-white #actionMenu .menu-item:hover {
+      background: linear-gradient(135deg, #10b981 0%, #0891b2 100%) !important;
+      border-color: #059669 !important;
+      color: #ffffff !important;
     }
     .home-portfolio-menu #homeMenuKharchItem:hover {
       transform: translateX(4px) translateY(-1px);
@@ -1088,20 +1107,41 @@
       box-shadow: 0 0 0 3.5px rgba(245, 158, 11, 0.28), 0 4px 16px rgba(245, 158, 11, 0.2) !important;
     }
     .home-menu-icon-wrap {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(6, 182, 212, 0.2) 50%, rgba(99, 102, 241, 0.16) 100%) !important;
+      border: 1.5px solid rgba(52, 211, 153, 0.65) !important;
+      color: #34d399 !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.42) !important;
       flex-shrink: 0;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
+      font-size: 0.96rem;
+      transition: all 0.22s ease;
+    }
+    .menu-item:hover .home-menu-icon-wrap {
+      border-color: #34d399 !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(6, 182, 212, 0.38) 100%) !important;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.55) !important;
+      transform: scale(1.06);
     }
     .home-menu-icon-wrap i {
       width: auto !important;
-      filter: none !important;
+      color: inherit !important;
+      filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.35)) !important;
+    }
+    body.theme-white .home-menu-icon-wrap {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 182, 212, 0.14) 100%) !important;
+      color: #059669 !important;
+      border-color: rgba(16, 185, 129, 0.55) !important;
+    }
+    body.theme-white .menu-item:hover .home-menu-icon-wrap {
+      background: rgba(255, 255, 255, 0.24) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.65) !important;
     }
     .home-menu-text-wrap {
       display: flex;
@@ -1116,17 +1156,23 @@
       color: #f8fafc;
       letter-spacing: -0.01em;
     }
-    body.theme-white .home-portfolio-menu .menu-item .home-menu-title {
+    body.theme-white .home-portfolio-menu .menu-item .home-menu-title,
+    body.theme-white #actionMenu .menu-item .home-menu-title {
       color: #0f172a;
     }
     body.theme-white .home-portfolio-menu .menu-item:hover .home-menu-title,
-    body.theme-white .home-portfolio-menu .menu-item:hover .home-menu-sub {
+    body.theme-white .home-portfolio-menu .menu-item:hover .home-menu-sub,
+    body.theme-white #actionMenu .menu-item:hover .home-menu-title,
+    body.theme-white #actionMenu .menu-item:hover .home-menu-sub {
       color: #ffffff !important;
     }
     .home-menu-sub {
       font-size: 0.68rem;
       font-weight: 600;
       color: #94a3b8;
+    }
+    body.theme-white .home-menu-sub {
+      color: #475569;
     }
     .menu-item {
       padding: 12px 16px;
@@ -1296,6 +1342,21 @@
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 18px;
       width: 100%;
+      box-sizing: border-box;
+    }
+    body.role-viewer .flats-container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    body.role-viewer .flats-container.viewer-single-flat-mode {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 18px 40px 18px;
+    }
+    body.role-viewer .flats-container.viewer-single-flat-mode .flat-card-merged {
+      width: 100%;
+      max-width: 520px;
     }
 
     .empty-flats-prompt {
@@ -1336,9 +1397,18 @@
       flex-direction: column;
       justify-content: space-between;
       min-height: 175px;
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
       color: var(--text-main);
       box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
       contain: layout style;
+    }
+    body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) {
+      background: rgba(255, 255, 255, 0.94);
+      border-color: #cbd5e1;
+      color: #0f172a;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
     }
     .flat-card-merged:hover {
       transform: translateY(-2px);
@@ -1374,19 +1444,24 @@
     .flat-top-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 8px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 8px 10px;
     }
     .flat-name {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: var(--text-main);
+      min-width: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.25;
     }
     .renter-identity {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-top: 10px;
+      min-width: 0;
     }
     .renter-avatar {
       width: 38px;
@@ -1409,6 +1484,9 @@
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--text-main);
+      min-width: 0;
+      overflow-wrap: anywhere;
+      line-height: 1.3;
     }
 
     .payment-banner {
@@ -1418,10 +1496,17 @@
       background: rgba(0, 0, 0, 0.26);
       border: 1px solid rgba(255, 255, 255, 0.22);
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+      gap: 6px 10px;
       font-size: 0.84rem;
       font-weight: 800;
+    }
+    body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) .payment-banner {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #0f172a;
     }
 
     .flat-bottom-row {
@@ -1431,9 +1516,13 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 6px;
+      gap: 6px 10px;
       font-size: 0.76rem;
       color: var(--text-muted);
+    }
+    body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) .flat-bottom-row {
+      border-top-color: rgba(15, 23, 42, 0.12);
+      color: #334155;
     }
     .rent-status {
       font-size: 0.78rem;
@@ -2168,66 +2257,80 @@
         width: 100% !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: space-between !important;
-        gap: 5px !important;
-        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 4px 2px 6px 2px !important;
+        scrollbar-width: none !important;
+      }
+      .nav-actions-group::-webkit-scrollbar {
+        display: none;
       }
       .dropdown-anchor {
         position: relative;
-        flex: 1 1 auto;
-        max-width: 46px;
+        flex: 0 0 auto;
         display: flex;
         justify-content: center;
       }
       .plus-btn-highlight,
-      .nav-btn {
-        min-width: 38px !important;
-        width: 40px !important;
-        max-width: 46px !important;
-        height: 34px !important;
-        border-radius: 8px !important;
+      .nav-btn,
+      .nav-actions-group .nav-btn,
+      .nav-actions-group .notification-icon-btn {
+        min-width: 42px !important;
+        width: 42px !important;
+        max-width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        border-radius: 13px !important;
         padding: 0 !important;
-        font-size: 0.86rem !important;
-        flex: 1 1 auto !important;
+        font-size: 1rem !important;
+        flex: 0 0 42px !important;
       }
-      .action-menu {
+      .action-menu,
+      .action-menu.home-portfolio-menu,
+      #actionMenu.action-menu {
         position: fixed !important;
-        top: 145px !important;
+        top: 138px !important;
         right: 12px !important;
         left: 12px !important;
         width: auto !important;
-        max-width: 320px !important;
+        max-width: 340px !important;
+        max-height: 70dvh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
         margin: 0 auto !important;
         z-index: 10000 !important;
       }
-      .action-menu .menu-item {
-        background: rgba(15, 23, 42, 0.95) !important;
-        backdrop-filter: blur(14px) !important;
-        -webkit-backdrop-filter: blur(14px) !important;
-      }
-      body.theme-white .action-menu .menu-item {
-        background: rgba(255, 255, 255, 0.96) !important;
-      }
       .properties-bar {
         padding: 10px 10px 6px 10px !important;
+        box-sizing: border-box !important;
       }
       .prop-card {
-        min-width: 155px !important;
-        max-width: 82vw !important;
+        min-width: 168px !important;
+        max-width: 78vw !important;
         padding: 10px 12px !important;
+        scroll-snap-align: start;
       }
       .prop-info h4, .prop-info span {
         white-space: normal !important;
         word-break: break-word !important;
       }
-      .flats-container {
-        padding: 8px 10px 28px 10px !important;
-        grid-template-columns: 1fr !important;
+      .flats-container,
+      body.role-viewer .flats-container.viewer-single-flat-mode {
+        padding: 10px 10px 28px 10px !important;
+        grid-template-columns: minmax(0, 1fr) !important;
         gap: 12px !important;
+      }
+      body.role-viewer .flats-container.viewer-single-flat-mode {
+        display: grid !important;
       }
       .flat-card-merged {
         padding: 14px 12px !important;
         min-width: 0 !important;
+        max-width: 100% !important;
         overflow: hidden !important;
       }
       .flat-top-row, .flat-bottom-row, .payment-banner {
@@ -2345,11 +2448,16 @@
         width: auto !important;
       }
       .plus-btn-highlight,
-      .nav-btn {
-        min-width: 35px !important;
-        width: 38px !important;
-        height: 32px !important;
-        border-radius: 7px !important;
+      .nav-btn,
+      .nav-actions-group .nav-btn,
+      .nav-actions-group .notification-icon-btn {
+        min-width: 40px !important;
+        width: 40px !important;
+        max-width: 40px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        border-radius: 12px !important;
+        flex: 0 0 40px !important;
       }
     }
 
@@ -3371,81 +3479,88 @@
     transition: box-shadow 0.3s ease !important;
   }
 
-  /* Admin Person Icon Operations Hub (Left of + Button, Inline Full-Page Workspace Below Header) */
-  .admin-ops-hub-btn {
-    border-color: rgba(16, 185, 129, 0.42) !important;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(56, 189, 248, 0.12) 100%) !important;
-  }
-  .admin-ops-hub-btn:hover,
+  /* Admin Person Icon Operations Hub — Embedded Inline Right on the Home Page */
   body.admin-ops-hub-open .admin-ops-hub-btn {
-    border-color: #10b981 !important;
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35), 0 6px 16px rgba(16, 185, 129, 0.28) !important;
+    border-color: #34d399 !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.45) 0%, rgba(6, 182, 212, 0.34) 100%) !important;
+    box-shadow: 0 0 0 2.5px rgba(52, 211, 153, 0.42), 0 8px 24px rgba(16, 185, 129, 0.48) !important;
+  }
+  body.admin-ops-hub-open .admin-ops-hub-btn i {
+    color: #ffffff !important;
   }
   body.admin-ops-hub-open #dashboardScreen .properties-bar,
   body.admin-ops-hub-open #dashboardScreen #flatsList {
     display: none !important;
   }
   .admin-ops-hub-section {
-    max-width: 1260px;
-    margin: 14px auto 38px auto;
-    padding: 0 18px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 18px 40px 18px;
     width: 100%;
     box-sizing: border-box;
-    animation: homePortalEntryFade 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: homePortalEntryFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   .admin-ops-hub-shell {
-    border-radius: 20px;
-    padding: 18px 20px 22px 20px;
-    background: rgba(15, 23, 42, 0.88);
-    border: 1.5px solid rgba(56, 189, 248, 0.32);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-  }
-  body.theme-white .admin-ops-hub-shell {
-    background: rgba(255, 255, 255, 0.94);
-    border-color: #cbd5e1;
-    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
   .admin-ops-hub-topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
-    padding-bottom: 14px;
+    gap: 10px 14px;
+    padding: 11px 15px;
     margin-bottom: 12px;
-    border-bottom: 1px solid var(--glass-border);
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.44);
+    border: 1.5px solid rgba(52, 211, 153, 0.34);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  }
+  body.theme-white .admin-ops-hub-topbar {
+    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(16, 185, 129, 0.42);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
   }
   .admin-ops-hub-title-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    background: rgba(16, 185, 129, 0.16);
-    border: 1px solid rgba(16, 185, 129, 0.42);
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(6, 182, 212, 0.2) 50%, rgba(99, 102, 241, 0.16) 100%);
+    border: 1.5px solid rgba(52, 211, 153, 0.65);
     color: #34d399;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1.08rem;
     flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  }
+  body.theme-white .admin-ops-hub-title-icon {
+    color: #059669;
   }
   .admin-ops-hub-close-btn {
     display: inline-flex;
     align-items: center;
     gap: 7px;
     padding: 8px 15px;
-    border-radius: 11px;
-    border: 1.5px solid rgba(239, 68, 68, 0.48);
-    background: rgba(239, 68, 68, 0.14);
+    border-radius: 12px;
+    border: 1.5px solid rgba(239, 68, 68, 0.52);
+    background: rgba(239, 68, 68, 0.16);
     color: #f87171;
     font-size: 0.82rem;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.18s ease;
+    white-space: nowrap;
   }
   .admin-ops-hub-close-btn:hover {
-    background: rgba(239, 68, 68, 0.24);
+    background: rgba(239, 68, 68, 0.28);
     border-color: #ef4444;
     transform: translateY(-1px);
   }
@@ -3457,15 +3572,15 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 11px;
+    gap: 12px;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
     padding: 4px 2px 12px 2px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     scrollbar-width: thin;
-    scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+    scrollbar-color: rgba(52, 211, 153, 0.45) transparent;
   }
   .admin-ops-hub-carousel::-webkit-scrollbar {
     height: 6px;
@@ -3474,55 +3589,80 @@
     background: transparent;
   }
   .admin-ops-hub-carousel::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.35);
+    background: rgba(52, 211, 153, 0.4);
     border-radius: 999px;
   }
   .admin-ops-carousel-card {
     flex: 0 0 auto;
     scroll-snap-align: start;
-    min-width: 178px;
+    min-width: 184px;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 11px;
     padding: 10px 15px;
-    border-radius: 14px;
-    background: rgba(30, 41, 59, 0.82);
-    border: 1.5px solid rgba(148, 163, 184, 0.26);
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.56);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(52, 211, 153, 0.32);
     color: #f8fafc;
     font-size: 0.84rem;
     font-weight: 800;
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.18s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   }
   .admin-ops-carousel-card:hover {
-    border-color: #38bdf8;
-    transform: translateY(-1px);
+    border-color: #34d399;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(16, 185, 129, 0.28);
   }
   .admin-ops-carousel-card.active {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.24) 0%, rgba(56, 189, 248, 0.2) 100%);
-    border-color: rgba(52, 211, 153, 0.78);
-    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.22);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(6, 182, 212, 0.24) 100%);
+    border-color: #34d399;
+    box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.24), 0 10px 26px rgba(16, 185, 129, 0.28);
   }
   body.theme-white .admin-ops-carousel-card {
-    background: #f8fafc;
-    border-color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(16, 185, 129, 0.38);
     color: #0f172a;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
   }
   body.theme-white .admin-ops-carousel-card.active {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(56, 189, 248, 0.14) 100%);
-    border-color: #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 182, 212, 0.16) 100%);
+    border-color: #059669;
     color: #064e3b;
   }
   .admin-ops-card-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.92rem;
+    font-size: 0.96rem;
     flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(6, 182, 212, 0.2) 50%, rgba(99, 102, 241, 0.16) 100%) !important;
+    border: 1.5px solid rgba(52, 211, 153, 0.65) !important;
+    color: #34d399 !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+    transition: all 0.2s ease;
+  }
+  .admin-ops-carousel-card:hover .admin-ops-card-icon,
+  .admin-ops-carousel-card.active .admin-ops-card-icon {
+    color: #ffffff !important;
+    border-color: #34d399 !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(6, 182, 212, 0.38) 100%) !important;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.55) !important;
+  }
+  body.theme-white .admin-ops-card-icon {
+    color: #059669 !important;
+  }
+  body.theme-white .admin-ops-carousel-card.active .admin-ops-card-icon,
+  body.theme-white .admin-ops-carousel-card:hover .admin-ops-card-icon {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%) !important;
   }
   .admin-ops-card-badge {
     font-size: 0.68rem;
@@ -3532,6 +3672,60 @@
     background: rgba(239, 68, 68, 0.2);
     color: #f87171;
     border: 1px solid rgba(239, 68, 68, 0.45);
+  }
+  .admin-ops-hub-body {
+    border-radius: 18px;
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.58);
+    border: 1.5px solid rgba(52, 211, 153, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.24);
+  }
+  body.theme-white .admin-ops-hub-body {
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(16, 185, 129, 0.38);
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  }
+  .utr-proof-row {
+    background: rgba(15, 23, 42, 0.68);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 11px 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+  }
+  body.theme-white .utr-proof-row {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #0f172a;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+  }
+  .utr-proof-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .utr-entry-delete-btn {
+    padding: 5px 9px !important;
+    font-size: 0.7rem !important;
+    color: #f87171 !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
+    background: rgba(239, 68, 68, 0.12) !important;
+  }
+  .utr-entry-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.24) !important;
+    border-color: #ef4444 !important;
+    color: #fecaca !important;
+  }
+  body.theme-white .utr-entry-delete-btn {
+    color: #dc2626 !important;
+    background: rgba(239, 68, 68, 0.08) !important;
   }
   #adminResidentOpsHubSection #adminScreenshotVerificationContainer {
     max-height: 620px;
@@ -4978,10 +5172,20 @@
   }
 
   /* ============================================================================
-     REQUIREMENT 5: STYLISH DASHBOARD HOUSE TRIGGER
+     UNIFIED HOME-ICON GLASSMORPHIC DESIGN ACROSS ALL DASHBOARD HEADER BUTTONS
      ============================================================================ */
   .home-icon-box-btn,
-  .stylish-house-trigger {
+  .stylish-house-trigger,
+  .nav-actions-group .nav-btn,
+  .nav-actions-group .notification-icon-btn,
+  .admin-ops-hub-btn,
+  .live-chat-icon-only-btn,
+  .help-center-icon-only-btn,
+  .maintenance-icon-only-btn,
+  .plus-icon-box-btn,
+  .profile-icon-box-btn,
+  .settings-icon-box-btn,
+  .logout-icon-box-btn {
     width: 44px !important;
     height: 44px !important;
     min-width: 44px !important;
@@ -5000,8 +5204,39 @@
     transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   }
 
+  .nav-actions-group .nav-btn::before,
+  .nav-actions-group .notification-icon-btn::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #10b981, #06b6d4, #8b5cf6);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    filter: blur(5px);
+    pointer-events: none;
+  }
+  .nav-actions-group .nav-btn:hover::before,
+  .nav-actions-group .notification-icon-btn:hover::before {
+    opacity: 0.72;
+  }
+
   .home-icon-box-btn:hover,
-  .stylish-house-trigger:hover {
+  .stylish-house-trigger:hover,
+  .nav-actions-group .nav-btn:hover,
+  .nav-actions-group .notification-icon-btn:hover,
+  .admin-ops-hub-btn:hover,
+  .live-chat-icon-only-btn:hover,
+  .help-center-icon-only-btn:hover,
+  .maintenance-icon-only-btn:hover,
+  .plus-icon-box-btn:hover,
+  .profile-icon-box-btn:hover,
+  .settings-icon-box-btn:hover,
+  .logout-icon-box-btn:hover {
     transform: translateY(-3px) scale(1.08) !important;
     border-color: #34d399 !important;
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.42) 0%, rgba(6, 182, 212, 0.32) 100%) !important;
@@ -5034,15 +5269,25 @@
   }
 
   .stylish-house-trigger .house-main-svg,
-  .home-icon-box-btn i {
+  .home-icon-box-btn i,
+  .nav-actions-group .nav-btn i,
+  .nav-actions-group .notification-icon-btn i {
     color: #34d399 !important;
-    font-size: 1.18rem !important;
+    font-size: 1.15rem !important;
     filter: drop-shadow(0 2px 6px rgba(16, 185, 129, 0.45)) !important;
     transition: all 0.25s ease !important;
   }
+  body.theme-white .stylish-house-trigger .house-main-svg,
+  body.theme-white .home-icon-box-btn i,
+  body.theme-white .nav-actions-group .nav-btn i,
+  body.theme-white .nav-actions-group .notification-icon-btn i {
+    color: #059669 !important;
+  }
 
   .stylish-house-trigger:hover .house-main-svg,
-  .home-icon-box-btn:hover i {
+  .home-icon-box-btn:hover i,
+  .nav-actions-group .nav-btn:hover i,
+  .nav-actions-group .notification-icon-btn:hover i {
     color: #ffffff !important;
     transform: scale(1.12);
     filter: drop-shadow(0 0 10px rgba(52, 211, 153, 0.8)) !important;
@@ -5250,9 +5495,57 @@
     }
     .module-nav-tab,
     .kharch-nav-tab {
+      min-width: 150px !important;
+      flex: 0 0 auto !important;
+      padding: 9px 12px !important;
+      font-size: 0.78rem !important;
+    }
+    .admin-ops-hub-section {
+      padding: 10px 10px 28px 10px !important;
+    }
+    .admin-ops-hub-topbar {
+      padding: 10px 12px !important;
+      gap: 8px !important;
+    }
+    .admin-ops-carousel-card {
       min-width: 160px !important;
       padding: 9px 12px !important;
       font-size: 0.78rem !important;
+    }
+    .admin-ops-hub-body {
+      padding: 12px 10px !important;
+    }
+    #adminPaymentProofQueueList {
+      max-height: 60dvh !important;
+    }
+    .utr-proof-row {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .utr-proof-actions {
+      justify-content: flex-start !important;
+      width: 100% !important;
+    }
+    #flatModalNavBar,
+    .module-tabs-bar,
+    .kharch-tabs-bar {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 8px !important;
+      padding-bottom: 6px !important;
+    }
+    #flatModalNavBar .flat-nav-item {
+      flex: 0 0 auto !important;
+      min-width: 112px !important;
+      white-space: nowrap !important;
+    }
+    #renterDashboardPaymentCircleCard,
+    #renterDashboardLatestReceiptSideCard {
+      flex: 1 1 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
     }
     .renter-modern-portal,
     .renter-modern-portal *:not(canvas):not(img):not(svg):not(i),
@@ -6234,18 +6527,18 @@
           </div>
         </div>
 
-        <!-- Action Icons Grouped Together (Top Dashboard Live Chat, Help Center, FD, Khet, Kharch, Add (+), Profile, Notifications, Settings, Logout) -->
+        <!-- Action Icons Grouped Together (All Unified with Home Icon Design) -->
         <div class="nav-actions-group">
-          <!-- Top Dashboard Live Chat Button (Icon Only per Bug 1) -->
+          <!-- Top Dashboard Live Chat Button -->
           <button type="button" id="btnRenterNavLiveChat" class="nav-btn live-chat-icon-only-btn" onclick="openModularLiveChatWidget()" title="Private Live Chat" aria-label="Private Live Chat">
-            <i class="fa-solid fa-comments" style="color:#34d399; font-size:1.05rem;"></i>
+            <i class="fa-solid fa-comments"></i>
             <span id="renterNavChatBadge" class="notification-badge-dot" style="display:none;">0</span>
           </button>
-          <!-- Top Dashboard Help Center Button (Icon Only per Requirement 2) -->
+          <!-- Top Dashboard Help Center Button -->
           <button type="button" id="btnRenterNavHelpCenter" class="nav-btn help-center-icon-only-btn" onclick="openContactUsModal()" title="Contact Property Admin" aria-label="Contact Property Admin">
-            <i class="fa-solid fa-headset" style="color:#38bdf8; font-size:1.05rem;"></i>
+            <i class="fa-solid fa-headset"></i>
           </button>
-          <!-- Portfolio Home Icon Dropdown (Left of Plus Icon): Expenses, Land Records (Khiyat), Fixed Deposit (FD) -->
+          <!-- Portfolio Home Icon Dropdown (Left of Person/Plus Icon): Expenses, Land Records (Khiyat), Fixed Deposit (FD) -->
           <div class="dropdown-anchor home-portfolio-anchor admin-only" id="homePortfolioDropdownAnchor">
             <button type="button" class="nav-btn home-icon-box-btn stylish-house-trigger" onclick="toggleHomePortfolioMenu(event)" title="Portfolio &amp; Records (Expenses, Land Records &amp; FD)" aria-label="Home Portfolio Menu">
               <div class="house-trigger-glow"></div>
@@ -6256,7 +6549,7 @@
             </button>
             <div id="homePortfolioMenu" class="action-menu home-portfolio-menu">
               <div class="menu-item" id="homeMenuKharchItem" onclick="closeHomePortfolioMenu(); openKharchModal()">
-                <span class="home-menu-icon-wrap" style="background:rgba(245,158,11,0.2); border-color:rgba(245,158,11,0.45); color:#fbbf24;">
+                <span class="home-menu-icon-wrap">
                   <i class="fa-solid fa-wallet"></i>
                 </span>
                 <div class="home-menu-text-wrap">
@@ -6265,7 +6558,7 @@
                 </div>
               </div>
               <div class="menu-item" id="homeMenuKhetItem" onclick="closeHomePortfolioMenu(); openKhetModal()">
-                <span class="home-menu-icon-wrap" style="background:rgba(16,185,129,0.2); border-color:rgba(52,211,153,0.45); color:#34d399;">
+                <span class="home-menu-icon-wrap">
                   <i class="fa-solid fa-seedling"></i>
                 </span>
                 <div class="home-menu-text-wrap">
@@ -6274,7 +6567,7 @@
                 </div>
               </div>
               <div class="menu-item" id="homeMenuFdItem" onclick="closeHomePortfolioMenu(); openFdModal()">
-                <span class="home-menu-icon-wrap" style="background:rgba(99,102,241,0.22); border-color:rgba(129,140,248,0.45); color:#818cf8;">
+                <span class="home-menu-icon-wrap">
                   <i class="fa-solid fa-building-columns"></i>
                 </span>
                 <div class="home-menu-text-wrap">
@@ -6285,65 +6578,81 @@
             </div>
           </div>
           <!-- 3B. Admin Person Icon Operations Hub Button (Left of Plus + Button) -->
-          <button type="button" id="btnAdminResidentOpsHub" class="nav-btn admin-only admin-ops-hub-btn" onclick="toggleAdminResidentOpsHub()" title="Operations Hub: Screenshot, UTR, Notifications, Contact &amp; Tickets" aria-label="Admin Operations Hub" style="position:relative;">
-            <i class="fa-solid fa-user" style="color:#34d399; font-size:1.02rem;"></i>
+          <button type="button" id="btnAdminResidentOpsHub" class="nav-btn admin-only admin-ops-hub-btn" onclick="toggleAdminResidentOpsHub()" title="Operations Hub: Screenshot, UTR, Notifications, Contact &amp; Tickets" aria-label="Admin Operations Hub">
+            <i class="fa-solid fa-user"></i>
             <span id="adminOpsHubPendingBadge" class="notification-badge-dot" style="display:none;">0</span>
           </button>
           <!-- 4. Dynamic Plus (+) Add Box Button -->
           <div class="dropdown-anchor admin-only" id="plusMenuDropdownAnchor">
-            <button type="button" class="nav-btn plus-icon-box-btn" onclick="toggleActionMenu(event)" title="Add Property, Flat or Renter">
-              <i class="fa-solid fa-plus" style="color:#38bdf8; font-size:1.05rem; font-weight:900;"></i>
+            <button type="button" class="nav-btn plus-icon-box-btn" onclick="toggleActionMenu(event)" title="Add Property, Flat or Renter" aria-label="Add Property, Flat or Renter">
+              <i class="fa-solid fa-plus"></i>
             </button>
             <div id="actionMenu" class="action-menu">
-              <div class="menu-item" onclick="openModal('addPropertyModal')">
-                <i class="fa-solid fa-building"></i> Add Property
+              <div class="menu-item" onclick="closeActionMenu(); openModal('addPropertyModal')">
+                <span class="home-menu-icon-wrap"><i class="fa-solid fa-building"></i></span>
+                <div class="home-menu-text-wrap">
+                  <span class="home-menu-title">Add Property</span>
+                  <span class="home-menu-sub">Register a New Building or Site</span>
+                </div>
               </div>
-              <div class="menu-item" onclick="syncPropertyDropdowns(); openModal('editPropertyModal')">
-                <i class="fa-solid fa-pen-to-square"></i> Edit Property
+              <div class="menu-item" onclick="closeActionMenu(); syncPropertyDropdowns(); openModal('editPropertyModal')">
+                <span class="home-menu-icon-wrap"><i class="fa-solid fa-pen-to-square"></i></span>
+                <div class="home-menu-text-wrap">
+                  <span class="home-menu-title">Edit Property</span>
+                  <span class="home-menu-sub">Update Property UPI &amp; Info</span>
+                </div>
               </div>
-              <div class="menu-item" onclick="openAddFlatModal()">
-                <i class="fa-solid fa-door-open"></i> Add Flat
+              <div class="menu-item" onclick="closeActionMenu(); openAddFlatModal()">
+                <span class="home-menu-icon-wrap"><i class="fa-solid fa-door-open"></i></span>
+                <div class="home-menu-text-wrap">
+                  <span class="home-menu-title">Add Flat</span>
+                  <span class="home-menu-sub">Create a Unit Under Property</span>
+                </div>
               </div>
-              <div class="menu-item" onclick="openAddRenterModal()">
-                <i class="fa-solid fa-user-plus"></i> Add Renter
+              <div class="menu-item" onclick="closeActionMenu(); openAddRenterModal()">
+                <span class="home-menu-icon-wrap"><i class="fa-solid fa-user-plus"></i></span>
+                <div class="home-menu-text-wrap">
+                  <span class="home-menu-title">Add Renter</span>
+                  <span class="home-menu-sub">Assign Tenant &amp; KYC Details</span>
+                </div>
               </div>
             </div>
           </div>
           <!-- 5. Profile Box Button -->
           <button type="button" class="nav-btn profile-icon-box-btn" onclick="openProfileModal()" title="My Profile" aria-label="My Profile">
-            <i class="fa-solid fa-user" style="color:#ec4899; font-size:1.05rem;"></i>
+            <i class="fa-solid fa-user-shield"></i>
           </button>
-          <!-- 5B. Notification Bell Icon (Requirement 4: Next to profile right on dashboard) -->
+          <!-- 5B. Notification Bell Icon -->
           <button type="button" id="btnDashboardNotification" class="notification-icon-btn" onclick="openNotificationsModal()" title="Admin Notifications & Announcements" aria-label="Notifications">
-            <i class="fa-solid fa-bell" style="color:#f59e0b; font-size:1.05rem;"></i>
+            <i class="fa-solid fa-bell"></i>
             <span id="navNotificationBadge" class="notification-badge-dot" style="display:none;">0</span>
           </button>
           <!-- 6. Settings Box Button -->
           <button type="button" class="nav-btn settings-icon-box-btn" onclick="openSettingsModal()" title="Settings" aria-label="Settings">
-            <i class="fa-solid fa-gear" style="color:#a855f7; font-size:1.05rem;"></i>
+            <i class="fa-solid fa-gear"></i>
           </button>
           <!-- 7. Logout Box Button -->
           <button type="button" class="nav-btn logout-icon-box-btn" onclick="handleLogout()" title="Logout" aria-label="Logout">
-            <i class="fa-solid fa-arrow-right-from-bracket" style="color:#ef4444; font-size:1.05rem;"></i>
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Admin Operations Hub (Replaces Dashboard Content Below Header When Person Icon Is Clicked) -->
+    <!-- Admin Operations Hub (Inline Home Workspace Below Header When Person Icon Is Clicked) -->
     <section id="adminResidentOpsHubSection" class="admin-ops-hub-section" style="display:none;" aria-label="Admin Operations Hub">
       <div class="admin-ops-hub-shell">
         <div class="admin-ops-hub-topbar">
-          <div style="display:flex; align-items:center; gap:11px;">
+          <div style="display:flex; align-items:center; gap:11px; min-width:0;">
             <div class="admin-ops-hub-title-icon">
               <i class="fa-solid fa-user"></i>
             </div>
-            <div>
-              <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34d399;">Admin Operations Center</div>
-              <h3 style="margin:2px 0 0 0; font-size:1.12rem; font-weight:900; color:var(--text-main);">Verification, Notifications, Contact &amp; Tickets</h3>
+            <div style="min-width:0;">
+              <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34d399;">Home Dashboard • Resident Operations</div>
+              <h3 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">Verification, Notifications, Contact &amp; Tickets</h3>
             </div>
           </div>
-          <button type="button" id="btnCloseAdminOpsHub" class="admin-ops-hub-close-btn" onclick="closeAdminResidentOpsHub()" title="Close &amp; Restore Dashboard">
+          <button type="button" id="btnCloseAdminOpsHub" class="admin-ops-hub-close-btn" onclick="closeAdminResidentOpsHub()" title="Close &amp; Return to Properties">
             <i class="fa-solid fa-xmark"></i>
             <span>Close</span>
           </button>
@@ -6352,25 +6661,25 @@
         <!-- Horizontally Scrollable Left-to-Right Carousel -->
         <div class="admin-ops-hub-carousel" id="adminOpsHubCarouselTrack" role="tablist" aria-label="Admin Operations Options">
           <button type="button" class="admin-ops-carousel-card active" data-ops-tab="screenshot" onclick="switchAdminOpsHubTab('screenshot')">
-            <span class="admin-ops-card-icon" style="background:rgba(16,185,129,0.18); color:#34d399;"><i class="fa-solid fa-images"></i></span>
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-images"></i></span>
             <span class="admin-ops-card-label">Screenshot Verification</span>
           </button>
           <button type="button" class="admin-ops-carousel-card" data-ops-tab="utr" onclick="switchAdminOpsHubTab('utr')">
-            <span class="admin-ops-card-icon" style="background:rgba(56,189,248,0.18); color:#38bdf8;"><i class="fa-solid fa-receipt"></i></span>
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-receipt"></i></span>
             <span class="admin-ops-card-label">UTR Verification</span>
             <span id="adminOpsCarouselUtrBadge" class="admin-ops-card-badge" style="display:none;">0</span>
           </button>
           <button type="button" class="admin-ops-carousel-card" data-ops-tab="notifications" onclick="switchAdminOpsHubTab('notifications')">
-            <span class="admin-ops-card-icon" style="background:rgba(245,158,11,0.18); color:#fbbf24;"><i class="fa-solid fa-bell"></i></span>
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-bell"></i></span>
             <span class="admin-ops-card-label">Notifications</span>
             <span id="adminOpsCarouselNotifBadge" class="admin-ops-card-badge" style="display:none;">0</span>
           </button>
           <button type="button" class="admin-ops-carousel-card" data-ops-tab="contact" onclick="switchAdminOpsHubTab('contact')">
-            <span class="admin-ops-card-icon" style="background:rgba(249,115,22,0.18); color:#fb923c;"><i class="fa-solid fa-address-book"></i></span>
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-address-book"></i></span>
             <span class="admin-ops-card-label">Contact Info</span>
           </button>
           <button type="button" class="admin-ops-carousel-card" data-ops-tab="tickets" onclick="switchAdminOpsHubTab('tickets')">
-            <span class="admin-ops-card-icon" style="background:rgba(99,102,241,0.18); color:#818cf8;"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+            <span class="admin-ops-card-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span>
             <span class="admin-ops-card-label">Maintenance Tickets</span>
             <span id="adminOpsCarouselTicketsBadge" class="admin-ops-card-badge" style="display:none;">0</span>
           </button>
@@ -13369,7 +13678,6 @@ function formatMonthLabel(rawVal) {
         /* Requirement 3: Viewer & Renter Account Strictly Restricted to Assigned Scope */
         body.role-viewer #searchContainer,
         body.role-viewer .pnl-tracker,
-        body.role-viewer .properties-bar,
         body.role-viewer button[onclick="openFdModal()"],
         body.role-viewer button[onclick="openKharchModal()"],
         body.role-viewer button[onclick="openKhetModal()"],
@@ -17693,6 +18001,7 @@ function formatMonthLabel(rawVal) {
       if (isRestrictedRole(activeRole) || (activeRole === "Manager" && viewerScope && viewerScope.mode === "FLAT")) {
         const flatsContainer = document.getElementById("flatsList");
         const propsBar = document.querySelector(".properties-bar");
+        if (flatsContainer) flatsContainer.classList.remove("viewer-single-flat-mode");
         if (activeRole === "Manager" && !hasManagerPermission("properties")) {
           if (propsBar) propsBar.style.display = "none";
           if (flatsContainer) {
@@ -17710,7 +18019,10 @@ function formatMonthLabel(rawVal) {
             updateGlobalProfitAndLoss();
             renderHomeKhetSection();
           }
-          if (flatsContainer) flatsContainer.style.display = "";
+          if (flatsContainer) {
+            flatsContainer.style.display = "";
+            if (activeRole === "Viewer") flatsContainer.classList.add("viewer-single-flat-mode");
+          }
           renderFlatsGrid(viewerScope.prop);
           const assignedFlatObj = findFlatObject(viewerScope.prop, viewerScope.flat);
           if (assignedFlatObj && !hasAutoOpenedViewerFlatOnce) {
@@ -17724,20 +18036,38 @@ function formatMonthLabel(rawVal) {
         } else if (viewerScope && (viewerScope.mode === "ALL" || viewerScope.mode === "SELECTED")) {
           if (propsBar) propsBar.style.display = "flex";
           renderPropertiesRow();
+          const allowedVisibleProps = (DB.properties || []).filter(p => isPropertyAllowedForViewer(p.PropertyName, viewerScope));
+          if ((!selectedProperty || !isPropertyAllowedForViewer(selectedProperty, viewerScope)) && allowedVisibleProps.length === 1) {
+            selectedProperty = allowedVisibleProps[0].PropertyName;
+          }
           if (selectedProperty && isPropertyAllowedForViewer(selectedProperty, viewerScope)) {
-            if (flatsContainer) flatsContainer.style.display = "";
+            if (flatsContainer) {
+              flatsContainer.style.display = "";
+              const matchingFlatsCount = (DB.flats || []).filter(f => String(f.PropertyName || "").trim().toLowerCase() === String(selectedProperty || "").trim().toLowerCase()).length;
+              if (activeRole === "Viewer" && matchingFlatsCount === 1) {
+                flatsContainer.classList.add("viewer-single-flat-mode");
+              }
+            }
             renderFlatsGrid(selectedProperty);
           } else {
             selectedProperty = null;
             if (flatsContainer) {
-              flatsContainer.innerHTML = "";
-              flatsContainer.style.display = "none";
+              flatsContainer.style.display = "";
+              flatsContainer.classList.add("viewer-single-flat-mode");
+              flatsContainer.innerHTML = `
+                <div class="empty-flats-prompt" style="margin: 18px auto; width: 100%; box-sizing: border-box;">
+                  <i class="fa-solid fa-building-circle-check"></i>
+                  <h3>Select a Property Above</h3>
+                  <p>Tap any assigned property card above to view its flat status, rent details, and ledger in read-only mode.</p>
+                </div>
+              `;
             }
           }
         } else if (flatsContainer) {
           flatsContainer.style.display = "";
+          flatsContainer.classList.add("viewer-single-flat-mode");
           flatsContainer.innerHTML = `
-            <div class="empty-flats-prompt">
+            <div class="empty-flats-prompt" style="margin: 18px auto; width: 100%; box-sizing: border-box;">
               <i class="fa-solid fa-door-closed"></i>
               <h3>No Flat Assigned to This ${activeRole} Account</h3>
               <p>Please ask an Admin to assign a specific flat or property to your ${activeRole} User ID.</p>
@@ -17749,6 +18079,7 @@ function formatMonthLabel(rawVal) {
 
       const propsBar = document.querySelector(".properties-bar");
       const flatsContainer = document.getElementById("flatsList");
+      if (flatsContainer) flatsContainer.classList.remove("viewer-single-flat-mode");
       if (activeRole === "Manager" && !hasManagerPermission("properties")) {
         if (propsBar) propsBar.style.display = "none";
         if (flatsContainer) {
@@ -19127,6 +19458,16 @@ function formatMonthLabel(rawVal) {
                   ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
                   ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
                 };
+            const rawServerProofs = Array.isArray(res.globalConfig.paymentProofs) ? res.globalConfig.paymentProofs : [];
+            const filteredServerProofs = window.__deletedPaymentProofIds
+              ? rawServerProofs.filter(p => {
+                  const pid = String(p?.id || p?.ProofID || "");
+                  const delTs = window.__deletedPaymentProofIds[pid];
+                  if (delTs && (nowSyncTs - delTs < 30000)) return false;
+                  if (delTs) delete window.__deletedPaymentProofIds[pid];
+                  return true;
+                })
+              : rawServerProofs;
             DB.globalConfig = {
               ...DB.globalConfig,
               ...res.globalConfig,
@@ -19135,7 +19476,7 @@ function formatMonthLabel(rawVal) {
               contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
               broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
               privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
-              paymentProofs: Array.isArray(res.globalConfig.paymentProofs) ? res.globalConfig.paymentProofs : [],
+              paymentProofs: filteredServerProofs,
               maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
               auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
             };
@@ -34539,29 +34880,42 @@ function formatMonthLabel(rawVal) {
       const badge = document.getElementById("pendingProofCountBadge") || document.getElementById("paymentProofPendingCountBadge");
       const list = getStoredPaymentProofs();
       const pendingCount = list.filter(p => p.status === "Pending").length;
+      const isAdminUser = String(activeRole || "").trim().toLowerCase() === "admin";
       if (badge) badge.innerText = `${pendingCount} Pending`;
       if (!box) return;
 
       if (list.length === 0) {
-        box.innerHTML = `<div style="text-align:center; padding:14px; color:var(--text-muted); font-size:0.78rem;">No payment proofs submitted yet.</div>`;
+        box.innerHTML = `<div style="text-align:center; padding:18px; color:var(--text-muted); font-size:0.8rem;">No payment proofs submitted yet.</div>`;
         return;
       }
 
-      box.innerHTML = list.slice(0, 20).map(p => {
-        const isPending = p.status === "Pending";
-        const stColor = p.status === "Approved" ? "#10b981" : (p.status === "Rejected" ? "#ef4444" : "#f59e0b");
+      box.innerHTML = list.map(p => {
+        const proofId = String(p.id || p.ProofID || "").trim();
+        const safeProofId = proofId.replace(/'/g, "\\'");
+        const safeScreenshot = String(p.screenshotUrl || p.ScreenshotURL || "").replace(/'/g, "\\'");
+        const safeUtr = String(p.utr || p.UTRNumber || "").replace(/'/g, "\\'");
+        const statusText = String(p.status || "Pending");
+        const isPending = statusText === "Pending";
+        const stColor = statusText === "Approved" ? "#10b981" : (statusText === "Rejected" ? "#ef4444" : "#f59e0b");
         return `
-          <div style="background:rgba(15,23,42,0.65); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; font-size:0.76rem;">
-            <div>
-              <div><strong>${p.propertyName} — Flat ${p.flatName}</strong> (${formatMonthLabel(p.monthYear)}) • <strong style="color:#10b981;">₹${Number(p.amount || 0).toLocaleString("en-IN")}</strong></div>
-              <div style="color:var(--text-muted); font-size:0.7rem;">Tenant: ${p.tenantName} | UTR: <strong style="color:#38bdf8;">${p.utr}</strong> (${p.mode}) | ${p.submittedAt}</div>
+          <div class="utr-proof-row">
+            <div style="min-width:0; flex:1 1 220px;">
+              <div style="overflow-wrap:anywhere;">
+                <strong>${escapeHtml(p.propertyName || "")} — Flat ${escapeHtml(p.flatName || "")}</strong>
+                (${escapeHtml(formatMonthLabel(p.monthYear))}) •
+                <strong style="color:#10b981;">₹${Number(p.amount || 0).toLocaleString("en-IN")}</strong>
+              </div>
+              <div style="color:var(--text-muted); font-size:0.72rem; margin-top:3px; overflow-wrap:anywhere;">
+                Tenant: ${escapeHtml(p.tenantName || "--")} | UTR: <strong style="color:#38bdf8;">${escapeHtml(p.utr || p.UTRNumber || "--")}</strong> (${escapeHtml(p.mode || p.paymentMode || "UPI")}) | ${escapeHtml(p.submittedAt || "")}
+              </div>
             </div>
-            <div style="display:flex; align-items:center; gap:6px;">
-              ${p.screenshotUrl ? `<button type="button" class="btn-ledger-action" style="padding:4px 8px; font-size:0.68rem;" onclick="openPhotoZoomModal('${p.screenshotUrl.replace(/'/g, "\\'")}', 'Payment Proof — UTR ${p.utr.replace(/'/g, "\\'")}')"><i class="fa-solid fa-image"></i> Proof</button>` : ""}
+            <div class="utr-proof-actions">
+              ${safeScreenshot ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.7rem;" onclick="openPhotoZoomModal('${safeScreenshot}', 'Payment Proof — UTR ${safeUtr}')"><i class="fa-solid fa-image"></i> Proof</button>` : ""}
               ${isPending ? `
-                <button type="button" class="btn-primary" style="width:auto; padding:5px 10px; font-size:0.7rem; background:#10b981;" onclick="approvePaymentProof('${p.id}')"><i class="fa-solid fa-check"></i> Approve &amp; Mark Paid</button>
-                <button type="button" class="btn-ledger-action" style="padding:5px 8px; font-size:0.7rem; color:#f87171; border-color:rgba(239,68,68,0.4);" onclick="rejectPaymentProof('${p.id}')"><i class="fa-solid fa-xmark"></i> Reject</button>
-              ` : `<span style="font-size:0.7rem; font-weight:800; color:${stColor};">${p.status}</span>`}
+                <button type="button" class="btn-primary" style="width:auto; padding:5px 10px; font-size:0.7rem; background:#10b981;" onclick="approvePaymentProof('${safeProofId}')"><i class="fa-solid fa-check"></i> Approve &amp; Mark Paid</button>
+                <button type="button" class="btn-ledger-action" style="padding:5px 8px; font-size:0.7rem; color:#f87171; border-color:rgba(239,68,68,0.4);" onclick="rejectPaymentProof('${safeProofId}')"><i class="fa-solid fa-xmark"></i> Reject</button>
+              ` : `<span style="font-size:0.72rem; font-weight:800; color:${stColor}; padding:3px 8px; border-radius:8px; border:1px solid ${stColor}44;">${escapeHtml(statusText)}</span>`}
+              ${isAdminUser ? `<button type="button" class="btn-ledger-action utr-entry-delete-btn" onclick="deletePaymentProof('${safeProofId}')" title="Delete UTR Record"><i class="fa-solid fa-trash-can"></i> Delete</button>` : ""}
             </div>
           </div>
         `;
@@ -34570,7 +34924,7 @@ function formatMonthLabel(rawVal) {
 
     async function approvePaymentProof(proofId) {
       const list = getStoredPaymentProofs();
-      const proof = list.find(p => p.id === proofId);
+      const proof = list.find(p => String(p.id || p.ProofID || "") === String(proofId));
       if (!proof) return;
       proof.status = "Approved";
       proof.verifiedBy = activeUser || "Admin";
@@ -34643,12 +34997,13 @@ function formatMonthLabel(rawVal) {
         recordAdminAuditLog("APPROVE_PAYMENT_PROOF", `${proof.propertyName} Flat ${proof.flatName}`, `Approved UTR ${proof.utr} for ₹${proof.amount}`);
       }
       renderAdminPaymentProofQueue();
+      if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
       triggerSideToast("Proof Approved & Bill Updated", `Marked ₹${Number(proof.amount || 0).toLocaleString("en-IN")} paid (UTR: ${proof.utr}).`, true);
     }
 
     function rejectPaymentProof(proofId) {
       const list = getStoredPaymentProofs();
-      const proof = list.find(p => p.id === proofId);
+      const proof = list.find(p => String(p.id || p.ProofID || "") === String(proofId));
       if (!proof) return;
       proof.status = "Rejected";
       saveStoredPaymentProofs(list);
@@ -34656,7 +35011,43 @@ function formatMonthLabel(rawVal) {
         recordAdminAuditLog("REJECT_PAYMENT_PROOF", `${proof.propertyName} Flat ${proof.flatName}`, `Rejected UTR ${proof.utr}`);
       }
       renderAdminPaymentProofQueue();
+      if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
       triggerSideToast("Proof Rejected", `Payment proof UTR ${proof.utr} marked as Rejected.`, "warning");
+    }
+
+    function deletePaymentProof(proofId) {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Permission Required", "Only Admin accounts can delete submitted UTR records.", false);
+      }
+      const list = getStoredPaymentProofs();
+      const proof = list.find(p => String(p.id || p.ProofID || "") === String(proofId));
+      if (!proof) return;
+
+      const utrLabel = proof.utr || proof.UTRNumber || "UTR";
+      const amtLabel = `₹${Number(proof.amount || 0).toLocaleString("en-IN")}`;
+      const desc = `Delete UTR ${utrLabel} (${amtLabel}) submitted by ${proof.tenantName || "Tenant"} for ${proof.propertyName || ""} Flat ${proof.flatName || ""}?`;
+
+      const executeDelete = () => {
+        if (!window.__deletedPaymentProofIds) window.__deletedPaymentProofIds = {};
+        window.__deletedPaymentProofIds[String(proofId)] = Date.now();
+        const updatedList = getStoredPaymentProofs().filter(p => String(p.id || p.ProofID || "") !== String(proofId));
+        saveStoredPaymentProofs(updatedList);
+        if (typeof recordAdminAuditLog === "function") {
+          recordAdminAuditLog("DELETE_PAYMENT_PROOF", `${proof.propertyName || ""} Flat ${proof.flatName || ""}`, `Deleted UTR ${utrLabel} (${amtLabel})`);
+        }
+        renderAdminPaymentProofQueue();
+        if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
+        triggerSideToast("UTR Record Deleted", `UTR ${utrLabel} has been permanently removed.`, true);
+      };
+
+      if (typeof openCenteredConfirmModal === "function") {
+        openCenteredConfirmModal("Delete UTR Record", desc, executeDelete, {
+          yesText: "Yes, Delete",
+          noText: "Cancel"
+        });
+      } else {
+        executeDelete();
+      }
     }
 
     // --- A3: AUTOMATED LATE FEE / PENALTY CALCULATOR ---
