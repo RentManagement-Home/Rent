@@ -3370,6 +3370,172 @@
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.65), 0 12px 32px rgba(99, 102, 241, 0.35) !important;
     transition: box-shadow 0.3s ease !important;
   }
+
+  /* Admin Person Icon Operations Hub (Left of + Button, Inline Full-Page Workspace Below Header) */
+  .admin-ops-hub-btn {
+    border-color: rgba(16, 185, 129, 0.42) !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(56, 189, 248, 0.12) 100%) !important;
+  }
+  .admin-ops-hub-btn:hover,
+  body.admin-ops-hub-open .admin-ops-hub-btn {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35), 0 6px 16px rgba(16, 185, 129, 0.28) !important;
+  }
+  body.admin-ops-hub-open #dashboardScreen .properties-bar,
+  body.admin-ops-hub-open #dashboardScreen #flatsList {
+    display: none !important;
+  }
+  .admin-ops-hub-section {
+    max-width: 1260px;
+    margin: 14px auto 38px auto;
+    padding: 0 18px;
+    width: 100%;
+    box-sizing: border-box;
+    animation: homePortalEntryFade 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .admin-ops-hub-shell {
+    border-radius: 20px;
+    padding: 18px 20px 22px 20px;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1.5px solid rgba(56, 189, 248, 0.32);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  body.theme-white .admin-ops-hub-shell {
+    background: rgba(255, 255, 255, 0.94);
+    border-color: #cbd5e1;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
+  }
+  .admin-ops-hub-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .admin-ops-hub-title-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(16, 185, 129, 0.16);
+    border: 1px solid rgba(16, 185, 129, 0.42);
+    color: #34d399;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .admin-ops-hub-close-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 15px;
+    border-radius: 11px;
+    border: 1.5px solid rgba(239, 68, 68, 0.48);
+    background: rgba(239, 68, 68, 0.14);
+    color: #f87171;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .admin-ops-hub-close-btn:hover {
+    background: rgba(239, 68, 68, 0.24);
+    border-color: #ef4444;
+    transform: translateY(-1px);
+  }
+  body.theme-white .admin-ops-hub-close-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+  }
+  .admin-ops-hub-carousel {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 11px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: 4px 2px 12px 2px;
+    margin-bottom: 14px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+  }
+  .admin-ops-hub-carousel::-webkit-scrollbar {
+    height: 6px;
+  }
+  .admin-ops-hub-carousel::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .admin-ops-hub-carousel::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.35);
+    border-radius: 999px;
+  }
+  .admin-ops-carousel-card {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    min-width: 178px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    border-radius: 14px;
+    background: rgba(30, 41, 59, 0.82);
+    border: 1.5px solid rgba(148, 163, 184, 0.26);
+    color: #f8fafc;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s ease;
+  }
+  .admin-ops-carousel-card:hover {
+    border-color: #38bdf8;
+    transform: translateY(-1px);
+  }
+  .admin-ops-carousel-card.active {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.24) 0%, rgba(56, 189, 248, 0.2) 100%);
+    border-color: rgba(52, 211, 153, 0.78);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.22);
+  }
+  body.theme-white .admin-ops-carousel-card {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+  }
+  body.theme-white .admin-ops-carousel-card.active {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(56, 189, 248, 0.14) 100%);
+    border-color: #10b981;
+    color: #064e3b;
+  }
+  .admin-ops-card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.92rem;
+    flex-shrink: 0;
+  }
+  .admin-ops-card-badge {
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.45);
+  }
+  #adminResidentOpsHubSection #adminScreenshotVerificationContainer {
+    max-height: 620px;
+  }
   .renter-kpi-bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -6118,6 +6284,11 @@
               </div>
             </div>
           </div>
+          <!-- 3B. Admin Person Icon Operations Hub Button (Left of Plus + Button) -->
+          <button type="button" id="btnAdminResidentOpsHub" class="nav-btn admin-only admin-ops-hub-btn" onclick="toggleAdminResidentOpsHub()" title="Operations Hub: Screenshot, UTR, Notifications, Contact &amp; Tickets" aria-label="Admin Operations Hub" style="position:relative;">
+            <i class="fa-solid fa-user" style="color:#34d399; font-size:1.02rem;"></i>
+            <span id="adminOpsHubPendingBadge" class="notification-badge-dot" style="display:none;">0</span>
+          </button>
           <!-- 4. Dynamic Plus (+) Add Box Button -->
           <div class="dropdown-anchor admin-only" id="plusMenuDropdownAnchor">
             <button type="button" class="nav-btn plus-icon-box-btn" onclick="toggleActionMenu(event)" title="Add Property, Flat or Renter">
@@ -6158,6 +6329,83 @@
         </div>
       </div>
     </header>
+
+    <!-- Admin Operations Hub (Replaces Dashboard Content Below Header When Person Icon Is Clicked) -->
+    <section id="adminResidentOpsHubSection" class="admin-ops-hub-section" style="display:none;" aria-label="Admin Operations Hub">
+      <div class="admin-ops-hub-shell">
+        <div class="admin-ops-hub-topbar">
+          <div style="display:flex; align-items:center; gap:11px;">
+            <div class="admin-ops-hub-title-icon">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+              <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34d399;">Admin Operations Center</div>
+              <h3 style="margin:2px 0 0 0; font-size:1.12rem; font-weight:900; color:var(--text-main);">Verification, Notifications, Contact &amp; Tickets</h3>
+            </div>
+          </div>
+          <button type="button" id="btnCloseAdminOpsHub" class="admin-ops-hub-close-btn" onclick="closeAdminResidentOpsHub()" title="Close &amp; Restore Dashboard">
+            <i class="fa-solid fa-xmark"></i>
+            <span>Close</span>
+          </button>
+        </div>
+
+        <!-- Horizontally Scrollable Left-to-Right Carousel -->
+        <div class="admin-ops-hub-carousel" id="adminOpsHubCarouselTrack" role="tablist" aria-label="Admin Operations Options">
+          <button type="button" class="admin-ops-carousel-card active" data-ops-tab="screenshot" onclick="switchAdminOpsHubTab('screenshot')">
+            <span class="admin-ops-card-icon" style="background:rgba(16,185,129,0.18); color:#34d399;"><i class="fa-solid fa-images"></i></span>
+            <span class="admin-ops-card-label">Screenshot Verification</span>
+          </button>
+          <button type="button" class="admin-ops-carousel-card" data-ops-tab="utr" onclick="switchAdminOpsHubTab('utr')">
+            <span class="admin-ops-card-icon" style="background:rgba(56,189,248,0.18); color:#38bdf8;"><i class="fa-solid fa-receipt"></i></span>
+            <span class="admin-ops-card-label">UTR Verification</span>
+            <span id="adminOpsCarouselUtrBadge" class="admin-ops-card-badge" style="display:none;">0</span>
+          </button>
+          <button type="button" class="admin-ops-carousel-card" data-ops-tab="notifications" onclick="switchAdminOpsHubTab('notifications')">
+            <span class="admin-ops-card-icon" style="background:rgba(245,158,11,0.18); color:#fbbf24;"><i class="fa-solid fa-bell"></i></span>
+            <span class="admin-ops-card-label">Notifications</span>
+            <span id="adminOpsCarouselNotifBadge" class="admin-ops-card-badge" style="display:none;">0</span>
+          </button>
+          <button type="button" class="admin-ops-carousel-card" data-ops-tab="contact" onclick="switchAdminOpsHubTab('contact')">
+            <span class="admin-ops-card-icon" style="background:rgba(249,115,22,0.18); color:#fb923c;"><i class="fa-solid fa-address-book"></i></span>
+            <span class="admin-ops-card-label">Contact Info</span>
+          </button>
+          <button type="button" class="admin-ops-carousel-card" data-ops-tab="tickets" onclick="switchAdminOpsHubTab('tickets')">
+            <span class="admin-ops-card-icon" style="background:rgba(99,102,241,0.18); color:#818cf8;"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+            <span class="admin-ops-card-label">Maintenance Tickets</span>
+            <span id="adminOpsCarouselTicketsBadge" class="admin-ops-card-badge" style="display:none;">0</span>
+          </button>
+        </div>
+
+        <!-- Active Option Workspace Body -->
+        <div class="admin-ops-hub-body" id="adminOpsHubBody">
+          <div id="adminOpsHubPanelSlot_screenshot" class="admin-ops-hub-slot" style="display:block;"></div>
+          <div id="adminOpsHubPanelSlot_utr" class="admin-ops-hub-slot" style="display:none;">
+            <div class="stat-pill" style="text-align:left; padding:18px; border-radius:16px; border:1.5px solid rgba(56,189,248,0.38);">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
+                <div>
+                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#38bdf8;">
+                    <i class="fa-solid fa-receipt"></i> Renter UTR &amp; Payment Proof Queue
+                  </div>
+                  <h4 style="margin:3px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
+                    UTR Verification &amp; Approval Center
+                  </h4>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <span id="paymentProofPendingCountBadge" style="font-size:0.74rem; font-weight:800; padding:5px 11px; border-radius:999px; background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.4);">0 Pending</span>
+                  <button type="button" class="btn-ledger-action" style="padding:6px 12px; font-size:0.75rem; color:#38bdf8; border-color:rgba(56,189,248,0.4);" onclick="refreshAdminUtrVerificationHub(this)">
+                    <i class="fa-solid fa-rotate"></i> Refresh
+                  </button>
+                </div>
+              </div>
+              <div id="adminPaymentProofQueueList" style="display:flex; flex-direction:column; gap:10px; max-height:520px; overflow-y:auto;"></div>
+            </div>
+          </div>
+          <div id="adminOpsHubPanelSlot_notifications" class="admin-ops-hub-slot" style="display:none;"></div>
+          <div id="adminOpsHubPanelSlot_contact" class="admin-ops-hub-slot" style="display:none;"></div>
+          <div id="adminOpsHubPanelSlot_tickets" class="admin-ops-hub-slot" style="display:none;"></div>
+        </div>
+      </div>
+    </section>
 
     <!-- Renter Quick Navigation Row (Manual Left-to-Right Scroll Only) -->
     <section id="renterQuickScrollNavBar" class="renter-quick-scroll-bar" style="display:none;" aria-label="Renter Quick Navigation">
@@ -7197,7 +7445,7 @@
 
       <!-- Settings Tab: Screenshot Verification (Right Before Notifications) -->
       <div id="setSubScreenshotVerification" class="tab-content">
-        <div class="ssv-shell">
+        <div id="sharedScreenshotVerificationWorkspace" class="ssv-shell">
           <div class="ssv-header">
             <div>
               <h4 class="ssv-title">
@@ -7651,6 +7899,7 @@
 
         <!-- Option 5 Panel: Contact Info Configuration (Property-Isolated Support Details) -->
         <div id="otherPanelContactSettings" class="stat-pill admin-only" style="text-align: left; display: none;">
+          <div id="sharedContactSettingsWorkspace">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
             <div>
               <span style="font-weight:800; font-size:0.88rem; color:#f59e0b;">
@@ -7711,10 +7960,12 @@
               <i class="fa-solid fa-floppy-disk"></i> Save Contact Details
             </button>
           </div>
+          </div>
         </div>
 
         <!-- Option 6 Panel (Feature G1): Maintenance Complaint / Ticket System Management -->
         <div id="otherPanelTickets" class="stat-pill admin-only" style="text-align: left; display: none;">
+          <div id="sharedMaintenanceTicketsWorkspace">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
             <div>
               <span style="font-weight:800; font-size:0.88rem; color:#38bdf8;">
@@ -7729,6 +7980,7 @@
             </button>
           </div>
           <div id="adminMaintenanceTicketsList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
         </div>
 
         <!-- Option 7 Panel (Feature G3): Detailed Admin Audit Trail & Activity Log -->
@@ -14129,11 +14381,170 @@ function formatMonthLabel(rawVal) {
       return activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("notifications"));
     }
 
-    function mountSharedNotificationsWorkspaceInto(targetContainerId) {
-      const workspace = document.getElementById("sharedNotificationsWorkspace");
+    function mountSharedWorkspaceInto(workspaceId, targetContainerId) {
+      const workspace = document.getElementById(workspaceId);
       const target = document.getElementById(targetContainerId);
       if (workspace && target && workspace.parentElement !== target) {
         target.appendChild(workspace);
+      }
+    }
+
+    function mountSharedNotificationsWorkspaceInto(targetContainerId) {
+      mountSharedWorkspaceInto("sharedNotificationsWorkspace", targetContainerId);
+    }
+
+    function restoreSharedAdminWorkspacesToSettings() {
+      mountSharedWorkspaceInto("sharedScreenshotVerificationWorkspace", "setSubScreenshotVerification");
+      mountSharedNotificationsWorkspaceInto("setSubNotifications");
+      mountSharedWorkspaceInto("sharedContactSettingsWorkspace", "otherPanelContactSettings");
+      mountSharedWorkspaceInto("sharedMaintenanceTicketsWorkspace", "otherPanelTickets");
+    }
+
+    window.activeAdminOpsHubTab = window.activeAdminOpsHubTab || "screenshot";
+
+    function syncAdminOpsHubBadges() {
+      const pendingUtr = (typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : []).filter(p => p && p.status === "Pending").length;
+      const openTickets = (typeof getStoredMaintenanceTickets === "function" ? getStoredMaintenanceTickets() : []).filter(t => t && t.status !== "Resolved").length;
+      const allNotices = typeof getStoredBroadcastNotifications === "function" ? getStoredBroadcastNotifications() : [];
+      const readIds = typeof getReadNotificationIds === "function" ? getReadNotificationIds() : [];
+      const unreadNotices = allNotices.filter(n => n && typeof isNoticeVisibleToCurrentUser === "function" && isNoticeVisibleToCurrentUser(n) && !readIds.includes(n.id)).length;
+
+      const utrBadge = document.getElementById("adminOpsCarouselUtrBadge");
+      const notifBadge = document.getElementById("adminOpsCarouselNotifBadge");
+      const ticketsBadge = document.getElementById("adminOpsCarouselTicketsBadge");
+      const topBadge = document.getElementById("adminOpsHubPendingBadge");
+
+      if (utrBadge) {
+        utrBadge.style.display = pendingUtr > 0 ? "inline-flex" : "none";
+        utrBadge.innerText = String(pendingUtr);
+      }
+      if (notifBadge) {
+        notifBadge.style.display = unreadNotices > 0 ? "inline-flex" : "none";
+        notifBadge.innerText = String(unreadNotices);
+      }
+      if (ticketsBadge) {
+        ticketsBadge.style.display = openTickets > 0 ? "inline-flex" : "none";
+        ticketsBadge.innerText = String(openTickets);
+      }
+      const totalPending = pendingUtr + openTickets;
+      if (topBadge) {
+        if (totalPending > 0 && String(activeRole || "").trim().toLowerCase() === "admin") {
+          topBadge.innerText = totalPending > 9 ? "9+" : String(totalPending);
+          topBadge.style.display = "flex";
+        } else {
+          topBadge.style.display = "none";
+        }
+      }
+    }
+
+    function toggleAdminResidentOpsHub() {
+      if (document.body.classList.contains("admin-ops-hub-open")) {
+        closeAdminResidentOpsHub();
+      } else {
+        openAdminResidentOpsHub();
+      }
+    }
+
+    function openAdminResidentOpsHub(initialTab = "") {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Access Only", "This operations hub is available for Admin accounts.", false);
+      }
+      if (typeof closeActionMenu === "function") closeActionMenu();
+      if (typeof closeHomePortfolioMenu === "function") closeHomePortfolioMenu();
+
+      const hubSection = document.getElementById("adminResidentOpsHubSection");
+      document.body.classList.add("admin-ops-hub-open");
+      if (hubSection) hubSection.style.display = "block";
+
+      const targetTab = initialTab || window.activeAdminOpsHubTab || "screenshot";
+      switchAdminOpsHubTab(targetTab);
+      syncAdminOpsHubBadges();
+    }
+
+    function closeAdminResidentOpsHub(silent = false) {
+      restoreSharedAdminWorkspacesToSettings();
+      document.body.classList.remove("admin-ops-hub-open");
+      const hubSection = document.getElementById("adminResidentOpsHubSection");
+      if (hubSection) hubSection.style.display = "none";
+      if (!silent) {
+        syncAdminOpsHubBadges();
+      }
+    }
+
+    function switchAdminOpsHubTab(tabKey) {
+      const allowedTabs = ["screenshot", "utr", "notifications", "contact", "tickets"];
+      const activeKey = allowedTabs.includes(tabKey) ? tabKey : "screenshot";
+      window.activeAdminOpsHubTab = activeKey;
+
+      document.querySelectorAll("#adminOpsHubCarouselTrack .admin-ops-carousel-card").forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-ops-tab") === activeKey);
+      });
+      document.querySelectorAll("#adminOpsHubBody .admin-ops-hub-slot").forEach(slot => {
+        slot.style.display = "none";
+      });
+      const activeSlot = document.getElementById("adminOpsHubPanelSlot_" + activeKey);
+      if (activeSlot) activeSlot.style.display = "block";
+
+      // Keep unused shared workspaces back in Settings so only the active one is mounted in the Hub
+      if (activeKey !== "screenshot") mountSharedWorkspaceInto("sharedScreenshotVerificationWorkspace", "setSubScreenshotVerification");
+      if (activeKey !== "notifications") mountSharedNotificationsWorkspaceInto("setSubNotifications");
+      if (activeKey !== "contact") mountSharedWorkspaceInto("sharedContactSettingsWorkspace", "otherPanelContactSettings");
+      if (activeKey !== "tickets") mountSharedWorkspaceInto("sharedMaintenanceTicketsWorkspace", "otherPanelTickets");
+
+      if (activeKey === "screenshot") {
+        mountSharedWorkspaceInto("sharedScreenshotVerificationWorkspace", "adminOpsHubPanelSlot_screenshot");
+        if (typeof renderAdminScreenshotVerificationGrid === "function") {
+          renderAdminScreenshotVerificationGrid();
+        }
+      } else if (activeKey === "utr") {
+        if (typeof renderAdminPaymentProofQueue === "function") {
+          renderAdminPaymentProofQueue();
+        }
+      } else if (activeKey === "notifications") {
+        mountSharedNotificationsWorkspaceInto("adminOpsHubPanelSlot_notifications");
+        const composerEl = document.getElementById("adminNotificationComposeCard");
+        if (composerEl) {
+          composerEl.style.display = "flex";
+          if (!currentEditingNoticeId && typeof renderNoticeTargetPropertiesChecklist === "function") {
+            renderNoticeTargetPropertiesChecklist(["ALL"]);
+          }
+        }
+        if (typeof renderBulkBillBroadcastQueue === "function") renderBulkBillBroadcastQueue();
+        if (typeof renderNotificationsListUI === "function") renderNotificationsListUI();
+        if (typeof markAllVisibleNotificationsRead === "function") markAllVisibleNotificationsRead();
+      } else if (activeKey === "contact") {
+        mountSharedWorkspaceInto("sharedContactSettingsWorkspace", "adminOpsHubPanelSlot_contact");
+        if (typeof initAdminContactSettingsInputs === "function") {
+          initAdminContactSettingsInputs();
+        }
+      } else if (activeKey === "tickets") {
+        mountSharedWorkspaceInto("sharedMaintenanceTicketsWorkspace", "adminOpsHubPanelSlot_tickets");
+        if (typeof renderAdminMaintenanceTickets === "function") {
+          renderAdminMaintenanceTickets();
+        }
+      }
+      syncAdminOpsHubBadges();
+    }
+
+    async function refreshAdminUtrVerificationHub(btn) {
+      const prevHtml = btn ? btn.innerHTML : "";
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Syncing...`;
+      }
+      try {
+        if (typeof syncDataLive === "function") {
+          await syncDataLive(true);
+        }
+        if (typeof renderAdminPaymentProofQueue === "function") {
+          renderAdminPaymentProofQueue();
+        }
+        syncAdminOpsHubBadges();
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = prevHtml || `<i class="fa-solid fa-rotate"></i> Refresh`;
+        }
       }
     }
 
@@ -17559,7 +17970,15 @@ function formatMonthLabel(rawVal) {
       const homeMenuKhet = document.getElementById("homeMenuKhetItem");
       const homeMenuFd = document.getElementById("homeMenuFdItem");
       const plusAnchor = document.getElementById("plusMenuDropdownAnchor") || document.querySelector(".plus-icon-box-btn")?.closest(".dropdown-anchor");
+      const adminOpsBtn = document.getElementById("btnAdminResidentOpsHub");
       const settingsBtn = document.querySelector(".settings-icon-box-btn");
+
+      if (adminOpsBtn) {
+        adminOpsBtn.style.setProperty("display", activeRole === "Admin" ? "inline-flex" : "none", "important");
+      }
+      if (activeRole !== "Admin" && typeof closeAdminResidentOpsHub === "function") {
+        closeAdminResidentOpsHub(true);
+      }
 
       // Requirement 1: Help Center is strictly visible ONLY on the Renter's dashboard
       if (rNavHelp) {
@@ -17599,6 +18018,9 @@ function formatMonthLabel(rawVal) {
         if (homeMenuFd) homeMenuFd.style.setProperty("display", "flex", "important");
         if (plusAnchor) plusAnchor.style.removeProperty("display");
         if (settingsBtn) settingsBtn.style.removeProperty("display");
+      }
+      if (typeof syncAdminOpsHubBadges === "function") {
+        syncAdminOpsHubBadges();
       }
 
       const shiftBtn = document.getElementById("btnShiftToAnotherFlat");
@@ -18801,9 +19223,21 @@ function formatMonthLabel(rawVal) {
           if (hasDataChanged || forceRender) {
             renderAllDashboardUI();
             const ssvPanel = document.getElementById("setSubScreenshotVerification");
-            if (ssvPanel && ssvPanel.classList.contains("active") && typeof renderAdminScreenshotVerificationGrid === "function") {
+            const isHubOpen = document.body.classList.contains("admin-ops-hub-open");
+            if (isHubOpen) {
+              if (window.activeAdminOpsHubTab === "screenshot" && typeof renderAdminScreenshotVerificationGrid === "function") {
+                renderAdminScreenshotVerificationGrid();
+              } else if (window.activeAdminOpsHubTab === "utr" && typeof renderAdminPaymentProofQueue === "function") {
+                renderAdminPaymentProofQueue();
+              } else if (window.activeAdminOpsHubTab === "tickets" && typeof renderAdminMaintenanceTickets === "function") {
+                renderAdminMaintenanceTickets();
+              }
+            } else if (ssvPanel && ssvPanel.classList.contains("active") && typeof renderAdminScreenshotVerificationGrid === "function") {
               renderAdminScreenshotVerificationGrid();
             }
+          }
+          if (typeof syncAdminOpsHubBadges === "function") {
+            syncAdminOpsHubBadges();
           }
         }
       } catch (err) {
@@ -20158,6 +20592,9 @@ function formatMonthLabel(rawVal) {
         opt = "users";
       }
 
+      if (typeof restoreSharedAdminWorkspacesToSettings === "function") {
+        restoreSharedAdminWorkspacesToSettings();
+      }
       if (parent) {
         parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
         parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
@@ -20958,8 +21395,8 @@ function formatMonthLabel(rawVal) {
         initialSubTabId = "setSubDeleteManage";
       }
 
-      // Mount the shared Notification workspace inside the Settings modal's 1st tab
-      mountSharedNotificationsWorkspaceInto("setSubNotifications");
+      // Restore shared workspaces back into Settings modal before opening Settings
+      restoreSharedAdminWorkspacesToSettings();
 
       // Configure horizontal tab buttons based on Admin vs Manager permissions
       const tabConfigs = [
@@ -21927,6 +22364,7 @@ function formatMonthLabel(rawVal) {
       }
       document.getElementById(subTabId)?.classList.add("active");
       if (subTabId === "setSubScreenshotVerification") {
+        mountSharedWorkspaceInto("sharedScreenshotVerificationWorkspace", "setSubScreenshotVerification");
         renderAdminScreenshotVerificationGrid();
       } else if (subTabId === "setSubNotifications") {
         mountSharedNotificationsWorkspaceInto("setSubNotifications");
@@ -31028,6 +31466,9 @@ function formatMonthLabel(rawVal) {
         if (!anyActiveModal) {
           document.body.classList.remove("modal-open-hide-chat");
         }
+        if (el.id === "settingsModal" && document.body.classList.contains("admin-ops-hub-open")) {
+          switchAdminOpsHubTab(window.activeAdminOpsHubTab || "screenshot");
+        }
       }
     }
 
@@ -32045,6 +32486,7 @@ function formatMonthLabel(rawVal) {
 
       const renterQuickNavEl = document.getElementById("renterQuickScrollNavBar");
       if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
+      if (typeof closeAdminResidentOpsHub === "function") closeAdminResidentOpsHub(true);
 
       const chatWidgetEl = document.getElementById("modularLiveChatWidget");
       if (chatWidgetEl) chatWidgetEl.style.display = "none";
