@@ -3576,11 +3576,11 @@
     border-color: #e2e8f0;
   }
   body.theme-white .renter-history-row-item:hover {
-    background: rgba(255, 255, 255, 0.20) !important;
+    background: rgba(255, 255, 255, 0.30) !important;
     border-color: #6366f1;
   }
 
-  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 80% transparent (20% opacity) */
+  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 70% transparent (30% opacity) */
   :where(.renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box)) {
     background: transparent !important;
     background-color: transparent !important;
@@ -3605,7 +3605,7 @@
   .renter-modern-portal .form-control,
   .renter-modern-portal #renterHeroAadhaarCardBox,
   .renter-modern-portal #renterDashboardPaymentCircleCard,
-  .renter-modern-portal #renterDashboardLatestReceiptBar,
+  .renter-modern-portal #renterDashboardLatestReceiptSideCard,
   .renter-modern-portal #renterDashboardLatestReceiptBtn,
   .renter-modern-portal #renterAadhaarLinkedReceiptsCard,
   .renter-modern-portal #renterInlineMaintenanceCard,
@@ -3618,8 +3618,8 @@
   .renter-modern-portal label[style*="border"],
   .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(15, 23, 42, 0.20) !important;
-    background-color: rgba(15, 23, 42, 0.20) !important;
+    background: rgba(15, 23, 42, 0.30) !important;
+    background-color: rgba(15, 23, 42, 0.30) !important;
     background-image: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -3641,7 +3641,7 @@
   body.theme-white .renter-modern-portal .form-control,
   body.theme-white .renter-modern-portal #renterHeroAadhaarCardBox,
   body.theme-white .renter-modern-portal #renterDashboardPaymentCircleCard,
-  body.theme-white .renter-modern-portal #renterDashboardLatestReceiptBar,
+  body.theme-white .renter-modern-portal #renterDashboardLatestReceiptSideCard,
   body.theme-white .renter-modern-portal #renterDashboardLatestReceiptBtn,
   body.theme-white .renter-modern-portal #renterAadhaarLinkedReceiptsCard,
   body.theme-white .renter-modern-portal #renterInlineMaintenanceCard,
@@ -3654,8 +3654,8 @@
   body.theme-white .renter-modern-portal label[style*="border"],
   body.theme-white .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(255, 255, 255, 0.20) !important;
-    background-color: rgba(255, 255, 255, 0.20) !important;
+    background: rgba(255, 255, 255, 0.30) !important;
+    background-color: rgba(255, 255, 255, 0.30) !important;
     background-image: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -16418,118 +16418,183 @@ function formatMonthLabel(rawVal) {
         const latestBillPropLabel = latestBill ? String(latestBill.SnapshotPropertyName || latestBill.PropertyName || targetProp || "") : targetProp;
         const latestBillFlatLabel = latestBill ? String(latestBill.SnapshotFlatName || latestBill.FlatName || targetFlat || "") : targetFlat;
 
+        const latestBillBaseRentAmt = latestBill ? (parseFloat(latestBill.BaseRent) || 0) : 0;
+        const latestBillElecAmt = latestBill ? (parseFloat(latestBill.ElecTotal) || 0) : 0;
+        const latestBillPngAmt = latestBill ? (parseFloat(latestBill.PNGTotal) || 0) : 0;
+        const latestBillWaterAmt = latestBill ? (parseFloat(latestBill.WaterTotal) || 0) : 0;
+        const latestBillAddAmt = latestBill ? (parseFloat(latestBill.AdditionalAmount) || 0) : 0;
+        const latestBillAddLabel = latestBill && latestBill.AdditionalName && latestBill.AdditionalName !== "None" ? String(latestBill.AdditionalName) : "Additional";
+        const latestBillIdDisplay = latestBill && latestBill.BillID ? String(latestBill.BillID) : "--";
+
         const dashboardPaymentCircleBoxHtml = `
-          <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="margin: 14px auto 0 0; width: 100%; max-width: 410px; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.20); border: 1.5px solid var(--glass-border);">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
-              <div style="display:flex; align-items:center; gap:9px;">
-                <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.20); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
-                  <i class="fa-solid fa-chart-pie"></i>
-                </div>
-                <div>
-                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#818cf8;">
-                    Latest Receipt Payment Overview
+          <div id="renterDashboardOverviewRow" style="margin-top: 14px; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-between; gap: 16px;">
+            <!-- Left Side: Half-Size Latest Receipt Payment Overview -->
+            <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="flex: 1 1 320px; max-width: 410px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.30); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+                <div style="display:flex; align-items:center; gap:9px;">
+                  <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.30); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                    <i class="fa-solid fa-chart-pie"></i>
                   </div>
-                  <div style="font-size:0.92rem; font-weight:900; color:var(--text-main); line-height:1.2;">
-                    ${latestReceiptMonthLabel} Status
-                  </div>
-                </div>
-              </div>
-              <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.20); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
-                ${latestBillDateLabel}
-              </span>
-            </div>
-
-            <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
-              <!-- Compact Circular Donut Chart: Yellow = Overpaid, Green = Paid, Red = Due -->
-              <div style="position:relative; width:144px; height:144px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg viewBox="0 0 140 140" width="144" height="144" style="transform:rotate(-90deg); overflow:visible;" aria-label="Latest receipt payment chart">
-                  <circle cx="70" cy="70" r="${chartRadius}" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="14"></circle>
-                  ${dueArcLen > 0 ? `
-                    <circle
-                      cx="70"
-                      cy="70"
-                      r="${chartRadius}"
-                      fill="none"
-                      stroke="#ef4444"
-                      stroke-width="14"
-                      stroke-dasharray="${dueArcLen} ${chartCirc}"
-                      stroke-dashoffset="${-paidArcLen}"
-                      stroke-linecap="butt"
-                    ></circle>
-                  ` : ""}
-                  ${paidArcLen > 0 ? `
-                    <circle
-                      cx="70"
-                      cy="70"
-                      r="${chartRadius}"
-                      fill="none"
-                      stroke="${circlePrimaryStroke}"
-                      stroke-width="14"
-                      stroke-dasharray="${paidArcLen} ${chartCirc}"
-                      stroke-dashoffset="0"
-                      stroke-linecap="${paidArcLen >= chartCirc - 0.5 ? "butt" : "round"}"
-                    ></circle>
-                  ` : ""}
-                </svg>
-                <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.20); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
-                  <span style="font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
-                  <strong style="font-size:1.05rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
-                  <span style="font-size:0.6rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
-                </div>
-              </div>
-
-              <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
-              <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
-                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.20); border:1px solid rgba(99,102,241,0.38); text-align:center;">
-                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
-                  <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
-                </div>
-                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.20); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
-                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
-                  <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
-                </div>
-                <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.20); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
-                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
-                  <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
-                </div>
-              </div>
-
-              ${chartAdvanceAmt > 0 ? `
-                <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.20); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
-                  <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
-                  <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
-                </div>
-              ` : ""}
-
-              <!-- Latest Receipt Box inside Left-Side Latest Receipt Payment Overview -->
-              <div id="renterDashboardLatestReceiptBar" style="width:100%; padding:10px 12px; border-radius:12px; background:rgba(15,23,42,0.20); border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-                <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1;">
-                  <div style="width:30px; height:30px; border-radius:8px; border:1px solid rgba(56,189,248,0.38); color:#38bdf8; display:flex; align-items:center; justify-content:center; font-size:0.85rem; flex-shrink:0;">
-                    <i class="fa-solid fa-receipt"></i>
-                  </div>
-                  <div style="min-width:0;">
-                    <div style="font-size:0.64rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#38bdf8;">Latest Receipt</div>
-                    <div style="font-size:0.78rem; font-weight:800; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                      ${latestBill ? `${latestReceiptMonthLabel} • Flat ${escapeHtml(latestBillFlatLabel)} (${escapeHtml(latestBillPropLabel)})` : "No Receipt Generated Yet"}
+                  <div>
+                    <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#818cf8;">
+                      Latest Receipt Payment Overview
+                    </div>
+                    <div style="font-size:0.92rem; font-weight:900; color:var(--text-main); line-height:1.2;">
+                      ${latestReceiptMonthLabel} Status
                     </div>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  id="renterDashboardLatestReceiptBtn"
-                  onclick="${latestBill ? `selectRenterHomeAvailableReceipt('${latestBillIdArg}', '${latestBillMonthArg}'); openBillReceiptModal('${latestBillIdArg}', '${latestBillMonthArg}');` : `navigateRenterQuickNav('receipt');`}"
-                  style="padding:6px 11px; border-radius:8px; border:1px solid rgba(56,189,248,0.45); color:#38bdf8; font-size:0.72rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;"
-                >
-                  <i class="fa-solid fa-eye"></i>
-                  <span>${latestBill ? "View Latest Receipt" : "All Receipts"}</span>
-                </button>
+                <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.30); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                  ${latestBillDateLabel}
+                </span>
               </div>
 
-              <div style="width:100%; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; font-size:0.66rem; color:var(--text-muted); padding-top:2px;">
-                <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; margin-right:4px;"></span>Paid</span>
-                <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; margin-right:4px;"></span>Due</span>
-                <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#eab308; margin-right:4px;"></span>Overpaid</span>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+                <!-- Compact Circular Donut Chart: Yellow = Overpaid, Green = Paid, Red = Due -->
+                <div style="position:relative; width:144px; height:144px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <svg viewBox="0 0 140 140" width="144" height="144" style="transform:rotate(-90deg); overflow:visible;" aria-label="Latest receipt payment chart">
+                    <circle cx="70" cy="70" r="${chartRadius}" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="14"></circle>
+                    ${dueArcLen > 0 ? `
+                      <circle
+                        cx="70"
+                        cy="70"
+                        r="${chartRadius}"
+                        fill="none"
+                        stroke="#ef4444"
+                        stroke-width="14"
+                        stroke-dasharray="${dueArcLen} ${chartCirc}"
+                        stroke-dashoffset="${-paidArcLen}"
+                        stroke-linecap="butt"
+                      ></circle>
+                    ` : ""}
+                    ${paidArcLen > 0 ? `
+                      <circle
+                        cx="70"
+                        cy="70"
+                        r="${chartRadius}"
+                        fill="none"
+                        stroke="${circlePrimaryStroke}"
+                        stroke-width="14"
+                        stroke-dasharray="${paidArcLen} ${chartCirc}"
+                        stroke-dashoffset="0"
+                        stroke-linecap="${paidArcLen >= chartCirc - 0.5 ? "butt" : "round"}"
+                      ></circle>
+                    ` : ""}
+                  </svg>
+                  <div style="position:absolute; inset:17px; border-radius:50%; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
+                    <span style="font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
+                    <strong style="font-size:1.05rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
+                    <span style="font-size:0.6rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
+                  </div>
+                </div>
+
+                <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
+                <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid rgba(99,102,241,0.38); text-align:center;">
+                    <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
+                    <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
+                  </div>
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
+                    <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
+                    <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
+                  </div>
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
+                    <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
+                    <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
+                  </div>
+                </div>
+
+                ${chartAdvanceAmt > 0 ? `
+                  <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                    <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
+                    <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
+                  </div>
+                ` : ""}
+
+                <div style="width:100%; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; font-size:0.66rem; color:var(--text-muted); padding-top:2px;">
+                  <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; margin-right:4px;"></span>Paid</span>
+                  <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; margin-right:4px;"></span>Due</span>
+                  <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#eab308; margin-right:4px;"></span>Overpaid</span>
+                </div>
               </div>
+            </div>
+
+            <!-- Right Side: Latest Receipt Summary Card -->
+            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.30); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+              <div>
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+                  <div style="display:flex; align-items:center; gap:9px;">
+                    <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.30); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                      <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                      <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#38bdf8;">
+                        Latest Receipt
+                      </div>
+                      <div style="font-size:0.92rem; font-weight:900; color:var(--text-main); line-height:1.2;">
+                        ${latestBill ? `${latestReceiptMonthLabel} Official Receipt` : "No Receipt Yet"}
+                      </div>
+                    </div>
+                  </div>
+                  <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.30); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                    ${chartCenterBadgeText}
+                  </span>
+                </div>
+
+                ${latestBill ? `
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="padding:9px 11px; border-radius:11px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                      <span style="font-size:0.74rem; font-weight:800; color:var(--text-main);">
+                        <i class="fa-solid fa-building" style="color:#38bdf8; margin-right:5px;"></i>Flat ${escapeHtml(latestBillFlatLabel)} (${escapeHtml(latestBillPropLabel)})
+                      </span>
+                      <span style="font-size:0.69rem; font-weight:700; color:var(--text-muted);">
+                        ${latestBillDateLabel} • ID: ${escapeHtml(latestBillIdDisplay)}
+                      </span>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                        <div style="font-size:0.62rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Base Rent</div>
+                        <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillBaseRentAmt.toLocaleString("en-IN")}</strong>
+                      </div>
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                        <div style="font-size:0.62rem; font-weight:800; color:#38bdf8; text-transform:uppercase;">Electricity</div>
+                        <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillElecAmt.toLocaleString("en-IN")}</strong>
+                      </div>
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                        <div style="font-size:0.62rem; font-weight:800; color:#f59e0b; text-transform:uppercase;">PNG Gas</div>
+                        <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillPngAmt.toLocaleString("en-IN")}</strong>
+                      </div>
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border);">
+                        <div style="font-size:0.62rem; font-weight:800; color:#06b6d4; text-transform:uppercase;">Water</div>
+                        <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillWaterAmt.toLocaleString("en-IN")}</strong>
+                      </div>
+                    </div>
+
+                    ${latestBillAddAmt > 0 ? `
+                      <div style="padding:7px 10px; border-radius:10px; background:rgba(15,23,42,0.30); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.74rem;">
+                        <span style="font-weight:700; color:#c084fc;">${escapeHtml(latestBillAddLabel)}</span>
+                        <strong style="font-weight:900; color:var(--text-main); font-variant-numeric:tabular-nums;">₹${latestBillAddAmt.toLocaleString("en-IN")}</strong>
+                      </div>
+                    ` : ""}
+                  </div>
+                ` : `
+                  <div style="padding:26px 14px; border-radius:12px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.30); text-align:center; color:var(--text-muted); font-size:0.78rem;">
+                    <i class="fa-solid fa-file-invoice" style="font-size:1.35rem; color:#38bdf8; display:block; margin-bottom:8px;"></i>
+                    No receipt generated for your account yet.
+                  </div>
+                `}
+              </div>
+
+              <button
+                type="button"
+                id="renterDashboardLatestReceiptBtn"
+                onclick="${latestBill ? `selectRenterHomeAvailableReceipt('${latestBillIdArg}', '${latestBillMonthArg}'); openBillReceiptModal('${latestBillIdArg}', '${latestBillMonthArg}');` : `navigateRenterQuickNav('receipt');`}"
+                style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(56,189,248,0.45); background:rgba(15,23,42,0.30); color:#38bdf8; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
+              >
+                <i class="fa-solid fa-eye"></i>
+                <span>${latestBill ? "View Latest Receipt" : "Open All Receipts"}</span>
+              </button>
             </div>
           </div>
         `;
@@ -17088,7 +17153,7 @@ function formatMonthLabel(rawVal) {
                 </div>
 
                 <!-- Right Side of Verified Residential Portal: Icon + Heading & Verified Aadhaar Number -->
-                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.20); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
+                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.30); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
                   <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38bdf8;">
                     <i class="fa-solid fa-id-card" style="color:#f97316; font-size:0.86rem;"></i>
                     <span>Aadhaar Card</span>
