@@ -7389,18 +7389,7 @@
       <!-- Horizontal Left-to-Right Options Box (Notifications, Create User ID, Delete Center + All 7 Modules One by One to the Right Side) -->
       <div class="settings-horizontal-options-box">
         <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid">
-          <div id="settingsTabBtnScreenshotVerify" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(16, 185, 129, 0.45);" onclick="switchSettingsSubTab(event, 'setSubScreenshotVerification')">
-            <div class="s-nav-icon" style="background: rgba(16, 185, 129, 0.18); color: #34d399;"><i class="fa-solid fa-images"></i></div>
-            <div class="s-nav-title">Screenshot Verification</div>
-          </div>
-          <div id="settingsTabBtnNotifications" class="flat-nav-item settings-nav-card nav-notify active" onclick="switchSettingsSubTab(event, 'setSubNotifications')">
-            <div class="s-nav-icon" style="position:relative;">
-              <i class="fa-solid fa-bell"></i>
-              <span id="settingsNotificationBadge" class="notification-badge-dot" style="display:none; top:-5px; right:-5px;">0</span>
-            </div>
-            <div class="s-nav-title">Notifications</div>
-          </div>
-          <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
+          <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create active" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
             <div class="s-nav-icon"><i class="fa-solid fa-user-plus"></i></div>
             <div class="s-nav-title">Create User ID</div>
           </div>
@@ -7423,14 +7412,6 @@
           <div id="btnOtherOptEditEverything" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(168, 85, 247, 0.45);" onclick="switchOtherSubOption('editEverything')">
             <div class="s-nav-icon" style="background: rgba(168, 85, 247, 0.18); color: #c084fc;"><i class="fa-solid fa-pen-ruler"></i></div>
             <div class="s-nav-title">Edit Everything</div>
-          </div>
-          <div id="btnOtherOptContactSettings" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(245, 158, 11, 0.45);" onclick="switchOtherSubOption('contactSettings')">
-            <div class="s-nav-icon" style="background: rgba(245, 158, 11, 0.18); color: #f59e0b;"><i class="fa-solid fa-address-book"></i></div>
-            <div class="s-nav-title">Contact Info</div>
-          </div>
-          <div id="btnOtherOptTickets" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(14, 165, 233, 0.45);" onclick="switchOtherSubOption('tickets')">
-            <div class="s-nav-icon" style="background: rgba(14, 165, 233, 0.18); color: #38bdf8;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-            <div class="s-nav-title">Maintenance Tickets</div>
           </div>
           <div id="btnOtherOptAuditLog" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(244, 63, 94, 0.45);" onclick="switchOtherSubOption('auditLog')">
             <div class="s-nav-icon" style="background: rgba(244, 63, 94, 0.18); color: #fb7185;"><i class="fa-solid fa-shield-cat"></i></div>
@@ -21411,15 +21392,15 @@ function formatMonthLabel(rawVal) {
         const btnEl = document.getElementById(cfg.btnId);
         if (btnEl) {
           btnEl.style.display = cfg.allowed ? "inline-flex" : "none";
-        }
-        if (cfg.allowed && !firstAllowedTabId) {
-          firstAllowedTabId = cfg.tabId;
+          if (cfg.allowed && !firstAllowedTabId) {
+            firstAllowedTabId = cfg.tabId;
+          }
         }
       });
 
       const targetTabId = (initialSubTabId && tabConfigs.some(c => c.tabId === initialSubTabId && c.allowed))
         ? initialSubTabId
-        : (firstAllowedTabId || "setSubNotifications");
+        : (firstAllowedTabId || "setSubCreateUser");
 
       const btnLoginHist = document.getElementById("btnOtherOptLoginHistory");
       const panelLoginHist = document.getElementById("otherPanelLoginHistory");
