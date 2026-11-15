@@ -3095,10 +3095,8 @@
     0% { opacity: 0; transform: translateY(10px); }
     100% { opacity: 1; transform: translateY(0); }
   }
-  #dashboardScreen.active .properties-bar,
-  #dashboardScreen.active .flats-container,
-  #dashboardScreen.active .renter-modern-portal {
-    animation: homePortalEntryFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  #dashboardScreen.active .properties-bar {
+    animation: homePortalEntryFade 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   body.role-renter .flats-container {
     display: block !important;
@@ -3578,8 +3576,68 @@
     border-color: #e2e8f0;
   }
   body.theme-white .renter-history-row-item:hover {
-    background: #eff6ff;
+    background: transparent !important;
     border-color: #6366f1;
+  }
+
+  /* Make all cards and inner boxes across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment & Profile 100% transparent */
+  .renter-modern-portal .renter-hero-banner,
+  body.theme-white .renter-modern-portal .renter-hero-banner,
+  .renter-modern-portal .renter-kpi-summary-box,
+  body.theme-white .renter-modern-portal .renter-kpi-summary-box,
+  .renter-modern-portal .renter-statement-card,
+  body.theme-white .renter-modern-portal .renter-statement-card,
+  .renter-modern-portal .renter-payment-card,
+  body.theme-white .renter-modern-portal .renter-payment-card,
+  .renter-modern-portal .renter-recent-bills-card,
+  body.theme-white .renter-modern-portal .renter-recent-bills-card,
+  .renter-modern-portal .renter-kpi-card,
+  body.theme-white .renter-modern-portal .renter-kpi-card,
+  .renter-modern-portal .renter-utility-item,
+  body.theme-white .renter-modern-portal .renter-utility-item,
+  .renter-modern-portal .renter-utility-item:hover,
+  body.theme-white .renter-modern-portal .renter-utility-item:hover,
+  .renter-modern-portal .renter-history-row-item,
+  body.theme-white .renter-modern-portal .renter-history-row-item,
+  .renter-modern-portal .renter-meta-chip,
+  body.theme-white .renter-modern-portal .renter-meta-chip,
+  .renter-modern-portal .renter-verified-pill,
+  body.theme-white .renter-modern-portal .renter-verified-pill,
+  .renter-modern-portal .renter-action-btn.secondary,
+  body.theme-white .renter-modern-portal .renter-action-btn.secondary,
+  .renter-modern-portal .form-control,
+  body.theme-white .renter-modern-portal .form-control,
+  .renter-modern-portal .renter-transparent-inner,
+  body.theme-white .renter-modern-portal .renter-transparent-inner {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  .renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box),
+  body.theme-white .renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box) {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  .renter-modern-portal span:not(.renter-chart-legend-dot),
+  body.theme-white .renter-modern-portal span:not(.renter-chart-legend-dot),
+  .renter-modern-portal label,
+  body.theme-white .renter-modern-portal label,
+  .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn),
+  body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+  .renter-modern-portal .renter-hero-banner::before {
+    display: none !important;
   }
 
 
@@ -5995,10 +6053,6 @@
           <!-- Top Dashboard Help Center Button (Icon Only per Requirement 2) -->
           <button type="button" id="btnRenterNavHelpCenter" class="nav-btn help-center-icon-only-btn" onclick="openContactUsModal()" title="Contact Property Admin" aria-label="Contact Property Admin">
             <i class="fa-solid fa-headset" style="color:#38bdf8; font-size:1.05rem;"></i>
-          </button>
-          <!-- Top Dashboard Maintenance Complaint & Track Ticket Button (Single Action Icon on Main Dashboard) -->
-          <button type="button" id="btnRenterNavMaintenance" class="nav-btn maintenance-icon-only-btn" onclick="if(activeRole==='Renter'){navigateRenterQuickNav('maintenance');}else{openRenterMaintenanceModal();}" title="Raise a Maintenance Complaint &amp; Track Ticket" aria-label="Raise a Maintenance Complaint &amp; Track Ticket">
-            <i class="fa-solid fa-screwdriver-wrench" style="color:#f59e0b; font-size:1.05rem;"></i>
           </button>
           <!-- Portfolio Home Icon Dropdown (Left of Plus Icon): Expenses, Land Records (Khiyat), Fixed Deposit (FD) -->
           <div class="dropdown-anchor home-portfolio-anchor admin-only" id="homePortfolioDropdownAnchor">
@@ -11109,29 +11163,19 @@
         ? normalizeGoogleDriveBgUrl(dashBg.trim())
         : DEFAULT_PORTAL_BACKGROUND_IMAGE;
 
-      if (loginScreenEl) {
-        loginScreenEl.style.setProperty("background-image", 'url("' + effectiveGlobalBg + '")', "important");
-        loginScreenEl.style.backgroundSize = "cover";
-        loginScreenEl.style.backgroundPosition = "center";
-        loginScreenEl.style.backgroundRepeat = "no-repeat";
-        loginScreenEl.style.backgroundAttachment = "fixed";
-      }
+      const applyBgIfChanged = (el) => {
+        if (!el || el.dataset.appliedBgUrl === effectiveGlobalBg) return;
+        el.dataset.appliedBgUrl = effectiveGlobalBg;
+        el.style.setProperty("background-image", 'url("' + effectiveGlobalBg + '")', "important");
+        el.style.backgroundSize = "cover";
+        el.style.backgroundPosition = "center";
+        el.style.backgroundRepeat = "no-repeat";
+        el.style.backgroundAttachment = "fixed";
+      };
 
-      if (dashScreenEl) {
-        dashScreenEl.style.setProperty("background-image", 'url("' + effectiveGlobalBg + '")', "important");
-        dashScreenEl.style.backgroundSize = "cover";
-        dashScreenEl.style.backgroundPosition = "center";
-        dashScreenEl.style.backgroundRepeat = "no-repeat";
-        dashScreenEl.style.backgroundAttachment = "fixed";
-      }
-
-      if (bgCanvasEl) {
-        bgCanvasEl.style.setProperty("background-image", 'url("' + effectiveGlobalBg + '")', "important");
-        bgCanvasEl.style.backgroundSize = "cover";
-        bgCanvasEl.style.backgroundPosition = "center";
-        bgCanvasEl.style.backgroundRepeat = "no-repeat";
-        bgCanvasEl.style.backgroundAttachment = "fixed";
-      }
+      applyBgIfChanged(loginScreenEl);
+      applyBgIfChanged(dashScreenEl);
+      applyBgIfChanged(bgCanvasEl);
     }
 
     function syncServerBackgroundsToLocal(globalConfig, userBgLogin, userBgDash, hasServerConfig = true) {
@@ -11156,20 +11200,25 @@
       const prevUrl = localStorage.getItem("portal_custom_bg_dashboard") || localStorage.getItem("portal_custom_bg_login") || "";
 
       if (isExplicitlyCleared) {
+        const hadCustom = Boolean(prevUrl || localHdCache);
         localStorage.removeItem("portal_custom_bg_dashboard");
         localStorage.removeItem("portal_custom_bg_login");
         localStorage.removeItem("portal_custom_bg_hd_cache");
         localStorage.removeItem("portal_custom_bg_sheet_safe");
-        applyCustomBackgrounds();
-        initCustomBgInputs();
+        if (hadCustom) {
+          applyCustomBackgrounds();
+          initCustomBgInputs();
+        }
         return;
       }
 
       let updated = false;
       if (serverDashBg && serverDashBg !== DEFAULT_PORTAL_BACKGROUND_IMAGE) {
         if (localHdCache && serverDashBg.startsWith("data:image/")) {
-          localStorage.setItem("portal_custom_bg_sheet_safe", serverDashBg);
-        } else if (prevUrl !== serverDashBg || localHdCache) {
+          if (localStorage.getItem("portal_custom_bg_sheet_safe") !== serverDashBg) {
+            localStorage.setItem("portal_custom_bg_sheet_safe", serverDashBg);
+          }
+        } else if (prevUrl !== serverDashBg) {
           localStorage.setItem("portal_custom_bg_dashboard", serverDashBg);
           localStorage.setItem("portal_custom_bg_login", serverDashBg);
           if (!serverDashBg.startsWith("data:image/")) {
@@ -14986,6 +15035,12 @@ function formatMonthLabel(rawVal) {
           shareableUrl: res?.shareableUrl || driveUrl,
           fileId: res?.fileId || res?.driveFileId || ""
         };
+        const inlineUtrVal = (cleanCat === "completed_payment" && !window.__skipInlineUtrAutoRecord)
+          ? String(document.getElementById("renterPayUtrInput")?.value || "").trim()
+          : "";
+        if (inlineUtrVal) {
+          savedSlot.utr = inlineUtrVal;
+        }
         const canonicalReturnedKey = res?.slotKey ? String(res.slotKey).trim() : "";
         if (canonicalReturnedKey && !trackKeys.includes(canonicalReturnedKey)) {
           trackKeys.push(canonicalReturnedKey);
@@ -15018,11 +15073,36 @@ function formatMonthLabel(rawVal) {
             r[targetPhotoCol] = driveUrl;
           }
         });
+        if (inlineUtrVal && typeof saveStoredPaymentProofs === "function" && typeof getStoredPaymentProofs === "function") {
+          const inlineAmt = parseFloat(document.getElementById("renterPayAmountInput")?.value) || 0;
+          const existingProofs = getStoredPaymentProofs();
+          const proofEntry = {
+            id: "PROOF-" + Date.now(),
+            billId: String(window.__activeRenterPaymentBillId || ""),
+            propertyName: propName,
+            flatName: flatName,
+            renterId: renterId,
+            aadhaar: normAadhaar,
+            monthYear: cleanMonth,
+            tenantName: renterName || activeUserFullName || activeUser || "Resident",
+            submittedBy: activeUser || renterName || "Resident",
+            amount: inlineAmt,
+            utr: inlineUtrVal,
+            mode: "UPI",
+            screenshotUrl: driveUrl,
+            status: "Pending",
+            submittedAt: new Date().toLocaleString("en-IN")
+          };
+          saveStoredPaymentProofs([proofEntry, ...existingProofs]);
+        }
         saveLocalGlobalConfigMaster(DB.globalConfig);
         saveDbSnapshotToCache();
         renderAllDashboardUI();
         if (typeof renderAdminScreenshotVerificationGrid === "function") {
           renderAdminScreenshotVerificationGrid();
+        }
+        if (typeof renderAdminPaymentProofQueue === "function") {
+          renderAdminPaymentProofQueue();
         }
         if (didUpdateRequestStatus) {
           sendFirebaseAction({
@@ -15198,6 +15278,134 @@ function formatMonthLabel(rawVal) {
         refreshRenterInlineMaintenanceTicketsFromSheet();
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function handleRenterPaymentInlinePhotoSelect(inputEl) {
+      const file = inputEl && inputEl.files && inputEl.files[0];
+      if (!file) return;
+      try {
+        const compressed = await compressImageFileToDataUrl(file, 1080, 0.82);
+        window.pendingRenterInlinePaymentPhotoDataUrl = compressed;
+        window.pendingRenterInlinePaymentPhotoName = file.name || `Payment_Proof_${Date.now()}.jpg`;
+        const prevBox = document.getElementById("renterInlinePayPhotoPendingBox");
+        const prevImg = document.getElementById("renterInlinePayPhotoPendingImg");
+        const prevName = document.getElementById("renterInlinePayPhotoPendingName");
+        if (prevImg) prevImg.src = compressed;
+        if (prevName) prevName.innerText = window.pendingRenterInlinePaymentPhotoName;
+        if (prevBox) prevBox.style.display = "flex";
+        triggerSideToast("Payment Photo Attached", "Enter your UTR number and click Submit for Verification.", true);
+      } catch (e) {
+        triggerSideToast("Photo Error", "Could not read selected payment photo.", false);
+      } finally {
+        if (inputEl) inputEl.value = "";
+      }
+    }
+
+    async function submitRenterInlinePaymentUtrProof() {
+      const utrInput = document.getElementById("renterPayUtrInput");
+      const amtInput = document.getElementById("renterPayAmountInput");
+      const submitBtn = document.getElementById("btnSubmitRenterInlineUtrProof");
+      const utr = String(utrInput?.value || "").trim();
+      const amount = parseFloat(amtInput?.value || "0") || 0;
+
+      if (!utr) {
+        if (utrInput) utrInput.focus();
+        return triggerSideToast("UTR Required", "Please enter your UTR / UPI Transaction Reference Number for verification.", false);
+      }
+
+      const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
+      const primaryRenter = matchedProfiles.find(r => String(r.Status || "").toLowerCase() === "active") || matchedProfiles[0] || activeFlatRenterObj || {};
+      const propName = String(primaryRenter.PropertyName || selectedFlat?.PropertyName || activeAssignedProperty || "").trim();
+      const flatName = String(primaryRenter.FlatName || selectedFlat?.FlatName || activeAssignedFlat || "").trim();
+      const renterId = String(primaryRenter.RenterID || "").trim();
+      const aadhaarNum = normalizeAadhaar12(primaryRenter.IdentityDocNumber || primaryRenter.AadhaarNumber || getNormalizedActiveRenterAadhaar());
+      const renterName = String(primaryRenter.RenterName || activeUserFullName || activeUser || "Resident").trim();
+      const targetMonth = normalizeMonthYear(window.selectedRenterMonthlyUploadMonth || window.selectedRenterHomeBillMonth) || new Date().toISOString().slice(0, 7);
+      const pendingPhoto = window.pendingRenterInlinePaymentPhotoDataUrl || "";
+      const existingDrivePhoto = String(window.__activeRenterCompletedPaymentPhotoUrl || "").trim();
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Submitting Payment Proof &amp; UTR...</span>`;
+      }
+
+      try {
+        let finalPhotoUrl = existingDrivePhoto;
+
+        if (pendingPhoto && pendingPhoto.startsWith("data:image")) {
+          window.__skipInlineUtrAutoRecord = true;
+          try {
+            await uploadRenterMonthlyPhotoDataUrl(
+              pendingPhoto,
+              window.pendingRenterInlinePaymentPhotoName || `PaymentProof_${propName}_Flat_${flatName}_${utr}.jpg`,
+              "completed_payment",
+              "Completed Payment Photo",
+              targetMonth,
+              propName,
+              flatName,
+              renterId,
+              aadhaarNum,
+              renterName
+            );
+          } finally {
+            window.__skipInlineUtrAutoRecord = false;
+          }
+          const latestMap = (DB.globalConfig && DB.globalConfig.renterMonthlyPhotos) || {};
+          const slotMatchKey = Object.keys(latestMap).find(k => {
+            const entry = latestMap[k];
+            return entry && canonicalMonthlyPhotoCategory(entry.category || "") === "completed_payment" &&
+              normalizeMonthYear(entry.monthYear || entry.MonthYear) === targetMonth &&
+              ((aadhaarNum.length === 12 && normalizeAadhaar12(entry.aadhaar || entry.identityDocNumber) === aadhaarNum) ||
+               isSamePropAndFlat(entry.propertyName, entry.flatName, propName, flatName));
+          });
+          if (slotMatchKey && latestMap[slotMatchKey]) {
+            finalPhotoUrl = normalizeGoogleDriveImageUrl(latestMap[slotMatchKey].imageUrl || latestMap[slotMatchKey].previewUrl || "");
+          }
+          window.pendingRenterInlinePaymentPhotoDataUrl = "";
+          window.pendingRenterInlinePaymentPhotoName = "";
+        }
+
+        const list = typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : [];
+        const newProof = {
+          id: "PROOF-" + Date.now(),
+          billId: String(window.__activeRenterPaymentBillId || ""),
+          propertyName: propName,
+          flatName: flatName,
+          renterId: renterId,
+          aadhaar: aadhaarNum,
+          monthYear: targetMonth,
+          tenantName: renterName,
+          submittedBy: activeUser || renterName,
+          amount: amount,
+          utr: utr,
+          mode: "UPI",
+          screenshotUrl: finalPhotoUrl,
+          status: "Pending",
+          submittedAt: new Date().toLocaleString("en-IN")
+        };
+        if (typeof saveStoredPaymentProofs === "function") {
+          saveStoredPaymentProofs([newProof, ...list]);
+        }
+        if (utrInput) utrInput.value = "";
+        renderAllDashboardUI();
+        if (typeof renderAdminPaymentProofQueue === "function") renderAdminPaymentProofQueue();
+        if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
+
+        triggerSideToast(
+          "Payment & UTR Submitted",
+          `UTR ${utr}${finalPhotoUrl ? " and payment photo" : ""} sent to Admin for verification!`,
+          true
+        );
+      } catch (err) {
+        console.error("Submit inline UTR proof error:", err);
+        triggerSideToast("Submission Error", err?.message || "Could not submit payment proof. Please try again.", false);
+      } finally {
+        const latestBtn = document.getElementById("btnSubmitRenterInlineUtrProof");
+        if (latestBtn) {
+          latestBtn.disabled = false;
+          latestBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Submit Payment Photo &amp; UTR for Verification</span>`;
+        }
+      }
     }
 
     function renderAllDashboardUI() {
@@ -15959,19 +16167,9 @@ function formatMonthLabel(rawVal) {
             border: "rgba(56,189,248,0.35)"
           },
           {
-            key: "completed_payment",
-            colKey: "Photo2URL",
-            title: "Photo 2 • Completed Payment / Any Photo",
-            subtitle: "Capture live camera photo & save to Google Drive",
-            icon: "fa-solid fa-receipt",
-            accent: "#10b981",
-            bg: "rgba(16,185,129,0.14)",
-            border: "rgba(16,185,129,0.35)"
-          },
-          {
             key: "water_meter_bill",
             colKey: "Photo3URL",
-            title: "Photo 3 • Water Meter / Bill / Any Photo",
+            title: "Photo 2 • Water Meter / Bill / Any Photo",
             subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-faucet-drip",
             accent: "#06b6d4",
@@ -15981,7 +16179,7 @@ function formatMonthLabel(rawVal) {
           {
             key: "png_gas_meter",
             colKey: "Photo4URL",
-            title: "Photo 4 • PNG Gas Meter / Any Photo",
+            title: "Photo 3 • PNG Gas Meter / Any Photo",
             subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-fire-flame-simple",
             accent: "#f59e0b",
@@ -15992,7 +16190,7 @@ function formatMonthLabel(rawVal) {
 
         const requestedCatTitles = monthlyUploadCategories
           .filter(c => Boolean(renterMonthReqStatus.requestedCats && renterMonthReqStatus.requestedCats[c.key]))
-          .map(c => c.title.split("•")[0].trim());
+          .map(c => c.title.split("•")[1]?.trim() || c.title.split("•")[0].trim());
 
         const requestedMonthsPillsHtml = requestedMonthsList.length > 0
           ? `<div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
@@ -16006,10 +16204,10 @@ function formatMonthLabel(rawVal) {
           : "";
 
         const renterMonthlyPhotoUploadsSectionHtml = `
-          <div class="renter-kpi-summary-box" id="renterMonthlyDrivePhotoUploadsCard" style="margin-top: 22px; padding: 22px; border-radius: 18px; background: var(--bg-card); border: 1.5px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.18);">
+          <div class="renter-kpi-summary-box" id="renterMonthlyDrivePhotoUploadsCard" style="margin-top: 22px; padding: 22px; border-radius: 18px; background: transparent; border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:40px; height:40px; border-radius:12px; background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+                <div style="width:40px; height:40px; border-radius:12px; background:transparent; color:#34d399; border:1px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
                   <i class="fa-solid fa-camera"></i>
                 </div>
                 <div>
@@ -16017,7 +16215,7 @@ function formatMonthLabel(rawVal) {
                     Live Camera Photo Verification • Auto-Saved to Google Drive
                   </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.12rem; font-weight:900; color:var(--text-main);">
-                    Monthly Meter &amp; Payment Photos (${activeUploadMonthLabel})
+                    Monthly Meter Photos (${activeUploadMonthLabel})
                   </h3>
                 </div>
               </div>
@@ -16026,7 +16224,7 @@ function formatMonthLabel(rawVal) {
             ${requestedMonthsPillsHtml}
 
             ${!hasAnyReqForMonth ? `
-              <div style="padding:20px; border-radius:14px; border:1.5px dashed rgba(245,158,11,0.45); background:rgba(245,158,11,0.08); text-align:center; margin-bottom:14px;">
+              <div style="padding:20px; border-radius:14px; border:1.5px dashed rgba(245,158,11,0.45); background:transparent; text-align:center; margin-bottom:14px;">
                 <div style="font-size:0.95rem; font-weight:800; color:#fbbf24; margin-bottom:5px;">
                   <i class="fa-solid fa-clock"></i> Awaiting Admin Photo Request for ${activeUploadMonthLabel}
                 </div>
@@ -16035,11 +16233,11 @@ function formatMonthLabel(rawVal) {
                 </div>
               </div>
             ` : (hasBulkRequest ? `
-              <div style="padding:10px 14px; border-radius:10px; border:1px solid rgba(16,185,129,0.4); background:rgba(16,185,129,0.12); color:#34d399; font-size:0.76rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-                <span><i class="fa-solid fa-circle-check"></i> Admin requested all 4 photos for <strong>${activeUploadMonthLabel}</strong>. Tap any card button below to open your Live Camera and upload.</span>
+              <div style="padding:10px 14px; border-radius:10px; border:1px solid rgba(16,185,129,0.4); background:transparent; color:#34d399; font-size:0.76rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                <span><i class="fa-solid fa-circle-check"></i> Admin requested meter photos for <strong>${activeUploadMonthLabel}</strong>. Tap any card button below to open your Live Camera and upload.</span>
               </div>
             ` : `
-              <div style="padding:10px 14px; border-radius:10px; border:1px solid rgba(245,158,11,0.45); background:rgba(245,158,11,0.12); color:#fbbf24; font-size:0.76rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+              <div style="padding:10px 14px; border-radius:10px; border:1px solid rgba(245,158,11,0.45); background:transparent; color:#fbbf24; font-size:0.76rem; font-weight:800; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                 <span><i class="fa-solid fa-camera"></i> Admin requested <strong>${requestedCatTitles.join(", ") || "specific photo"}</strong> for <strong>${activeUploadMonthLabel}</strong>. Only the requested box(es) are unlocked below.</span>
               </div>
             `)}
@@ -16065,11 +16263,11 @@ function formatMonthLabel(rawVal) {
                 const canRenterCapture = isSlotReRequested || (isThisCatUnlockedByAdmin && !displayImgUrl);
 
                 return `
-                  <div style="padding:15px; border-radius:15px; background:var(--bg-input); border:1.5px solid ${isSlotReRequested ? '#f59e0b' : (isSlotRequested && !displayImgUrl ? '#38bdf8' : (displayImgUrl ? cat.border : "var(--glass-border)"))}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                  <div style="padding:15px; border-radius:15px; background:transparent; border:1.5px solid ${isSlotReRequested ? '#f59e0b' : (isSlotRequested && !displayImgUrl ? '#38bdf8' : (displayImgUrl ? cat.border : "var(--glass-border)"))}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
                     <div>
                       <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
                         <div style="display:flex; align-items:center; gap:9px;">
-                          <div style="width:34px; height:34px; border-radius:10px; background:${cat.bg}; color:${cat.accent}; border:1px solid ${cat.border}; display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0;">
+                          <div style="width:34px; height:34px; border-radius:10px; background:transparent; color:${cat.accent}; border:1px solid ${cat.border}; display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0;">
                             <i class="${cat.icon}"></i>
                           </div>
                           <div>
@@ -16077,13 +16275,13 @@ function formatMonthLabel(rawVal) {
                             <div style="font-size:0.69rem; color:var(--text-muted); margin-top:2px;">${cat.subtitle}</div>
                           </div>
                         </div>
-                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${isSlotReRequested ? "rgba(245,158,11,0.2)" : (isSlotRequested && !displayImgUrl ? "rgba(56,189,248,0.18)" : (displayImgUrl ? "rgba(16,185,129,0.16)" : "rgba(148,163,184,0.12)"))}; color:${isSlotReRequested ? "#fbbf24" : (isSlotRequested && !displayImgUrl ? "#38bdf8" : (displayImgUrl ? "#34d399" : "var(--text-muted)"))}; border:1px solid ${isSlotReRequested ? "rgba(245,158,11,0.45)" : (isSlotRequested && !displayImgUrl ? "rgba(56,189,248,0.45)" : (displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"))}; white-space:nowrap;">
+                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:transparent; color:${isSlotReRequested ? "#fbbf24" : (isSlotRequested && !displayImgUrl ? "#38bdf8" : (displayImgUrl ? "#34d399" : "var(--text-muted)"))}; border:1px solid ${isSlotReRequested ? "rgba(245,158,11,0.45)" : (isSlotRequested && !displayImgUrl ? "rgba(56,189,248,0.45)" : (displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"))}; white-space:nowrap;">
                           ${isSlotReRequested ? "Re-requested" : (isSlotRequested && !displayImgUrl ? "Requested" : (displayImgUrl ? "Uploaded" : activeUploadMonthLabel))}
                         </span>
                       </div>
 
                       ${isSlotReRequested ? `
-                        <div style="padding:7px 10px; border-radius:8px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.45); color:#fbbf24; font-size:0.7rem; font-weight:800; margin-bottom:8px;">
+                        <div style="padding:7px 10px; border-radius:8px; background:transparent; border:1px solid rgba(245,158,11,0.45); color:#fbbf24; font-size:0.7rem; font-weight:800; margin-bottom:8px;">
                           <i class="fa-solid fa-rotate"></i> Admin requested a new photo for ${activeUploadMonthLabel}. Please capture via Live Camera.
                         </div>
                       ` : ""}
@@ -16092,10 +16290,10 @@ function formatMonthLabel(rawVal) {
                         <div
                           onclick="openPhotoZoomModal('${safeZoomUrl}', '${safeTitleArg}')"
                           title="Click to view full photo"
-                          style="width:100%; height:148px; border-radius:11px; overflow:hidden; border:1px solid ${cat.border}; background:#0f172a; cursor:zoom-in; position:relative; margin-bottom:8px;"
+                          style="width:100%; height:148px; border-radius:11px; overflow:hidden; border:1px solid ${cat.border}; background:transparent; cursor:zoom-in; position:relative; margin-bottom:8px;"
                         >
                           <img src="${displayImgUrl}" alt="${cat.title}" onerror="handleDriveImgFallback(this)" style="width:100%; height:100%; object-fit:cover; display:block;" />
-                          <div style="position:absolute; bottom:6px; right:6px; background:rgba(15,23,42,0.82); color:#fff; font-size:0.65rem; font-weight:800; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
+                          <div style="position:absolute; bottom:6px; right:6px; background:rgba(15,23,42,0.72); color:#fff; font-size:0.65rem; font-weight:800; padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">
                             <i class="fa-solid fa-magnifying-glass-plus"></i> View Photo
                           </div>
                         </div>
@@ -16104,7 +16302,7 @@ function formatMonthLabel(rawVal) {
                           ${uploadedTimeStr ? `<span style="color:var(--text-muted);">${uploadedTimeStr}</span>` : ""}
                         </div>
                       ` : `
-                        <div style="width:100%; height:148px; border-radius:11px; border:1.5px dashed var(--glass-border); background:rgba(15,23,42,0.35); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); padding:12px; text-align:center; margin-bottom:8px;">
+                        <div style="width:100%; height:148px; border-radius:11px; border:1.5px dashed var(--glass-border); background:transparent; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); padding:12px; text-align:center; margin-bottom:8px;">
                           <i class="${cat.icon}" style="font-size:1.5rem; color:${cat.accent}; opacity:0.8;"></i>
                           <div style="font-size:0.74rem; font-weight:800; color:var(--text-main);">No ${cat.title} for ${activeUploadMonthLabel}</div>
                           <div style="font-size:0.67rem; color:var(--text-muted);">${isThisCatUnlockedByAdmin ? "Tap Live Camera button below to capture" : "Locked until Admin requests this photo"}</div>
@@ -16118,17 +16316,17 @@ function formatMonthLabel(rawVal) {
                           type="button"
                           id="btnRenterMonthlyUpload_${cat.key}"
                           onclick="openRenterLiveCameraCapture('${cat.key}', '${cat.title.replace(/'/g, "\\'")}', '${defaultMonthlyUploadMonth}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}', '${safeRenterNameArg2}')"
-                          style="flex:1; padding:9px 12px; border-radius:10px; background:linear-gradient(135deg, ${cat.accent}26 0%, ${cat.accent}14 100%); border:1.5px solid ${cat.border}; color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
+                          style="flex:1; padding:9px 12px; border-radius:10px; background:transparent; border:1.5px solid ${cat.border}; color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
                         >
                           <i class="fa-solid fa-camera" style="color:${cat.accent};"></i>
                           <span>${isSlotReRequested ? "Re-Capture Photo (Camera)" : "Open Live Camera"}</span>
                         </button>
                       ` : (displayImgUrl ? `
-                        <div style="flex:1; padding:8px 10px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-size:0.72rem; font-weight:800; text-align:center;">
+                        <div style="flex:1; padding:8px 10px; border-radius:10px; background:transparent; border:1px solid rgba(16,185,129,0.3); color:#34d399; font-size:0.72rem; font-weight:800; text-align:center;">
                           <i class="fa-solid fa-shield-halved"></i> Uploaded (Admin-only Delete / Re-request)
                         </div>
                       ` : `
-                        <div style="flex:1; padding:8px 10px; border-radius:10px; background:rgba(148,163,184,0.1); border:1px solid var(--glass-border); color:var(--text-muted); font-size:0.72rem; font-weight:700; text-align:center;">
+                        <div style="flex:1; padding:8px 10px; border-radius:10px; background:transparent; border:1px solid var(--glass-border); color:var(--text-muted); font-size:0.72rem; font-weight:700; text-align:center;">
                           <i class="fa-solid fa-lock"></i> ${hasAnyReqForMonth ? "Locked (Not Requested)" : "Waiting for Admin Request"}
                         </div>
                       `)}
@@ -16140,66 +16338,26 @@ function formatMonthLabel(rawVal) {
           </div>
         `;
 
-        const topHeroReceiptItemHtml = latestBill ? (() => {
-          const topMetrics = computeCurrentMonthStandaloneAdvanceAndDue(latestBill);
-          const isTopSettled = topMetrics.dueAmt <= 0;
-          const topBillId = String(latestBill.BillID || "").replace(/'/g, "\\'");
-          const topMonthYear = String(latestBill.MonthYear || "").replace(/'/g, "\\'");
-          return `
-            <div
-              class="renter-history-row-item"
-              onclick="openBillReceiptModal('${topBillId}', '${topMonthYear}');"
-              title="Click to display only the receipt for ${topMetrics.monthLabel}"
-              style="margin:0; padding:8px 13px; border-radius:12px; cursor:pointer; display:inline-flex; align-items:center; gap:10px; background:var(--bg-input); border:1.5px solid rgba(99,102,241,0.45); box-shadow:0 4px 14px rgba(0,0,0,0.15);"
-            >
-              <div style="width:32px; height:32px; border-radius:9px; background:${isTopSettled ? "rgba(16,185,129,0.16)" : "rgba(239,68,68,0.16)"}; color:${isTopSettled ? "#34d399" : "#f87171"}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
-                <i class="fa-solid ${isTopSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
-              </div>
-              <div style="text-align:left;">
-                <div style="font-size:0.8rem; font-weight:900; color:var(--text-main); line-height:1.15;">${topMetrics.monthLabel} Receipt</div>
-                <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">Billed: ₹${topMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${topMetrics.paidAmount.toLocaleString("en-IN")}</div>
-              </div>
-              <span style="font-size:0.69rem; font-weight:800; padding:3px 8px; border-radius:999px; background:${isTopSettled ? "rgba(16,185,129,0.14)" : "rgba(239,68,68,0.14)"}; color:${isTopSettled ? "#34d399" : "#f87171"}; border:1px solid ${isTopSettled ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.4)"};">
-                ${topMetrics.advanceAmt > 0 ? `Adv ₹${topMetrics.advanceAmt.toLocaleString("en-IN")}` : (isTopSettled ? "Settled" : `Due ₹${topMetrics.dueAmt.toLocaleString("en-IN")}`)}
-              </span>
-            </div>
-          `;
-        })() : `
-          <div
-            class="renter-history-row-item"
-            onclick="openRenterReceiptsModal();"
-            title="Click to view receipt"
-            style="margin:0; padding:8px 13px; border-radius:12px; cursor:pointer; display:inline-flex; align-items:center; gap:10px; background:var(--bg-input); border:1.5px solid var(--glass-border);"
-          >
-            <div style="width:32px; height:32px; border-radius:9px; background:rgba(56,189,248,0.15); color:#38bdf8; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
-              <i class="fa-solid fa-file-circle-check"></i>
-            </div>
-            <div style="text-align:left;">
-              <div style="font-size:0.8rem; font-weight:900; color:var(--text-main); line-height:1.15;">My Receipt</div>
-              <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">No Receipt Issued Yet</div>
-            </div>
-          </div>
-        `;
-
         // ====================================================================
         // RENTER PORTAL HOMEPAGE: STRICT 1-OF-6 SECTION ISOLATION
         // ====================================================================
         const activeRenterSection = syncRenterQuickNavButtonsUI(window.activeRenterHomeSection || "dashboard");
 
-        // Build Dashboard Circular Payment Chart Card (Based on Latest Receipt)
-        const chartRadius = 68;
+        // Build Left-Side Half-Size Latest Receipt Circular Payment Overview Card
+        const chartRadius = 52;
         const chartCirc = Number((2 * Math.PI * chartRadius).toFixed(2));
         const hasLatestReceiptForChart = Boolean(latestBill);
         const chartTotalAmt = Math.max(0, Number(latestTotalCharge) || 0);
         const chartPaidAmt = Math.max(0, Number(latestPaidAmount) || 0);
         const chartDueAmt = Math.max(0, Number(latestDueAmt) || 0);
         const chartAdvanceAmt = Math.max(0, Number(latestAdvanceAmt) || 0);
-        const isChartOverpaid = hasLatestReceiptForChart && (chartAdvanceAmt > 0 || (chartDueAmt === 0 && (chartTotalAmt > 0 || chartPaidAmt > 0)));
+        const isChartOverpaid = hasLatestReceiptForChart && (chartAdvanceAmt > 0 || chartPaidAmt > chartTotalAmt);
+        const isChartExactPaid = hasLatestReceiptForChart && !isChartOverpaid && chartDueAmt === 0 && (chartTotalAmt > 0 || chartPaidAmt > 0);
 
         let paidArcLen = 0;
         let dueArcLen = 0;
         if (hasLatestReceiptForChart) {
-          if (isChartOverpaid) {
+          if (isChartOverpaid || isChartExactPaid) {
             paidArcLen = chartCirc;
             dueArcLen = 0;
           } else if (chartTotalAmt > 0) {
@@ -16212,49 +16370,57 @@ function formatMonthLabel(rawVal) {
           }
         }
 
+        // Yellow for Overpaid, Green for Paid, Red for Due
+        const circlePrimaryStroke = isChartOverpaid ? "#eab308" : "#10b981";
         const chartCenterBadgeText = !hasLatestReceiptForChart
           ? "No Receipt"
-          : (chartAdvanceAmt > 0
+          : (isChartOverpaid
               ? "Overpaid"
               : (chartDueAmt === 0 ? "100% Paid" : "Due Pending"));
         const chartCenterBadgeColor = !hasLatestReceiptForChart
           ? "var(--text-muted)"
-          : (chartDueAmt === 0 ? "#34d399" : "#f87171");
+          : (isChartOverpaid ? "#facc15" : (chartDueAmt === 0 ? "#34d399" : "#f87171"));
+        const chartHeaderIconColor = isChartOverpaid
+          ? "#facc15"
+          : (hasLatestReceiptForChart && chartDueAmt === 0 ? "#34d399" : "#f87171");
+        const chartHeaderIconBorder = isChartOverpaid
+          ? "rgba(234,179,8,0.45)"
+          : (hasLatestReceiptForChart && chartDueAmt === 0 ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.35)");
 
         const dashboardPaymentCircleBoxHtml = `
-          <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="margin-top: 18px; padding: 24px; border-radius: 18px; background: var(--bg-card); border: 1.5px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.18);">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
-              <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:38px; height:38px; border-radius:11px; background:${isChartOverpaid || (hasLatestReceiptForChart && chartDueAmt === 0) ? "rgba(16,185,129,0.16)" : "rgba(239,68,68,0.15)"}; color:${isChartOverpaid || (hasLatestReceiptForChart && chartDueAmt === 0) ? "#34d399" : "#f87171"}; border:1px solid ${isChartOverpaid || (hasLatestReceiptForChart && chartDueAmt === 0) ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.35)"}; display:flex; align-items:center; justify-content:center; font-size:1.05rem;">
+          <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="margin: 14px auto 0 0; width: 100%; max-width: 410px; padding: 16px 18px; border-radius: 16px; background: transparent; border: 1.5px solid var(--glass-border);">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
+              <div style="display:flex; align-items:center; gap:9px;">
+                <div style="width:32px; height:32px; border-radius:9px; background:transparent; color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                   <i class="fa-solid fa-chart-pie"></i>
                 </div>
                 <div>
-                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#818cf8;">
+                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#818cf8;">
                     Latest Receipt Payment Overview
                   </div>
-                  <div style="font-size:1.08rem; font-weight:900; color:var(--text-main);">
-                    ${latestReceiptMonthLabel} Payment Status
+                  <div style="font-size:0.92rem; font-weight:900; color:var(--text-main); line-height:1.2;">
+                    ${latestReceiptMonthLabel} Status
                   </div>
                 </div>
               </div>
-              <span style="font-size:0.76rem; font-weight:800; padding:5px 12px; border-radius:999px; background:${hasLatestReceiptForChart && chartDueAmt === 0 ? "rgba(16,185,129,0.15)" : (hasLatestReceiptForChart ? "rgba(239,68,68,0.15)" : "rgba(148,163,184,0.14)")}; color:${chartCenterBadgeColor}; border:1px solid ${hasLatestReceiptForChart && chartDueAmt === 0 ? "rgba(16,185,129,0.35)" : (hasLatestReceiptForChart ? "rgba(239,68,68,0.35)" : "var(--glass-border)")};">
-                ${latestBill ? `Receipt Date: ${formatDateOnly(latestBill.BillDate || latestBill.PaymentDate) || "Latest"}` : "No Receipt Issued Yet"}
+              <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:transparent; color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                ${latestBill ? `${formatDateOnly(latestBill.BillDate || latestBill.PaymentDate) || "Latest"}` : "No Receipt"}
               </span>
             </div>
 
-            <div style="display:flex; align-items:center; justify-content:space-around; flex-wrap:wrap; gap:26px;">
-              <!-- Circular Donut Chart: Green = Paid, Red = Due, 100% Green when Overpaid -->
-              <div style="position:relative; width:196px; height:196px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg viewBox="0 0 180 180" width="196" height="196" style="transform:rotate(-90deg); overflow:visible;" aria-label="Latest receipt payment chart">
-                  <circle cx="90" cy="90" r="${chartRadius}" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="18"></circle>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+              <!-- Compact Circular Donut Chart: Yellow = Overpaid, Green = Paid, Red = Due -->
+              <div style="position:relative; width:144px; height:144px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg viewBox="0 0 140 140" width="144" height="144" style="transform:rotate(-90deg); overflow:visible;" aria-label="Latest receipt payment chart">
+                  <circle cx="70" cy="70" r="${chartRadius}" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="14"></circle>
                   ${dueArcLen > 0 ? `
                     <circle
-                      cx="90"
-                      cy="90"
+                      cx="70"
+                      cy="70"
                       r="${chartRadius}"
                       fill="none"
                       stroke="#ef4444"
-                      stroke-width="18"
+                      stroke-width="14"
                       stroke-dasharray="${dueArcLen} ${chartCirc}"
                       stroke-dashoffset="${-paidArcLen}"
                       stroke-linecap="butt"
@@ -16262,69 +16428,58 @@ function formatMonthLabel(rawVal) {
                   ` : ""}
                   ${paidArcLen > 0 ? `
                     <circle
-                      cx="90"
-                      cy="90"
+                      cx="70"
+                      cy="70"
                       r="${chartRadius}"
                       fill="none"
-                      stroke="#10b981"
-                      stroke-width="18"
+                      stroke="${circlePrimaryStroke}"
+                      stroke-width="14"
                       stroke-dasharray="${paidArcLen} ${chartCirc}"
                       stroke-dashoffset="0"
                       stroke-linecap="${paidArcLen >= chartCirc - 0.5 ? "butt" : "round"}"
                     ></circle>
                   ` : ""}
                 </svg>
-                <div style="position:absolute; inset:22px; border-radius:50%; background:var(--bg-input); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:8px;">
-                  <span style="font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted);">Total Amount</span>
-                  <strong style="font-size:1.35rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
-                  <span style="font-size:0.66rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:3px;">${chartCenterBadgeText}</span>
+                <div style="position:absolute; inset:17px; border-radius:50%; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
+                  <span style="font-size:0.56rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
+                  <strong style="font-size:1.05rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
+                  <span style="font-size:0.6rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
                 </div>
               </div>
 
-              <!-- Paid & Due Breakdown Beside the Circle -->
-              <div style="flex:1; min-width:240px; max-width:460px; display:flex; flex-direction:column; gap:12px;">
-                <div style="padding:14px 16px; border-radius:14px; background:rgba(16,185,129,0.1); border:1.5px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:space-between; gap:12px;">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="width:12px; height:12px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 8px rgba(16,185,129,0.6);"></span>
-                    <div>
-                      <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:#34d399;">Paid Amount</div>
-                      <div style="font-size:0.7rem; color:var(--text-muted);">${isChartOverpaid ? "100% Paid (Includes Overpayment)" : "Recorded Payment on Latest Receipt"}</div>
-                    </div>
-                  </div>
-                  <strong style="font-size:1.25rem; font-weight:900; color:#34d399; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
+              <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
+              <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
+                <div style="padding:9px 8px; border-radius:11px; background:transparent; border:1px solid rgba(99,102,241,0.38); text-align:center;">
+                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
+                  <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                 </div>
-
-                <div style="padding:14px 16px; border-radius:14px; background:${chartDueAmt > 0 ? "rgba(239,68,68,0.1)" : "rgba(16,185,129,0.08)"}; border:1.5px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.4)" : "rgba(16,185,129,0.3)"}; display:flex; align-items:center; justify-content:space-between; gap:12px;">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="width:12px; height:12px; border-radius:50%; background:${chartDueAmt > 0 ? "#ef4444" : "#10b981"}; display:inline-block; box-shadow:0 0 8px ${chartDueAmt > 0 ? "rgba(239,68,68,0.6)" : "rgba(16,185,129,0.5)"};"></span>
-                    <div>
-                      <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"};">Due Amount</div>
-                      <div style="font-size:0.7rem; color:var(--text-muted);">${chartDueAmt > 0 ? "Remaining Unpaid Balance" : "All Dues Cleared"}</div>
-                    </div>
-                  </div>
-                  <strong style="font-size:1.25rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
+                <div style="padding:9px 8px; border-radius:11px; background:transparent; border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
+                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
+                  <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
                 </div>
-
-                ${chartAdvanceAmt > 0 ? `
-                  <div style="padding:11px 15px; border-radius:12px; background:rgba(16,185,129,0.16); border:1px solid rgba(16,185,129,0.45); display:flex; align-items:center; justify-content:space-between; gap:10px;">
-                    <span style="font-size:0.78rem; font-weight:800; color:#34d399;"><i class="fa-solid fa-circle-check"></i> Overpaid / Advance Credit</span>
-                    <strong style="font-size:1.05rem; font-weight:900; color:#34d399; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
-                  </div>
-                ` : ""}
-
-                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding-top:4px; font-size:0.72rem; color:var(--text-muted);">
-                  <div style="display:flex; align-items:center; gap:12px;">
-                    <span><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#10b981; margin-right:5px;"></span>Green: Paid</span>
-                    <span><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#ef4444; margin-right:5px;"></span>Red: Due</span>
-                  </div>
-                  <span>Total: <strong style="color:var(--text-main);">₹${chartTotalAmt.toLocaleString("en-IN")}</strong></span>
+                <div style="padding:9px 8px; border-radius:11px; background:transparent; border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
+                  <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
+                  <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
                 </div>
+              </div>
+
+              ${chartAdvanceAmt > 0 ? `
+                <div style="width:100%; padding:8px 12px; border-radius:10px; background:transparent; border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                  <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
+                  <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
+                </div>
+              ` : ""}
+
+              <div style="width:100%; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; font-size:0.66rem; color:var(--text-muted); padding-top:2px;">
+                <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; margin-right:4px;"></span>Paid</span>
+                <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; margin-right:4px;"></span>Due</span>
+                <span><span class="renter-chart-legend-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#eab308; margin-right:4px;"></span>Overpaid</span>
               </div>
             </div>
           </div>
         `;
 
-        // Build Isolated Receipt Section (All Receipts Belonging to This Renter + Selected Breakdown)
+        // Build Isolated Receipt Section (All Receipts Belonging to This Renter — Available Monthly Receipt removed)
         const allMyReceiptsFullListHtml = `
           <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
@@ -16388,7 +16543,6 @@ function formatMonthLabel(rawVal) {
         const renterIsolatedReceiptSectionHtml = `
           <div style="display:flex; flex-direction:column; gap:20px;">
             ${allMyReceiptsFullListHtml}
-            ${statementLeftHtml}
           </div>
         `;
 
@@ -16403,10 +16557,10 @@ function formatMonthLabel(rawVal) {
         }).slice(0, 25);
 
         const renterInlineMaintenanceHtml = `
-          <div class="renter-kpi-summary-box" id="renterInlineMaintenanceCard" style="padding: 24px; border-radius: 18px; background: var(--bg-card); border: 1.5px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.18);">
+          <div class="renter-kpi-summary-box" id="renterInlineMaintenanceCard" style="padding: 24px; border-radius: 18px; background: transparent; border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:42px; height:42px; border-radius:12px; background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+                <div style="width:42px; height:42px; border-radius:12px; background:transparent; color:#fbbf24; border:1px solid rgba(245,158,11,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
                   <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
                 <div>
@@ -16422,19 +16576,19 @@ function formatMonthLabel(rawVal) {
                 type="button"
                 id="btnMaintenanceUploadAPhoto"
                 onclick="navigateRenterQuickNav('upload_photo')"
-                style="padding:10px 16px; border-radius:12px; background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(56,189,248,0.18)); border:1.5px solid rgba(16,185,129,0.55); color:#34d399; font-size:0.84rem; font-weight:900; cursor:pointer; display:inline-flex; align-items:center; gap:8px;"
+                style="padding:10px 16px; border-radius:12px; background:transparent; border:1.5px solid rgba(16,185,129,0.55); color:#34d399; font-size:0.84rem; font-weight:900; cursor:pointer; display:inline-flex; align-items:center; gap:8px;"
               >
                 <i class="fa-solid fa-camera"></i>
                 <span>Upload a Photo</span>
               </button>
             </div>
 
-            <div style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.35); border-radius:14px; padding:16px; margin-bottom:18px;">
+            <div style="background:transparent; border:1px solid rgba(245,158,11,0.35); border-radius:14px; padding:16px; margin-bottom:18px;">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
                 <div style="font-size:0.88rem; font-weight:800; color:#fbbf24;">
                   <i class="fa-solid fa-plus-circle"></i> Raise a Maintenance Complaint
                 </div>
-                <span style="font-size:0.69rem; font-weight:700; color:#34d399; background:rgba(16,185,129,0.12); padding:3px 9px; border-radius:999px; border:1px solid rgba(16,185,129,0.3);">
+                <span style="font-size:0.69rem; font-weight:700; color:#34d399; background:transparent; padding:3px 9px; border-radius:999px; border:1px solid rgba(16,185,129,0.3);">
                   <i class="fa-solid fa-cloud-arrow-up"></i> Live Google Sheets
                 </span>
               </div>
@@ -16472,19 +16626,19 @@ function formatMonthLabel(rawVal) {
               </div>
               <div style="display:flex; flex-direction:column; gap:8px;">
                 ${myMaintenanceTickets.length === 0 ? `
-                  <div style="font-size:0.82rem; color:var(--text-muted); text-align:center; padding:18px; border:1px dashed var(--glass-border); border-radius:12px;">
+                  <div style="font-size:0.82rem; color:var(--text-muted); text-align:center; padding:18px; border:1px dashed var(--glass-border); border-radius:12px; background:transparent;">
                     No maintenance tickets raised yet.
                   </div>
                 ` : myMaintenanceTickets.map(t => {
                   const st = String(t.status || "Open");
                   const stColor = st === "Resolved" ? "#10b981" : (st === "In Progress" ? "#f59e0b" : "#ef4444");
                   return `
-                    <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px; padding:11px 14px; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <div style="background:transparent; border:1px solid var(--glass-border); border-radius:12px; padding:11px 14px; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
                       <div>
                         <div><strong style="color:#fbbf24;">[${escapeHtml(t.category || "Issue")}]</strong> ${escapeHtml(t.description || "")}</div>
                         <div style="font-size:0.71rem; color:var(--text-muted); margin-top:3px;">${t.id ? `${escapeHtml(t.id)} • ` : ""}${escapeHtml(t.propertyName || targetProp)} Flat ${escapeHtml(t.flatName || targetFlat)} • ${escapeHtml(t.createdAt || "")}</div>
                       </div>
-                      <span style="padding:4px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor};">${escapeHtml(st)}</span>
+                      <span style="padding:4px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; background:transparent; color:${stColor}; border:1px solid ${stColor};">${escapeHtml(st)}</span>
                     </div>
                   `;
                 }).join("")}
@@ -16493,10 +16647,10 @@ function formatMonthLabel(rawVal) {
           </div>
         `;
 
-        // Build Isolated Upload Photo Section (ONLY the photo upload card — nothing else shown!)
+        // Build Isolated Upload Photo Section (ONLY the meter photo upload card — Photo 2 removed!)
         const isolatedUploadPhotoCardHtml = renterMonthlyPhotoUploadsSectionHtml.replace("margin-top: 22px;", "margin-top: 0;");
 
-        // Build Isolated Payment Section (ONLY Instant UPI Payment Hub + Quick Payment)
+        // Build Isolated Payment Section (Instant UPI Payment Hub + Moved Payment Photo Upload + UTR Verification Input)
         const activePayAmt = qrRenderData ? (Number(qrRenderData.amount) || 0) : 0;
         const activePayUpiId = qrRenderData ? String(qrRenderData.upiId || "").trim() : "";
         const activePayUpiName = qrRenderData ? String(qrRenderData.upiName || "N/A").trim() : "N/A";
@@ -16505,64 +16659,231 @@ function formatMonthLabel(rawVal) {
         const safePayUpiNameArg = activePayUpiName.replace(/'/g, "\\'");
         const safePayNoteArg = activePayNote.replace(/'/g, "\\'");
 
+        window.__activeRenterPaymentBillId = currentMonthBill ? String(currentMonthBill.BillID || "") : "";
+        const paymentSlotObj = resolveRenterMonthlyPhotoSlot("completed_payment", "Photo2URL");
+        const rawPayPhotoUrl = paymentSlotObj && paymentSlotObj.imageUrl ? String(paymentSlotObj.imageUrl) : "";
+        const displayPayPhotoUrl = rawPayPhotoUrl ? normalizeGoogleDriveImageUrl(rawPayPhotoUrl) : "";
+        window.__activeRenterCompletedPaymentPhotoUrl = displayPayPhotoUrl;
+        const isPayPhotoReRequested = Boolean(renterMonthReqStatus.reRequestedCats && renterMonthReqStatus.reRequestedCats.completed_payment);
+        const isPayPhotoRequested = Boolean(renterMonthReqStatus.requestedCats && renterMonthReqStatus.requestedCats.completed_payment);
+        const payUploadedDateStr = paymentSlotObj && paymentSlotObj.uploadedAt
+          ? new Date(paymentSlotObj.uploadedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+          : "";
+        const safePayPropArg = String(targetProp || "").replace(/'/g, "\\'");
+        const safePayFlatArg = String(targetFlat || "").replace(/'/g, "\\'");
+        const safePayRenterIdArg = String(primaryRenter.RenterID || "").replace(/'/g, "\\'");
+        const safePayAadhaarArg = String(effectiveAadhaar || "").replace(/'/g, "\\'");
+        const safePayRenterNameArg = String(renterNameDisplay || "").replace(/'/g, "\\'");
+        const safePayZoomUrl = displayPayPhotoUrl.replace(/'/g, "\\'");
+        const safePayZoomTitle = `Completed Payment Photo (${activeUploadMonthLabel})`.replace(/'/g, "\\'");
+
+        const mySubmittedUtrProofs = (typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : []).filter(p => {
+          if (!p) return false;
+          const pAadh = normalizeAadhaar12(p.aadhaar || p.identityDocNumber || "");
+          if (effectiveAadhaar && effectiveAadhaar.length === 12 && pAadh === effectiveAadhaar) return true;
+          return isSamePropAndFlat(p.propertyName, p.flatName, targetProp, targetFlat);
+        }).slice(0, 8);
+
         const renterIsolatedPaymentHtml = `
-          <div class="renter-payment-card" id="renterInstantUpiPaymentCard" style="max-width:680px; margin:0 auto;">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
-              <div>
-                <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
-                  <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
+          <div style="display:flex; flex-direction:column; gap:18px; max-width:740px; margin:0 auto; width:100%;">
+            <div class="renter-payment-card" id="renterInstantUpiPaymentCard" style="margin:0; background:transparent;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
+                <div>
+                  <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
+                    <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
+                  </div>
+                  <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
+                    Pay Rent &amp; Utilities (${activeMonthLabel})
+                  </h3>
                 </div>
-                <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
-                  Pay Rent &amp; Utilities (${activeMonthLabel})
-                </h3>
+                <span style="font-size:0.88rem; font-weight:900; padding:6px 13px; border-radius:10px; background:transparent; color:#34d399; border:1px solid rgba(16,185,129,0.35); font-variant-numeric:tabular-nums;">
+                  ₹${activePayAmt.toLocaleString("en-IN")}
+                </span>
               </div>
-              <span style="font-size:0.88rem; font-weight:900; padding:6px 13px; border-radius:10px; background:rgba(16,185,129,0.14); color:#34d399; border:1px solid rgba(16,185,129,0.35); font-variant-numeric:tabular-nums;">
-                ₹${activePayAmt.toLocaleString("en-IN")}
-              </span>
+
+              <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); margin-bottom:16px;">
+                <div class="renter-qr-canvas-box" style="background:#ffffff; width:156px; height:156px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
+                  <canvas id="renterHomeInlineQrCanvas" width="140" height="140" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
+                </div>
+                <div style="flex:1; min-width:190px;">
+                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Receiver / UPI Name</div>
+                  <div style="font-size:1.02rem; font-weight:900; color:var(--text-main); margin-bottom:10px;">${escapeHtml(activePayUpiName)}</div>
+                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
+                  <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px;">
+                    <span style="font-size:0.9rem; font-weight:800; color:var(--primary); word-break:break-all;">${escapeHtml(activePayUpiId || "N/A")}</span>
+                    ${activePayUpiId ? `
+                      <button
+                        type="button"
+                        onclick="event.stopPropagation(); copyRenterHomeUpiId('${safePayUpiIdArg}');"
+                        style="background:transparent; border:1px solid rgba(99,102,241,0.35); color:#818cf8; border-radius:6px; padding:3px 9px; font-size:0.72rem; font-weight:800; cursor:pointer;"
+                        title="Copy UPI ID"
+                      >
+                        <i class="fa-regular fa-copy"></i> Copy
+                      </button>
+                    ` : ""}
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <button
+                  type="button"
+                  class="renter-upi-launch-btn"
+                  onclick="event.stopPropagation(); launchMobileUpiApp('all', '${safePayUpiIdArg}', '${safePayUpiNameArg}', ${activePayAmt}, '${safePayNoteArg}');"
+                  style="width:100%; padding:12px 16px; border-radius:12px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.88rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 16px rgba(16,185,129,0.28);"
+                >
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  <span>Open System Chooser (Pay ₹${activePayAmt.toLocaleString("en-IN")})</span>
+                </button>
+                <button
+                  type="button"
+                  onclick="openRenterQuickPaymentModal();"
+                  class="renter-action-btn secondary"
+                  style="width:100%; justify-content:center; padding:11px 16px; background:transparent;"
+                >
+                  <i class="fa-solid fa-bolt" style="color:#34d399;"></i>
+                  <span>Open Full Quick Payment Modal</span>
+                </button>
+              </div>
             </div>
 
-            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; padding:16px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:16px;">
-              <div style="background:#ffffff; width:156px; height:156px; padding:8px; box-sizing:border-box; border-radius:12px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 6px 16px rgba(0,0,0,0.18); overflow:hidden;">
-                <canvas id="renterHomeInlineQrCanvas" width="140" height="140" style="width:100%; height:100%; object-fit:contain; display:block; margin:0;"></canvas>
+            <!-- Moved Payment Completion Photo Upload & UTR Verification Card -->
+            <div class="renter-payment-card" id="renterPaymentPhotoAndUtrCard" style="margin:0; background:transparent;">
+              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:36px; height:36px; border-radius:10px; background:transparent; color:#34d399; border:1px solid rgba(16,185,129,0.35); display:flex; align-items:center; justify-content:center; font-size:1rem;">
+                    <i class="fa-solid fa-receipt"></i>
+                  </div>
+                  <div>
+                    <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#34d399;">
+                      Payment Completion Photo &amp; UTR Verification
+                    </div>
+                    <h4 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
+                      Upload Payment Proof &amp; Enter UTR (${activeUploadMonthLabel})
+                    </h4>
+                  </div>
+                </div>
+                <span style="font-size:0.68rem; font-weight:800; padding:4px 10px; border-radius:999px; background:transparent; color:${isPayPhotoReRequested ? "#fbbf24" : (isPayPhotoRequested && !displayPayPhotoUrl ? "#38bdf8" : (displayPayPhotoUrl ? "#34d399" : "var(--text-muted)"))}; border:1px solid ${isPayPhotoReRequested ? "rgba(245,158,11,0.42)" : (isPayPhotoRequested && !displayPayPhotoUrl ? "rgba(56,189,248,0.42)" : (displayPayPhotoUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"))};">
+                  ${isPayPhotoReRequested ? "Admin Re-requested Photo" : (isPayPhotoRequested && !displayPayPhotoUrl ? "Admin Requested Photo" : (displayPayPhotoUrl ? "Payment Photo Saved" : "Ready for Verification"))}
+                </span>
               </div>
-              <div style="flex:1; min-width:190px;">
-                <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Receiver / UPI Name</div>
-                <div style="font-size:1.02rem; font-weight:900; color:var(--text-main); margin-bottom:10px;">${escapeHtml(activePayUpiName)}</div>
-                <div style="font-size:0.7rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px;">
-                  <span style="font-size:0.9rem; font-weight:800; color:var(--primary); word-break:break-all;">${escapeHtml(activePayUpiId || "N/A")}</span>
-                  ${activePayUpiId ? `
-                    <button
-                      type="button"
-                      onclick="event.stopPropagation(); copyRenterHomeUpiId('${safePayUpiIdArg}');"
-                      style="background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.35); color:#818cf8; border-radius:6px; padding:3px 9px; font-size:0.72rem; font-weight:800; cursor:pointer;"
-                      title="Copy UPI ID"
-                    >
-                      <i class="fa-regular fa-copy"></i> Copy
-                    </button>
-                  ` : ""}
+
+              ${displayPayPhotoUrl ? `
+                <div style="margin-bottom:14px;">
+                  <div
+                    onclick="openPhotoZoomModal('${safePayZoomUrl}', '${safePayZoomTitle}')"
+                    title="Click to view full payment photo"
+                    style="width:100%; max-height:190px; border-radius:12px; overflow:hidden; border:1.5px solid rgba(16,185,129,0.4); background:transparent; cursor:zoom-in; position:relative;"
+                  >
+                    <img src="${displayPayPhotoUrl}" alt="Completed Payment Photo" onerror="handleDriveImgFallback(this)" style="width:100%; height:175px; object-fit:cover; display:block;" />
+                    <div style="position:absolute; bottom:7px; right:7px; background:rgba(15,23,42,0.75); color:#fff; font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:6px; display:inline-flex; align-items:center; gap:5px;">
+                      <i class="fa-solid fa-magnifying-glass-plus"></i> View Saved Payment Photo
+                    </div>
+                  </div>
+                  <div style="font-size:0.69rem; color:#34d399; font-weight:700; margin-top:5px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                    <span><i class="fa-brands fa-google-drive"></i> Saved on Google Drive (${activeUploadMonthLabel})</span>
+                    ${payUploadedDateStr ? `<span style="color:var(--text-muted);">${payUploadedDateStr}</span>` : ""}
+                  </div>
+                </div>
+              ` : ""}
+
+              <!-- Pending Selected File Preview (before Submit) -->
+              <div id="renterInlinePayPhotoPendingBox" style="display:${window.pendingRenterInlinePaymentPhotoDataUrl ? "flex" : "none"}; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:transparent; border:1px solid rgba(16,185,129,0.4); margin-bottom:14px;">
+                <img id="renterInlinePayPhotoPendingImg" src="${window.pendingRenterInlinePaymentPhotoDataUrl || ""}" alt="Selected payment proof" style="width:52px; height:52px; border-radius:8px; object-fit:cover; border:1px solid rgba(16,185,129,0.4);" />
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:0.74rem; font-weight:800; color:#34d399;">Payment Photo Attached</div>
+                  <div id="renterInlinePayPhotoPendingName" style="font-size:0.7rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(window.pendingRenterInlinePaymentPhotoName || "Ready to upload")}</div>
                 </div>
               </div>
-            </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <button
-                type="button"
-                onclick="event.stopPropagation(); launchMobileUpiApp('all', '${safePayUpiIdArg}', '${safePayUpiNameArg}', ${activePayAmt}, '${safePayNoteArg}');"
-                style="width:100%; padding:12px 16px; border-radius:12px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#ffffff; border:none; font-size:0.88rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 16px rgba(16,185,129,0.28);"
-              >
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                <span>Open System Chooser (Pay ₹${activePayAmt.toLocaleString("en-IN")})</span>
-              </button>
-              <button
-                type="button"
-                onclick="openRenterQuickPaymentModal();"
-                class="renter-action-btn secondary"
-                style="width:100%; justify-content:center; padding:11px 16px;"
-              >
-                <i class="fa-solid fa-bolt" style="color:#34d399;"></i>
-                <span>Open Full Quick Payment Modal</span>
-              </button>
+              <!-- Upload Payment Photo Buttons (Live Camera + Gallery/Screenshot File) -->
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(185px, 1fr)); gap:10px; margin-bottom:14px;">
+                <button
+                  type="button"
+                  id="btnRenterMonthlyUpload_completed_payment"
+                  onclick="openRenterLiveCameraCapture('completed_payment', 'Completed Payment Photo', '${defaultMonthlyUploadMonth}', '${safePayPropArg}', '${safePayFlatArg}', '${safePayRenterIdArg}', '${safePayAadhaarArg}', '${safePayRenterNameArg}')"
+                  style="padding:10px 12px; border-radius:11px; background:transparent; border:1.5px solid rgba(16,185,129,0.42); color:var(--text-main); font-size:0.8rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
+                >
+                  <i class="fa-solid fa-camera" style="color:#34d399;"></i>
+                  <span>${isPayPhotoReRequested ? "Re-Capture Payment (Camera)" : "Capture Payment Photo (Camera)"}</span>
+                </button>
+                <label
+                  style="padding:10px 12px; border-radius:11px; background:transparent; border:1.5px solid rgba(56,189,248,0.42); color:var(--text-main); font-size:0.8rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px; margin:0;"
+                >
+                  <i class="fa-solid fa-image" style="color:#38bdf8;"></i>
+                  <span>Upload Payment Screenshot</span>
+                  <input type="file" id="renterPayPhotoFileInput" accept="image/*" style="display:none;" onchange="handleRenterPaymentInlinePhotoSelect(this)">
+                </label>
+              </div>
+
+              <!-- UTR Verification Input & Submit -->
+              <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+                  <div>
+                    <label for="renterPayUtrInput" style="display:block; font-size:0.72rem; font-weight:800; color:#38bdf8; text-transform:uppercase; margin-bottom:5px;">
+                      UTR / UPI Transaction Number *
+                    </label>
+                    <input
+                      type="text"
+                      id="renterPayUtrInput"
+                      class="form-control"
+                      placeholder="Enter 12-digit UTR or Txn Ref No."
+                      style="padding:10px 12px; font-size:0.86rem; background:transparent;"
+                    />
+                  </div>
+                  <div>
+                    <label for="renterPayAmountInput" style="display:block; font-size:0.72rem; font-weight:800; color:#34d399; text-transform:uppercase; margin-bottom:5px;">
+                      Amount Paid (₹)
+                    </label>
+                    <input
+                      type="number"
+                      id="renterPayAmountInput"
+                      class="form-control"
+                      value="${activePayAmt > 0 ? activePayAmt : ""}"
+                      placeholder="Enter paid amount"
+                      style="padding:10px 12px; font-size:0.86rem; background:transparent;"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  id="btnSubmitRenterInlineUtrProof"
+                  class="btn-primary"
+                  onclick="submitRenterInlinePaymentUtrProof()"
+                  style="width:100%; padding:11px 16px; font-size:0.86rem;"
+                >
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span>Submit Payment Photo &amp; UTR for Verification</span>
+                </button>
+              </div>
+
+              ${mySubmittedUtrProofs.length > 0 ? `
+                <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--glass-border);">
+                  <div style="font-size:0.74rem; font-weight:800; color:var(--text-main); margin-bottom:8px;">
+                    <i class="fa-solid fa-clock-rotate-left" style="color:#818cf8; margin-right:5px;"></i> Your Submitted UTRs &amp; Payment Verifications
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:7px;">
+                    ${mySubmittedUtrProofs.map(pr => {
+                      const pSt = String(pr.status || "Pending");
+                      const pColor = pSt === "Approved" ? "#34d399" : (pSt === "Rejected" ? "#f87171" : "#fbbf24");
+                      const safePrImg = pr.screenshotUrl ? normalizeGoogleDriveImageUrl(pr.screenshotUrl).replace(/'/g, "\\'") : "";
+                      const safePrUtr = String(pr.utr || "").replace(/'/g, "\\'");
+                      return `
+                        <div style="padding:9px 12px; border-radius:10px; background:transparent; border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:0.75rem;">
+                          <div>
+                            <div style="font-weight:800; color:var(--text-main);">UTR: <span style="color:#38bdf8;">${escapeHtml(pr.utr || "--")}</span> • ₹${(Number(pr.amount) || 0).toLocaleString("en-IN")}</div>
+                            <div style="font-size:0.68rem; color:var(--text-muted);">${pr.monthYear ? formatMonthLabel(pr.monthYear) + " • " : ""}${escapeHtml(pr.submittedAt || "")}</div>
+                          </div>
+                          <div style="display:flex; align-items:center; gap:6px;">
+                            ${safePrImg ? `<button type="button" class="btn-ledger-action" style="padding:3px 8px; font-size:0.68rem; background:transparent;" onclick="openPhotoZoomModal('${safePrImg}', 'Payment Proof — UTR ${safePrUtr}')"><i class="fa-solid fa-image"></i> Photo</button>` : ""}
+                            <span style="padding:3px 9px; border-radius:999px; font-size:0.68rem; font-weight:800; background:transparent; color:${pColor}; border:1px solid ${pColor};">${escapeHtml(pSt)}</span>
+                          </div>
+                        </div>
+                      `;
+                    }).join("")}
+                  </div>
+                </div>
+              ` : ""}
             </div>
           </div>
         `;
@@ -16581,10 +16902,10 @@ function formatMonthLabel(rawVal) {
         const profFamilyList = Array.isArray(consolidatedProfile.FamilyMembersList) ? consolidatedProfile.FamilyMembersList : (Array.isArray(primaryRenter.FamilyMembersList) ? primaryRenter.FamilyMembersList : []);
 
         const renterIsolatedProfileHtml = `
-          <div class="renter-kpi-summary-box" id="renterInlineProfileCard" style="padding: 24px; border-radius: 18px; background: var(--bg-card); border: 1.5px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.18);">
+          <div class="renter-kpi-summary-box" id="renterInlineProfileCard" style="padding: 24px; border-radius: 18px; background: transparent; border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:42px; height:42px; border-radius:12px; background:rgba(168,85,247,0.16); color:#c084fc; border:1px solid rgba(168,85,247,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+                <div style="width:42px; height:42px; border-radius:12px; background:transparent; color:#c084fc; border:1px solid rgba(168,85,247,0.35); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
                   <i class="fa-solid fa-user-shield"></i>
                 </div>
                 <div>
@@ -16596,13 +16917,13 @@ function formatMonthLabel(rawVal) {
                   </h3>
                 </div>
               </div>
-              <span class="badge-paid" style="font-size:0.74rem;">
+              <span class="badge-paid" style="font-size:0.74rem; background:transparent;">
                 <i class="fa-solid fa-circle-check"></i> ${escapeHtml(String(primaryRenter.Status || "Active"))}
               </span>
             </div>
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:20px;">
-              <div style="padding:16px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
+              <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
                 <div style="font-size:0.78rem; font-weight:800; color:#34d399; text-transform:uppercase; letter-spacing:0.05em;">Resident Identity Details</div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Full Name</span><strong style="font-size:0.9rem; color:var(--text-main);">${escapeHtml(renterNameDisplay)}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
@@ -16610,7 +16931,7 @@ function formatMonthLabel(rawVal) {
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Permanent Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(consolidatedProfile.Address || primaryRenter.Address || "N/A")}</strong></div>
               </div>
 
-              <div style="padding:16px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
+              <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
                 <div style="font-size:0.78rem; font-weight:800; color:#38bdf8; text-transform:uppercase; letter-spacing:0.05em;">Tenancy &amp; Utility Schedule</div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Property &amp; Flat</span><strong style="font-size:0.9rem; color:var(--text-main);">${escapeHtml(targetProp)} • Flat ${escapeHtml(targetFlat)}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Monthly Base Rent</span><strong style="font-size:0.9rem; color:#34d399;">₹${baseRentConfigured.toLocaleString("en-IN")}/mo</strong></div>
@@ -16621,11 +16942,11 @@ function formatMonthLabel(rawVal) {
             </div>
 
             ${profFamilyList.length > 0 ? `
-              <div style="padding:14px 16px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); margin-bottom:20px;">
+              <div style="padding:14px 16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); margin-bottom:20px;">
                 <div style="font-size:0.76rem; font-weight:800; color:#818cf8; text-transform:uppercase; margin-bottom:8px;">Family Members</div>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:8px;">
                   ${profFamilyList.map((fm, idx) => `
-                    <div style="padding:8px 10px; border-radius:10px; background:var(--bg-card); border:1px solid var(--glass-border); font-size:0.76rem;">
+                    <div style="padding:8px 10px; border-radius:10px; background:transparent; border:1px solid var(--glass-border); font-size:0.76rem;">
                       <strong style="color:var(--text-main);">#${idx + 1} ${escapeHtml(fm.name || fm.Name || "Member")}</strong>
                       <div style="color:var(--text-muted); font-size:0.7rem; margin-top:2px;">${escapeHtml(fm.mobile || fm.Mobile || "")} ${fm.aadhaar || fm.Aadhaar ? `• Aadhaar: ${formatAadhaarWithHyphens(fm.aadhaar || fm.Aadhaar)}` : ""}</div>
                     </div>
@@ -16635,29 +16956,32 @@ function formatMonthLabel(rawVal) {
             ` : ""}
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px;">
-              <div style="padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); text-align:center;">
+              <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-user" style="color:#38bdf8;"></i> Renter Photo</div>
                 ${profileImgUrl ? `
                   <img src="${profileImgUrl}" alt="Renter Photo" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${safeProfileImgArg}', '${safeRenterNameArg} — Profile Photo')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
-                ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Profile Photo</div>`}
+                ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Profile Photo</div>`}
               </div>
 
-              <div style="padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); text-align:center;">
+              <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-id-card" style="color:#34d399;"></i> Aadhaar (Front)</div>
                 ${profFrontUrl ? `
                   <img src="${profFrontUrl}" alt="Aadhaar Front" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${profFrontUrl.replace(/'/g, "\\'")}', '${safeRenterNameArg} — Aadhaar Front')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
-                ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Front Photo</div>`}
+                ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Front Photo</div>`}
               </div>
 
-              <div style="padding:14px; border-radius:14px; background:var(--bg-input); border:1px solid var(--glass-border); text-align:center;">
+              <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-id-card-clip" style="color:#38bdf8;"></i> Aadhaar (Back)</div>
                 ${profBackUrl ? `
                   <img src="${profBackUrl}" alt="Aadhaar Back" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${profBackUrl.replace(/'/g, "\\'")}', '${safeRenterNameArg} — Aadhaar Back')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
-                ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Back Photo</div>`}
+                ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Back Photo</div>`}
               </div>
             </div>
           </div>
         `;
+
+        // Regenerated Aadhaar Card WebP image for Verified Residential Portal right side
+        const aadhaarHeroImageSrc = window.__aadhaarCardRegenImgUrl || "src/assets/images/regenerated_image_1794745526539.webp";
 
         // Select ONLY the active 1-of-6 section so the other 5 stay hidden!
         let activeRenterSectionContentHtml = "";
@@ -16672,9 +16996,9 @@ function formatMonthLabel(rawVal) {
         } else if (activeRenterSection === "profile") {
           activeRenterSectionContentHtml = renterIsolatedProfileHtml;
         } else {
-          // Default: "dashboard" -> ONLY Verified Resident Tier Portal + Circular Chart Box below it
+          // Default: "dashboard" -> Verified Resident Portal (with right-side Aadhaar Card box) + Left-Side Half-Size Latest Receipt Overview
           activeRenterSectionContentHtml = `
-            <div class="renter-hero-banner">
+            <div class="renter-hero-banner" style="background:transparent;">
               <div class="renter-hero-top">
                 <div class="renter-hero-identity">
                   <div
@@ -16684,28 +17008,23 @@ function formatMonthLabel(rawVal) {
                     ${profileImgUrl ? `<img src="${profileImgUrl}" alt="${renterNameDisplay}" onerror="handleDriveImgFallback(this)" />` : avatarInitials}
                   </div>
                   <div>
-                    <div class="renter-verified-pill">
+                    <div class="renter-verified-pill" style="background:transparent;">
                       <i class="fa-solid fa-circle-check"></i> Verified Resident Portal • Personal Ledger
                     </div>
                     <h2 style="margin:0; font-size:1.8rem; font-weight:900; color:var(--text-main); letter-spacing:-0.025em; line-height:1.15;">
                       ${renterNameDisplay}
                     </h2>
                     <div class="renter-meta-chips">
-                      <span class="renter-meta-chip">
+                      <span class="renter-meta-chip" style="background:transparent;">
                         <i class="fa-solid fa-building" style="color:#38bdf8;"></i>
                         <span>${targetProp}</span>
                       </span>
-                      <span class="renter-meta-chip">
+                      <span class="renter-meta-chip" style="background:transparent;">
                         <i class="fa-solid fa-door-open" style="color:#fbbf24;"></i>
                         <span>Flat ${targetFlat}</span>
                       </span>
-                      ${effectiveAadhaar ? `
-                      <span class="renter-meta-chip" style="border-color:rgba(16,185,129,0.38);">
-                        <i class="fa-solid fa-id-card" style="color:#34d399;"></i>
-                        <span>Aadhaar: ${formatAadhaarWithHyphens(effectiveAadhaar)}</span>
-                      </span>` : ""}
                       ${renterPhoneDisplay ? `
-                      <span class="renter-meta-chip">
+                      <span class="renter-meta-chip" style="background:transparent;">
                         <i class="fa-solid fa-phone" style="color:#a855f7;"></i>
                         <span>${renterPhoneDisplay}</span>
                       </span>` : ""}
@@ -16713,33 +17032,20 @@ function formatMonthLabel(rawVal) {
                   </div>
                 </div>
 
-                <div class="renter-hero-actions" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                  ${(() => {
-                    const quickDueInfo = typeof resolveRenterCurrentMonthDueInfo === "function" ? resolveRenterCurrentMonthDueInfo() : null;
-                    const quickDueAmt = Number(quickDueInfo?.amountDue) || 0;
-                    const quickDueSuffix = quickDueAmt > 0 ? ` • ₹${quickDueAmt.toLocaleString("en-IN")}` : "";
-                    return `
-                      <button
-                        type="button"
-                        id="btnRenterQuickPaymentShortcut"
-                        class="renter-action-btn emerald"
-                        onclick="openRenterQuickPaymentModal();"
-                        title="Open UPI payment modal pre-filled with your current month's calculated due"
-                      >
-                        <i class="fa-solid fa-bolt"></i>
-                        <span>Quick Payment${quickDueSuffix}</span>
-                      </button>
-                    `;
-                  })()}
-                  ${topHeroReceiptItemHtml}
-                  <button
-                    type="button"
-                    class="renter-action-btn secondary"
-                    onclick="navigateRenterQuickNav('profile');"
-                  >
-                    <i class="fa-solid fa-user-shield"></i>
-                    <span>My Profile</span>
-                  </button>
+                <!-- Right Side of Verified Residential Portal: Icon + Heading, Aadhaar Card WebP Image, 'Aadhaar Card' Text, Verified Number -->
+                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:transparent; border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
+                  <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38bdf8;">
+                    <i class="fa-solid fa-id-card" style="color:#f97316; font-size:0.86rem;"></i>
+                    <span>Aadhaar Card</span>
+                  </div>
+                  <img src="${aadhaarHeroImageSrc}" alt="Aadhaar Card" style="width:94px; height:60px; border-radius:9px; object-fit:contain; display:block;" />
+                  <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#38bdf8; margin-top:-2px;">
+                    Aadhaar Card
+                  </div>
+                  <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.86rem; font-weight:900; color:var(--text-main); font-variant-numeric:tabular-nums;">
+                    <span>${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "Not Linked"}</span>
+                    ${effectiveAadhaar ? `<i class="fa-solid fa-circle-check" style="color:#10b981; font-size:0.95rem;" title="Verified Aadhaar"></i>` : ""}
+                  </div>
                 </div>
               </div>
             </div>
@@ -16750,42 +17056,89 @@ function formatMonthLabel(rawVal) {
 
         if (flatsContainer) {
           flatsContainer.style.display = "";
-          flatsContainer.innerHTML = `
+          const nextRenterPortalHtml = `
             <div class="renter-modern-portal">
               ${activeRenterSectionContentHtml}
             </div>
           `;
+          const alreadyRenderedPortal = Boolean(flatsContainer.querySelector(".renter-modern-portal"));
+          const hasChangedHtml = flatsContainer.dataset.lastRenterHtmlSig !== nextRenterPortalHtml;
+
+          if (!alreadyRenderedPortal || hasChangedHtml) {
+            // Preserve live user inputs & cursor focus so silent background updates never disturb typing
+            const activeElId = document.activeElement ? document.activeElement.id : "";
+            const activeSelStart = document.activeElement && typeof document.activeElement.selectionStart === "number" ? document.activeElement.selectionStart : null;
+            const activeSelEnd = document.activeElement && typeof document.activeElement.selectionEnd === "number" ? document.activeElement.selectionEnd : null;
+            const preservedFieldIds = [
+              "renterPayUtrInput",
+              "renterPayAmountInput",
+              "renterInlineTicketDesc",
+              "renterInlineTicketCategory",
+              "renterInlineTicketPriority"
+            ];
+            const preservedValues = {};
+            preservedFieldIds.forEach(fid => {
+              const el = document.getElementById(fid);
+              if (el && el.value !== undefined && el.value !== "") {
+                preservedValues[fid] = el.value;
+              }
+            });
+
+            flatsContainer.dataset.lastRenterHtmlSig = nextRenterPortalHtml;
+            flatsContainer.innerHTML = nextRenterPortalHtml;
+
+            Object.keys(preservedValues).forEach(fid => {
+              const restored = document.getElementById(fid);
+              if (restored) restored.value = preservedValues[fid];
+            });
+            if (activeElId && preservedFieldIds.includes(activeElId)) {
+              const focusTarget = document.getElementById(activeElId);
+              if (focusTarget) {
+                try {
+                  focusTarget.focus({ preventScroll: true });
+                  if (activeSelStart !== null && typeof focusTarget.setSelectionRange === "function") {
+                    focusTarget.setSelectionRange(activeSelStart, activeSelEnd);
+                  }
+                } catch (e) {}
+              }
+            }
+          }
 
           if (activeRenterSection === "payment") {
-            setTimeout(() => {
-              const qrCanvasEl = document.getElementById("renterHomeInlineQrCanvas");
-              if (!qrCanvasEl) return;
-              if (qrRenderData && qrRenderData.upiId && typeof generatePropertyRentQrCode === "function") {
-                generatePropertyRentQrCode({
-                  upiId: qrRenderData.upiId,
-                  upiName: qrRenderData.upiName === "N/A" ? "Rent Receiver" : qrRenderData.upiName,
-                  amount: qrRenderData.amount,
-                  note: qrRenderData.note,
-                  canvasEl: qrCanvasEl,
-                  size: 140
-                });
-              } else {
-                const ctx = qrCanvasEl.getContext("2d");
-                if (ctx) {
-                  ctx.clearRect(0, 0, qrCanvasEl.width, qrCanvasEl.height);
-                  ctx.fillStyle = "#f8fafc";
-                  ctx.fillRect(0, 0, qrCanvasEl.width, qrCanvasEl.height);
-                  ctx.strokeStyle = "#cbd5e1";
-                  ctx.lineWidth = 2;
-                  ctx.strokeRect(6, 6, qrCanvasEl.width - 12, qrCanvasEl.height - 12);
-                  ctx.fillStyle = "#64748b";
-                  ctx.font = "bold 13px sans-serif";
-                  ctx.textAlign = "center";
-                  ctx.textBaseline = "middle";
-                  ctx.fillText("UPI N/A", qrCanvasEl.width / 2, qrCanvasEl.height / 2);
+            const qrCanvasEl = document.getElementById("renterHomeInlineQrCanvas");
+            if (qrCanvasEl) {
+              const nextQrSig = qrRenderData
+                ? `${qrRenderData.upiId}|${qrRenderData.upiName}|${qrRenderData.amount}|${qrRenderData.note}`
+                : "NO_UPI";
+              if (qrCanvasEl.dataset.qrKey !== nextQrSig) {
+                qrCanvasEl.dataset.qrKey = nextQrSig;
+                if (qrRenderData && qrRenderData.upiId && typeof generatePropertyRentQrCode === "function") {
+                  generatePropertyRentQrCode({
+                    upiId: qrRenderData.upiId,
+                    upiName: qrRenderData.upiName === "N/A" ? "Rent Receiver" : qrRenderData.upiName,
+                    amount: qrRenderData.amount,
+                    note: qrRenderData.note,
+                    canvasEl: qrCanvasEl,
+                    size: 140
+                  });
+                } else {
+                  const ctx = qrCanvasEl.getContext("2d");
+                  if (ctx) {
+                    ctx.clearRect(0, 0, qrCanvasEl.width, qrCanvasEl.height);
+                    ctx.fillStyle = "#f8fafc";
+                    ctx.fillRect(0, 0, qrCanvasEl.width, qrCanvasEl.height);
+                    ctx.strokeStyle = "#cbd5e1";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(6, 6, qrCanvasEl.width - 12, qrCanvasEl.height - 12);
+                    ctx.fillStyle = "#64748b";
+                    ctx.font = "bold 13px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText("UPI N/A", qrCanvasEl.width / 2, qrCanvasEl.height / 2);
+                  }
                 }
               }
-            }, 30);
+            }
           }
         }
 
@@ -16991,7 +17344,7 @@ function formatMonthLabel(rawVal) {
       }
 
       if (!skipImmediateSync) {
-        try { syncDataLive(true); } catch (e) {}
+        try { syncDataLive(false); } catch (e) {}
       }
       try {
         if (typeof initFirestoreLiveListeners === "function") initFirestoreLiveListeners();
@@ -18145,7 +18498,9 @@ function formatMonthLabel(rawVal) {
             kh: incomingKhetRecords,
             kharch: incomingKharchRecords,
             rmp: res.globalConfig?.renterMonthlyPhotos || {},
-            srq: res.globalConfig?.screenshotRequests || {}
+            srq: res.globalConfig?.screenshotRequests || {},
+            pp: res.globalConfig?.paymentProofs || [],
+            mt: res.globalConfig?.maintenanceTickets || []
           });
 
           const hasDataChanged = incomingHash !== lastSyncedDataHash;
@@ -18268,10 +18623,11 @@ function formatMonthLabel(rawVal) {
           if (res.userTheme && res.userTheme !== activeThemePref) {
             applyVisualTheme(res.userTheme);
           }
-          if (res.userRole && res.userRole !== activeRole) {
-            applyRolePermissions(res.userRole);
-          } else if (isRestrictedRole(activeRole) || activeRole === "Manager") {
-            applyRolePermissions(activeRole);
+          const nextRoleVal = res.userRole || activeRole;
+          const nextRoleSig = `${nextRoleVal}|${activeAssignedProperty}|${activeAssignedFlat}|${activeAssignedAadhaar}|${JSON.stringify(activeManagerPermissions)}`;
+          if (nextRoleVal !== activeRole || window.__lastAppliedRoleSig !== nextRoleSig) {
+            window.__lastAppliedRoleSig = nextRoleSig;
+            applyRolePermissions(nextRoleVal);
           }
           if (res.userFullName) {
             activeUserFullName = res.userFullName;
