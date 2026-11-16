@@ -71,8 +71,8 @@
     :root,
     body.theme-black {
       --bg-overlay: linear-gradient(180deg, rgba(9, 13, 22, 0.70) 0%, rgba(9, 13, 22, 0.88) 100%);
-      --bg-header: rgba(9, 13, 22, 0.30);
-      --bg-card: rgba(17, 24, 39, 0.30);
+      --bg-header: rgba(9, 13, 22, 0.25);
+      --bg-card: rgba(17, 24, 39, 0.25);
       --bg-modal: #111827;
       --bg-input: rgba(30, 41, 59, 0.92);
       --primary: #4f46e5;
@@ -92,8 +92,8 @@
 
     body.theme-white {
       --bg-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.74) 0%, rgba(241, 245, 249, 0.88) 100%);
-      --bg-header: rgba(255, 255, 255, 0.30);
-      --bg-card: rgba(255, 255, 255, 0.30);
+      --bg-header: rgba(255, 255, 255, 0.25);
+      --bg-card: rgba(255, 255, 255, 0.25);
       --bg-modal: #ffffff;
       --bg-input: #f1f5f9;
       --primary: #4f46e5;
@@ -857,7 +857,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(15, 23, 42, 0.30);
+      background: rgba(15, 23, 42, 0.25);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--glass-border);
@@ -869,7 +869,7 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
     }
     body.theme-white .pnl-tracker {
-      background: rgba(255, 255, 255, 0.30);
+      background: rgba(255, 255, 255, 0.25);
     }
     .pnl-item {
       display: flex;
@@ -1074,7 +1074,7 @@
       box-shadow: 0 25px 65px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04) inset !important;
     }
     #adminPortfolioHubSection .admin-ops-hub-body {
-      background: rgba(15, 23, 42, 0.30) !important;
+      background: rgba(15, 23, 42, 0.25) !important;
       backdrop-filter: blur(12px) !important;
       -webkit-backdrop-filter: blur(12px) !important;
       border: 1.5px solid rgba(148, 163, 184, 0.35) !important;
@@ -1083,7 +1083,7 @@
       box-shadow: 0 14px 36px rgba(0, 0, 0, 0.24) !important;
     }
     body.theme-white #adminPortfolioHubSection .admin-ops-hub-body {
-      background: rgba(255, 255, 255, 0.30) !important;
+      background: rgba(255, 255, 255, 0.25) !important;
       backdrop-filter: blur(12px) !important;
       -webkit-backdrop-filter: blur(12px) !important;
       border: 1.5px solid rgba(15, 23, 42, 0.18) !important;
@@ -1462,7 +1462,7 @@
     }
 
     .flat-card-merged {
-      background: var(--bg-card);
+      background: rgba(17, 24, 39, 0.80);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1.5px solid var(--glass-border);
@@ -1482,7 +1482,7 @@
       contain: layout style;
     }
     body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) {
-      background: rgba(255, 255, 255, 0.30);
+      background: rgba(255, 255, 255, 0.80);
       border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
       box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
@@ -1493,7 +1493,7 @@
     }
 
     .flat-card-merged.flat-card-paid {
-      background: linear-gradient(135deg, rgba(6, 95, 70, 0.30) 0%, rgba(16, 185, 129, 0.30) 100%) !important;
+      background: linear-gradient(135deg, rgba(6, 95, 70, 0.80) 0%, rgba(16, 185, 129, 0.80) 100%) !important;
       border: 2px solid #34d399 !important;
       box-shadow: 0 14px 32px rgba(16, 185, 129, 0.24) !important;
       color: #ffffff !important;
@@ -1506,7 +1506,7 @@
     }
 
     .flat-card-merged.flat-card-due {
-      background: linear-gradient(135deg, rgba(153, 27, 27, 0.30) 0%, rgba(239, 68, 68, 0.30) 100%) !important;
+      background: linear-gradient(135deg, rgba(153, 27, 27, 0.80) 0%, rgba(239, 68, 68, 0.80) 100%) !important;
       border: 2px solid #f87171 !important;
       box-shadow: 0 14px 32px rgba(239, 68, 68, 0.24) !important;
       color: #ffffff !important;
@@ -1581,7 +1581,7 @@
       font-weight: 800;
     }
     body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) .payment-banner {
-      background: rgba(241, 245, 249, 0.30);
+      background: rgba(241, 245, 249, 0.80);
       border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
     }
@@ -3106,48 +3106,48 @@
       border-left: 5px solid #059669 !important;
     }
     .stat-pill {
-      background: linear-gradient(135deg, rgba(79, 70, 229, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.18) 0%, rgba(30, 41, 59, 0.25) 100%);
       border: 1.5px solid rgba(129, 140, 248, 0.35);
       border-top: 3px solid #6366f1;
     }
     .stat-pill:nth-child(2) {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(30, 41, 59, 0.25) 100%);
       border-color: rgba(52, 211, 153, 0.35);
       border-top-color: #10b981;
     }
     .stat-pill:nth-child(3) {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(30, 41, 59, 0.25) 100%);
       border-color: rgba(251, 191, 36, 0.35);
       border-top-color: #f59e0b;
     }
     .stat-pill:nth-child(4) {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.18) 0%, rgba(30, 41, 59, 0.25) 100%);
       border-color: rgba(34, 211, 238, 0.35);
       border-top-color: #06b6d4;
     }
     .stat-pill:nth-child(5) {
-      background: linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(30, 41, 59, 0.25) 100%);
       border-color: rgba(244, 114, 182, 0.35);
       border-top-color: #ec4899;
     }
     body.theme-white .stat-pill {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(238, 242, 255, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(238, 242, 255, 0.25) 100%);
       border-color: #c7d2fe;
     }
     body.theme-white .stat-pill:nth-child(2) {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(236, 253, 245, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(236, 253, 245, 0.25) 100%);
       border-color: #a7f3d0;
     }
     body.theme-white .stat-pill:nth-child(3) {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 251, 235, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 251, 235, 0.25) 100%);
       border-color: #fde68a;
     }
     body.theme-white .stat-pill:nth-child(4) {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(236, 254, 255, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(236, 254, 255, 0.25) 100%);
       border-color: #a5f3fc;
     }
     body.theme-white .stat-pill:nth-child(5) {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(253, 242, 248, 0.30) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(253, 242, 248, 0.25) 100%);
       border-color: #fbcfe8;
     }
 
@@ -3600,7 +3600,7 @@
     gap: 9px;
     padding: 9px 14px;
     border-radius: 13px;
-    background: rgba(15, 23, 42, 0.30);
+    background: rgba(15, 23, 42, 0.25);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1.5px solid rgba(148, 163, 184, 0.24);
@@ -3622,7 +3622,7 @@
     box-shadow: 0 6px 18px rgba(99, 102, 241, 0.24);
   }
   body.theme-white .renter-quick-box {
-    background: rgba(255, 255, 255, 0.30);
+    background: rgba(255, 255, 255, 0.25);
     border-color: rgba(15, 23, 42, 0.2);
     color: #0f172a;
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
@@ -3706,14 +3706,14 @@
     padding: 11px 15px;
     margin-bottom: 12px;
     border-radius: 16px;
-    background: rgba(15, 23, 42, 0.30);
+    background: rgba(15, 23, 42, 0.25);
     border: 1.5px solid rgba(52, 211, 153, 0.34);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
   }
   body.theme-white .admin-ops-hub-topbar {
-    background: rgba(255, 255, 255, 0.30);
+    background: rgba(255, 255, 255, 0.25);
     border-color: rgba(16, 185, 129, 0.42);
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
   }
@@ -3791,7 +3791,7 @@
     gap: 11px;
     padding: 10px 15px;
     border-radius: 16px;
-    background: rgba(15, 23, 42, 0.30);
+    background: rgba(15, 23, 42, 0.25);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1.5px solid rgba(52, 211, 153, 0.32);
@@ -3809,12 +3809,12 @@
     box-shadow: 0 10px 24px rgba(16, 185, 129, 0.28);
   }
   .admin-ops-carousel-card.active {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.30) 0%, rgba(6, 182, 212, 0.28) 100%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(6, 182, 212, 0.25) 100%);
     border-color: #34d399;
     box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.24), 0 10px 26px rgba(16, 185, 129, 0.28);
   }
   body.theme-white .admin-ops-carousel-card {
-    background: rgba(255, 255, 255, 0.30);
+    background: rgba(255, 255, 255, 0.25);
     border-color: rgba(16, 185, 129, 0.38);
     color: #0f172a;
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
@@ -3866,19 +3866,19 @@
   .admin-ops-hub-body {
     border-radius: 18px;
     padding: 16px;
-    background: rgba(15, 23, 42, 0.30);
+    background: rgba(15, 23, 42, 0.25);
     border: 1.5px solid rgba(52, 211, 153, 0.3);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.24);
   }
   body.theme-white .admin-ops-hub-body {
-    background: rgba(255, 255, 255, 0.30);
+    background: rgba(255, 255, 255, 0.25);
     border-color: rgba(16, 185, 129, 0.38);
     box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
   }
   .utr-proof-row {
-    background: rgba(15, 23, 42, 0.30);
+    background: rgba(15, 23, 42, 0.25);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
     padding: 11px 13px;
@@ -3890,7 +3890,7 @@
     font-size: 0.78rem;
   }
   body.theme-white .utr-proof-row {
-    background: rgba(255, 255, 255, 0.30);
+    background: rgba(255, 255, 255, 0.25);
     border-color: rgba(15, 23, 42, 0.2);
     color: #0f172a;
     box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
@@ -4126,11 +4126,11 @@
     border-color: #e2e8f0;
   }
   body.theme-white .renter-history-row-item:hover {
-    background: rgba(255, 255, 255, 0.30) !important;
+    background: rgba(255, 255, 255, 0.25) !important;
     border-color: #6366f1;
   }
 
-  /* Make all inner boxes and cards across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment, Download App & Profile 70% transparent (0.30 opacity) & keep all text crystal clear */
+  /* Make all inner boxes and cards across Dashboard, Receipt, Maintenance, Upload Photo, Payment, Download App & Profile 75% transparent (0.25 opacity) & keep all text crystal clear */
   :where(.renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box)) {
     background: transparent !important;
     background-color: transparent !important;
@@ -4179,8 +4179,8 @@
   .renter-modern-portal label[style*="border"],
   .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(15, 23, 42, 0.30) !important;
-    background-color: rgba(15, 23, 42, 0.30) !important;
+    background: rgba(15, 23, 42, 0.25) !important;
+    background-color: rgba(15, 23, 42, 0.25) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -4228,8 +4228,8 @@
   body.theme-white .renter-modern-portal label[style*="border"],
   body.theme-white .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(255, 255, 255, 0.30) !important;
-    background-color: rgba(255, 255, 255, 0.30) !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    background-color: rgba(255, 255, 255, 0.25) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -4718,9 +4718,9 @@
     border-color: #10b981 !important;
   }
 
-  /* Requirement 4 & 9: Ultra-Stylish, Modern, 50% Transparent Settings Interface */
+  /* Admin Settings Interface: 25% Transparent (0.75 opacity) */
   #settingsModal .modal-window {
-    background: linear-gradient(160deg, rgba(15, 23, 42, 0.50) 0%, rgba(17, 24, 39, 0.50) 100%) !important;
+    background: linear-gradient(160deg, rgba(15, 23, 42, 0.75) 0%, rgba(17, 24, 39, 0.75) 100%) !important;
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;
     color: #f8fafc !important;
@@ -4730,7 +4730,7 @@
     padding: 22px !important;
   }
   body.theme-white #settingsModal .modal-window {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.50) 0%, rgba(248, 250, 252, 0.50) 100%) !important;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.75) 0%, rgba(248, 250, 252, 0.75) 100%) !important;
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;
     color: #0f172a !important;
@@ -4788,7 +4788,7 @@
     letter-spacing: -0.2px !important;
   }
   #settingsModal .settings-horizontal-options-box {
-    background: rgba(15, 23, 42, 0.45) !important;
+    background: rgba(15, 23, 42, 0.75) !important;
     border: 1.5px solid rgba(129, 140, 248, 0.4) !important;
     border-radius: 16px !important;
     padding: 10px !important;
@@ -4796,7 +4796,7 @@
     box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.22) !important;
   }
   body.theme-white #settingsModal .settings-horizontal-options-box {
-    background: rgba(248, 250, 252, 0.50) !important;
+    background: rgba(248, 250, 252, 0.75) !important;
     border: 1.5px solid #cbd5e1 !important;
     box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.04) !important;
   }
@@ -4814,7 +4814,7 @@
   #settingsModal .settings-nav-card {
     flex: 1 0 140px !important;
     min-width: 140px !important;
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.50), rgba(15, 23, 42, 0.50)) !important;
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.75)) !important;
     border: 1.5px solid rgba(148, 163, 184, 0.28) !important;
     border-radius: 14px !important;
     padding: 12px 10px !important;
@@ -4830,7 +4830,7 @@
     cursor: pointer !important;
   }
   body.theme-white #settingsModal .settings-nav-card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.50), rgba(241, 245, 249, 0.50)) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.75), rgba(241, 245, 249, 0.75)) !important;
     border: 1.5px solid #cbd5e1 !important;
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06) !important;
   }
@@ -4891,7 +4891,7 @@
     color: #0f172a !important;
   }
   #settingsModal .other-tool-card {
-    background: linear-gradient(145deg, rgba(17, 24, 39, 0.50), rgba(30, 41, 59, 0.50)) !important;
+    background: linear-gradient(145deg, rgba(17, 24, 39, 0.75), rgba(30, 41, 59, 0.75)) !important;
     color: #f8fafc !important;
     border-radius: 16px !important;
     padding: 14px !important;
@@ -4903,7 +4903,7 @@
     box-shadow: 0 10px 24px rgba(79, 70, 229, 0.28) !important;
   }
   body.theme-white #settingsModal .other-tool-card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.50), rgba(248, 250, 252, 0.50)) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.75), rgba(248, 250, 252, 0.75)) !important;
     color: #0f172a !important;
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07) !important;
   }
@@ -10366,23 +10366,24 @@
             <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:8px;">
               <div>
                 <label style="font-size:0.68rem;">Ceiling Fans (Qty)</label>
-                <input type="number" id="invFansCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="2" min="0">
+                <input type="number" id="invFansCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="0" min="0">
               </div>
               <div>
                 <label style="font-size:0.68rem;">LED Bulbs / Tubes</label>
-                <input type="number" id="invBulbsCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="4" min="0">
+                <input type="number" id="invBulbsCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="0" min="0">
               </div>
               <div>
                 <label style="font-size:0.68rem;">Geyser / Exhaust</label>
-                <input type="number" id="invGeysersCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="1" min="0">
+                <input type="number" id="invGeysersCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="0" min="0">
               </div>
               <div>
                 <label style="font-size:0.68rem;">Door Keys Handed</label>
-                <input type="number" id="invKeysCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="2" min="0">
+                <input type="number" id="invKeysCount" class="form-control" style="padding:5px 8px; font-size:0.76rem;" value="0" min="0">
               </div>
               <div>
                 <label style="font-size:0.68rem;">Sub-Meter Seal Status</label>
                 <select id="invMeterCondition" class="form-control" style="padding:5px 8px; font-size:0.74rem;">
+                  <option value="">-- Select --</option>
                   <option value="Intact & Working">Intact &amp; Working</option>
                   <option value="New Digital Meter">New Digital Meter</option>
                   <option value="Needs Check">Needs Check</option>
@@ -10391,6 +10392,7 @@
               <div>
                 <label style="font-size:0.68rem;">Wall Paint &amp; Taps</label>
                 <select id="invPaintCondition" class="form-control" style="padding:5px 8px; font-size:0.74rem;">
+                  <option value="">-- Select --</option>
                   <option value="Freshly Painted & Intact">Freshly Painted &amp; Intact</option>
                   <option value="Good Condition">Good Condition</option>
                   <option value="Minor Wear / Repaint Due">Minor Wear / Repaint Due</option>
@@ -12854,7 +12856,8 @@
             requesterUsername: activeUser || "admin",
             targetUsername: u.Username,
             newStatus: "Blocked",
-            block: true
+            block: true,
+            movedOutAutoBlocked: true
           }).catch(() => {});
           if (typeof recordAdminAuditLog === "function") {
             recordAdminAuditLog(
@@ -12865,6 +12868,104 @@
           }
         });
       }
+    }
+
+    function autoUnblockRenterUserAccountOnActivate(aadhaarNumber, propertyName, flatName, renterName = "", previousAadhaar = "") {
+      const cleanAadhaar = normalizeAadhaar12(aadhaarNumber);
+      const prevCleanAadhaar = normalizeAadhaar12(previousAadhaar);
+      const usersSource = (Array.isArray(DB.users) && DB.users.length > 0) ? DB.users : loadLocalUsersMaster();
+      if (!Array.isArray(DB.users) || DB.users.length === 0) {
+        DB.users = usersSource;
+      }
+
+      let blockedList = [];
+      try {
+        blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+      } catch (e) {}
+
+      const unblockedUsers = [];
+      (DB.users || []).forEach(u => {
+        if (String(u.Role || "").trim().toLowerCase() !== "renter") return;
+        const curStatus = String(u.Status || u.AccountStatus || "Active").trim().toLowerCase();
+        if (curStatus !== "blocked") return;
+
+        const uAadhaar = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber);
+        const matchByAadhaar = cleanAadhaar.length === 12 && uAadhaar === cleanAadhaar;
+        const matchByPrevAadhaar = prevCleanAadhaar.length === 12 && uAadhaar === prevCleanAadhaar;
+        const wasMovedOutAutoBlocked = String(u.MovedOutAutoBlocked || "").trim().toLowerCase() === "true";
+        const matchByMovedOutFlat = Boolean(
+          wasMovedOutAutoBlocked && !uAadhaar && propertyName && flatName &&
+          isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, propertyName, flatName)
+        );
+        if (!matchByAadhaar && !matchByPrevAadhaar && !matchByMovedOutFlat) return;
+
+        u.Status = "Active";
+        u.AccountStatus = "Active";
+        u.MovedOutAutoBlocked = false;
+        u.LockoutStage = 0;
+        u.FailedAttempts = 0;
+        u.LockedUntil = 0;
+        u.LockedTierLabel = "";
+        u.IsPermanentlyBlocked = "false";
+        u.PermanentlyLockedByAttempts = false;
+        if (propertyName) u.AssignedProperty = propertyName;
+        if (flatName) u.AssignedFlat = flatName;
+        if (cleanAadhaar.length === 12) {
+          u.AssignedAadhaar = cleanAadhaar;
+          u.AadhaarNumber = cleanAadhaar;
+        }
+        if (renterName) u.FullName = renterName;
+        u.UpdatedAt = new Date().toISOString();
+
+        const uClean = String(u.Username || "").trim().toLowerCase();
+        if (uClean) {
+          blockedList = blockedList.filter(name => String(name || "").trim().toLowerCase() !== uClean);
+          if (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uClean]) {
+            delete DB.globalConfig.loginLockouts[uClean];
+          }
+          if (typeof resetLoginLockoutState === "function") {
+            resetLoginLockoutState(uClean);
+          }
+        }
+        unblockedUsers.push(u);
+      });
+
+      if (unblockedUsers.length > 0) {
+        try {
+          localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
+        } catch (e) {}
+        saveLocalUsersMaster(DB.users || []);
+        saveDbSnapshotToCache();
+        if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
+        unblockedUsers.forEach(u => {
+          sendFirebaseAction({
+            action: "toggleUserBlock",
+            requesterUsername: activeUser || "admin",
+            targetUsername: u.Username,
+            newStatus: "Active",
+            block: false
+          }).catch(() => {});
+          if (propertyName && flatName) {
+            sendFirebaseAction({
+              action: "updateUserRole",
+              requesterUsername: activeUser || "admin",
+              targetUsername: u.Username,
+              newRole: u.Role || "Renter",
+              assignedProperty: propertyName,
+              assignedFlat: flatName,
+              assignedAadhaar: cleanAadhaar || u.AssignedAadhaar || ""
+            }).catch(() => {});
+          }
+          if (typeof recordAdminAuditLog === "function") {
+            recordAdminAuditLog(
+              "AUTO_UNBLOCK_REACTIVATE",
+              `@${u.Username}`,
+              `Renter ${renterName || u.FullName || u.Username} became Active (${propertyName || ""} Flat ${flatName || ""}) — account automatically unblocked.`
+            );
+          }
+        });
+      }
+      return unblockedUsers;
     }
 
     async function toggleUserBlockStatus(targetUsername, newStatus) {
@@ -13254,14 +13355,27 @@
       const contextStay = syncedStays[0] || (typeof aadhaarOrRenterObj === "object" && aadhaarOrRenterObj !== null ? aadhaarOrRenterObj : activeFlatRenterObj) || updatedFields;
       syncLinkedUserAccountsAadhaar(targetDigits, prevDigits, contextStay);
 
-      // Cascade updated Aadhaar number across ALL existing bills/receipts & payment proofs so prior receipts appear under the new Aadhaar
+      // Cascade updated Aadhaar number across ALL existing bills/receipts, payment proofs, monthly photos, screenshot requests, maintenance tickets, chats, logs & tenure metadata
       if (targetDigits.length === 12) {
+        const replaceAadhaarInText = val => {
+          let s = String(val === undefined || val === null ? "" : val);
+          if (!s || prevDigits.length !== 12 || prevDigits === targetDigits) return s;
+          const oldFmt = formatAadhaarWithHyphens(prevDigits);
+          if (s.includes(prevDigits)) s = s.split(prevDigits).join(targetDigits);
+          if (oldFmt && s.includes(oldFmt)) s = s.split(oldFmt).join(formattedAadhaar);
+          return s;
+        };
+
         (DB.bills || []).forEach(b => {
           const bAadh = String(b.TenantAadhaar || b.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
           const bRenterId = String(b.RenterID || "").trim();
           const matchOldAadh = prevDigits.length === 12 && bAadh === prevDigits;
           const matchSyncedId = bRenterId && syncedRenterIds.has(bRenterId) && (!bAadh || bAadh === prevDigits);
-          if (matchOldAadh || matchSyncedId) {
+          const matchUnlinkedSameFlatAndName = !bAadh && contextStay &&
+            contextStay.PropertyName && contextStay.FlatName &&
+            isSamePropAndFlat(b.PropertyName, b.FlatName, contextStay.PropertyName, contextStay.FlatName) &&
+            (!b.TenantName || !contextStay.RenterName || String(b.TenantName).trim().toLowerCase() === String(contextStay.RenterName).trim().toLowerCase());
+          if (matchOldAadh || matchSyncedId || matchUnlinkedSameFlatAndName) {
             b.TenantAadhaar = formattedAadhaar;
             if ("AadhaarNumber" in b) b.AadhaarNumber = formattedAadhaar;
           }
@@ -13281,21 +13395,145 @@
             });
           }
           if (DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" && prevDigits.length === 12 && prevDigits !== targetDigits) {
-            const oldKey = "renter::" + prevDigits;
-            const newKey = "renter::" + targetDigits;
-            if (DB.globalConfig.renterMonthlyPhotos[oldKey] && typeof DB.globalConfig.renterMonthlyPhotos[oldKey] === "object") {
-              const mergedMap = { ...(DB.globalConfig.renterMonthlyPhotos[newKey] || {}), ...DB.globalConfig.renterMonthlyPhotos[oldKey] };
-              Object.values(mergedMap).forEach(slot => {
-                if (slot && typeof slot === "object") slot.aadhaar = targetDigits;
-              });
-              DB.globalConfig.renterMonthlyPhotos[newKey] = mergedMap;
-              delete DB.globalConfig.renterMonthlyPhotos[oldKey];
-              didTouchGlobalCfg = true;
-            }
+            const rmp = DB.globalConfig.renterMonthlyPhotos;
+            Object.keys(rmp).forEach(k => {
+              const entry = rmp[k];
+              const keyHasOld = k.includes(prevDigits) || k.includes(formatAadhaarWithHyphens(prevDigits));
+              const nextKey = keyHasOld ? replaceAadhaarInText(k) : k;
+              if (k === "renter::" + prevDigits && entry && typeof entry === "object" && !entry.imageUrl && !entry.previewUrl) {
+                const mergedMap = { ...(rmp["renter::" + targetDigits] || {}), ...entry };
+                Object.values(mergedMap).forEach(slot => {
+                  if (slot && typeof slot === "object") {
+                    slot.aadhaar = targetDigits;
+                    if ("identityDocNumber" in slot) slot.identityDocNumber = targetDigits;
+                  }
+                });
+                rmp["renter::" + targetDigits] = mergedMap;
+                delete rmp[k];
+                didTouchGlobalCfg = true;
+                return;
+              }
+              if (entry && typeof entry === "object") {
+                const ea = String(entry.aadhaar || entry.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+                const eRid = String(entry.renterId || "").trim();
+                const entryMatches = ea === prevDigits || keyHasOld || (eRid && syncedRenterIds.has(eRid) && (!ea || ea === prevDigits));
+                if (entryMatches || nextKey !== k) {
+                  entry.aadhaar = targetDigits;
+                  entry.identityDocNumber = targetDigits;
+                  if (entry.slotKey) entry.slotKey = replaceAadhaarInText(entry.slotKey);
+                  if (nextKey !== k) {
+                    rmp[nextKey] = entry;
+                    delete rmp[k];
+                  }
+                  didTouchGlobalCfg = true;
+                }
+              }
+            });
+          }
+          if (DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" && prevDigits.length === 12 && prevDigits !== targetDigits) {
+            const srMap = DB.globalConfig.screenshotRequests;
+            Object.keys(srMap).forEach(k => {
+              const req = srMap[k];
+              const keyHasOld = k.includes(prevDigits) || k.includes(formatAadhaarWithHyphens(prevDigits));
+              const nextKey = keyHasOld ? replaceAadhaarInText(k) : k;
+              if (req && typeof req === "object") {
+                const ra = String(req.aadhaar || req.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+                const rRid = String(req.renterId || "").trim();
+                const reqMatches = ra === prevDigits || keyHasOld || (rRid && syncedRenterIds.has(rRid) && (!ra || ra === prevDigits));
+                if (reqMatches || nextKey !== k) {
+                  req.aadhaar = targetDigits;
+                  if (req.requestKey) req.requestKey = replaceAadhaarInText(req.requestKey);
+                  if (nextKey !== k) {
+                    srMap[nextKey] = req;
+                    delete srMap[k];
+                  }
+                  didTouchGlobalCfg = true;
+                }
+              }
+            });
+          }
+          if (Array.isArray(DB.globalConfig.maintenanceTickets) && prevDigits.length === 12 && prevDigits !== targetDigits) {
+            DB.globalConfig.maintenanceTickets.forEach(t => {
+              if (!t || typeof t !== "object") return;
+              const ta = String(t.aadhaar || t.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+              if (ta === prevDigits) {
+                t.aadhaar = targetDigits;
+                didTouchGlobalCfg = true;
+              }
+            });
+          }
+          if (Array.isArray(DB.globalConfig.userRequests) && prevDigits.length === 12 && prevDigits !== targetDigits) {
+            DB.globalConfig.userRequests.forEach(ur => {
+              if (!ur || typeof ur !== "object") return;
+              const ua = String(ur.aadhaar || ur.AadhaarNumber || ur.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+              if (ua === prevDigits) {
+                ur.aadhaar = targetDigits;
+                ur.AadhaarNumber = targetDigits;
+                if (ur.identityDocNumber) ur.identityDocNumber = targetDigits;
+                didTouchGlobalCfg = true;
+              }
+            });
+          }
+          if (DB.globalConfig.privateChats && typeof DB.globalConfig.privateChats === "object" && prevDigits.length === 12 && prevDigits !== targetDigits) {
+            const pc = DB.globalConfig.privateChats;
+            Object.keys(pc).forEach(k => {
+              const nextKey = replaceAadhaarInText(k);
+              const list = Array.isArray(pc[k]) ? pc[k] : null;
+              if (list) {
+                list.forEach(msg => {
+                  if (msg && typeof msg === "object" && String(msg.aadhaar || "").replace(/\D/g, "").slice(0, 12) === prevDigits) {
+                    msg.aadhaar = targetDigits;
+                    didTouchGlobalCfg = true;
+                  }
+                });
+              }
+              if (nextKey !== k) {
+                pc[nextKey] = Array.isArray(pc[nextKey]) && list ? pc[nextKey].concat(list) : pc[k];
+                delete pc[k];
+                didTouchGlobalCfg = true;
+              }
+            });
           }
           if (didTouchGlobalCfg && typeof saveLocalGlobalConfigMaster === "function") {
             saveLocalGlobalConfigMaster(DB.globalConfig);
           }
+        }
+
+        if (window.__recentMonthlyPhotoUploads && typeof window.__recentMonthlyPhotoUploads === "object" && prevDigits.length === 12 && prevDigits !== targetDigits) {
+          Object.keys(window.__recentMonthlyPhotoUploads).forEach(tk => {
+            const item = window.__recentMonthlyPhotoUploads[tk];
+            const nextTk = replaceAadhaarInText(tk);
+            if (item && typeof item === "object") {
+              if (String(item.aadhaar || "").replace(/\D/g, "").slice(0, 12) === prevDigits) {
+                item.aadhaar = targetDigits;
+              }
+              if (item.slot && typeof item.slot === "object") {
+                item.slot.aadhaar = targetDigits;
+                item.slot.identityDocNumber = targetDigits;
+                if (item.slot.slotKey) item.slot.slotKey = replaceAadhaarInText(item.slot.slotKey);
+              }
+            }
+            if (nextTk !== tk) {
+              window.__recentMonthlyPhotoUploads[nextTk] = item;
+              delete window.__recentMonthlyPhotoUploads[tk];
+            }
+          });
+        }
+
+        if (prevDigits.length === 12 && prevDigits !== targetDigits) {
+          try {
+            const tMeta = getRenterTenureMetaMap();
+            let tMetaChanged = false;
+            Object.keys(tMeta).forEach(mk => {
+              if (mk.includes(prevDigits)) {
+                const nextMk = replaceAadhaarInText(mk);
+                tMeta[nextMk] = tMeta[mk];
+                delete tMeta[mk];
+                tMetaChanged = true;
+              }
+            });
+            if (tMetaChanged) localStorage.setItem("portal_renter_tenure_meta_v1", JSON.stringify(tMeta));
+          } catch (e) {}
         }
       }
 
@@ -13612,6 +13850,10 @@
         IdentityBackImageURL: newActiveRenterRecord.IdentityBackImageURL
       });
 
+      if (typeof autoUnblockRenterUserAccountOnActivate === "function") {
+        autoUnblockRenterUserAccountOnActivate(formattedAadhaar, destProp, destFlat, newActiveRenterRecord.RenterName);
+      }
+
       saveRenterTenureMeta(
         newStayRenterId,
         destProp,
@@ -13865,6 +14107,10 @@
         IdentityImageURL: shiftedRenterRecord.IdentityImageURL,
         IdentityBackImageURL: shiftedRenterRecord.IdentityBackImageURL
       });
+
+      if (typeof autoUnblockRenterUserAccountOnActivate === "function") {
+        autoUnblockRenterUserAccountOnActivate(shiftedRenterRecord.IdentityDocNumber, destProp, destFlat, shiftedRenterRecord.RenterName);
+      }
 
       if (targetFlatObj) {
         targetFlatObj.RentAmount = newRentAmt;
@@ -18447,10 +18693,10 @@ function formatMonthLabel(rawVal) {
         const dashboardPaymentCircleBoxHtml = `
           <div id="renterDashboardOverviewRow" style="margin-top: 14px; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: space-between; gap: 16px;">
             <!-- Left Side: Half-Size Latest Receipt Payment Overview -->
-            <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="flex: 1 1 320px; max-width: 410px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.31); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="renter-kpi-summary-box" id="renterDashboardPaymentCircleCard" style="flex: 1 1 320px; max-width: 410px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.25); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between;">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                 <div style="display:flex; align-items:center; gap:9px;">
-                  <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.31); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                  <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.25); color:${chartHeaderIconColor}; border:1px solid ${chartHeaderIconBorder}; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                     <i class="fa-solid fa-chart-pie"></i>
                   </div>
                   <div>
@@ -18462,7 +18708,7 @@ function formatMonthLabel(rawVal) {
                     </div>
                   </div>
                 </div>
-                <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.31); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.25); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
                   ${latestBillDateLabel}
                 </span>
               </div>
@@ -18512,7 +18758,7 @@ function formatMonthLabel(rawVal) {
                       ` : ""}
                     </g>
                   </svg>
-                  <div style="position:absolute; width:96px; height:96px; border-radius:50%; background:rgba(15,23,42,0.31); border:1.5px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
+                  <div style="position:absolute; width:96px; height:96px; border-radius:50%; background:rgba(15,23,42,0.25); border:1.5px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6px;">
                     <span style="font-size:0.54rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Total</span>
                     <strong style="font-size:1rem; font-weight:900; color:var(--text-main); margin-top:1px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                     <span style="font-size:0.58rem; font-weight:800; color:${chartCenterBadgeColor}; margin-top:2px;">${chartCenterBadgeText}</span>
@@ -18521,22 +18767,22 @@ function formatMonthLabel(rawVal) {
 
                 <!-- Three Small Boxes Right Below Circle: Total, Paid, Due -->
                 <div style="width:100%; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px;">
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.31); border:1px solid rgba(99,102,241,0.38); text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.25); border:1px solid rgba(99,102,241,0.38); text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:#818cf8; letter-spacing:0.04em;">Total</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:var(--text-main); margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartTotalAmt.toLocaleString("en-IN")}</strong>
                   </div>
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.31); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.25); border:1px solid ${isChartOverpaid ? "rgba(234,179,8,0.45)" : "rgba(16,185,129,0.38)"}; text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${isChartOverpaid ? "#facc15" : "#34d399"}; letter-spacing:0.04em;">Paid</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:${isChartOverpaid ? "#facc15" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartPaidAmt.toLocaleString("en-IN")}</strong>
                   </div>
-                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.31); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
+                  <div style="padding:9px 8px; border-radius:11px; background:rgba(15,23,42,0.25); border:1px solid ${chartDueAmt > 0 ? "rgba(239,68,68,0.42)" : "rgba(16,185,129,0.35)"}; text-align:center;">
                     <div style="font-size:0.62rem; font-weight:800; text-transform:uppercase; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; letter-spacing:0.04em;">Due</div>
                     <strong style="display:block; font-size:0.9rem; font-weight:900; color:${chartDueAmt > 0 ? "#f87171" : "#34d399"}; margin-top:3px; font-variant-numeric:tabular-nums;">₹${chartDueAmt.toLocaleString("en-IN")}</strong>
                   </div>
                 </div>
 
                 ${chartAdvanceAmt > 0 ? `
-                  <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.31); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                  <div style="width:100%; padding:8px 12px; border-radius:10px; background:rgba(15,23,42,0.25); border:1px solid rgba(234,179,8,0.45); display:flex; align-items:center; justify-content:space-between; gap:8px;">
                     <span style="font-size:0.72rem; font-weight:800; color:#facc15;"><i class="fa-solid fa-circle-check"></i> Overpaid Credit</span>
                     <strong style="font-size:0.9rem; font-weight:900; color:#facc15; font-variant-numeric:tabular-nums;">+₹${chartAdvanceAmt.toLocaleString("en-IN")}</strong>
                   </div>
@@ -18546,11 +18792,11 @@ function formatMonthLabel(rawVal) {
             </div>
 
             <!-- Right Side: Latest Receipt Summary Card -->
-            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.31); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.25); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
               <div>
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                   <div style="display:flex; align-items:center; gap:9px;">
-                    <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.31); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
+                    <div style="width:32px; height:32px; border-radius:9px; background:rgba(15,23,42,0.25); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0;">
                       <i class="fa-solid fa-receipt"></i>
                     </div>
                     <div>
@@ -18562,14 +18808,14 @@ function formatMonthLabel(rawVal) {
                       </div>
                     </div>
                   </div>
-                  <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.31); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
+                  <span style="font-size:0.66rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(15,23,42,0.25); color:${chartCenterBadgeColor}; border:1px solid ${chartHeaderIconBorder};">
                     ${chartCenterBadgeText}
                   </span>
                 </div>
 
                 ${latestBill ? `
                   <div style="display:flex; flex-direction:column; gap:8px;">
-                    <div style="padding:9px 11px; border-radius:11px; background:rgba(15,23,42,0.31); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                    <div style="padding:9px 11px; border-radius:11px; background:rgba(15,23,42,0.25); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
                       <span style="font-size:0.74rem; font-weight:800; color:var(--text-main);">
                         <i class="fa-solid fa-building" style="color:#38bdf8; margin-right:5px;"></i>Flat ${escapeHtml(latestBillFlatLabel)} (${escapeHtml(latestBillPropLabel)})
                       </span>
@@ -18579,33 +18825,33 @@ function formatMonthLabel(rawVal) {
                     </div>
 
                     <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;">
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.31); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.25); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Base Rent</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillBaseRentAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.31); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.25); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#38bdf8; text-transform:uppercase;">Electricity</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillElecAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.31); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.25); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#f59e0b; text-transform:uppercase;">PNG Gas</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillPngAmt.toLocaleString("en-IN")}</strong>
                       </div>
-                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.31); border:1px solid var(--glass-border);">
+                      <div style="padding:8px 10px; border-radius:10px; background:rgba(15,23,42,0.25); border:1px solid var(--glass-border);">
                         <div style="font-size:0.62rem; font-weight:800; color:#06b6d4; text-transform:uppercase;">Water</div>
                         <strong style="display:block; font-size:0.86rem; font-weight:900; color:var(--text-main); margin-top:2px; font-variant-numeric:tabular-nums;">₹${latestBillWaterAmt.toLocaleString("en-IN")}</strong>
                       </div>
                     </div>
 
                     ${latestBillAddAmt > 0 ? `
-                      <div style="padding:7px 10px; border-radius:10px; background:rgba(15,23,42,0.31); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.74rem;">
+                      <div style="padding:7px 10px; border-radius:10px; background:rgba(15,23,42,0.25); border:1px solid var(--glass-border); display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:0.74rem;">
                         <span style="font-weight:700; color:#c084fc;">${escapeHtml(latestBillAddLabel)}</span>
                         <strong style="font-weight:900; color:var(--text-main); font-variant-numeric:tabular-nums;">₹${latestBillAddAmt.toLocaleString("en-IN")}</strong>
                       </div>
                     ` : ""}
                   </div>
                 ` : `
-                  <div style="padding:26px 14px; border-radius:12px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.31); text-align:center; color:var(--text-muted); font-size:0.78rem;">
+                  <div style="padding:26px 14px; border-radius:12px; border:1px dashed var(--glass-border); background:rgba(15,23,42,0.25); text-align:center; color:var(--text-muted); font-size:0.78rem;">
                     <i class="fa-solid fa-file-invoice" style="font-size:1.35rem; color:#38bdf8; display:block; margin-bottom:8px;"></i>
                     No receipt generated for your account yet.
                   </div>
@@ -18616,7 +18862,7 @@ function formatMonthLabel(rawVal) {
                 type="button"
                 id="renterDashboardLatestReceiptBtn"
                 onclick="${latestBill ? `selectRenterHomeAvailableReceipt('${latestBillIdArg}', '${latestBillMonthArg}'); openBillReceiptModal('${latestBillIdArg}', '${latestBillMonthArg}');` : `navigateRenterQuickNav('receipt');`}"
-                style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(56,189,248,0.45); background:rgba(15,23,42,0.31); color:#38bdf8; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
+                style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid rgba(56,189,248,0.45); background:rgba(15,23,42,0.25); color:#38bdf8; font-size:0.78rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
               >
                 <i class="fa-solid fa-eye"></i>
                 <span>${latestBill ? "View Latest Receipt" : "Open All Receipts"}</span>
@@ -19041,6 +19287,20 @@ function formatMonthLabel(rawVal) {
           window.__pendingProfileEmailOtp.awaitingVerify === true
         );
 
+        const flatChecklistStorageKey = (typeof getFlatChecklistStorageKey === "function" && targetProp && targetFlat)
+          ? getFlatChecklistStorageKey(targetProp, targetFlat)
+          : "";
+        const flatChecklistData = (assignedFlatObj?.ApplianceChecklist && Object.keys(assignedFlatObj.ApplianceChecklist).length > 0)
+          ? assignedFlatObj.ApplianceChecklist
+          : ((flatChecklistStorageKey && DB.globalConfig?.flatChecklists?.[flatChecklistStorageKey]) || {});
+        const clFans = Number(flatChecklistData.fans ?? 0);
+        const clBulbs = Number(flatChecklistData.bulbs ?? 0);
+        const clGeysers = Number(flatChecklistData.geysers ?? 0);
+        const clKeys = Number(flatChecklistData.keys ?? 0);
+        const clMeter = String(flatChecklistData.meter || "").trim() || "Not Set";
+        const clPaint = String(flatChecklistData.paint || "").trim() || "Not Set";
+        const clNotes = String(flatChecklistData.notes || "").trim();
+
         const renterIsolatedProfileHtml = `
           <div class="renter-kpi-summary-box" id="renterInlineProfileCard" style="padding: 24px; border-radius: 18px; background: transparent; border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
@@ -19093,7 +19353,7 @@ function formatMonthLabel(rawVal) {
               </div>
             ` : ""}
 
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px; margin-bottom:20px;">
               <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-user" style="color:#38bdf8;"></i> Renter Photo</div>
                 ${profileImgUrl ? `
@@ -19115,6 +19375,50 @@ function formatMonthLabel(rawVal) {
                 ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Back Photo</div>`}
               </div>
             </div>
+
+            <!-- Move-In / Move-Out Inventory & Appliance Checklist (Read-Only View for Renter) -->
+            <div id="renterProfileChecklistCard" style="padding:16px; border-radius:16px; background:transparent; border:1.5px solid rgba(56,189,248,0.45);">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:0.84rem; font-weight:800; color:#38bdf8;">
+                  <i class="fa-solid fa-clipboard-check"></i> Move-In / Move-Out Inventory &amp; Appliance Checklist
+                </span>
+                <span style="font-size:0.68rem; font-weight:700; color:var(--text-muted);">
+                  Flat ${escapeHtml(targetFlat)} (${escapeHtml(targetProp)})
+                </span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
+                <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Ceiling Fans (Qty)</span>
+                  <strong style="font-size:0.88rem; color:var(--text-main);">${clFans}</strong>
+                </div>
+                <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">LED Bulbs / Tubes</span>
+                  <strong style="font-size:0.88rem; color:var(--text-main);">${clBulbs}</strong>
+                </div>
+                <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Geyser / Exhaust</span>
+                  <strong style="font-size:0.88rem; color:var(--text-main);">${clGeysers}</strong>
+                </div>
+                <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Door Keys Handed</span>
+                  <strong style="font-size:0.88rem; color:var(--text-main);">${clKeys}</strong>
+                </div>
+                <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Sub-Meter Seal Status</span>
+                  <strong style="font-size:0.84rem; color:var(--text-main);">${escapeHtml(clMeter)}</strong>
+                </div>
+                <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Wall Paint &amp; Taps</span>
+                  <strong style="font-size:0.84rem; color:var(--text-main);">${escapeHtml(clPaint)}</strong>
+                </div>
+              </div>
+              ${clNotes ? `
+                <div style="margin-top:10px; padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Move-In / Move-Out Remarks</span>
+                  <strong style="font-size:0.8rem; color:var(--text-main);">${escapeHtml(clNotes)}</strong>
+                </div>
+              ` : ""}
+            </div>
           </div>
         `;
 
@@ -19125,10 +19429,10 @@ function formatMonthLabel(rawVal) {
         const hasAndroidLink = Boolean(appDownloadLinks.androidApkUrl);
         const hasIosLink = Boolean(appDownloadLinks.iosAppUrl);
         const renterIsolatedDownloadAppHtml = `
-          <div class="renter-kpi-summary-box" id="renterDownloadAppCard" style="padding: 24px; border-radius: 18px; background: rgba(15,23,42,0.31); border: 1.5px solid var(--glass-border);">
+          <div class="renter-kpi-summary-box" id="renterDownloadAppCard" style="padding: 24px; border-radius: 18px; background: rgba(15,23,42,0.25); border: 1.5px solid var(--glass-border);">
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:42px; height:42px; border-radius:12px; background:rgba(15,23,42,0.31); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
+                <div style="width:42px; height:42px; border-radius:12px; background:rgba(15,23,42,0.25); color:#38bdf8; border:1px solid rgba(56,189,248,0.38); display:flex; align-items:center; justify-content:center; font-size:1.15rem;">
                   <i class="fa-solid fa-mobile-screen-button"></i>
                 </div>
                 <div>
@@ -19218,7 +19522,7 @@ function formatMonthLabel(rawVal) {
                 </div>
 
                 <!-- Right Side of Verified Residential Portal: Icon + Heading & Verified Aadhaar Number -->
-                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.31); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
+                <div id="renterHeroAadhaarCardBox" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; padding:12px 16px; border-radius:16px; background:rgba(15,23,42,0.25); border:1.5px solid rgba(16,185,129,0.4); min-width:190px;">
                   <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#38bdf8;">
                     <i class="fa-solid fa-id-card" style="color:#f97316; font-size:0.86rem;"></i>
                     <span>Aadhaar Card</span>
@@ -26469,6 +26773,10 @@ function formatMonthLabel(rawVal) {
         identityBackImageUrl: targetRenter.IdentityBackImageURL || ""
       });
       let didServerSyncUpdate = false;
+      if (saveRes && Array.isArray(saveRes.renters) && saveRes.renters.length > 0) {
+        DB.renters = saveRes.renters;
+        didServerSyncUpdate = true;
+      }
       if (saveRes && Array.isArray(saveRes.bills) && saveRes.bills.length > 0) {
         DB.bills = sanitizeAllBillsMonths(saveRes.bills);
         didServerSyncUpdate = true;
@@ -26479,7 +26787,23 @@ function formatMonthLabel(rawVal) {
         didServerSyncUpdate = true;
         if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
       }
+      if (saveRes && Array.isArray(saveRes.paymentProofs)) {
+        if (!DB.globalConfig) DB.globalConfig = {};
+        DB.globalConfig.paymentProofs = saveRes.paymentProofs;
+        didServerSyncUpdate = true;
+      }
+      if (saveRes && saveRes.renterMonthlyPhotos && typeof saveRes.renterMonthlyPhotos === "object") {
+        if (!DB.globalConfig) DB.globalConfig = {};
+        DB.globalConfig.renterMonthlyPhotos = saveRes.renterMonthlyPhotos;
+        didServerSyncUpdate = true;
+      }
+      if (saveRes && saveRes.screenshotRequests && typeof saveRes.screenshotRequests === "object") {
+        if (!DB.globalConfig) DB.globalConfig = {};
+        DB.globalConfig.screenshotRequests = saveRes.screenshotRequests;
+        didServerSyncUpdate = true;
+      }
       if (didServerSyncUpdate) {
+        if (typeof saveLocalGlobalConfigMaster === "function" && DB.globalConfig) saveLocalGlobalConfigMaster(DB.globalConfig);
         saveDbSnapshotToCache();
         renderAllDashboardUI();
         if (selectedFlat) populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
@@ -33941,6 +34265,15 @@ function formatMonthLabel(rawVal) {
           RenterName: payload.renterName
         }
       );
+      if (statusVal === "Active" && typeof autoUnblockRenterUserAccountOnActivate === "function") {
+        autoUnblockRenterUserAccountOnActivate(
+          payload.identityDocNumber,
+          selectedFlat.PropertyName,
+          selectedFlat.FlatName,
+          payload.renterName,
+          previousAadhaarBeforeEdit
+        );
+      }
       const aadhInputAfterSave = document.getElementById("renterIdentityNum");
       if (aadhInputAfterSave) {
         aadhInputAfterSave.dataset.originalAadhaar = statusVal === "Inactive" && !wasAlreadyInactive ? "" : (payload.identityDocNumber || "");
@@ -33960,6 +34293,10 @@ function formatMonthLabel(rawVal) {
 
       const saveRes = await sendFirebaseAction(payload);
       let didServerSyncUpdate = false;
+      if (saveRes && Array.isArray(saveRes.renters) && saveRes.renters.length > 0) {
+        DB.renters = saveRes.renters;
+        didServerSyncUpdate = true;
+      }
       if (saveRes && Array.isArray(saveRes.bills) && saveRes.bills.length > 0) {
         DB.bills = sanitizeAllBillsMonths(saveRes.bills);
         didServerSyncUpdate = true;
@@ -33970,7 +34307,23 @@ function formatMonthLabel(rawVal) {
         didServerSyncUpdate = true;
         if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
       }
+      if (saveRes && Array.isArray(saveRes.paymentProofs)) {
+        if (!DB.globalConfig) DB.globalConfig = {};
+        DB.globalConfig.paymentProofs = saveRes.paymentProofs;
+        didServerSyncUpdate = true;
+      }
+      if (saveRes && saveRes.renterMonthlyPhotos && typeof saveRes.renterMonthlyPhotos === "object") {
+        if (!DB.globalConfig) DB.globalConfig = {};
+        DB.globalConfig.renterMonthlyPhotos = saveRes.renterMonthlyPhotos;
+        didServerSyncUpdate = true;
+      }
+      if (saveRes && saveRes.screenshotRequests && typeof saveRes.screenshotRequests === "object") {
+        if (!DB.globalConfig) DB.globalConfig = {};
+        DB.globalConfig.screenshotRequests = saveRes.screenshotRequests;
+        didServerSyncUpdate = true;
+      }
       if (didServerSyncUpdate) {
+        if (typeof saveLocalGlobalConfigMaster === "function" && DB.globalConfig) saveLocalGlobalConfigMaster(DB.globalConfig);
         saveDbSnapshotToCache();
         renderAllDashboardUI();
         if (selectedFlat) populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
@@ -34113,6 +34466,8 @@ function formatMonthLabel(rawVal) {
       addRenterModalIsReactivating = false;
       addRenterModalProfUrl = "";
       addRenterModalIdUrl = "";
+      window.__addRenterAadhaarCandidates = [];
+      window.__isSubmittingAddRenterModal = false;
 
       const nameEl = document.getElementById("addRenterNameInput");
       const flatRateEl = document.getElementById("addRenterFlatRateInput");
@@ -34153,16 +34508,17 @@ function formatMonthLabel(rawVal) {
     }
 
     // Inside "Add Renter" under Plus (+), ONLY display flats that are currently VACANT
-    function populateAddRenterFlatsDropdown() {
+    function populateAddRenterFlatsDropdown(preserveFlatVal = "") {
       const propName = document.getElementById("addRenterPropDropdown")?.value || "";
       const flatSelect = document.getElementById("addRenterFlatDropdown");
       if (!flatSelect) return;
+      const desiredFlat = String(preserveFlatVal || "").trim();
       if (!propName) {
         flatSelect.innerHTML = '<option value="">-- Select Location First (*) --</option>';
         return;
       }
       const matchingFlats = (DB.flats || []).filter(f =>
-        String(f.PropertyName || "").trim().toLowerCase() === String(propName).trim().toLowerCase()
+        String(f.PropertyName || "").trim().toLowerCase() === String(propName || "").trim().toLowerCase()
       );
       if (matchingFlats.length === 0) {
         flatSelect.innerHTML = '<option value="">No flats found in this location (Add Flat first)</option>';
@@ -34185,6 +34541,11 @@ function formatMonthLabel(rawVal) {
       flatSelect.innerHTML = ['<option value="">-- Select Vacant Flat Name / Number (*) --</option>'].concat(
         vacantFlats.map(f => `<option value="${f.FlatName}">${f.FlatName} — Vacant</option>`)
       ).join("");
+
+      if (desiredFlat) {
+        const matchOpt = Array.from(flatSelect.options).find(o => String(o.value || "").trim().toLowerCase() === desiredFlat.toLowerCase());
+        if (matchOpt) flatSelect.value = matchOpt.value;
+      }
     }
 
     // Auto-fill Flat Rate & Electricity Rate Per Unit if the selected flat already has saved rates
@@ -34204,7 +34565,7 @@ function formatMonthLabel(rawVal) {
       }
     }
 
-    // Auto-hyphenate Aadhaar (XXXX-XXXX-XXXX) & Auto-Fill Name, Flat Rate, Electricity Rate when a previous renter's Aadhaar is entered
+    // Auto-hyphenate Aadhaar (XXXX-XXXX-XXXX) & display selectable matching record dropdown right below Aadhaar input (no immediate auto-fill)
     function handleAddRenterModalAadhaarLookup(rawVal) {
       const aadhInput = document.getElementById("addRenterAadhaarInput");
       const digits = String(rawVal !== undefined ? rawVal : (aadhInput ? aadhInput.value : "")).replace(/\D/g, "").slice(0, 12);
@@ -34219,13 +34580,14 @@ function formatMonthLabel(rawVal) {
       if (digits.length < 4) {
         addRenterModalMatchedRecord = null;
         addRenterModalIsReactivating = false;
+        window.__addRenterAadhaarCandidates = [];
         matchBox.style.display = "none";
         matchBox.innerHTML = "";
         return;
       }
 
       const matchingRecords = (DB.renters || []).filter(r => {
-        const rAadhaar = String(r.IdentityDocNumber || "").replace(/\D/g, "");
+        const rAadhaar = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
         if (!rAadhaar) return false;
         return digits.length === 12 ? (rAadhaar === digits) : rAadhaar.startsWith(digits);
       });
@@ -34233,24 +34595,85 @@ function formatMonthLabel(rawVal) {
       if (matchingRecords.length === 0) {
         addRenterModalMatchedRecord = null;
         addRenterModalIsReactivating = false;
+        window.__addRenterAadhaarCandidates = [];
         matchBox.style.display = "none";
         matchBox.innerHTML = "";
         return;
       }
 
       matchingRecords.sort((a, b) => {
-        const aExact = String(a.IdentityDocNumber || "").replace(/\D/g, "") === digits ? 1 : 0;
-        const bExact = String(b.IdentityDocNumber || "").replace(/\D/g, "") === digits ? 1 : 0;
+        const aExact = String(a.IdentityDocNumber || a.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12) === digits ? 1 : 0;
+        const bExact = String(b.IdentityDocNumber || b.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12) === digits ? 1 : 0;
         if (aExact !== bExact) return bExact - aExact;
         const aScore = (a.ProfileImageURL ? 2 : 0) + (a.IdentityImageURL ? 2 : 0) + (a.Address ? 1 : 0);
         const bScore = (b.ProfileImageURL ? 2 : 0) + (b.IdentityImageURL ? 2 : 0) + (b.Address ? 1 : 0);
         return bScore - aScore;
       });
 
-      const best = consolidateRenterHistoryDetailsByAadhaar(matchingRecords[0])?.merged || matchingRecords[0];
+      const seenAadhaarKeys = new Set();
+      const candidates = [];
+      matchingRecords.forEach(r => {
+        const candDigits = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+        const key = candDigits || ("RID:" + String(r.RenterID || r.RenterName || candidates.length));
+        if (seenAadhaarKeys.has(key)) return;
+        seenAadhaarKeys.add(key);
+        const merged = consolidateRenterHistoryDetailsByAadhaar(r)?.merged || r;
+        const staysList = matchingRecords
+          .filter(m => {
+            const md = String(m.IdentityDocNumber || m.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+            return candDigits ? md === candDigits : m === r;
+          })
+          .map(m => `${m.PropertyName || "--"} (Flat ${m.FlatName || "--"} • ${String(m.Status || "Active")})`)
+          .filter((v, idx, arr) => arr.indexOf(v) === idx)
+          .join(" | ");
+        candidates.push({ record: merged, staysText: staysList, aadhaarDigits: candDigits });
+      });
+
+      window.__addRenterAadhaarCandidates = candidates;
+      addRenterModalMatchedRecord = null;
+      addRenterModalIsReactivating = false;
+
+      matchBox.style.display = "block";
+      matchBox.innerHTML = `
+        <div style="padding:12px; border-radius:12px; background:var(--bg-input); border:1.5px solid rgba(56,189,248,0.45);">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;">
+            <label for="addRenterAadhaarMatchDropdown" style="font-size:0.78rem; font-weight:800; color:#38bdf8; margin:0; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-magnifying-glass"></i> Matching Record Found (${candidates.length}) — Select to Auto-Fill
+            </label>
+          </div>
+          <select id="addRenterAadhaarMatchDropdown" class="form-control" style="font-size:0.84rem;" onchange="selectAddRenterAadhaarCandidate(this.value)">
+            <option value="">-- Select Matching Renter Record --</option>
+            ${candidates.map((cand, idx) => {
+              const rec = cand.record;
+              const fmtA = cand.aadhaarDigits ? formatAadhaarWithHyphens(cand.aadhaarDigits) : "--";
+              const stLabel = String(rec.Status || "").trim().toLowerCase() === "active" ? "Active" : "Past";
+              return `<option value="${idx}">${escapeHtml(rec.RenterName || "Saved Renter")} • ${fmtA} (${escapeHtml(rec.PropertyName || "--")} Flat ${escapeHtml(rec.FlatName || "--")} • ${stLabel})</option>`;
+            }).join("")}
+          </select>
+          <div id="addRenterAadhaarSelectedSummary" style="margin-top:8px;"></div>
+        </div>
+      `;
+    }
+
+    function selectAddRenterAadhaarCandidate(idxStr) {
+      const summaryEl = document.getElementById("addRenterAadhaarSelectedSummary");
+      if (idxStr === "" || idxStr === null || idxStr === undefined) {
+        addRenterModalMatchedRecord = null;
+        addRenterModalIsReactivating = false;
+        if (summaryEl) summaryEl.innerHTML = "";
+        return;
+      }
+      const idx = parseInt(idxStr, 10);
+      const candidates = Array.isArray(window.__addRenterAadhaarCandidates) ? window.__addRenterAadhaarCandidates : [];
+      const selectedCand = (!isNaN(idx) && candidates[idx]) ? candidates[idx] : null;
+      if (!selectedCand || !selectedCand.record) return;
+
+      const best = selectedCand.record;
+      const digits = selectedCand.aadhaarDigits || String(best.IdentityDocNumber || best.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
       addRenterModalMatchedRecord = best;
       addRenterModalIsReactivating = true;
 
+      const aadhInput = document.getElementById("addRenterAadhaarInput");
       const nameEl = document.getElementById("addRenterNameInput");
       const flatRateEl = document.getElementById("addRenterFlatRateInput");
       const elecRateEl = document.getElementById("addRenterElecRateInput");
@@ -34260,6 +34683,9 @@ function formatMonthLabel(rawVal) {
       const profImg = document.getElementById("addRenterProfilePicPreview") || document.getElementById("addRenterProfPreview");
       const idImg = document.getElementById("addRenterIdentityPicPreview") || document.getElementById("addRenterIdPreview");
 
+      if (aadhInput && digits.length === 12) {
+        aadhInput.value = formatAadhaarWithHyphens(digits);
+      }
       if (nameEl && best.RenterName) {
         nameEl.value = best.RenterName;
       }
@@ -34284,51 +34710,45 @@ function formatMonthLabel(rawVal) {
       if (profImg) profImg.src = addRenterModalProfUrl ? normalizeGoogleDriveImageUrl(addRenterModalProfUrl) : EMPTY_PROFILE_PLACEHOLDER;
       if (idImg) idImg.src = addRenterModalIdUrl ? normalizeGoogleDriveImageUrl(addRenterModalIdUrl) : EMPTY_IDENTITY_PLACEHOLDER;
 
-      const isCurrentlyActive = String(best.Status || "").trim().toLowerCase() === "active";
-      const statusBadgeHtml = isCurrentlyActive
-        ? `<span class="badge-paid" style="font-size:0.68rem; padding:3px 9px;"><i class="fa-solid fa-circle-check"></i> Currently Active</span>`
-        : `<span class="badge-unpaid" style="font-size:0.68rem; padding:3px 9px;"><i class="fa-solid fa-clock-rotate-left"></i> Past / Returning Renter</span>`;
+      if (summaryEl) {
+        const isCurrentlyActive = String(best.Status || "").trim().toLowerCase() === "active";
+        const statusBadgeHtml = isCurrentlyActive
+          ? `<span class="badge-paid" style="font-size:0.68rem; padding:3px 9px;"><i class="fa-solid fa-circle-check"></i> Currently Active</span>`
+          : `<span class="badge-unpaid" style="font-size:0.68rem; padding:3px 9px;"><i class="fa-solid fa-clock-rotate-left"></i> Past / Returning Renter</span>`;
+        const profSrc = (!isPlaceholderImageUrl(best.ProfileImageURL)) ? normalizeGoogleDriveImageUrl(best.ProfileImageURL) : EMPTY_PROFILE_PLACEHOLDER;
 
-      const allStaysText = matchingRecords
-        .map(r => `${r.PropertyName || "--"} (Flat ${r.FlatName || "--"} • ${String(r.Status || "Active")})`)
-        .filter((v, idx, arr) => arr.indexOf(v) === idx)
-        .join(" | ");
-
-      const profSrc = (!isPlaceholderImageUrl(best.ProfileImageURL)) ? normalizeGoogleDriveImageUrl(best.ProfileImageURL) : EMPTY_PROFILE_PLACEHOLDER;
-
-      matchBox.style.display = "block";
-      matchBox.innerHTML = `
-        <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid rgba(16,185,129,0.28);">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${profSrc}" alt="Renter" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid #10b981; flex-shrink:0;" />
-            <div>
-              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <strong style="font-size:0.95rem; color:var(--text-main);">${best.RenterName || "Saved Renter"}</strong>
-                ${statusBadgeHtml}
-              </div>
-              <div style="font-size:0.74rem; color:#10b981; font-weight:800; margin-top:2px;">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Full Profile, Photos &amp; Documents Auto-Loaded! Choose Location &amp; Vacant Flat above to assign.
+        summaryEl.innerHTML = `
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:10px; padding:10px; border-radius:10px; border:1px solid rgba(16,185,129,0.35); background:rgba(16,185,129,0.08);">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <img src="${profSrc}" alt="Renter" style="width:46px; height:46px; border-radius:50%; object-fit:cover; border:2px solid #10b981; flex-shrink:0;" />
+              <div>
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <strong style="font-size:0.94rem; color:var(--text-main);">${escapeHtml(best.RenterName || "Saved Renter")}</strong>
+                  ${statusBadgeHtml}
+                </div>
+                <div style="font-size:0.74rem; color:#10b981; font-weight:800; margin-top:2px;">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> Renter Name, Aadhaar &amp; Saved Details Filled!
+                </div>
               </div>
             </div>
+            <button
+              type="button"
+              class="btn-primary"
+              style="width:auto; padding:7px 12px; font-size:0.74rem; font-weight:800; background:linear-gradient(135deg, #10b981, #059669); border-radius:10px;"
+              onclick="activateInPageRenterDetailsFromAadhaar()"
+            >
+              <i class="fa-solid fa-sliders"></i> View / Edit Full Details
+            </button>
           </div>
-          <button
-            type="button"
-            class="btn-primary"
-            style="width:auto; padding:7px 12px; font-size:0.74rem; font-weight:800; background:linear-gradient(135deg, #10b981, #059669); border-radius:10px;"
-            onclick="activateInPageRenterDetailsFromAadhaar()"
-          >
-            <i class="fa-solid fa-sliders"></i> View / Edit Full Details
-          </button>
-        </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(155px, 1fr)); gap:8px; font-size:0.76rem; background:var(--bg-input); padding:10px; border-radius:10px; border:1px solid var(--glass-border);">
-          <div><span style="color:var(--text-muted);">Auto-Filled Name:</span> <strong style="color:var(--text-main);">${best.RenterName || "--"}</strong></div>
-          <div><span style="color:var(--text-muted);">Previous Rent:</span> <strong style="color:#10b981;">₹${Number(best.RentAmount || 0).toLocaleString("en-IN")}</strong></div>
-          <div><span style="color:var(--text-muted);">Aadhaar No.:</span> <strong style="color:#38bdf8;">${formatAadhaarWithHyphens(best.IdentityDocNumber || digits)}</strong></div>
-          <div><span style="color:var(--text-muted);">Photos &amp; Docs:</span> <strong style="color:#10b981;">${(addRenterModalProfUrl || addRenterModalIdUrl) ? "Loaded Automatically" : "Standard"}</strong></div>
-          <div><span style="color:var(--text-muted);">Previous Stays:</span> <strong style="color:#a78bfa;">${allStaysText}</strong></div>
-        </div>
-      `;
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(155px, 1fr)); gap:8px; font-size:0.76rem; background:var(--bg-input); padding:10px; border-radius:10px; border:1px solid var(--glass-border);">
+            <div><span style="color:var(--text-muted);">Selected Name:</span> <strong style="color:var(--text-main);">${escapeHtml(best.RenterName || "--")}</strong></div>
+            <div><span style="color:var(--text-muted);">Previous Rent:</span> <strong style="color:#10b981;">₹${Number(best.RentAmount || 0).toLocaleString("en-IN")}</strong></div>
+            <div><span style="color:var(--text-muted);">Aadhaar No.:</span> <strong style="color:#38bdf8;">${formatAadhaarWithHyphens(best.IdentityDocNumber || digits)}</strong></div>
+            <div><span style="color:var(--text-muted);">Photos &amp; Docs:</span> <strong style="color:#10b981;">${(addRenterModalProfUrl || addRenterModalIdUrl) ? "Loaded Automatically" : "Standard"}</strong></div>
+            <div><span style="color:var(--text-muted);">Previous Stays:</span> <strong style="color:#a78bfa;">${escapeHtml(selectedCand.staysText || "")}</strong></div>
+          </div>
+        `;
+      }
     }
 
     function activateInPageRenterDetailsFromAadhaar() {
@@ -34394,6 +34814,7 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitAddRenterModal() {
+      if (window.__isSubmittingAddRenterModal) return;
       const targetProp = (document.getElementById("addRenterPropDropdown")?.value || "").trim();
       const targetFlat = (document.getElementById("addRenterFlatDropdown")?.value || "").trim();
       const rName = (document.getElementById("addRenterNameInput")?.value || "").trim();
@@ -34421,219 +34842,226 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Invalid Aadhaar Number", "If entering an Aadhaar number, please enter all 12 digits (XXXX-XXXX-XXXX).", false);
       }
 
-      const expBox = document.getElementById("addRenterExpandedDetailsBox");
-      const isExpandedVisible = expBox && expBox.style.display !== "none";
+      window.__isSubmittingAddRenterModal = true;
+      try {
+        const expBox = document.getElementById("addRenterExpandedDetailsBox");
+        const isExpandedVisible = expBox && expBox.style.display !== "none";
 
-      const consolidatedRec = consolidateRenterHistoryDetailsByAadhaar(addRenterModalMatchedRecord || { IdentityDocNumber: rawAadhaar })?.merged || addRenterModalMatchedRecord;
+        const consolidatedRec = consolidateRenterHistoryDetailsByAadhaar(addRenterModalMatchedRecord || { IdentityDocNumber: rawAadhaar })?.merged || addRenterModalMatchedRecord;
 
-      const altMob = isExpandedVisible
-        ? (document.getElementById("addRenterAltMobileInput")?.value || "").trim()
-        : (consolidatedRec?.AltMobileNumber || "");
-      const addr = isExpandedVisible
-        ? (document.getElementById("addRenterAddressInput")?.value || "").trim()
-        : (consolidatedRec?.Address || "");
-      const famCount = isExpandedVisible
-        ? (parseInt(document.getElementById("addRenterFamilyInput")?.value || "1", 10) || 1)
-        : (parseInt(consolidatedRec?.TotalFamilyMembers || "1", 10) || 1);
-      const joinDate = (isExpandedVisible && document.getElementById("addRenterJoinDateInput")?.value)
-        ? document.getElementById("addRenterJoinDateInput").value
-        : new Date().toISOString().split("T")[0];
-      const statusVal = "Active";
+        const altMob = isExpandedVisible
+          ? (document.getElementById("addRenterAltMobileInput")?.value || "").trim()
+          : (consolidatedRec?.AltMobileNumber || "");
+        const addr = isExpandedVisible
+          ? (document.getElementById("addRenterAddressInput")?.value || "").trim()
+          : (consolidatedRec?.Address || "");
+        const famCount = isExpandedVisible
+          ? (parseInt(document.getElementById("addRenterFamilyInput")?.value || "1", 10) || 1)
+          : (parseInt(consolidatedRec?.TotalFamilyMembers || "1", 10) || 1);
+        const joinDate = (isExpandedVisible && document.getElementById("addRenterJoinDateInput")?.value)
+          ? document.getElementById("addRenterJoinDateInput").value
+          : new Date().toISOString().split("T")[0];
+        const statusVal = "Active";
 
-      const profUrl = addRenterModalProfUrl || (consolidatedRec && !isPlaceholderImageUrl(consolidatedRec.ProfileImageURL) ? consolidatedRec.ProfileImageURL : "");
-      const idUrl = addRenterModalIdUrl || (consolidatedRec && !isPlaceholderImageUrl(consolidatedRec.IdentityImageURL) ? consolidatedRec.IdentityImageURL : "");
+        const profUrl = addRenterModalProfUrl || (consolidatedRec && !isPlaceholderImageUrl(consolidatedRec.ProfileImageURL) ? consolidatedRec.ProfileImageURL : "");
+        const idUrl = addRenterModalIdUrl || (consolidatedRec && !isPlaceholderImageUrl(consolidatedRec.IdentityImageURL) ? consolidatedRec.IdentityImageURL : "");
 
-      const flatObj = findFlatObject(targetProp, targetFlat);
-      const propObj = findPropertyObject(targetProp);
+        const flatObj = findFlatObject(targetProp, targetFlat);
+        const propObj = findPropertyObject(targetProp);
 
-      const finalRentAmount = flatRateNum;
-      const finalElecRate = rawElecRateStr !== "" && !isNaN(parseFloat(rawElecRateStr))
-        ? parseFloat(rawElecRateStr)
-        : (flatObj?.ElecRate !== undefined && flatObj?.ElecRate !== "" ? flatObj.ElecRate : (consolidatedRec?.ElecFixedRate !== undefined ? consolidatedRec.ElecFixedRate : ""));
+        const finalRentAmount = flatRateNum;
+        const finalElecRate = rawElecRateStr !== "" && !isNaN(parseFloat(rawElecRateStr))
+          ? parseFloat(rawElecRateStr)
+          : (flatObj?.ElecRate !== undefined && flatObj?.ElecRate !== "" ? flatObj.ElecRate : (consolidatedRec?.ElecFixedRate !== undefined ? consolidatedRec.ElecFixedRate : ""));
 
-      // Update the flat object in DB.flats with the newly entered Flat Rate and Electricity Rate Per Unit
-      if (flatObj) {
-        flatObj.RentAmount = finalRentAmount;
-        if (finalElecRate !== "") {
-          flatObj.ElecRate = finalElecRate;
-        }
-      }
-
-      const inheritedPng = flatObj?.PNGRate !== undefined && flatObj?.PNGRate !== "" ? flatObj.PNGRate : (consolidatedRec?.PNGFixedRate !== undefined ? consolidatedRec.PNGFixedRate : "");
-      const inheritedWater = flatObj?.WaterRate !== undefined && flatObj?.WaterRate !== "" ? flatObj.WaterRate : (consolidatedRec?.WaterFixedRate !== undefined ? consolidatedRec.WaterFixedRate : "");
-      const inheritedUpiName = propObj?.UPIName || flatObj?.UPIName || consolidatedRec?.UPIName || "";
-      const inheritedUpiId = propObj?.UPIID || flatObj?.UPIID || consolidatedRec?.UPIID || "";
-      const inheritedContract = propObj?.ContractNumber || flatObj?.ContractMobile || consolidatedRec?.ContractMobile || "";
-
-      // If another renter is currently Active in this target flat, mark them Inactive so history is preserved
-      (DB.renters || []).forEach(r => {
-        if (isSamePropAndFlat(r.PropertyName, r.FlatName, targetProp, targetFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
-          r.Status = "Inactive";
-          if (!r.EndDate) r.EndDate = new Date().toISOString().split("T")[0];
-          if (typeof autoBlockRenterUserAccountOnMoveOut === "function") {
-            autoBlockRenterUserAccountOnMoveOut(r.IdentityDocNumber, r.PropertyName, r.FlatName, r.RenterName);
+        // Update the flat object in DB.flats with the newly entered Flat Rate and Electricity Rate Per Unit
+        if (flatObj) {
+          flatObj.RentAmount = finalRentAmount;
+          if (finalElecRate !== "") {
+            flatObj.ElecRate = finalElecRate;
           }
         }
-      });
 
-      const newRenterId = "R-" + Date.now();
-      const isReturningMatch = Boolean(addRenterModalIsReactivating || (rawAadhaar.length === 12 && (DB.renters || []).some(r => normalizeAadhaarString(r.IdentityDocNumber) === rawAadhaar)));
-      const newRenterObj = {
-        RenterID: newRenterId,
-        PropertyName: targetProp,
-        FlatName: targetFlat,
-        RenterName: rName,
-        RentAmount: finalRentAmount,
-        ElecFixedRate: finalElecRate,
-        PNGFixedRate: inheritedPng,
-        WaterFixedRate: inheritedWater,
-        UPIName: inheritedUpiName,
-        UPIID: inheritedUpiId,
-        ContractMobile: inheritedContract,
-        JoinDate: joinDate,
-        Status: statusVal,
-        IdentityDocNumber: formattedAadhaar,
-        ProfileImageURL: profUrl,
-        IdentityImageURL: idUrl,
-        MobileNumber: consolidatedRec?.MobileNumber ? formatIndianMobilePlus91(consolidatedRec.MobileNumber) : "",
-        AltMobileNumber: altMob,
-        Address: addr,
-        TotalFamilyMembers: famCount,
-        EndDate: "",
-        TenureType: isReturningMatch ? "RETURNING" : "NEW"
-      };
+        const inheritedPng = flatObj?.PNGRate !== undefined && flatObj?.PNGRate !== "" ? flatObj.PNGRate : (consolidatedRec?.PNGFixedRate !== undefined ? consolidatedRec.PNGFixedRate : "");
+        const inheritedWater = flatObj?.WaterRate !== undefined && flatObj?.WaterRate !== "" ? flatObj.WaterRate : (consolidatedRec?.WaterFixedRate !== undefined ? consolidatedRec.WaterFixedRate : "");
+        const inheritedUpiName = propObj?.UPIName || flatObj?.UPIName || consolidatedRec?.UPIName || "";
+        const inheritedUpiId = propObj?.UPIID || flatObj?.UPIID || consolidatedRec?.UPIID || "";
+        const inheritedContract = propObj?.ContractNumber || flatObj?.ContractMobile || consolidatedRec?.ContractMobile || "";
 
-      
-      
-      const tenureDetailText = isReturningMatch && consolidatedRec?.PropertyName
-        ? `Returned from ${consolidatedRec.PropertyName} (Flat ${consolidatedRec.FlatName || "--"}) on ${formatDateOnly(joinDate)}`
-        : `Assigned to ${targetProp} - Flat ${targetFlat} on ${formatDateOnly(joinDate)}`;
-      saveRenterTenureMeta(
-        newRenterId,
-        targetProp,
-        targetFlat,
-        rawAadhaar,
-        isReturningMatch ? "RETURNING" : "NEW",
-        tenureDetailText
-      );
-
-      DB.renters.push(newRenterObj);
-
-      // Sync Aadhaar-linked profile & photos across all flats where this Aadhaar lived
-      if (rawAadhaar.length === 12) {
+        // If another renter is currently Active in this target flat, mark them Inactive so history is preserved
         (DB.renters || []).forEach(r => {
-          const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "");
-          if (rAadh === rawAadhaar) {
-            r.RenterName = rName;
-            r.IdentityDocNumber = formattedAadhaar;
-            if (newRenterObj.MobileNumber) r.MobileNumber = newRenterObj.MobileNumber;
-            if (altMob) r.AltMobileNumber = altMob;
-            if (addr) r.Address = addr;
-            if (profUrl) r.ProfileImageURL = profUrl;
-            if (idUrl) r.IdentityImageURL = idUrl;
+          if (isSamePropAndFlat(r.PropertyName, r.FlatName, targetProp, targetFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
+            r.Status = "Inactive";
+            if (!r.EndDate) r.EndDate = new Date().toISOString().split("T")[0];
+            if (typeof autoBlockRenterUserAccountOnMoveOut === "function") {
+              autoBlockRenterUserAccountOnMoveOut(r.IdentityDocNumber, r.PropertyName, r.FlatName, r.RenterName);
+            }
           }
         });
-      }
 
-      selectedProperty = targetProp;
-      sessionStorage.setItem("active_selected_property", targetProp);
-      saveDbSnapshotToCache();
-      renderAllDashboardUI();
-      closeModal("addRenterModal");
+        const newRenterId = "R-" + Date.now();
+        const isReturningMatch = Boolean(addRenterModalIsReactivating || (rawAadhaar.length === 12 && (DB.renters || []).some(r => normalizeAadhaarString(r.IdentityDocNumber) === rawAadhaar)));
+        const newRenterObj = {
+          RenterID: newRenterId,
+          PropertyName: targetProp,
+          FlatName: targetFlat,
+          RenterName: rName,
+          RentAmount: finalRentAmount,
+          ElecFixedRate: finalElecRate,
+          PNGFixedRate: inheritedPng,
+          WaterFixedRate: inheritedWater,
+          UPIName: inheritedUpiName,
+          UPIID: inheritedUpiId,
+          ContractMobile: inheritedContract,
+          JoinDate: joinDate,
+          Status: statusVal,
+          IdentityDocNumber: formattedAadhaar,
+          ProfileImageURL: profUrl,
+          IdentityImageURL: idUrl,
+          MobileNumber: consolidatedRec?.MobileNumber ? formatIndianMobilePlus91(consolidatedRec.MobileNumber) : "",
+          AltMobileNumber: altMob,
+          Address: addr,
+          TotalFamilyMembers: famCount,
+          EndDate: "",
+          TenureType: isReturningMatch ? "RETURNING" : "NEW"
+        };
 
-      triggerSideToast(
-        addRenterModalIsReactivating ? "Renter Reactivated & Saved" : "Renter Added",
-        `${rName} assigned to ${targetProp} — Flat ${targetFlat} (Rent: ₹${finalRentAmount.toLocaleString("en-IN")})`,
-        true
-      );
+        const tenureDetailText = isReturningMatch && consolidatedRec?.PropertyName
+          ? `Returned from ${consolidatedRec.PropertyName} (Flat ${consolidatedRec.FlatName || "--"}) on ${formatDateOnly(joinDate)}`
+          : `Assigned to ${targetProp} - Flat ${targetFlat} on ${formatDateOnly(joinDate)}`;
+        saveRenterTenureMeta(
+          newRenterId,
+          targetProp,
+          targetFlat,
+          rawAadhaar,
+          isReturningMatch ? "RETURNING" : "NEW",
+          tenureDetailText
+        );
 
-      lastWriteCompletedAt = Date.now();
-      await sendFirebaseAction({
-        action: "saveRenterProfile",
-        renterId: newRenterId,
-        propertyName: targetProp,
-        flatName: targetFlat,
-        renterName: rName,
-        rentAmount: finalRentAmount,
-        elecFixedRate: finalElecRate,
-        pngFixedRate: inheritedPng,
-        waterFixedRate: inheritedWater,
-        elecRate: finalElecRate,
-        pngRate: inheritedPng,
-        waterRate: inheritedWater,
-        upiName: inheritedUpiName,
-        upiId: inheritedUpiId,
-        contractMobile: inheritedContract,
-        joinDate: joinDate,
-        endDate: "",
-        renterStatus: statusVal,
-        status: statusVal,
-        identityDocNumber: formattedAadhaar || rawAadhaar,
-        identityNumber: rawAadhaar,
-        profileImageUrl: (profUrl && !profUrl.startsWith("data:image")) ? profUrl : "",
-        profileImg: "",
-        identityImageUrl: (idUrl && !idUrl.startsWith("data:image")) ? idUrl : "",
-        identityImg: "",
-        mobileNumber: newRenterObj.MobileNumber,
-        mobile: newRenterObj.MobileNumber,
-        altMobileNumber: altMob,
-        altMobile: altMob,
-        address: addr,
-        familyMembers: famCount,
-        forceCreateNewRow: true
-      });
-      await sendFirebaseAction({
-        action: "updateMasterRentAndRates",
-        propertyName: targetProp,
-        flatName: targetFlat,
-        rentAmount: finalRentAmount,
-        elecRate: finalElecRate,
-        pngRate: inheritedPng,
-        waterRate: inheritedWater
-      });
-      if (profUrl && profUrl.startsWith("data:image")) {
-        const profRes = await sendFirebaseAction({
-          action: "uploadRenterDocument",
+        DB.renters.push(newRenterObj);
+
+        // Sync Aadhaar-linked profile & photos across all flats where this Aadhaar lived
+        if (rawAadhaar.length === 12) {
+          (DB.renters || []).forEach(r => {
+            const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "");
+            if (rAadh === rawAadhaar) {
+              r.RenterName = rName;
+              r.IdentityDocNumber = formattedAadhaar;
+              if (newRenterObj.MobileNumber) r.MobileNumber = newRenterObj.MobileNumber;
+              if (altMob) r.AltMobileNumber = altMob;
+              if (addr) r.Address = addr;
+              if (profUrl) r.ProfileImageURL = profUrl;
+              if (idUrl) r.IdentityImageURL = idUrl;
+            }
+          });
+        }
+
+        if (typeof autoUnblockRenterUserAccountOnActivate === "function") {
+          autoUnblockRenterUserAccountOnActivate(formattedAadhaar || rawAadhaar, targetProp, targetFlat, rName);
+        }
+
+        selectedProperty = targetProp;
+        sessionStorage.setItem("active_selected_property", targetProp);
+        saveDbSnapshotToCache();
+        closeModal("addRenterModal");
+        renderAllDashboardUI();
+
+        triggerSideToast(
+          addRenterModalIsReactivating ? "Renter Reactivated & Saved" : "Renter Added",
+          `${rName} assigned to ${targetProp} — Flat ${targetFlat} (Rent: ₹${finalRentAmount.toLocaleString("en-IN")})`,
+          true
+        );
+
+        lastWriteCompletedAt = Date.now();
+        await sendFirebaseAction({
+          action: "saveRenterProfile",
+          renterId: newRenterId,
           propertyName: targetProp,
           flatName: targetFlat,
-          renterId: newRenterId,
-          identityDocNumber: formattedAadhaar || rawAadhaar,
           renterName: rName,
           rentAmount: finalRentAmount,
-          docType: "profile",
-          fileName: "Profile_Photo.jpg",
-          mimeType: "image/jpeg",
-          base64Data: profUrl
+          elecFixedRate: finalElecRate,
+          pngFixedRate: inheritedPng,
+          waterFixedRate: inheritedWater,
+          elecRate: finalElecRate,
+          pngRate: inheritedPng,
+          waterRate: inheritedWater,
+          upiName: inheritedUpiName,
+          upiId: inheritedUpiId,
+          contractMobile: inheritedContract,
+          joinDate: joinDate,
+          endDate: "",
+          renterStatus: statusVal,
+          status: statusVal,
+          identityDocNumber: formattedAadhaar || rawAadhaar,
+          identityNumber: rawAadhaar,
+          profileImageUrl: (profUrl && !profUrl.startsWith("data:image")) ? profUrl : "",
+          profileImg: "",
+          identityImageUrl: (idUrl && !idUrl.startsWith("data:image")) ? idUrl : "",
+          identityImg: "",
+          mobileNumber: newRenterObj.MobileNumber,
+          mobile: newRenterObj.MobileNumber,
+          altMobileNumber: altMob,
+          altMobile: altMob,
+          address: addr,
+          familyMembers: famCount,
+          forceCreateNewRow: true
         });
-        if (!profRes || profRes.status === "error") {
-          triggerSideToast("Google Drive Upload Failed", profRes?.message || "Could not upload profile photo to Google Drive.", false);
-        } else if (profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.previewUrl || profRes.url) {
-          newRenterObj.ProfileImageURL = String(profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.previewUrl || profRes.url).trim();
-        }
-      }
-      if (idUrl && idUrl.startsWith("data:image")) {
-        const idRes = await sendFirebaseAction({
-          action: "uploadRenterDocument",
+        await sendFirebaseAction({
+          action: "updateMasterRentAndRates",
           propertyName: targetProp,
           flatName: targetFlat,
-          renterId: newRenterId,
-          identityDocNumber: formattedAadhaar || rawAadhaar,
-          renterName: rName,
           rentAmount: finalRentAmount,
-          docType: "identity",
-          fileName: "Aadhaar_Card.jpg",
-          mimeType: "image/jpeg",
-          base64Data: idUrl
+          elecRate: finalElecRate,
+          pngRate: inheritedPng,
+          waterRate: inheritedWater
         });
-        if (!idRes || idRes.status === "error") {
-          triggerSideToast("Google Drive Upload Failed", idRes?.message || "Could not upload Aadhaar photo to Google Drive.", false);
-        } else if (idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.previewUrl || idRes.url) {
-          newRenterObj.IdentityImageURL = String(idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.previewUrl || idRes.url).trim();
+        if (profUrl && profUrl.startsWith("data:image")) {
+          const profRes = await sendFirebaseAction({
+            action: "uploadRenterDocument",
+            propertyName: targetProp,
+            flatName: targetFlat,
+            renterId: newRenterId,
+            identityDocNumber: formattedAadhaar || rawAadhaar,
+            renterName: rName,
+            rentAmount: finalRentAmount,
+            docType: "profile",
+            fileName: "Profile_Photo.jpg",
+            mimeType: "image/jpeg",
+            base64Data: profUrl
+          });
+          if (!profRes || profRes.status === "error") {
+            triggerSideToast("Google Drive Upload Failed", profRes?.message || "Could not upload profile photo to Google Drive.", false);
+          } else if (profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.previewUrl || profRes.url) {
+            newRenterObj.ProfileImageURL = String(profRes.shareableUrl || profRes.driveUrl || profRes.imageUrl || profRes.previewUrl || profRes.url).trim();
+          }
         }
+        if (idUrl && idUrl.startsWith("data:image")) {
+          const idRes = await sendFirebaseAction({
+            action: "uploadRenterDocument",
+            propertyName: targetProp,
+            flatName: targetFlat,
+            renterId: newRenterId,
+            identityDocNumber: formattedAadhaar || rawAadhaar,
+            renterName: rName,
+            rentAmount: finalRentAmount,
+            docType: "identity",
+            fileName: "Aadhaar_Card.jpg",
+            mimeType: "image/jpeg",
+            base64Data: idUrl
+          });
+          if (!idRes || idRes.status === "error") {
+            triggerSideToast("Google Drive Upload Failed", idRes?.message || "Could not upload Aadhaar photo to Google Drive.", false);
+          } else if (idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.previewUrl || idRes.url) {
+            newRenterObj.IdentityImageURL = String(idRes.shareableUrl || idRes.driveUrl || idRes.imageUrl || idRes.previewUrl || idRes.url).trim();
+          }
+        }
+        lastWriteCompletedAt = Date.now();
+        saveDbSnapshotToCache();
+        renderAllDashboardUI();
+      } finally {
+        window.__isSubmittingAddRenterModal = false;
       }
-      lastWriteCompletedAt = Date.now();
-      saveDbSnapshotToCache();
-      renderAllDashboardUI();
     }
 
     function syncPropertyDropdowns() {
@@ -34643,20 +35071,39 @@ function formatMonthLabel(rawVal) {
       const addFlatSelect = document.getElementById("addFlatPropDropdown");
       const delFlatPropSelect = document.getElementById("deleteFlatPropDropdown");
       const addRenterPropSelect = document.getElementById("addRenterPropDropdown");
+      const addRenterFlatSelect = document.getElementById("addRenterFlatDropdown");
 
-      const currentAddPropVal = addFlatSelect?.value;
+      const prevEditVal = editSelect?.value || "";
+      const prevDelVal = delSelect?.value || "";
+      const prevAddFlatVal = addFlatSelect?.value || "";
+      const prevDelFlatPropVal = delFlatPropSelect?.value || "";
+      const prevAddRenterPropVal = addRenterPropSelect?.value || "";
+      const prevAddRenterFlatVal = addRenterFlatSelect?.value || "";
+      const isAddRenterModalOpen = Boolean(document.getElementById("addRenterModal")?.classList.contains("show"));
+
       const options = DB.properties.map(p => `<option value="${p.PropertyName}">${p.PropertyName}</option>`).join("");
       [editSelect, delSelect, addFlatSelect, delFlatPropSelect].forEach(sel => {
         if (sel) sel.innerHTML = options;
       });
+      if (editSelect && prevEditVal && Array.from(editSelect.options).some(o => o.value === prevEditVal)) editSelect.value = prevEditVal;
+      if (delSelect && prevDelVal && Array.from(delSelect.options).some(o => o.value === prevDelVal)) delSelect.value = prevDelVal;
+      if (delFlatPropSelect && prevDelFlatPropVal && Array.from(delFlatPropSelect.options).some(o => o.value === prevDelFlatPropVal)) delFlatPropSelect.value = prevDelFlatPropVal;
+
       if (addRenterPropSelect) {
         addRenterPropSelect.innerHTML = '<option value="">-- Select Location / Property (*) --</option>' + options;
+        if (prevAddRenterPropVal && Array.from(addRenterPropSelect.options).some(o => String(o.value || "").trim().toLowerCase() === prevAddRenterPropVal.trim().toLowerCase())) {
+          const matchedOpt = Array.from(addRenterPropSelect.options).find(o => String(o.value || "").trim().toLowerCase() === prevAddRenterPropVal.trim().toLowerCase());
+          if (matchedOpt) addRenterPropSelect.value = matchedOpt.value;
+          if (isAddRenterModalOpen) {
+            populateAddRenterFlatsDropdown(prevAddRenterFlatVal);
+          }
+        }
       }
 
-      if (selectedProperty && addFlatSelect) {
+      if (selectedProperty && addFlatSelect && !prevAddFlatVal) {
         addFlatSelect.value = selectedProperty;
-      } else if (currentAddPropVal && addFlatSelect) {
-        addFlatSelect.value = currentAddPropVal;
+      } else if (prevAddFlatVal && addFlatSelect && Array.from(addFlatSelect.options).some(o => o.value === prevAddFlatVal)) {
+        addFlatSelect.value = prevAddFlatVal;
       }
 
       syncEditPropDisplay();
@@ -37840,15 +38287,22 @@ function formatMonthLabel(rawVal) {
     }
 
     function loadFlatApplianceChecklist(prop, flat) {
-      let data = selectedFlat?.ApplianceChecklist || null;
-      const d = data || { fans: 2, bulbs: 4, geysers: 1, keys: 2, meter: "Working & Sealed", paint: "Freshly Painted", notes: "" };
-      if (document.getElementById("invFansCount")) document.getElementById("invFansCount").value = d.fans ?? 2;
-      if (document.getElementById("invBulbsCount")) document.getElementById("invBulbsCount").value = d.bulbs ?? 4;
-      if (document.getElementById("invGeysersCount")) document.getElementById("invGeysersCount").value = d.geysers ?? 1;
-      if (document.getElementById("invKeysCount")) document.getElementById("invKeysCount").value = d.keys ?? 2;
-      if (document.getElementById("invMeterCondition")) document.getElementById("invMeterCondition").value = d.meter || "Working & Sealed";
+      const storageKey = getFlatChecklistStorageKey(prop, flat);
+      const rawFlatCl = selectedFlat?.ApplianceChecklist;
+      const hasSavedFlatCl = rawFlatCl && typeof rawFlatCl === "object" && (
+        rawFlatCl.fans !== undefined || rawFlatCl.bulbs !== undefined ||
+        rawFlatCl.geysers !== undefined || rawFlatCl.keys !== undefined ||
+        Boolean(rawFlatCl.meter) || Boolean(rawFlatCl.paint) || Boolean(rawFlatCl.notes)
+      );
+      const cfgCl = DB.globalConfig?.flatChecklists?.[storageKey] || null;
+      const d = (hasSavedFlatCl ? rawFlatCl : null) || cfgCl || { fans: 0, bulbs: 0, geysers: 0, keys: 0, meter: "", paint: "", notes: "" };
+      if (document.getElementById("invFansCount")) document.getElementById("invFansCount").value = d.fans ?? 0;
+      if (document.getElementById("invBulbsCount")) document.getElementById("invBulbsCount").value = d.bulbs ?? 0;
+      if (document.getElementById("invGeysersCount")) document.getElementById("invGeysersCount").value = d.geysers ?? 0;
+      if (document.getElementById("invKeysCount")) document.getElementById("invKeysCount").value = d.keys ?? 0;
+      if (document.getElementById("invMeterCondition")) document.getElementById("invMeterCondition").value = d.meter || "";
       const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
-      if (paintEl) paintEl.value = d.paint || "Freshly Painted";
+      if (paintEl) paintEl.value = d.paint || "";
       const notesEl = document.getElementById("invExtraNotes") || document.getElementById("invConditionNotes");
       if (notesEl) notesEl.value = d.notes || "";
     }
@@ -37861,19 +38315,24 @@ function formatMonthLabel(rawVal) {
       const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
       const notesEl = document.getElementById("invExtraNotes") || document.getElementById("invConditionNotes");
       const checklist = {
-        fans: parseInt(document.getElementById("invFansCount")?.value || "0", 10),
-        bulbs: parseInt(document.getElementById("invBulbsCount")?.value || "0", 10),
-        geysers: parseInt(document.getElementById("invGeysersCount")?.value || "0", 10),
-        keys: parseInt(document.getElementById("invKeysCount")?.value || "0", 10),
-        meter: document.getElementById("invMeterCondition")?.value || "Working & Sealed",
-        paint: paintEl?.value || "Freshly Painted",
+        fans: parseInt(document.getElementById("invFansCount")?.value || "0", 10) || 0,
+        bulbs: parseInt(document.getElementById("invBulbsCount")?.value || "0", 10) || 0,
+        geysers: parseInt(document.getElementById("invGeysersCount")?.value || "0", 10) || 0,
+        keys: parseInt(document.getElementById("invKeysCount")?.value || "0", 10) || 0,
+        meter: document.getElementById("invMeterCondition")?.value || "",
+        paint: paintEl?.value || "",
         notes: (notesEl?.value || "").trim(),
         updatedAt: new Date().toISOString()
       };
       selectedFlat.ApplianceChecklist = checklist;
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      if (!DB.globalConfig.flatChecklists || typeof DB.globalConfig.flatChecklists !== "object") DB.globalConfig.flatChecklists = {};
+      const clKey = getFlatChecklistStorageKey(selectedFlat.PropertyName, selectedFlat.FlatName);
+      DB.globalConfig.flatChecklists[clKey] = checklist;
+      if (typeof saveLocalGlobalConfigMaster === "function") saveLocalGlobalConfigMaster(DB.globalConfig);
       saveDbSnapshotToCache();
       if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("SAVE_INVENTORY_CHECKLIST", `${selectedFlat.PropertyName} Flat ${selectedFlat.FlatName}`, `Fans:${checklist.fans}, Bulbs:${checklist.bulbs}, Keys:${checklist.keys}, Paint:${checklist.paint}`);
+        recordAdminAuditLog("SAVE_INVENTORY_CHECKLIST", `${selectedFlat.PropertyName} Flat ${selectedFlat.FlatName}`, `Fans:${checklist.fans}, Bulbs:${checklist.bulbs}, Keys:${checklist.keys}, Paint:${checklist.paint || "Not Set"}`);
       }
       triggerSideToast("Inventory Checklist Saved", `Move-In/Move-Out checklist saved for Flat ${selectedFlat.FlatName}.`, true);
       await sendFirebaseAction({
@@ -37881,6 +38340,11 @@ function formatMonthLabel(rawVal) {
         propertyName: selectedFlat.PropertyName,
         flatName: selectedFlat.FlatName,
         checklist
+      });
+      await sendFirebaseAction({
+        action: "saveConfig",
+        configKey: "flatChecklists",
+        configValue: DB.globalConfig.flatChecklists
       });
     }
 
