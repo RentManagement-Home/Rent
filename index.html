@@ -7103,28 +7103,24 @@
                 <span class="home-menu-icon-wrap"><i class="fa-solid fa-building"></i></span>
                 <div class="home-menu-text-wrap">
                   <span class="home-menu-title">Add Property</span>
-                  <span class="home-menu-sub">Register a New Building or Site</span>
                 </div>
               </div>
               <div class="menu-item" onclick="closeActionMenu(); syncPropertyDropdowns(); openModal('editPropertyModal')">
                 <span class="home-menu-icon-wrap"><i class="fa-solid fa-pen-to-square"></i></span>
                 <div class="home-menu-text-wrap">
                   <span class="home-menu-title">Edit Property</span>
-                  <span class="home-menu-sub">Update Property UPI &amp; Info</span>
                 </div>
               </div>
               <div class="menu-item" onclick="closeActionMenu(); openAddFlatModal()">
                 <span class="home-menu-icon-wrap"><i class="fa-solid fa-door-open"></i></span>
                 <div class="home-menu-text-wrap">
                   <span class="home-menu-title">Add Flat</span>
-                  <span class="home-menu-sub">Create a Unit Under Property</span>
                 </div>
               </div>
               <div class="menu-item" onclick="closeActionMenu(); openAddRenterModal()">
                 <span class="home-menu-icon-wrap"><i class="fa-solid fa-user-plus"></i></span>
                 <div class="home-menu-text-wrap">
                   <span class="home-menu-title">Add Renter</span>
-                  <span class="home-menu-sub">Assign Tenant &amp; KYC Details</span>
                 </div>
               </div>
             </div>
@@ -9033,9 +9029,6 @@
           <i class="fa-solid fa-building-circle-check"></i>
         </div>
         <div class="exec-modal-title-wrap">
-          <span class="exec-modal-badge" style="background:rgba(99,102,241,0.2); color:#818cf8; border:1px solid rgba(99,102,241,0.4);">
-            <i class="fa-solid fa-plus-circle"></i> Property
-          </span>
           <h3 class="exec-modal-title">Add New Property</h3>
         </div>
       </div>
@@ -9048,7 +9041,7 @@
             </label>
             <span class="exec-field-tag tag-required">Compulsory</span>
           </div>
-          <input type="text" id="newPropName" class="form-control" placeholder="e.g. Patna">
+          <input type="text" id="newPropName" class="form-control" placeholder="Patna">
         </div>
 
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:12px;">
@@ -9057,9 +9050,8 @@
               <label class="exec-field-label" for="newPropUpiName">
                 <i class="fa-solid fa-user-check" style="color:#10b981;"></i> 2. Receiver UPI Name
               </label>
-              <span class="exec-field-tag tag-optional">Optional</span>
             </div>
-            <input type="text" id="newPropUpiName" class="form-control" placeholder="e.g. Rajesh Sharma">
+            <input type="text" id="newPropUpiName" class="form-control" placeholder="Abhishek Ranjan">
           </div>
 
           <div class="exec-field-card">
@@ -9067,18 +9059,16 @@
               <label class="exec-field-label" for="newPropUpiId">
                 <i class="fa-solid fa-qrcode" style="color:#06b6d4;"></i> 3. UPI ID (VPA)
               </label>
-              <span class="exec-field-tag tag-optional">Optional</span>
             </div>
-            <input type="text" id="newPropUpiId" class="form-control" placeholder="e.g. name@okhdfcbank">
+            <input type="text" id="newPropUpiId" class="form-control" placeholder="72********@upi">
           </div>
         </div>
 
         <div class="exec-field-card">
           <div class="exec-field-label-row">
             <label class="exec-field-label" for="newPropContract">
-              <i class="fa-solid fa-phone-volume" style="color:#f59e0b;"></i> 4. Property Contact Mobile Number <span class="req-star">*</span>
+              <i class="fa-solid fa-phone-volume" style="color:#f59e0b;"></i> 4. Contact Mobile Number
             </label>
-            <span class="exec-field-tag tag-required">Max 10 Digits</span>
           </div>
           <div style="display:flex; gap:8px;">
             <select id="newPropCountryCode" class="form-control" style="width:122px; flex-shrink:0;">
