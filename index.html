@@ -71,8 +71,8 @@
     :root,
     body.theme-black {
       --bg-overlay: linear-gradient(180deg, rgba(9, 13, 22, 0.70) 0%, rgba(9, 13, 22, 0.88) 100%);
-      --bg-header: rgba(9, 13, 22, 0.90);
-      --bg-card: rgba(17, 24, 39, 0.84);
+      --bg-header: rgba(9, 13, 22, 0.30);
+      --bg-card: rgba(17, 24, 39, 0.30);
       --bg-modal: #111827;
       --bg-input: rgba(30, 41, 59, 0.92);
       --primary: #4f46e5;
@@ -92,8 +92,8 @@
 
     body.theme-white {
       --bg-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.74) 0%, rgba(241, 245, 249, 0.88) 100%);
-      --bg-header: rgba(255, 255, 255, 0.94);
-      --bg-card: rgba(255, 255, 255, 0.88);
+      --bg-header: rgba(255, 255, 255, 0.30);
+      --bg-card: rgba(255, 255, 255, 0.30);
       --bg-modal: #ffffff;
       --bg-input: #f1f5f9;
       --primary: #4f46e5;
@@ -402,6 +402,25 @@
       gap: 6px;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.92);
     }
+    #loginScreen #forgotPasswordInlinePanel {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    #loginScreen #forgotPasswordInlinePanel .fp-label-highlight {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      background: rgba(255, 255, 255, 0.90) !important;
+      color: #0f172a !important;
+      text-shadow: none !important;
+      padding: 4px 10px !important;
+      border-radius: 8px !important;
+      margin-bottom: 7px !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24) !important;
+    }
     #loginScreen .login-input-shell {
       position: relative;
       display: flex;
@@ -660,6 +679,8 @@
       gap: 10px;
       padding: 12px 20px;
       background: var(--bg-header);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--glass-border);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
     }
@@ -836,7 +857,9 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      background: var(--bg-input);
+      background: rgba(15, 23, 42, 0.30);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--glass-border);
       padding: 7px 14px;
       border-radius: 12px;
@@ -844,6 +867,9 @@
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+    }
+    body.theme-white .pnl-tracker {
+      background: rgba(255, 255, 255, 0.30);
     }
     .pnl-item {
       display: flex;
@@ -1028,11 +1054,10 @@
       border-color: #6366f1 !important;
     }
 
-    /* 100% Solid & Visible Modal & Inline Workspace Background for All Three Triggers */
+    /* 100% Solid & Visible Modal Background for Modals; Inline Dashboard Portfolio Body stays 70% Transparent */
     #fdModal .modal-window,
     #khetModal .modal-window,
-    #kharchModal .modal-window,
-    #adminPortfolioHubSection .admin-ops-hub-body {
+    #kharchModal .modal-window {
       background: #0b1120 !important;
       opacity: 1 !important;
       border: 1.5px solid rgba(148, 163, 184, 0.35) !important;
@@ -1042,12 +1067,27 @@
     }
     body.theme-white #fdModal .modal-window,
     body.theme-white #khetModal .modal-window,
-    body.theme-white #kharchModal .modal-window,
-    body.theme-white #adminPortfolioHubSection .admin-ops-hub-body {
+    body.theme-white #kharchModal .modal-window {
       background: #ffffff !important;
       opacity: 1 !important;
       border: 1.5px solid #cbd5e1 !important;
       box-shadow: 0 25px 65px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04) inset !important;
+    }
+    #adminPortfolioHubSection .admin-ops-hub-body {
+      background: rgba(15, 23, 42, 0.30) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1.5px solid rgba(148, 163, 184, 0.35) !important;
+      border-radius: 20px !important;
+      padding: 20px !important;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.24) !important;
+    }
+    body.theme-white #adminPortfolioHubSection .admin-ops-hub-body {
+      background: rgba(255, 255, 255, 0.30) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1.5px solid rgba(15, 23, 42, 0.18) !important;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08) !important;
     }
 
     /* Highly Stylish & Modern Design for Text Boxes inside All Three Triggers */
@@ -1274,6 +1314,8 @@
       flex-shrink: 0;
       padding: 14px 16px;
       background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 2px solid var(--glass-border);
       border-radius: 16px;
       display: flex;
@@ -1421,6 +1463,8 @@
 
     .flat-card-merged {
       background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1.5px solid var(--glass-border);
       border-radius: var(--radius-lg);
       padding: 20px;
@@ -1438,8 +1482,8 @@
       contain: layout style;
     }
     body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) {
-      background: rgba(255, 255, 255, 0.94);
-      border-color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.30);
+      border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
       box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
     }
@@ -1449,9 +1493,9 @@
     }
 
     .flat-card-merged.flat-card-paid {
-      background: linear-gradient(135deg, rgba(6, 95, 70, 0.90) 0%, rgba(16, 185, 129, 0.78) 100%) !important;
+      background: linear-gradient(135deg, rgba(6, 95, 70, 0.30) 0%, rgba(16, 185, 129, 0.30) 100%) !important;
       border: 2px solid #34d399 !important;
-      box-shadow: 0 14px 32px rgba(16, 185, 129, 0.38) !important;
+      box-shadow: 0 14px 32px rgba(16, 185, 129, 0.24) !important;
       color: #ffffff !important;
     }
     .flat-card-merged.flat-card-paid .flat-name,
@@ -1462,9 +1506,9 @@
     }
 
     .flat-card-merged.flat-card-due {
-      background: linear-gradient(135deg, rgba(153, 27, 27, 0.92) 0%, rgba(239, 68, 68, 0.82) 100%) !important;
+      background: linear-gradient(135deg, rgba(153, 27, 27, 0.30) 0%, rgba(239, 68, 68, 0.30) 100%) !important;
       border: 2px solid #f87171 !important;
-      box-shadow: 0 14px 32px rgba(239, 68, 68, 0.42) !important;
+      box-shadow: 0 14px 32px rgba(239, 68, 68, 0.24) !important;
       color: #ffffff !important;
     }
     .flat-card-merged.flat-card-due .flat-name,
@@ -1537,8 +1581,8 @@
       font-weight: 800;
     }
     body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) .payment-banner {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
+      background: rgba(241, 245, 249, 0.30);
+      border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
     }
 
@@ -3062,48 +3106,48 @@
       border-left: 5px solid #059669 !important;
     }
     .stat-pill {
-      background: linear-gradient(135deg, rgba(79, 70, 229, 0.14) 0%, rgba(30, 41, 59, 0.88) 100%);
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
       border: 1.5px solid rgba(129, 140, 248, 0.35);
       border-top: 3px solid #6366f1;
     }
     .stat-pill:nth-child(2) {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(30, 41, 59, 0.88) 100%);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
       border-color: rgba(52, 211, 153, 0.35);
       border-top-color: #10b981;
     }
     .stat-pill:nth-child(3) {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(30, 41, 59, 0.88) 100%);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
       border-color: rgba(251, 191, 36, 0.35);
       border-top-color: #f59e0b;
     }
     .stat-pill:nth-child(4) {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.14) 0%, rgba(30, 41, 59, 0.88) 100%);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
       border-color: rgba(34, 211, 238, 0.35);
       border-top-color: #06b6d4;
     }
     .stat-pill:nth-child(5) {
-      background: linear-gradient(135deg, rgba(236, 72, 153, 0.14) 0%, rgba(30, 41, 59, 0.88) 100%);
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.18) 0%, rgba(30, 41, 59, 0.30) 100%);
       border-color: rgba(244, 114, 182, 0.35);
       border-top-color: #ec4899;
     }
     body.theme-white .stat-pill {
-      background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(238, 242, 255, 0.30) 100%);
       border-color: #c7d2fe;
     }
     body.theme-white .stat-pill:nth-child(2) {
-      background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(236, 253, 245, 0.30) 100%);
       border-color: #a7f3d0;
     }
     body.theme-white .stat-pill:nth-child(3) {
-      background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 251, 235, 0.30) 100%);
       border-color: #fde68a;
     }
     body.theme-white .stat-pill:nth-child(4) {
-      background: linear-gradient(135deg, #ffffff 0%, #ecfeff 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(236, 254, 255, 0.30) 100%);
       border-color: #a5f3fc;
     }
     body.theme-white .stat-pill:nth-child(5) {
-      background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30) 0%, rgba(253, 242, 248, 0.30) 100%);
       border-color: #fbcfe8;
     }
 
@@ -3556,7 +3600,9 @@
     gap: 9px;
     padding: 9px 14px;
     border-radius: 13px;
-    background: rgba(15, 23, 42, 0.88);
+    background: rgba(15, 23, 42, 0.30);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1.5px solid rgba(148, 163, 184, 0.24);
     color: #f8fafc;
     font-size: 0.84rem;
@@ -3571,13 +3617,13 @@
     transform: translateY(-1px);
   }
   .renter-quick-box.active {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.24) 0%, rgba(16, 185, 129, 0.16) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.28) 0%, rgba(16, 185, 129, 0.22) 100%);
     border-color: rgba(99, 102, 241, 0.72);
     box-shadow: 0 6px 18px rgba(99, 102, 241, 0.24);
   }
   body.theme-white .renter-quick-box {
-    background: #ffffff;
-    border-color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.30);
+    border-color: rgba(15, 23, 42, 0.2);
     color: #0f172a;
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
   }
@@ -3660,14 +3706,14 @@
     padding: 11px 15px;
     margin-bottom: 12px;
     border-radius: 16px;
-    background: rgba(15, 23, 42, 0.44);
+    background: rgba(15, 23, 42, 0.30);
     border: 1.5px solid rgba(52, 211, 153, 0.34);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
   }
   body.theme-white .admin-ops-hub-topbar {
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.30);
     border-color: rgba(16, 185, 129, 0.42);
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
   }
@@ -3745,7 +3791,7 @@
     gap: 11px;
     padding: 10px 15px;
     border-radius: 16px;
-    background: rgba(15, 23, 42, 0.56);
+    background: rgba(15, 23, 42, 0.30);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1.5px solid rgba(52, 211, 153, 0.32);
@@ -3763,18 +3809,18 @@
     box-shadow: 0 10px 24px rgba(16, 185, 129, 0.28);
   }
   .admin-ops-carousel-card.active {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(6, 182, 212, 0.24) 100%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.30) 0%, rgba(6, 182, 212, 0.28) 100%);
     border-color: #34d399;
     box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.24), 0 10px 26px rgba(16, 185, 129, 0.28);
   }
   body.theme-white .admin-ops-carousel-card {
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(255, 255, 255, 0.30);
     border-color: rgba(16, 185, 129, 0.38);
     color: #0f172a;
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
   }
   body.theme-white .admin-ops-carousel-card.active {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 182, 212, 0.16) 100%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.24) 0%, rgba(6, 182, 212, 0.20) 100%);
     border-color: #059669;
     color: #064e3b;
   }
@@ -3820,19 +3866,19 @@
   .admin-ops-hub-body {
     border-radius: 18px;
     padding: 16px;
-    background: rgba(15, 23, 42, 0.58);
+    background: rgba(15, 23, 42, 0.30);
     border: 1.5px solid rgba(52, 211, 153, 0.3);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.24);
   }
   body.theme-white .admin-ops-hub-body {
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(255, 255, 255, 0.30);
     border-color: rgba(16, 185, 129, 0.38);
     box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
   }
   .utr-proof-row {
-    background: rgba(15, 23, 42, 0.68);
+    background: rgba(15, 23, 42, 0.30);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
     padding: 11px 13px;
@@ -3844,8 +3890,8 @@
     font-size: 0.78rem;
   }
   body.theme-white .utr-proof-row {
-    background: #ffffff;
-    border-color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.30);
+    border-color: rgba(15, 23, 42, 0.2);
     color: #0f172a;
     box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
   }
@@ -4084,7 +4130,7 @@
     border-color: #6366f1;
   }
 
-  /* Make all inner boxes and cards across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment, Download App & Profile 69% transparent (0.31 opacity) & keep all text crystal clear */
+  /* Make all inner boxes and cards across Renter Dashboard, Receipt, Maintenance, Upload Photo, Payment, Download App & Profile 70% transparent (0.30 opacity) & keep all text crystal clear */
   :where(.renter-modern-portal div:not(.renter-hero-avatar):not(.renter-qr-canvas-box)) {
     background: transparent !important;
     background-color: transparent !important;
@@ -4133,8 +4179,8 @@
   .renter-modern-portal label[style*="border"],
   .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(15, 23, 42, 0.31) !important;
-    background-color: rgba(15, 23, 42, 0.31) !important;
+    background: rgba(15, 23, 42, 0.30) !important;
+    background-color: rgba(15, 23, 42, 0.30) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -4182,8 +4228,8 @@
   body.theme-white .renter-modern-portal label[style*="border"],
   body.theme-white .renter-modern-portal span[style*="border-radius"]:not(.renter-chart-legend-dot),
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
-    background: rgba(255, 255, 255, 0.31) !important;
-    background-color: rgba(255, 255, 255, 0.31) !important;
+    background: rgba(255, 255, 255, 0.30) !important;
+    background-color: rgba(255, 255, 255, 0.30) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -4514,7 +4560,6 @@
 
   /* REQUIREMENTS 4 & 5: Maximum Text Readability & Theme Adaptation for Profile, Settings, FD, Khet & Kharch Modals */
   #profileModal .modal-window,
-  #settingsModal .modal-window,
   #fdModal .modal-window,
   #khetModal .modal-window,
   #kharchModal .modal-window {
@@ -4524,7 +4569,6 @@
     box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(99, 102, 241, 0.2) !important;
   }
   body.theme-white #profileModal .modal-window,
-  body.theme-white #settingsModal .modal-window,
   body.theme-white #fdModal .modal-window,
   body.theme-white #khetModal .modal-window,
   body.theme-white #kharchModal .modal-window {
@@ -4674,16 +4718,22 @@
     border-color: #10b981 !important;
   }
 
-  /* Requirement 4: Ultra-Stylish, Modern, Visually Engaging Settings Interface */
+  /* Requirement 4 & 9: Ultra-Stylish, Modern, 50% Transparent Settings Interface */
   #settingsModal .modal-window {
-    background: linear-gradient(160deg, rgba(15, 23, 42, 0.97) 0%, rgba(17, 24, 39, 0.98) 100%) !important;
+    background: linear-gradient(160deg, rgba(15, 23, 42, 0.50) 0%, rgba(17, 24, 39, 0.50) 100%) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    color: #f8fafc !important;
     border: 2px solid rgba(99, 102, 241, 0.45) !important;
     border-radius: 24px !important;
-    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.65), 0 0 40px rgba(79, 70, 229, 0.18) !important;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55), 0 0 40px rgba(79, 70, 229, 0.18) !important;
     padding: 22px !important;
   }
   body.theme-white #settingsModal .modal-window {
-    background: linear-gradient(160deg, #ffffff 0%, #f8fafc 100%) !important;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.50) 0%, rgba(248, 250, 252, 0.50) 100%) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    color: #0f172a !important;
     border: 2px solid #a5b4fc !important;
     box-shadow: 0 25px 60px rgba(15, 23, 42, 0.18), 0 0 0 4px rgba(99, 102, 241, 0.08) !important;
   }
@@ -4738,7 +4788,7 @@
     letter-spacing: -0.2px !important;
   }
   #settingsModal .settings-horizontal-options-box {
-    background: rgba(15, 23, 42, 0.65) !important;
+    background: rgba(15, 23, 42, 0.45) !important;
     border: 1.5px solid rgba(129, 140, 248, 0.4) !important;
     border-radius: 16px !important;
     padding: 10px !important;
@@ -4746,7 +4796,7 @@
     box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.22) !important;
   }
   body.theme-white #settingsModal .settings-horizontal-options-box {
-    background: #f8fafc !important;
+    background: rgba(248, 250, 252, 0.50) !important;
     border: 1.5px solid #cbd5e1 !important;
     box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.04) !important;
   }
@@ -4764,7 +4814,7 @@
   #settingsModal .settings-nav-card {
     flex: 1 0 140px !important;
     min-width: 140px !important;
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.95)) !important;
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.50), rgba(15, 23, 42, 0.50)) !important;
     border: 1.5px solid rgba(148, 163, 184, 0.28) !important;
     border-radius: 14px !important;
     padding: 12px 10px !important;
@@ -4780,7 +4830,7 @@
     cursor: pointer !important;
   }
   body.theme-white #settingsModal .settings-nav-card {
-    background: linear-gradient(145deg, #ffffff, #f1f5f9) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.50), rgba(241, 245, 249, 0.50)) !important;
     border: 1.5px solid #cbd5e1 !important;
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06) !important;
   }
@@ -4841,7 +4891,7 @@
     color: #0f172a !important;
   }
   #settingsModal .other-tool-card {
-    background: linear-gradient(145deg, #111827, #1e293b) !important;
+    background: linear-gradient(145deg, rgba(17, 24, 39, 0.50), rgba(30, 41, 59, 0.50)) !important;
     color: #f8fafc !important;
     border-radius: 16px !important;
     padding: 14px !important;
@@ -4853,7 +4903,7 @@
     box-shadow: 0 10px 24px rgba(79, 70, 229, 0.28) !important;
   }
   body.theme-white #settingsModal .other-tool-card {
-    background: linear-gradient(145deg, #ffffff, #f8fafc) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.50), rgba(248, 250, 252, 0.50)) !important;
     color: #0f172a !important;
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07) !important;
   }
@@ -6928,28 +6978,28 @@
         </div>
       </form>
 
-      <!-- Inline Forgot Password Panel (Renders right on the login screen without any popup) -->
-      <div id="forgotPasswordInlinePanel" style="display:none; text-align:left; background:rgba(15,23,42,0.72); border:1.5px solid rgba(255,255,255,0.28); border-radius:18px; padding:18px 16px; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); box-shadow:0 12px 32px rgba(0,0,0,0.45);">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.16);">
+      <!-- Inline Forgot Password Panel (100% Transparent with Crisp White Label Highlights) -->
+      <div id="forgotPasswordInlinePanel" style="display:none; text-align:left; background:transparent; border:none; border-radius:18px; padding:18px 16px; box-shadow:none;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.22);">
           <div>
-            <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#a78bfa;">Account Recovery</div>
-            <h3 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:#ffffff;">Forgot Password</h3>
+            <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#e9d5ff; text-shadow:0 1px 4px rgba(0,0,0,0.85);">Account Recovery</div>
+            <h3 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:#ffffff; text-shadow:0 2px 8px rgba(0,0,0,0.9);">Forgot Password</h3>
           </div>
-          <button type="button" onclick="hideInlineForgotPasswordPanel()" style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#ffffff; border-radius:10px; padding:6px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+          <button type="button" onclick="hideInlineForgotPasswordPanel()" style="background:rgba(15,23,42,0.55); border:1px solid rgba(255,255,255,0.35); color:#ffffff; border-radius:10px; padding:6px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; backdrop-filter:blur(8px);">
             <i class="fa-solid fa-arrow-left"></i> Back
           </button>
         </div>
 
         <div id="fpCredentialsStepBox">
           <div class="form-group" style="margin-bottom:12px;">
-            <label for="fpAadhaarInput" style="color:#f8fafc; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-id-card" style="color:#38bdf8;"></i> Aadhaar Number</label>
+            <label for="fpAadhaarInput" class="fp-label-highlight" style="font-size:0.78rem; font-weight:800;"><i class="fa-solid fa-id-card" style="color:#0284c7;"></i> Aadhaar Number</label>
             <div class="login-input-shell">
               <i class="fa-solid fa-id-card login-field-icon"></i>
               <input type="text" id="fpAadhaarInput" class="form-control" maxlength="14" inputmode="numeric" placeholder="XXXX-XXXX-XXXX" autocomplete="off" oninput="this.value = formatAadhaarWithHyphens(this.value)">
             </div>
           </div>
           <div class="form-group" style="margin-bottom:12px;">
-            <label for="fpEmailInput" style="color:#f8fafc; font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-envelope" style="color:#a78bfa;"></i> Registered Email ID</label>
+            <label for="fpEmailInput" class="fp-label-highlight" style="font-size:0.78rem; font-weight:800;"><i class="fa-solid fa-envelope" style="color:#6d28d9;"></i> Registered Email ID</label>
             <div class="login-input-shell">
               <i class="fa-solid fa-envelope login-field-icon"></i>
               <input type="email" id="fpEmailInput" class="form-control" placeholder="Enter your registered email ID" autocomplete="off">
@@ -6960,8 +7010,8 @@
           </button>
         </div>
 
-        <div id="fpOtpStepBox" style="display:none; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.22);">
-          <div id="fpOtpSentHint" style="font-size:0.75rem; color:#93c5fd; font-weight:700; margin-bottom:8px;">
+        <div id="fpOtpStepBox" style="display:none; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.28);">
+          <div id="fpOtpSentHint" style="font-size:0.75rem; color:#e0f2fe; font-weight:700; margin-bottom:8px; text-shadow:0 1px 4px rgba(0,0,0,0.85);">
             <i class="fa-solid fa-envelope-circle-check"></i> Enter the 4-digit OTP sent to your Email ID.
           </div>
           <div class="form-group" style="margin-bottom:10px;">
@@ -6974,10 +7024,55 @@
             <button type="button" id="btnFpVerifyOtp" onclick="submitInlineForgotPasswordVerifyOtp()" style="flex:1; min-width:160px; padding:11px 14px; border-radius:12px; border:none; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:#ffffff; font-size:0.86rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px;">
               <i class="fa-solid fa-circle-check"></i> <span>Verify OTP</span>
             </button>
-            <button type="button" id="btnFpResendOtp" onclick="submitInlineForgotPasswordSendOtp()" style="padding:11px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.3); background:rgba(255,255,255,0.1); color:#ffffff; font-size:0.76rem; font-weight:800; cursor:pointer;">
+            <button type="button" id="btnFpResendOtp" onclick="submitInlineForgotPasswordSendOtp()" style="padding:11px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.35); background:rgba(15,23,42,0.55); color:#ffffff; font-size:0.76rem; font-weight:800; cursor:pointer; backdrop-filter:blur(8px);">
               Resend
             </button>
           </div>
+        </div>
+
+        <!-- Step 3: Post-OTP Reset Details Form (1. Name, 2. Username, 3. Password, 4. Re-enter ID, 5. Contact No) -->
+        <div id="fpResetDetailsStepBox" style="display:none; margin-top:4px;">
+          <div class="form-group" style="margin-bottom:10px;">
+            <label for="fpResetNameInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-user" style="color:#059669;"></i> 1. Name</label>
+            <div class="login-input-shell">
+              <i class="fa-solid fa-user login-field-icon"></i>
+              <input type="text" id="fpResetNameInput" class="form-control" placeholder="Enter your full name" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label for="fpResetUsernameInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-at" style="color:#4f46e5;"></i> 2. Username</label>
+            <div class="login-input-shell">
+              <i class="fa-solid fa-at login-field-icon"></i>
+              <input type="text" id="fpResetUsernameInput" class="form-control" placeholder="Min 3 characters (letters/digits)" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label for="fpResetPasswordInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-lock" style="color:#dc2626;"></i> 3. Password</label>
+            <div class="login-input-shell password-field-wrapper">
+              <i class="fa-solid fa-lock login-field-icon"></i>
+              <input type="password" id="fpResetPasswordInput" class="form-control" placeholder="Enter new password" autocomplete="new-password">
+              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('fpResetPasswordInput', this)" aria-label="Show or Hide Password">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label for="fpResetReenterIdInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-id-badge" style="color:#0284c7;"></i> 4. Re-enter ID</label>
+            <div class="login-input-shell">
+              <i class="fa-solid fa-id-badge login-field-icon"></i>
+              <input type="text" id="fpResetReenterIdInput" class="form-control" placeholder="Re-enter your User ID / Username" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px;">
+            <label for="fpResetContactNoInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-phone" style="color:#059669;"></i> 5. Contact No</label>
+            <div class="login-input-shell">
+              <i class="fa-solid fa-phone login-field-icon"></i>
+              <input type="tel" id="fpResetContactNoInput" class="form-control" placeholder="Enter your contact number" autocomplete="off">
+            </div>
+          </div>
+          <button type="button" id="btnFpCompleteReset" onclick="submitInlineForgotPasswordResetDetails()" style="width:100%; padding:12px 16px; border-radius:12px; border:none; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:#ffffff; font-size:0.9rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 8px 20px rgba(16,185,129,0.4);">
+            <i class="fa-solid fa-floppy-disk"></i> <span>Save &amp; Email Details</span>
+          </button>
         </div>
 
         <div id="fpStatusMsg" style="display:none; margin-top:10px; padding:9px 11px; border-radius:10px; font-size:0.76rem; font-weight:700; line-height:1.4;"></div>
@@ -7031,44 +7126,15 @@
           <button type="button" id="btnRenterNavHelpCenter" class="nav-btn help-center-icon-only-btn" onclick="openContactUsModal()" title="Contact Property Admin" aria-label="Contact Property Admin">
             <i class="fa-solid fa-headset"></i>
           </button>
-          <!-- Portfolio Home Icon Dropdown (Left of Person/Plus Icon): Expenses, Land Records (Khiyat), Fixed Deposit (FD) -->
+          <!-- Direct Home Portfolio Trigger (Opens Expenses by default; 3 tabs remain inside workspace) -->
           <div class="dropdown-anchor home-portfolio-anchor admin-only" id="homePortfolioDropdownAnchor">
-            <button type="button" class="nav-btn home-icon-box-btn stylish-house-trigger" onclick="toggleHomePortfolioMenu(event)" title="Portfolio &amp; Records (Expenses, Land Records &amp; FD)" aria-label="Home Portfolio Menu">
+            <button type="button" class="nav-btn home-icon-box-btn stylish-house-trigger" onclick="openDefaultAdminPortfolioHub(event)" title="Portfolio &amp; Records (Expenses, Land Records &amp; FD)" aria-label="Open Portfolio Hub">
               <div class="house-trigger-glow"></div>
               <div class="house-icon-wrapper">
                 <i class="fa-solid fa-house-chimney house-main-svg"></i>
               </div>
               <span class="house-live-indicator" title="Portfolio Hub Active"></span>
             </button>
-            <div id="homePortfolioMenu" class="action-menu home-portfolio-menu">
-              <div class="menu-item" id="homeMenuKharchItem" onclick="closeHomePortfolioMenu(); openKharchModal()">
-                <span class="home-menu-icon-wrap">
-                  <i class="fa-solid fa-wallet"></i>
-                </span>
-                <div class="home-menu-text-wrap">
-                  <span class="home-menu-title">Expenses</span>
-                  <span class="home-menu-sub">Daily &amp; Monthly Kharch Ledger</span>
-                </div>
-              </div>
-              <div class="menu-item" id="homeMenuKhetItem" onclick="closeHomePortfolioMenu(); openKhetModal()">
-                <span class="home-menu-icon-wrap">
-                  <i class="fa-solid fa-seedling"></i>
-                </span>
-                <div class="home-menu-text-wrap">
-                  <span class="home-menu-title">Land Records (Khiyat)</span>
-                  <span class="home-menu-sub">Farmland &amp; Partner Registry</span>
-                </div>
-              </div>
-              <div class="menu-item" id="homeMenuFdItem" onclick="closeHomePortfolioMenu(); openFdModal()">
-                <span class="home-menu-icon-wrap">
-                  <i class="fa-solid fa-building-columns"></i>
-                </span>
-                <div class="home-menu-text-wrap">
-                  <span class="home-menu-title">Fixed Deposit (FD)</span>
-                  <span class="home-menu-sub">Bank FD &amp; Savings Portfolio</span>
-                </div>
-              </div>
-            </div>
           </div>
           <!-- 3B. Admin Person Icon Operations Hub Button (Left of Plus + Button) -->
           <button type="button" id="btnAdminResidentOpsHub" class="nav-btn admin-only admin-ops-hub-btn" onclick="toggleAdminResidentOpsHub()" title="Operations Hub: Screenshot, UTR, Notifications, Contact &amp; Tickets" aria-label="Admin Operations Hub">
@@ -7217,32 +7283,80 @@
                     <i class="fa-solid fa-mobile-screen-button"></i> Mobile App Distribution Links
                   </div>
                   <h4 style="margin:3px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
-                    Manage Android APK &amp; iOS App Download Links
+                    Download &amp; Manage Android APK &amp; iOS App Links
                   </h4>
                 </div>
-                <span style="font-size:0.72rem; font-weight:700; color:var(--text-muted);">
+                <span id="adminAppLinksSavedNote" style="font-size:0.72rem; font-weight:700; color:var(--text-muted);">
                   Synced live to Renters' Download App tab
                 </span>
               </div>
-              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; margin-bottom:16px;">
-                <div>
-                  <label for="adminAndroidApkUrlInput" style="display:block; font-size:0.74rem; font-weight:800; color:#4ade80; text-transform:uppercase; margin-bottom:6px;">
-                    <i class="fa-brands fa-android"></i> Android APK Download Link
-                  </label>
-                  <input type="url" id="adminAndroidApkUrlInput" class="form-control" placeholder="https://example.com/app-release.apk" style="font-size:0.84rem;" />
+
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
+                <!-- Android APK Download & Pencil Edit Card -->
+                <div style="padding:16px; border-radius:14px; border:1.5px solid rgba(16,185,129,0.35); background:rgba(15,23,42,0.28); display:flex; flex-direction:column; gap:12px;">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:46px; height:46px; border-radius:12px; border:1px solid rgba(74,222,128,0.45); display:flex; align-items:center; justify-content:center; font-size:1.6rem; color:#4ade80; flex-shrink:0;">
+                      <i class="fa-brands fa-android"></i>
+                    </div>
+                    <div style="min-width:0; flex:1;">
+                      <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">Android APK</div>
+                      <div id="adminAndroidApkPreviewText" style="font-size:0.72rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Not configured yet</div>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="btn-primary" style="flex:1; padding:10px 14px; font-size:0.84rem; background:linear-gradient(135deg, #059669 0%, #10b981 100%);" onclick="triggerRenterAppDownload('android')">
+                      <i class="fa-solid fa-download"></i> Download Android APK
+                    </button>
+                    <button type="button" id="btnEditAndroidAppLink" class="btn-ledger-action" style="padding:10px 12px; font-size:0.86rem; color:#4ade80; border-color:rgba(74,222,128,0.45);" onclick="toggleAdminAppLinkEdit('android')" title="Edit Android APK URL" aria-label="Edit Android APK URL">
+                      <i class="fa-solid fa-pencil"></i>
+                    </button>
+                  </div>
+                  <div id="adminAndroidLinkEditBox" style="display:none; padding-top:10px; border-top:1px dashed var(--glass-border);">
+                    <label for="adminAndroidApkUrlInput" style="display:block; font-size:0.72rem; font-weight:800; color:#4ade80; text-transform:uppercase; margin-bottom:6px;">
+                      Android APK Download URL
+                    </label>
+                    <input type="url" id="adminAndroidApkUrlInput" class="form-control" placeholder="https://example.com/app-release.apk" style="font-size:0.82rem; margin-bottom:8px;" />
+                    <div style="display:flex; gap:8px; justify-content:flex-end;">
+                      <button type="button" class="btn-ledger-action" style="padding:7px 12px; font-size:0.76rem;" onclick="toggleAdminAppLinkEdit('android', false)">Cancel</button>
+                      <button type="button" class="btn-primary" style="width:auto; padding:7px 14px; font-size:0.78rem;" onclick="saveAdminAppDownloadLinks('android')">
+                        <i class="fa-solid fa-floppy-disk"></i> Save
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label for="adminIosAppUrlInput" style="display:block; font-size:0.74rem; font-weight:800; color:#38bdf8; text-transform:uppercase; margin-bottom:6px;">
-                    <i class="fa-brands fa-apple"></i> iOS App Download / Store Link
-                  </label>
-                  <input type="url" id="adminIosAppUrlInput" class="form-control" placeholder="https://apps.apple.com/..." style="font-size:0.84rem;" />
+
+                <!-- iOS App Download & Pencil Edit Card -->
+                <div style="padding:16px; border-radius:14px; border:1.5px solid rgba(56,189,248,0.35); background:rgba(15,23,42,0.28); display:flex; flex-direction:column; gap:12px;">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:46px; height:46px; border-radius:12px; border:1px solid rgba(56,189,248,0.45); display:flex; align-items:center; justify-content:center; font-size:1.65rem; color:#38bdf8; flex-shrink:0;">
+                      <i class="fa-brands fa-apple"></i>
+                    </div>
+                    <div style="min-width:0; flex:1;">
+                      <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">iOS App</div>
+                      <div id="adminIosAppPreviewText" style="font-size:0.72rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Not configured yet</div>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="btn-primary" style="flex:1; padding:10px 14px; font-size:0.84rem; background:linear-gradient(135deg, #2563eb 0%, #38bdf8 100%);" onclick="triggerRenterAppDownload('ios')">
+                      <i class="fa-solid fa-download"></i> Download iOS App
+                    </button>
+                    <button type="button" id="btnEditIosAppLink" class="btn-ledger-action" style="padding:10px 12px; font-size:0.86rem; color:#38bdf8; border-color:rgba(56,189,248,0.45);" onclick="toggleAdminAppLinkEdit('ios')" title="Edit iOS App URL" aria-label="Edit iOS App URL">
+                      <i class="fa-solid fa-pencil"></i>
+                    </button>
+                  </div>
+                  <div id="adminIosLinkEditBox" style="display:none; padding-top:10px; border-top:1px dashed var(--glass-border);">
+                    <label for="adminIosAppUrlInput" style="display:block; font-size:0.72rem; font-weight:800; color:#38bdf8; text-transform:uppercase; margin-bottom:6px;">
+                      iOS App Download / Store URL
+                    </label>
+                    <input type="url" id="adminIosAppUrlInput" class="form-control" placeholder="https://apps.apple.com/..." style="font-size:0.82rem; margin-bottom:8px;" />
+                    <div style="display:flex; gap:8px; justify-content:flex-end;">
+                      <button type="button" class="btn-ledger-action" style="padding:7px 12px; font-size:0.76rem;" onclick="toggleAdminAppLinkEdit('ios', false)">Cancel</button>
+                      <button type="button" class="btn-primary" style="width:auto; padding:7px 14px; font-size:0.78rem;" onclick="saveAdminAppDownloadLinks('ios')">
+                        <i class="fa-solid fa-floppy-disk"></i> Save
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-                <span id="adminAppLinksSavedNote" style="font-size:0.74rem; color:var(--text-muted);">Enter valid URLs and click Save App Links.</span>
-                <button type="button" class="btn-primary" style="width:auto; padding:10px 18px; font-size:0.84rem;" onclick="saveAdminAppDownloadLinks()">
-                  <i class="fa-solid fa-floppy-disk"></i> Save App Links
-                </button>
               </div>
             </div>
           </div>
@@ -8510,10 +8624,6 @@
         <div class="form-group">
           <label>Full Name <span class="req-star">*</span></label>
           <input type="text" id="createUserName" class="form-control" placeholder="Enter full name">
-        </div>
-        <div class="form-group">
-          <label>Mobile No. (+91 &amp; 10 Digits)</label>
-          <input type="tel" id="createUserMobile" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)">
         </div>
         <div class="form-group">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
@@ -11393,7 +11503,7 @@
         password: cleanPass,
         sessionToken: sessionToken,
         deviceId: getOrCreatePortalDeviceId(),
-        loginTime: new Date().toLocaleString("en-IN"),
+        loginTime: formatDateOnly(new Date()),
         deviceInfo: navigator.userAgent || "Web Browser"
       };
       const bodyStr = JSON.stringify(loginPayloadObj);
@@ -13034,13 +13144,17 @@
       const ctxProp = String(renterContext?.PropertyName || "").trim();
       const ctxFlat = String(renterContext?.FlatName || "").trim();
       const ctxName = String(renterContext?.RenterName || "").trim();
+      const ctxRenterId = String(renterContext?.RenterID || "").trim();
       const updatedUsers = [];
 
       (DB.users || []).forEach(u => {
-        if (String(u.Role || "").trim().toLowerCase() !== "renter") return;
+        const uRole = String(u.Role || "").trim().toLowerCase();
         const uDigits = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber);
         const matchPrev = prevDigits.length === 12 && uDigits === prevDigits;
         const matchNext = nextDigits.length === 12 && uDigits === nextDigits;
+        const matchRenterId = Boolean(ctxRenterId && u.RenterID && String(u.RenterID).trim() === ctxRenterId);
+        if (uRole !== "renter" && !matchPrev) return;
+
         const isSameFlatTarget = Boolean(ctxProp && ctxFlat && isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, ctxProp, ctxFlat));
         const isActiveStatus = String(u.Status || u.AccountStatus || "Active").trim().toLowerCase() !== "blocked";
         const otherHoldsPrev = prevDigits.length === 12 && (DB.users || []).some(other =>
@@ -13048,8 +13162,8 @@
           String(other.Role || "").trim().toLowerCase() === "renter" &&
           normalizeAadhaar12(other.AssignedAadhaar || other.AadhaarNumber) === prevDigits
         );
-        const matchFlat = Boolean(isSameFlatTarget && (!uDigits || (isActiveStatus && !otherHoldsPrev)));
-        if (!matchPrev && !matchNext && !matchFlat) return;
+        const matchFlat = Boolean(uRole === "renter" && isSameFlatTarget && (!uDigits || (isActiveStatus && !otherHoldsPrev)));
+        if (!matchPrev && !matchNext && !matchRenterId && !matchFlat) return;
 
         let changed = false;
         if (nextDigits.length === 12 && (normalizeAadhaar12(u.AssignedAadhaar) !== nextDigits || normalizeAadhaar12(u.AadhaarNumber) !== nextDigits)) {
@@ -13080,8 +13194,8 @@
     }
 
     // Cross-Location & Historical Record Synchronization by Aadhaar Number:
-    // Whenever any update is made to a tenant's profile/documents (in either their current location or historical records),
-    // seamlessly synchronize the updated personal & KYC fields across ALL stays (both historical and active locations) sharing that Aadhaar.
+    // Whenever any update is made to a tenant's profile/documents (or Aadhaar number is changed),
+    // synchronize personal/KYC fields across all stays, cascade updated Aadhaar across existing receipts & payment proofs, and sync Registered Users.
     function syncRenterIdentityAcrossAllStays(aadhaarOrRenterObj, updatedFields = {}, previousAadhaar = "") {
       const targetDigits = String(
         (typeof aadhaarOrRenterObj === "object" && aadhaarOrRenterObj !== null)
@@ -13140,7 +13254,50 @@
       const contextStay = syncedStays[0] || (typeof aadhaarOrRenterObj === "object" && aadhaarOrRenterObj !== null ? aadhaarOrRenterObj : activeFlatRenterObj) || updatedFields;
       syncLinkedUserAccountsAadhaar(targetDigits, prevDigits, contextStay);
 
-      // Existing generated bills/receipts remain immutable and never get overwritten by future profile edits
+      // Cascade updated Aadhaar number across ALL existing bills/receipts & payment proofs so prior receipts appear under the new Aadhaar
+      if (targetDigits.length === 12) {
+        (DB.bills || []).forEach(b => {
+          const bAadh = String(b.TenantAadhaar || b.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+          const bRenterId = String(b.RenterID || "").trim();
+          const matchOldAadh = prevDigits.length === 12 && bAadh === prevDigits;
+          const matchSyncedId = bRenterId && syncedRenterIds.has(bRenterId) && (!bAadh || bAadh === prevDigits);
+          if (matchOldAadh || matchSyncedId) {
+            b.TenantAadhaar = formattedAadhaar;
+            if ("AadhaarNumber" in b) b.AadhaarNumber = formattedAadhaar;
+          }
+        });
+
+        if (DB.globalConfig && typeof DB.globalConfig === "object") {
+          let didTouchGlobalCfg = false;
+          if (Array.isArray(DB.globalConfig.paymentProofs)) {
+            DB.globalConfig.paymentProofs.forEach(p => {
+              const pAadh = String(p.aadhaar || p.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+              const pRid = String(p.renterId || "").trim();
+              if ((prevDigits.length === 12 && pAadh === prevDigits) || (pRid && syncedRenterIds.has(pRid) && (!pAadh || pAadh === prevDigits))) {
+                p.aadhaar = targetDigits;
+                if ("AadhaarNumber" in p) p.AadhaarNumber = targetDigits;
+                didTouchGlobalCfg = true;
+              }
+            });
+          }
+          if (DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" && prevDigits.length === 12 && prevDigits !== targetDigits) {
+            const oldKey = "renter::" + prevDigits;
+            const newKey = "renter::" + targetDigits;
+            if (DB.globalConfig.renterMonthlyPhotos[oldKey] && typeof DB.globalConfig.renterMonthlyPhotos[oldKey] === "object") {
+              const mergedMap = { ...(DB.globalConfig.renterMonthlyPhotos[newKey] || {}), ...DB.globalConfig.renterMonthlyPhotos[oldKey] };
+              Object.values(mergedMap).forEach(slot => {
+                if (slot && typeof slot === "object") slot.aadhaar = targetDigits;
+              });
+              DB.globalConfig.renterMonthlyPhotos[newKey] = mergedMap;
+              delete DB.globalConfig.renterMonthlyPhotos[oldKey];
+              didTouchGlobalCfg = true;
+            }
+          }
+          if (didTouchGlobalCfg && typeof saveLocalGlobalConfigMaster === "function") {
+            saveLocalGlobalConfigMaster(DB.globalConfig);
+          }
+        }
+      }
 
       // If the currently open flat's activeFlatRenterObj shares this Aadhaar, refresh the live form inputs as well
       if (activeFlatRenterObj) {
@@ -13833,76 +13990,52 @@
     }
 
     /**
-     * Requirement 4 & 8: Display Year, Month, and Date ONLY (strictly NO time)
+     * Requirement 7 & 8: Display Date, Month, and Year ONLY in DD MMM YYYY order (strictly NO time, never year-first)
      */
     function formatDateOnly(rawDate) {
       if (!rawDate) return "--";
       const s = String(rawDate).trim().replace(/^'+/, "");
       if (!s || s === "undefined" || s === "null" || s === "Invalid Date" || s === "--") return "--";
-      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-      const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const formatDMY = (da, moIdx, yr) => {
+        const dNum = Number(da), mIdx = Number(moIdx), yNum = Number(yr);
+        if (!yNum || mIdx < 0 || mIdx > 11 || dNum < 1 || dNum > 31) return "";
+        return `${String(dNum).padStart(2, "0")} ${months[mIdx]} ${yNum}`;
+      };
+      // Handle YYYY-MM-DD or YYYY/MM/DD (with optional ISO/time suffix)
+      const ymdMatch = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\b|T|,|\s|$)/);
+      if (ymdMatch) {
+        return formatDMY(ymdMatch[3], Number(ymdMatch[2]) - 1, ymdMatch[1]) || "--";
+      }
+      // Handle D/M/YYYY or DD-MM-YYYY (with optional ", time" or " time")
+      const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:\b|,|\s|$)/);
       if (dmyMatch) {
-        const d = dmyMatch[1].padStart(2, "0");
-        const m = dmyMatch[2].padStart(2, "0");
-        const y = dmyMatch[3];
-        return `${y}-${m}-${d}`;
+        return formatDMY(dmyMatch[1], Number(dmyMatch[2]) - 1, dmyMatch[3]) || "--";
       }
-      if (s.includes("T")) {
-        const parsedT = new Date(s);
-        if (!isNaN(parsedT.getTime())) {
-          const y = parsedT.getFullYear();
-          const m = String(parsedT.getMonth() + 1).padStart(2, "0");
-          const d = String(parsedT.getDate()).padStart(2, "0");
-          return `${y}-${m}-${d}`;
-        }
-        return s.split("T")[0];
+      // Handle "16 Nov 2026, ..." or "16-Nov-2026 ..."
+      const dMonYMatch = s.match(/^(\d{1,2})[\s-]+([A-Za-z]{3,9})[\s-,]+(\d{4})/);
+      if (dMonYMatch) {
+        const mKey = dMonYMatch[2].slice(0, 3).toLowerCase();
+        const mIdx = months.findIndex(m => m.toLowerCase() === mKey);
+        if (mIdx !== -1) return formatDMY(dMonYMatch[1], mIdx, dMonYMatch[3]) || "--";
       }
-      if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
-      const parsed = new Date(s);
+      // Handle "Nov 16, 2026 ..."
+      const monDYMatch = s.match(/^([A-Za-z]{3,9})[\s-]+(\d{1,2})[\s,]+(\d{4})/);
+      if (monDYMatch) {
+        const mKey = monDYMatch[1].slice(0, 3).toLowerCase();
+        const mIdx = months.findIndex(m => m.toLowerCase() === mKey);
+        if (mIdx !== -1) return formatDMY(monDYMatch[2], mIdx, monDYMatch[3]) || "--";
+      }
+      const parsed = rawDate instanceof Date ? rawDate : new Date(s);
       if (!isNaN(parsed.getTime())) {
-        const y = parsed.getFullYear();
-        const m = String(parsed.getMonth() + 1).padStart(2, "0");
-        const d = String(parsed.getDate()).padStart(2, "0");
-        return y + "-" + m + "-" + d;
+        return formatDMY(parsed.getDate(), parsed.getMonth(), parsed.getFullYear()) || "--";
       }
-      const firstWord = s.split(" ")[0];
-      if (/^\d{4}-\d{2}-\d{2}/.test(firstWord)) return firstWord.substring(0, 10);
       return "--";
     }
 
     function formatUtrDateOnly(rawDate) {
-      if (!rawDate) return "";
-      const s = String(rawDate).trim().replace(/^'+/, "");
-      if (!s || s === "undefined" || s === "null" || s === "--") return "";
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const formatParts = (yr, moIdx, da) => {
-        if (!yr || moIdx < 0 || moIdx > 11 || da < 1 || da > 31) return "";
-        return `${String(da).padStart(2, "0")} ${months[moIdx]} ${yr}`;
-      };
-      // Handle D/M/YYYY or DD/MM/YYYY with optional ", time" (e.g. "15/11/2026, 10:30:12 am")
-      const dmyTimeMatch = s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
-      if (dmyTimeMatch) {
-        return formatParts(Number(dmyTimeMatch[3]), Number(dmyTimeMatch[2]) - 1, Number(dmyTimeMatch[1])) || s.split(",")[0].trim();
-      }
-      // Handle ISO or YYYY-MM-DD
-      const ymdMatch = s.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);
-      if (ymdMatch) {
-        return formatParts(Number(ymdMatch[1]), Number(ymdMatch[2]) - 1, Number(ymdMatch[3])) || s.substring(0, 10);
-      }
-      // Handle "15 Nov 2026, ..." or "15-Nov-2026 ..."
-      const dMonYMatch = s.match(/^(\d{1,2})[\s-]+([A-Za-z]{3,9})[\s-,]+(\d{4})/);
-      if (dMonYMatch) {
-        const mName = dMonYMatch[2].slice(0, 3).toLowerCase();
-        const mIdx = months.findIndex(m => m.toLowerCase() === mName);
-        if (mIdx !== -1) {
-          return formatParts(Number(dMonYMatch[3]), mIdx, Number(dMonYMatch[1]));
-        }
-      }
-      const parsed = new Date(s);
-      if (!isNaN(parsed.getTime())) {
-        return formatParts(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
-      }
-      return s.split(",")[0].trim();
+      const formatted = formatDateOnly(rawDate);
+      return formatted === "--" ? "" : formatted;
     }
 
     
@@ -15603,6 +15736,17 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    function openDefaultAdminPortfolioHub(e) {
+      if (e && typeof e.stopPropagation === "function") e.stopPropagation();
+      if (activeRole === "Manager") {
+        if (hasManagerPermission("kharch")) return openAdminPortfolioHub("kharch");
+        if (hasManagerPermission("khet")) return openAdminPortfolioHub("khet");
+        if (hasManagerPermission("fd")) return openAdminPortfolioHub("fd");
+        return triggerSideToast("Access Restricted", "You do not have permission to view portfolio sections.", false);
+      }
+      return openAdminPortfolioHub("kharch");
+    }
+
     function openAdminPortfolioHub(tabKey = "kharch") {
       if (typeof closeActionMenu === "function") closeActionMenu();
       if (typeof closeHomePortfolioMenu === "function") closeHomePortfolioMenu();
@@ -15611,7 +15755,14 @@ function formatMonthLabel(rawVal) {
       document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
 
       const allowedTabs = ["kharch", "khet", "fd"];
-      const activeKey = allowedTabs.includes(tabKey) ? tabKey : "kharch";
+      let activeKey = allowedTabs.includes(tabKey) ? tabKey : "kharch";
+      if (activeRole === "Manager" && !hasManagerPermission(activeKey)) {
+        const fallback = allowedTabs.find(k => hasManagerPermission(k));
+        if (!fallback) {
+          return triggerSideToast("Access Restricted", "You do not have permission to view portfolio sections.", false);
+        }
+        activeKey = fallback;
+      }
       window.activeAdminPortfolioHubTab = activeKey;
 
       const portfolioSection = document.getElementById("adminPortfolioHubSection");
@@ -15619,7 +15770,13 @@ function formatMonthLabel(rawVal) {
       if (portfolioSection) portfolioSection.style.display = "block";
 
       document.querySelectorAll("#adminPortfolioHubCarouselTrack .admin-ops-carousel-card").forEach(btn => {
-        btn.classList.toggle("active", btn.getAttribute("data-portfolio-tab") === activeKey);
+        const btnKey = btn.getAttribute("data-portfolio-tab");
+        if (activeRole === "Manager") {
+          btn.style.display = hasManagerPermission(btnKey) ? "inline-flex" : "none";
+        } else {
+          btn.style.display = "inline-flex";
+        }
+        btn.classList.toggle("active", btnKey === activeKey);
       });
       document.querySelectorAll("#adminPortfolioHubBody .admin-ops-hub-slot").forEach(slot => {
         slot.style.display = "none";
@@ -15712,26 +15869,47 @@ function formatMonthLabel(rawVal) {
       };
     }
 
+    function toggleAdminAppLinkEdit(platform, forceState = null) {
+      const isAndroid = String(platform || "").toLowerCase() === "android";
+      const box = document.getElementById(isAndroid ? "adminAndroidLinkEditBox" : "adminIosLinkEditBox");
+      const input = document.getElementById(isAndroid ? "adminAndroidApkUrlInput" : "adminIosAppUrlInput");
+      if (!box) return;
+      const shouldShow = typeof forceState === "boolean" ? forceState : (box.style.display === "none" || !box.style.display);
+      box.style.display = shouldShow ? "block" : "none";
+      if (shouldShow && input) {
+        const links = getStoredAppDownloadLinks();
+        input.value = isAndroid ? links.androidApkUrl : links.iosAppUrl;
+        setTimeout(() => input.focus(), 40);
+      }
+    }
+
     function initAdminAppDownloadLinksForm() {
       const links = getStoredAppDownloadLinks();
       const androidIn = document.getElementById("adminAndroidApkUrlInput");
       const iosIn = document.getElementById("adminIosAppUrlInput");
+      const androidPreview = document.getElementById("adminAndroidApkPreviewText");
+      const iosPreview = document.getElementById("adminIosAppPreviewText");
       const noteEl = document.getElementById("adminAppLinksSavedNote");
       if (androidIn && document.activeElement !== androidIn) androidIn.value = links.androidApkUrl;
       if (iosIn && document.activeElement !== iosIn) iosIn.value = links.iosAppUrl;
+      if (androidPreview) androidPreview.innerText = links.androidApkUrl || "No Android APK link saved yet";
+      if (iosPreview) iosPreview.innerText = links.iosAppUrl || "No iOS App link saved yet";
       if (noteEl) {
         noteEl.innerText = (links.androidApkUrl || links.iosAppUrl)
-          ? "Saved app links are live on Renters' Download App tab."
-          : "Enter valid URLs and click Save App Links.";
+          ? "Click Download to test/install or click the Pencil icon to edit URLs."
+          : "Click the Pencil icon on either card to add & save its download URL.";
       }
     }
 
-    async function saveAdminAppDownloadLinks() {
+    async function saveAdminAppDownloadLinks(editedPlatform = "") {
       if (String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Admin Access Only", "Only Admin accounts can update app download links.", false);
       }
-      const androidUrl = String(document.getElementById("adminAndroidApkUrlInput")?.value || "").trim();
-      const iosUrl = String(document.getElementById("adminIosAppUrlInput")?.value || "").trim();
+      const existing = getStoredAppDownloadLinks();
+      const androidInput = document.getElementById("adminAndroidApkUrlInput");
+      const iosInput = document.getElementById("adminIosAppUrlInput");
+      const androidUrl = androidInput ? String(androidInput.value || "").trim() : existing.androidApkUrl;
+      const iosUrl = iosInput ? String(iosInput.value || "").trim() : existing.iosAppUrl;
       const isValidLink = (u) => !u || /^(https?:\/\/|\/)/i.test(u);
       if (!isValidLink(androidUrl) || !isValidLink(iosUrl)) {
         return triggerSideToast("Invalid URL", "Please enter valid http(s):// links for Android APK and iOS App.", false);
@@ -15740,10 +15918,17 @@ function formatMonthLabel(rawVal) {
       DB.globalConfig.appDownloadLinks = {
         androidApkUrl: androidUrl,
         iosAppUrl: iosUrl,
-        updatedAt: new Date().toISOString()
+        updatedAt: formatDateOnly(new Date())
       };
       saveLocalGlobalConfigMaster(DB.globalConfig);
       saveDbSnapshotToCache();
+      if (editedPlatform === "android" || editedPlatform === "ios") {
+        toggleAdminAppLinkEdit(editedPlatform, false);
+      } else {
+        toggleAdminAppLinkEdit("android", false);
+        toggleAdminAppLinkEdit("ios", false);
+      }
+      initAdminAppDownloadLinksForm();
       const noteEl = document.getElementById("adminAppLinksSavedNote");
       if (noteEl) noteEl.innerText = "App download links saved and synced live!";
 
@@ -15753,7 +15938,7 @@ function formatMonthLabel(rawVal) {
         androidApkUrl: androidUrl,
         iosAppUrl: iosUrl
       });
-      triggerSideToast("App Links Saved", "Android APK & iOS App links updated for all Renters.", true);
+      triggerSideToast("App Links Saved", "Android APK & iOS App links updated live.", true);
     }
 
     async function refreshAdminUtrVerificationHub(btn) {
@@ -15932,7 +16117,7 @@ function formatMonthLabel(rawVal) {
       container.innerHTML = relevant.map(n => {
         const sigKeys = getNotificationSignatureKeys(n);
         const isRead = isAdminViewer || sigKeys.some(k => readIds.includes(k));
-        const timeStr = n.timestamp ? new Date(n.timestamp).toLocaleDateString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+        const timeStr = n.timestamp ? formatDateOnly(n.timestamp) : "";
         const safeTitle = String(n.title || "Announcement").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const safeBody = String(n.body || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const safeSender = String(n.sender || "Admin").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -16833,7 +17018,7 @@ function formatMonthLabel(rawVal) {
             mode: "UPI",
             screenshotUrl: driveUrl,
             status: "Pending",
-            submittedAt: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+            submittedAt: formatDateOnly(new Date())
           };
           saveStoredPaymentProofs([proofEntry, ...existingProofs]);
         }
@@ -17139,7 +17324,7 @@ function formatMonthLabel(rawVal) {
           mode: "UPI",
           screenshotUrl: finalPhotoUrl,
           status: "Pending",
-          submittedAt: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+          submittedAt: formatDateOnly(new Date())
         };
         if (typeof saveStoredPaymentProofs === "function") {
           saveStoredPaymentProofs([newProof, ...list]);
@@ -18064,7 +18249,7 @@ function formatMonthLabel(rawVal) {
                 const safeAadhaarArg = String(effectiveAadhaar || "").replace(/'/g, "\\'");
                 const safeRenterNameArg2 = String(renterNameDisplay || "").replace(/'/g, "\\'");
                 const uploadedTimeStr = slotObj && slotObj.uploadedAt
-                  ? new Date(slotObj.uploadedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+                  ? formatDateOnly(slotObj.uploadedAt)
                   : "";
                 const isSlotReRequested = Boolean(renterMonthReqStatus.reRequestedCats && renterMonthReqStatus.reRequestedCats[cat.key]);
                 const isSlotRequested = Boolean(renterMonthReqStatus.requestedCats && renterMonthReqStatus.requestedCats[cat.key]);
@@ -18597,7 +18782,7 @@ function formatMonthLabel(rawVal) {
                     <div style="background:transparent; border:1px solid var(--glass-border); border-radius:12px; padding:11px 14px; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
                       <div>
                         <div><strong style="color:#fbbf24;">[${escapeHtml(t.category || "Issue")}]</strong> ${escapeHtml(t.description || "")}</div>
-                        <div style="font-size:0.71rem; color:var(--text-muted); margin-top:3px;">${t.id ? `${escapeHtml(t.id)} • ` : ""}${escapeHtml(t.propertyName || targetProp)} Flat ${escapeHtml(t.flatName || targetFlat)} • ${escapeHtml(t.createdAt || "")}</div>
+                        <div style="font-size:0.71rem; color:var(--text-muted); margin-top:3px;">${t.id ? `${escapeHtml(t.id)} • ` : ""}${escapeHtml(t.propertyName || targetProp)} Flat ${escapeHtml(t.flatName || targetFlat)}${t.createdAt ? ` • ${escapeHtml(formatDateOnly(t.createdAt))}` : ""}</div>
                       </div>
                       <span style="padding:4px 10px; border-radius:999px; font-size:0.72rem; font-weight:800; background:transparent; color:${stColor}; border:1px solid ${stColor};">${escapeHtml(st)}</span>
                     </div>
@@ -18629,7 +18814,7 @@ function formatMonthLabel(rawVal) {
         const isPayPhotoReRequested = Boolean(renterMonthReqStatus.reRequestedCats && renterMonthReqStatus.reRequestedCats.completed_payment);
         const isPayPhotoRequested = Boolean(renterMonthReqStatus.requestedCats && renterMonthReqStatus.requestedCats.completed_payment);
         const payUploadedDateStr = paymentSlotObj && paymentSlotObj.uploadedAt
-          ? new Date(paymentSlotObj.uploadedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+          ? formatDateOnly(paymentSlotObj.uploadedAt)
           : "";
         const safePayPropArg = String(targetProp || "").replace(/'/g, "\\'");
         const safePayFlatArg = String(targetFlat || "").replace(/'/g, "\\'");
@@ -18889,7 +19074,7 @@ function formatMonthLabel(rawVal) {
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Property &amp; Flat</span><strong style="font-size:0.9rem; color:var(--text-main);">${escapeHtml(targetProp)} • Flat ${escapeHtml(targetFlat)}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Monthly Base Rent</span><strong style="font-size:0.9rem; color:#34d399;">₹${baseRentConfigured.toLocaleString("en-IN")}/mo</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Utility Rates (Fixed Profile)</span><strong style="font-size:0.85rem; color:var(--text-main);">Elec: ₹${profElecRate !== "" ? profElecRate : "--"}/U • PNG: ₹${profPngRate !== "" ? profPngRate : "--"}/U • Water: ₹${profWaterRate !== "" ? profWaterRate : "--"}/U</strong></div>
-                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Joining Date ${profEndDate ? "/ End Date" : ""}</span><strong style="font-size:0.88rem; color:var(--text-main);">${profJoinDate || "N/A"}${profEndDate ? ` → ${profEndDate}` : ""}</strong></div>
+                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Joining Date ${profEndDate ? "/ End Date" : ""}</span><strong style="font-size:0.88rem; color:var(--text-main);">${profJoinDate ? formatDateOnly(profJoinDate) : "N/A"}${profEndDate ? ` → ${formatDateOnly(profEndDate)}` : ""}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Total Family Members</span><strong style="font-size:0.88rem; color:var(--text-main);">${escapeHtml(String(consolidatedProfile.TotalFamilyMembers || primaryRenter.TotalFamilyMembers || 1))}</strong></div>
               </div>
             </div>
@@ -19303,10 +19488,15 @@ function formatMonthLabel(rawVal) {
     function showInlineForgotPasswordPanel() {
       const loginFormEl = document.getElementById("loginForm");
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
+      const credBox = document.getElementById("fpCredentialsStepBox");
       const otpBox = document.getElementById("fpOtpStepBox");
+      const resetBox = document.getElementById("fpResetDetailsStepBox");
+      window.__fpResetSession = null;
       if (loginFormEl) loginFormEl.style.display = "none";
       if (panelEl) panelEl.style.display = "block";
+      if (credBox) credBox.style.display = "block";
       if (otpBox) otpBox.style.display = "none";
+      if (resetBox) resetBox.style.display = "none";
       setInlineForgotPasswordStatus("", "info");
       const aadhIn = document.getElementById("fpAadhaarInput");
       if (aadhIn && typeof aadhIn.focus === "function") aadhIn.focus();
@@ -19315,14 +19505,29 @@ function formatMonthLabel(rawVal) {
     function hideInlineForgotPasswordPanel() {
       const loginFormEl = document.getElementById("loginForm");
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
+      const credBox = document.getElementById("fpCredentialsStepBox");
       const otpBox = document.getElementById("fpOtpStepBox");
+      const resetBox = document.getElementById("fpResetDetailsStepBox");
       const aadhIn = document.getElementById("fpAadhaarInput");
       const emailIn = document.getElementById("fpEmailInput");
       const otpIn = document.getElementById("fpOtpInput");
+      const rNameIn = document.getElementById("fpResetNameInput");
+      const rUserIn = document.getElementById("fpResetUsernameInput");
+      const rPassIn = document.getElementById("fpResetPasswordInput");
+      const rIdIn = document.getElementById("fpResetReenterIdInput");
+      const rContactIn = document.getElementById("fpResetContactNoInput");
+      window.__fpResetSession = null;
       if (aadhIn) aadhIn.value = "";
       if (emailIn) emailIn.value = "";
       if (otpIn) otpIn.value = "";
+      if (rNameIn) rNameIn.value = "";
+      if (rUserIn) rUserIn.value = "";
+      if (rPassIn) rPassIn.value = "";
+      if (rIdIn) rIdIn.value = "";
+      if (rContactIn) rContactIn.value = "";
+      if (credBox) credBox.style.display = "block";
       if (otpBox) otpBox.style.display = "none";
+      if (resetBox) resetBox.style.display = "none";
       setInlineForgotPasswordStatus("", "info");
       if (panelEl) panelEl.style.display = "none";
       if (loginFormEl) loginFormEl.style.display = "block";
@@ -19422,12 +19627,34 @@ function formatMonthLabel(rawVal) {
           triggerSideToast("OTP Failed", errMsg, false);
           return;
         }
-        const okMsg = res.message || `OTP verified! Your User ID, Username, and Password have been sent to ${cleanEmail}.`;
-        setInlineForgotPasswordStatus(okMsg, "success");
-        triggerSideToast("Credentials Sent to Email", okMsg, true);
+        window.__fpResetSession = {
+          resetToken: String(res.resetToken || "").trim(),
+          aadhaar: cleanAadh,
+          email: cleanEmail
+        };
         if (otpIn) otpIn.value = "";
+        const credBox = document.getElementById("fpCredentialsStepBox");
         const otpBox = document.getElementById("fpOtpStepBox");
+        const resetBox = document.getElementById("fpResetDetailsStepBox");
+        if (credBox) credBox.style.display = "none";
         if (otpBox) otpBox.style.display = "none";
+        if (resetBox) resetBox.style.display = "block";
+
+        const rNameIn = document.getElementById("fpResetNameInput");
+        const rUserIn = document.getElementById("fpResetUsernameInput");
+        const rPassIn = document.getElementById("fpResetPasswordInput");
+        const rIdIn = document.getElementById("fpResetReenterIdInput");
+        const rContactIn = document.getElementById("fpResetContactNoInput");
+        if (rNameIn) rNameIn.value = String(res.prefill?.name || "");
+        if (rUserIn) rUserIn.value = String(res.prefill?.username || "");
+        if (rPassIn) rPassIn.value = "";
+        if (rIdIn) rIdIn.value = String(res.prefill?.username || "");
+        if (rContactIn) rContactIn.value = String(res.prefill?.contactNo || "");
+
+        const okMsg = res.message || "OTP verified! Please enter your 5 account details below to save and receive them on Gmail.";
+        setInlineForgotPasswordStatus(okMsg, "success");
+        triggerSideToast("OTP Verified", "Fill the 5 details below to complete recovery.", true);
+        if (rNameIn && typeof rNameIn.focus === "function") rNameIn.focus();
       } catch (err) {
         const msg = err?.message || "Could not verify OTP right now.";
         setInlineForgotPasswordStatus(msg, "error");
@@ -19436,6 +19663,93 @@ function formatMonthLabel(rawVal) {
         if (btn) {
           btn.disabled = false;
           btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Verify OTP</span>`;
+        }
+      }
+    }
+
+    async function submitInlineForgotPasswordResetDetails() {
+      const sess = window.__fpResetSession || {};
+      const resetToken = String(sess.resetToken || "").trim();
+      const cleanAadh = String(sess.aadhaar || document.getElementById("fpAadhaarInput")?.value || "").replace(/\D/g, "").slice(0, 12);
+      const cleanEmail = String(sess.email || document.getElementById("fpEmailInput")?.value || "").trim().toLowerCase();
+
+      const nameVal = String(document.getElementById("fpResetNameInput")?.value || "").trim();
+      const usernameVal = String(document.getElementById("fpResetUsernameInput")?.value || "").trim();
+      const passwordVal = String(document.getElementById("fpResetPasswordInput")?.value || "").trim();
+      const reenterIdVal = String(document.getElementById("fpResetReenterIdInput")?.value || "").trim();
+      const contactNoVal = String(document.getElementById("fpResetContactNoInput")?.value || "").trim();
+
+      if (!resetToken || cleanAadh.length !== 12 || !cleanEmail) {
+        setInlineForgotPasswordStatus("Verification session expired. Please request and verify OTP again.", "error");
+        return triggerSideToast("Session Expired", "Please verify OTP again.", false);
+      }
+      if (!nameVal) {
+        setInlineForgotPasswordStatus("Please enter Name (Field 1).", "error");
+        return triggerSideToast("Name Required", "Please enter your Name.", false);
+      }
+      if (usernameVal.length < 3) {
+        setInlineForgotPasswordStatus("Username (Field 2) must be at least 3 characters or digits.", "error");
+        return triggerSideToast("Invalid Username", "Username must be at least 3 characters.", false);
+      }
+      if (!passwordVal) {
+        setInlineForgotPasswordStatus("Please enter a new Password (Field 3).", "error");
+        return triggerSideToast("Password Required", "Please enter a new Password.", false);
+      }
+      if (!reenterIdVal || reenterIdVal.toLowerCase() !== usernameVal.toLowerCase()) {
+        setInlineForgotPasswordStatus("Re-enter ID (Field 4) must match Username (Field 2).", "error");
+        return triggerSideToast("ID Mismatch", "Re-enter ID must match Username.", false);
+      }
+      if (!contactNoVal || contactNoVal.replace(/\D/g, "").length < 7) {
+        setInlineForgotPasswordStatus("Please enter a valid Contact No (Field 5).", "error");
+        return triggerSideToast("Contact Required", "Please enter a valid Contact No.", false);
+      }
+
+      const btn = document.getElementById("btnFpCompleteReset");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Saving &amp; Sending Email...</span>`;
+      }
+      setInlineForgotPasswordStatus("Updating account details and sending confirmation to Gmail...", "info");
+
+      try {
+        const res = await sendFirebaseAction({
+          action: "completeForgotPasswordReset",
+          aadhaar: cleanAadh,
+          email: cleanEmail,
+          resetToken: resetToken,
+          name: nameVal,
+          username: usernameVal,
+          password: passwordVal,
+          reenterId: reenterIdVal,
+          contactNo: contactNoVal
+        });
+        if (!res || res.status !== "success") {
+          const errMsg = res?.message || "Could not update details. Please try again.";
+          setInlineForgotPasswordStatus(errMsg, "error");
+          triggerSideToast("Update Failed", errMsg, false);
+          return;
+        }
+        if (Array.isArray(res.users) && res.users.length > 0) {
+          DB.users = res.users;
+          if (typeof saveLocalUsersMaster === "function") saveLocalUsersMaster(DB.users);
+          if (typeof saveDbSnapshotToCache === "function") saveDbSnapshotToCache();
+        }
+        window.__fpResetSession = null;
+        const okMsg = res.message || `All 5 details updated & sent to ${cleanEmail}. You can now sign in with your updated credentials.`;
+        setInlineForgotPasswordStatus(okMsg, "success");
+        triggerSideToast("Recovery Complete", `Details saved and emailed to ${cleanEmail}.`, true);
+        const loginUserIn = document.getElementById("loginUsername");
+        const loginPassIn = document.getElementById("loginPassword");
+        if (loginUserIn) loginUserIn.value = reenterIdVal;
+        if (loginPassIn) loginPassIn.value = "";
+      } catch (err) {
+        const msg = err?.message || "Could not save details right now.";
+        setInlineForgotPasswordStatus(msg, "error");
+        triggerSideToast("Reset Error", msg, false);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> <span>Save &amp; Email Details</span>`;
         }
       }
     }
@@ -19600,9 +19914,9 @@ function formatMonthLabel(rawVal) {
       const pnlTracker = document.querySelector(".pnl-tracker");
       const searchWrap = document.querySelector(".header-search-wrap");
       const homePortfolioAnchor = document.getElementById("homePortfolioDropdownAnchor");
-      const homeMenuKharch = document.getElementById("homeMenuKharchItem");
-      const homeMenuKhet = document.getElementById("homeMenuKhetItem");
-      const homeMenuFd = document.getElementById("homeMenuFdItem");
+      const pfTabKharch = document.querySelector('#adminPortfolioHubCarouselTrack [data-portfolio-tab="kharch"]');
+      const pfTabKhet = document.querySelector('#adminPortfolioHubCarouselTrack [data-portfolio-tab="khet"]');
+      const pfTabFd = document.querySelector('#adminPortfolioHubCarouselTrack [data-portfolio-tab="fd"]');
       const plusAnchor = document.getElementById("plusMenuDropdownAnchor") || document.querySelector(".plus-icon-box-btn")?.closest(".dropdown-anchor");
       const adminOpsBtn = document.getElementById("btnAdminResidentOpsHub");
       const settingsBtn = document.querySelector(".settings-icon-box-btn");
@@ -19623,16 +19937,16 @@ function formatMonthLabel(rawVal) {
         btnNotif.style.setProperty("display", (activeRole === "Renter" || activeRole === "Viewer") ? "inline-flex" : "none", "important");
       }
 
-      // Requirement 2 & 3: Enforce Home Portfolio dropdown & granular Manager permissions on all top dashboard controls
+      // Requirement 2 & 3: Enforce Home Portfolio trigger & granular Manager permissions on all top dashboard controls
       if (activeRole === "Manager") {
         if (pnlTracker) pnlTracker.style.setProperty("display", hasManagerPermission("pnl") ? "inline-flex" : "none", "important");
         if (searchWrap) searchWrap.style.setProperty("display", hasManagerPermission("search") ? "flex" : "none", "important");
         if (rNavChat) rNavChat.style.setProperty("display", hasManagerPermission("liveChat") ? "inline-flex" : "none", "important");
         const hasAnyPortfolioPerm = hasManagerPermission("kharch") || hasManagerPermission("khet") || hasManagerPermission("fd");
         if (homePortfolioAnchor) homePortfolioAnchor.style.setProperty("display", hasAnyPortfolioPerm ? "inline-flex" : "none", "important");
-        if (homeMenuKharch) homeMenuKharch.style.setProperty("display", hasManagerPermission("kharch") ? "flex" : "none", "important");
-        if (homeMenuKhet) homeMenuKhet.style.setProperty("display", hasManagerPermission("khet") ? "flex" : "none", "important");
-        if (homeMenuFd) homeMenuFd.style.setProperty("display", hasManagerPermission("fd") ? "flex" : "none", "important");
+        if (pfTabKharch) pfTabKharch.style.display = hasManagerPermission("kharch") ? "inline-flex" : "none";
+        if (pfTabKhet) pfTabKhet.style.display = hasManagerPermission("khet") ? "inline-flex" : "none";
+        if (pfTabFd) pfTabFd.style.display = hasManagerPermission("fd") ? "inline-flex" : "none";
         if (plusAnchor) plusAnchor.style.setProperty("display", hasManagerPermission("addMenu") ? "inline-flex" : "none", "important");
         if (settingsBtn) settingsBtn.style.setProperty("display", hasAnySettingsPermission() ? "inline-flex" : "none", "important");
       } else if (activeRole === "Renter" || activeRole === "Viewer") {
@@ -19647,9 +19961,9 @@ function formatMonthLabel(rawVal) {
         if (searchWrap) searchWrap.style.removeProperty("display");
         if (rNavChat) rNavChat.style.setProperty("display", "inline-flex", "important");
         if (homePortfolioAnchor) homePortfolioAnchor.style.setProperty("display", "inline-flex", "important");
-        if (homeMenuKharch) homeMenuKharch.style.setProperty("display", "flex", "important");
-        if (homeMenuKhet) homeMenuKhet.style.setProperty("display", "flex", "important");
-        if (homeMenuFd) homeMenuFd.style.setProperty("display", "flex", "important");
+        if (pfTabKharch) pfTabKharch.style.display = "inline-flex";
+        if (pfTabKhet) pfTabKhet.style.display = "inline-flex";
+        if (pfTabFd) pfTabFd.style.display = "inline-flex";
         if (plusAnchor) plusAnchor.style.removeProperty("display");
         if (settingsBtn) settingsBtn.style.removeProperty("display");
       }
@@ -22179,18 +22493,7 @@ function formatMonthLabel(rawVal) {
 
     // 6. Dedicated Settings Modal + "Other" Section Options (Registered Users & 12-per-page Last Login History)
     function formatLoginTimestampDisplay(isoStr) {
-      if (!isoStr) return "--";
-      const d = new Date(isoStr);
-      if (isNaN(d.getTime())) return String(isoStr);
-      return d.toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-      });
+      return formatDateOnly(isoStr);
     }
 
     function changeLoginHistoryPage(delta) {
@@ -24636,7 +24939,7 @@ function formatMonthLabel(rawVal) {
       setCreateUserBannerState("", "");
 
       const fullName = document.getElementById("createUserName").value.trim();
-      const rawMobile = document.getElementById("createUserMobile").value.trim();
+      const rawMobile = (document.getElementById("createUserMobile")?.value || "").trim();
       const digitsMob = extractIndianMobile10Digits(rawMobile);
       if (rawMobile && rawMobile !== "+91" && digitsMob.length > 0 && digitsMob.length !== 10) {
         setCreateUserBannerState("error", "Please enter a valid 10-digit Indian mobile number.");
@@ -24762,7 +25065,8 @@ function formatMonthLabel(rawVal) {
           saveDbSnapshotToCache();
 
           document.getElementById("createUserName").value = "";
-          document.getElementById("createUserMobile").value = "";
+          const mobResetEl = document.getElementById("createUserMobile");
+          if (mobResetEl) mobResetEl.value = "";
           document.getElementById("createUserLoginId").value = "";
           document.getElementById("createUserPass").value = "";
           const aadhEl = document.getElementById("createUserAssignedAadhaar");
@@ -26164,11 +26468,21 @@ function formatMonthLabel(rawVal) {
         identityImageUrl: targetRenter.IdentityImageURL || "",
         identityBackImageUrl: targetRenter.IdentityBackImageURL || ""
       });
+      let didServerSyncUpdate = false;
+      if (saveRes && Array.isArray(saveRes.bills) && saveRes.bills.length > 0) {
+        DB.bills = sanitizeAllBillsMonths(saveRes.bills);
+        didServerSyncUpdate = true;
+      }
       if (saveRes && Array.isArray(saveRes.users) && saveRes.users.length > 0) {
         DB.users = saveRes.users;
         saveLocalUsersMaster(DB.users);
-        saveDbSnapshotToCache();
+        didServerSyncUpdate = true;
         if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
+      }
+      if (didServerSyncUpdate) {
+        saveDbSnapshotToCache();
+        renderAllDashboardUI();
+        if (selectedFlat) populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
       }
 
       closeModal("editLeftRenterModal");
@@ -33645,11 +33959,21 @@ function formatMonthLabel(rawVal) {
       populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
 
       const saveRes = await sendFirebaseAction(payload);
+      let didServerSyncUpdate = false;
+      if (saveRes && Array.isArray(saveRes.bills) && saveRes.bills.length > 0) {
+        DB.bills = sanitizeAllBillsMonths(saveRes.bills);
+        didServerSyncUpdate = true;
+      }
       if (saveRes && Array.isArray(saveRes.users) && saveRes.users.length > 0) {
         DB.users = saveRes.users;
         saveLocalUsersMaster(DB.users);
-        saveDbSnapshotToCache();
+        didServerSyncUpdate = true;
         if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
+      }
+      if (didServerSyncUpdate) {
+        saveDbSnapshotToCache();
+        renderAllDashboardUI();
+        if (selectedFlat) populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
       }
     }
 
@@ -33682,16 +34006,11 @@ function formatMonthLabel(rawVal) {
 
     // 10. Modals, Strict Property-Targeted Flat Creation & Complete Cascade Deletion
     function toggleHomePortfolioMenu(e) {
-      if (e && typeof e.stopPropagation === "function") e.stopPropagation();
-      document.getElementById("actionMenu")?.classList.remove("show");
-      document.getElementById("homePortfolioMenu")?.classList.toggle("show");
+      return openDefaultAdminPortfolioHub(e);
     }
-    function closeHomePortfolioMenu() {
-      document.getElementById("homePortfolioMenu")?.classList.remove("show");
-    }
+    function closeHomePortfolioMenu() {}
     function toggleActionMenu(e) {
       if (e && typeof e.stopPropagation === "function") e.stopPropagation();
-      document.getElementById("homePortfolioMenu")?.classList.remove("show");
       document.getElementById("actionMenu")?.classList.toggle("show");
     }
     function closeActionMenu() {
@@ -33700,9 +34019,6 @@ function formatMonthLabel(rawVal) {
     window.addEventListener("click", (e) => {
       if (!e.target.closest("#plusMenuDropdownAnchor")) {
         document.getElementById("actionMenu")?.classList.remove("show");
-      }
-      if (!e.target.closest("#homePortfolioDropdownAnchor")) {
-        document.getElementById("homePortfolioMenu")?.classList.remove("show");
       }
       if (!e.target.closest("#searchContainer")) {
         document.getElementById("globalSearchResultsBox")?.classList.remove("active");
@@ -33714,7 +34030,6 @@ function formatMonthLabel(rawVal) {
       if (el) {
         el.classList.add("active");
         document.getElementById("actionMenu")?.classList.remove("show");
-        document.getElementById("homePortfolioMenu")?.classList.remove("show");
         document.body.classList.add("modal-open-hide-chat");
         if (typeof closeModularLiveChatWidget === "function") closeModularLiveChatWidget();
         if (el.id === "flatDetailsModal") {
@@ -35669,7 +35984,7 @@ function formatMonthLabel(rawVal) {
                 <div style="background:rgba(15,23,42,0.55); border:1px solid var(--glass-border); border-radius:10px; padding:9px 11px; font-size:0.76rem; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
                   <div>
                     <div><strong style="color:#f59e0b;">[${escapeHtml(t.category || "Issue")}]</strong> ${escapeHtml(t.description || "")}</div>
-                    <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">${t.id ? `${escapeHtml(t.id)} • ` : ""}${escapeHtml(t.propertyName || "")} Flat ${escapeHtml(t.flatName || "--")} • ${escapeHtml(t.createdAt || "")}</div>
+                    <div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">${t.id ? `${escapeHtml(t.id)} • ` : ""}${escapeHtml(t.propertyName || "")} Flat ${escapeHtml(t.flatName || "--")}${t.createdAt ? ` • ${escapeHtml(formatDateOnly(t.createdAt))}` : ""}</div>
                   </div>
                   <span style="padding:3px 9px; border-radius:999px; font-size:0.68rem; font-weight:800; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor};">${escapeHtml(st)}</span>
                 </div>
@@ -36425,7 +36740,7 @@ function formatMonthLabel(rawVal) {
         return `
           <div class="chat-msg-bubble ${isMine ? "sent" : "received"}">
             <div>${safeText}</div>
-            <span class="chat-msg-meta">${senderHeaderLabel} • ${m.timeStr || ""}</span>
+            <span class="chat-msg-meta">${senderHeaderLabel}${(m.timestamp || m.timeStr) ? ` • ${formatDateOnly(m.timestamp || m.timeStr)}` : ""}</span>
           </div>
         `;
       }).join("");
@@ -36501,7 +36816,7 @@ function formatMonthLabel(rawVal) {
       const cleanSenderDisplay = `${String(senderActualName).replace(/\s*\(@[^)]+\)/g, "").trim()} (${senderRoleLabel})`;
 
       const nowTs = Date.now();
-      const nowStr = new Date(nowTs).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const nowStr = formatDateOnly(nowTs);
 
       const newMsgObj = {
         id: "msg_" + nowTs + "_" + Math.random().toString(36).substring(2, 6),
@@ -37074,7 +37389,7 @@ function formatMonthLabel(rawVal) {
       proof.rejectionReason = reason;
       proof.notes = reason;
       proof.rejectedBy = activeUser || "Admin";
-      proof.rejectedAt = new Date().toLocaleString("en-IN");
+      proof.rejectedAt = formatDateOnly(new Date());
       saveStoredPaymentProofs(list);
       if (typeof recordAdminAuditLog === "function") {
         recordAdminAuditLog("REJECT_PAYMENT_PROOF", `${proof.propertyName || ""} Flat ${proof.flatName || ""}`, `Rejected UTR ${proof.utr} — Reason: ${reason}`);
@@ -37496,7 +37811,7 @@ function formatMonthLabel(rawVal) {
           const renewalDate = new Date(jd);
           renewalDate.setMonth(renewalDate.getMonth() + 11);
           const diffDays = Math.ceil((renewalDate - new Date()) / (1000 * 60 * 60 * 24));
-          nextRenewalText = `${renewalDate.toISOString().split("T")[0]} (${diffDays >= 0 ? `in ${diffDays} days` : `${Math.abs(diffDays)} days overdue`})`;
+          nextRenewalText = `${formatDateOnly(renewalDate)} (${diffDays >= 0 ? `in ${diffDays} days` : `${Math.abs(diffDays)} days overdue`})`;
         }
       }
       box.innerHTML = `Current: <strong>₹${baseRent.toLocaleString("en-IN")}</strong> → After +${pct}%: <strong style="color:#10b981;">₹${escalatedRent.toLocaleString("en-IN")}/mo</strong> | Next 11-Mo Renewal: <strong>${nextRenewalText}</strong>`;
@@ -37874,7 +38189,7 @@ function formatMonthLabel(rawVal) {
         priority: prio,
         description: desc,
         status: "Open",
-        createdAt: new Date().toLocaleString("en-IN")
+        createdAt: formatDateOnly(new Date())
       };
       list.unshift(ticket);
       if (descEl) descEl.value = "";
@@ -37962,7 +38277,7 @@ function formatMonthLabel(rawVal) {
         priority: prio,
         description: desc,
         status: "Open",
-        createdAt: new Date().toLocaleString("en-IN")
+        createdAt: formatDateOnly(new Date())
       };
       const list = getStoredMaintenanceTickets().slice();
       list.unshift(ticket);
@@ -38003,7 +38318,7 @@ function formatMonthLabel(rawVal) {
                 <span style="font-size:0.66rem; padding:2px 7px; border-radius:999px; background:rgba(255,255,255,0.06); color:${stColor}; border:1px solid ${stColor}; font-weight:800;">${escapeHtml(t.status)}</span>
               </div>
               <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
-                <strong>${escapeHtml(t.propertyName)} — Flat ${escapeHtml(t.flatName)}</strong> • Raised by: ${escapeHtml(t.renterName)} • Priority: <strong>${escapeHtml(t.priority)}</strong> • ${escapeHtml(t.createdAt)}
+                <strong>${escapeHtml(t.propertyName)} — Flat ${escapeHtml(t.flatName)}</strong> • Raised by: ${escapeHtml(t.renterName)} • Priority: <strong>${escapeHtml(t.priority)}</strong>${t.createdAt ? ` • ${escapeHtml(formatDateOnly(t.createdAt))}` : ""}
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:6px;">
@@ -38131,7 +38446,7 @@ function formatMonthLabel(rawVal) {
       const list = getStoredAdminAuditLogs().slice();
       const entry = {
         id: "AUD-" + Date.now() + "-" + Math.random().toString(36).substring(2, 5),
-        timestamp: new Date().toLocaleString("en-IN"),
+        timestamp: formatDateOnly(new Date()),
         actor: activeUser || "admin",
         role: activeRole || "Admin",
         actionType: String(actionType || "ACTION"),
@@ -38182,7 +38497,7 @@ function formatMonthLabel(rawVal) {
             <strong>${a.target}</strong> — <span style="color:var(--text-muted);">${a.details}</span>
           </div>
           <div style="font-size:0.68rem; color:var(--text-muted);">
-            <i class="fa-solid fa-user-shield"></i> @${a.actor} (${a.role}) • ${a.timestamp}
+            <i class="fa-solid fa-user-shield"></i> @${a.actor} (${a.role}) • ${formatDateOnly(a.timestamp)}
           </div>
         </div>
       `).join("");
@@ -38211,7 +38526,7 @@ function formatMonthLabel(rawVal) {
         doc.setTextColor(203, 213, 225);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9.5);
-        doc.text(`Generated: ${new Date().toLocaleString("en-IN")}   |   Total Entries: ${logs.length}`, 32, 50);
+        doc.text(`Generated: ${formatDateOnly(new Date())}   |   Total Entries: ${logs.length}`, 32, 50);
 
         let y = 88;
         const colX = [32, 165, 255, 330, 445, 575];
@@ -38221,7 +38536,7 @@ function formatMonthLabel(rawVal) {
           doc.setTextColor(248, 250, 252);
           doc.setFont("helvetica", "bold");
           doc.setFontSize(9);
-          doc.text("Timestamp", colX[0], y);
+          doc.text("Date", colX[0], y);
           doc.text("Actor", colX[1], y);
           doc.text("Role", colX[2], y);
           doc.text("Action Type", colX[3], y);
@@ -38254,7 +38569,7 @@ function formatMonthLabel(rawVal) {
           }
 
           doc.setTextColor(15, 23, 42);
-          doc.text(String(l.timestamp || "-").slice(0, 24), colX[0], y);
+          doc.text(String(formatDateOnly(l.timestamp) || "-").slice(0, 24), colX[0], y);
           doc.text("@" + String(l.actor || "-").slice(0, 16), colX[1], y);
           doc.text(String(l.role || "-").slice(0, 12), colX[2], y);
           doc.setFont("helvetica", "bold");
