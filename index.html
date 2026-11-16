@@ -6982,7 +6982,6 @@
       <div id="forgotPasswordInlinePanel" style="display:none; text-align:left; background:transparent; border:none; border-radius:18px; padding:18px 16px; box-shadow:none;">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.22);">
           <div>
-            <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#e9d5ff; text-shadow:0 1px 4px rgba(0,0,0,0.85);">Account Recovery</div>
             <h3 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:#ffffff; text-shadow:0 2px 8px rgba(0,0,0,0.9);">Forgot Password</h3>
           </div>
           <button type="button" onclick="hideInlineForgotPasswordPanel()" style="background:rgba(15,23,42,0.55); border:1px solid rgba(255,255,255,0.35); color:#ffffff; border-radius:10px; padding:6px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; backdrop-filter:blur(8px);">
@@ -6992,27 +6991,25 @@
 
         <div id="fpCredentialsStepBox">
           <div class="form-group" style="margin-bottom:12px;">
-            <label for="fpAadhaarInput" class="fp-label-highlight" style="font-size:0.78rem; font-weight:800;"><i class="fa-solid fa-id-card" style="color:#0284c7;"></i> Aadhaar Number</label>
             <div class="login-input-shell">
               <i class="fa-solid fa-id-card login-field-icon"></i>
               <input type="text" id="fpAadhaarInput" class="form-control" maxlength="14" inputmode="numeric" placeholder="XXXX-XXXX-XXXX" autocomplete="off" oninput="this.value = formatAadhaarWithHyphens(this.value)">
             </div>
           </div>
           <div class="form-group" style="margin-bottom:12px;">
-            <label for="fpEmailInput" class="fp-label-highlight" style="font-size:0.78rem; font-weight:800;"><i class="fa-solid fa-envelope" style="color:#6d28d9;"></i> Registered Email ID</label>
             <div class="login-input-shell">
               <i class="fa-solid fa-envelope login-field-icon"></i>
               <input type="email" id="fpEmailInput" class="form-control" placeholder="Enter your registered email ID" autocomplete="off">
             </div>
           </div>
           <button type="button" id="btnFpSendOtp" onclick="submitInlineForgotPasswordSendOtp()" style="width:100%; padding:12px 16px; border-radius:12px; border:none; background:linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color:#ffffff; font-size:0.9rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 8px 20px rgba(79,70,229,0.4);">
-            <i class="fa-solid fa-paper-plane"></i> <span>Send 4-Digit OTP</span>
+            <i class="fa-solid fa-paper-plane"></i> <span>Submit</span>
           </button>
         </div>
 
         <div id="fpOtpStepBox" style="display:none; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.28);">
           <div id="fpOtpSentHint" style="font-size:0.75rem; color:#e0f2fe; font-weight:700; margin-bottom:8px; text-shadow:0 1px 4px rgba(0,0,0,0.85);">
-            <i class="fa-solid fa-envelope-circle-check"></i> Enter the 4-digit OTP sent to your Email ID.
+            <i class="fa-solid fa-envelope-circle-check"></i> Enter OTP sent to your Email ID.
           </div>
           <div class="form-group" style="margin-bottom:10px;">
             <div class="login-input-shell">
@@ -7028,51 +7025,6 @@
               Resend
             </button>
           </div>
-        </div>
-
-        <!-- Step 3: Post-OTP Reset Details Form (1. Name, 2. Username, 3. Password, 4. Re-enter ID, 5. Contact No) -->
-        <div id="fpResetDetailsStepBox" style="display:none; margin-top:4px;">
-          <div class="form-group" style="margin-bottom:10px;">
-            <label for="fpResetNameInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-user" style="color:#059669;"></i> 1. Name</label>
-            <div class="login-input-shell">
-              <i class="fa-solid fa-user login-field-icon"></i>
-              <input type="text" id="fpResetNameInput" class="form-control" placeholder="Enter your full name" autocomplete="off">
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:10px;">
-            <label for="fpResetUsernameInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-at" style="color:#4f46e5;"></i> 2. Username</label>
-            <div class="login-input-shell">
-              <i class="fa-solid fa-at login-field-icon"></i>
-              <input type="text" id="fpResetUsernameInput" class="form-control" placeholder="Min 3 characters (letters/digits)" autocomplete="off">
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:10px;">
-            <label for="fpResetPasswordInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-lock" style="color:#dc2626;"></i> 3. Password</label>
-            <div class="login-input-shell password-field-wrapper">
-              <i class="fa-solid fa-lock login-field-icon"></i>
-              <input type="password" id="fpResetPasswordInput" class="form-control" placeholder="Enter new password" autocomplete="new-password">
-              <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('fpResetPasswordInput', this)" aria-label="Show or Hide Password">
-                <i class="fa-solid fa-eye"></i>
-              </button>
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:10px;">
-            <label for="fpResetReenterIdInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-id-badge" style="color:#0284c7;"></i> 4. Re-enter ID</label>
-            <div class="login-input-shell">
-              <i class="fa-solid fa-id-badge login-field-icon"></i>
-              <input type="text" id="fpResetReenterIdInput" class="form-control" placeholder="Re-enter your User ID / Username" autocomplete="off">
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:12px;">
-            <label for="fpResetContactNoInput" class="fp-label-highlight" style="font-size:0.76rem; font-weight:800;"><i class="fa-solid fa-phone" style="color:#059669;"></i> 5. Contact No</label>
-            <div class="login-input-shell">
-              <i class="fa-solid fa-phone login-field-icon"></i>
-              <input type="tel" id="fpResetContactNoInput" class="form-control" placeholder="Enter your contact number" autocomplete="off">
-            </div>
-          </div>
-          <button type="button" id="btnFpCompleteReset" onclick="submitInlineForgotPasswordResetDetails()" style="width:100%; padding:12px 16px; border-radius:12px; border:none; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:#ffffff; font-size:0.9rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 8px 20px rgba(16,185,129,0.4);">
-            <i class="fa-solid fa-floppy-disk"></i> <span>Save &amp; Email Details</span>
-          </button>
         </div>
 
         <div id="fpStatusMsg" style="display:none; margin-top:10px; padding:9px 11px; border-radius:10px; font-size:0.76rem; font-weight:700; line-height:1.4;"></div>
@@ -19794,13 +19746,10 @@ function formatMonthLabel(rawVal) {
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
       const credBox = document.getElementById("fpCredentialsStepBox");
       const otpBox = document.getElementById("fpOtpStepBox");
-      const resetBox = document.getElementById("fpResetDetailsStepBox");
-      window.__fpResetSession = null;
       if (loginFormEl) loginFormEl.style.display = "none";
       if (panelEl) panelEl.style.display = "block";
       if (credBox) credBox.style.display = "block";
       if (otpBox) otpBox.style.display = "none";
-      if (resetBox) resetBox.style.display = "none";
       setInlineForgotPasswordStatus("", "info");
       const aadhIn = document.getElementById("fpAadhaarInput");
       if (aadhIn && typeof aadhIn.focus === "function") aadhIn.focus();
@@ -19811,27 +19760,14 @@ function formatMonthLabel(rawVal) {
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
       const credBox = document.getElementById("fpCredentialsStepBox");
       const otpBox = document.getElementById("fpOtpStepBox");
-      const resetBox = document.getElementById("fpResetDetailsStepBox");
       const aadhIn = document.getElementById("fpAadhaarInput");
       const emailIn = document.getElementById("fpEmailInput");
       const otpIn = document.getElementById("fpOtpInput");
-      const rNameIn = document.getElementById("fpResetNameInput");
-      const rUserIn = document.getElementById("fpResetUsernameInput");
-      const rPassIn = document.getElementById("fpResetPasswordInput");
-      const rIdIn = document.getElementById("fpResetReenterIdInput");
-      const rContactIn = document.getElementById("fpResetContactNoInput");
-      window.__fpResetSession = null;
       if (aadhIn) aadhIn.value = "";
       if (emailIn) emailIn.value = "";
       if (otpIn) otpIn.value = "";
-      if (rNameIn) rNameIn.value = "";
-      if (rUserIn) rUserIn.value = "";
-      if (rPassIn) rPassIn.value = "";
-      if (rIdIn) rIdIn.value = "";
-      if (rContactIn) rContactIn.value = "";
       if (credBox) credBox.style.display = "block";
       if (otpBox) otpBox.style.display = "none";
-      if (resetBox) resetBox.style.display = "none";
       setInlineForgotPasswordStatus("", "info");
       if (panelEl) panelEl.style.display = "none";
       if (loginFormEl) loginFormEl.style.display = "block";
@@ -19847,7 +19783,7 @@ function formatMonthLabel(rawVal) {
       const cleanAadh = String(aadhIn?.value || "").replace(/\D/g, "").slice(0, 12);
       const cleanEmail = String(emailIn?.value || "").trim().toLowerCase();
 
-      if (cleanAadh.length !== 12) {
+      if (cleanAadhaarLengthInvalid(cleanAadh)) {
         setInlineForgotPasswordStatus("Please enter a valid 12-digit Aadhaar Number.", "error");
         return triggerSideToast("Invalid Aadhaar", "Please enter a valid 12-digit Aadhaar Number.", false);
       }
@@ -19889,9 +19825,13 @@ function formatMonthLabel(rawVal) {
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Send 4-Digit OTP</span>`;
+          btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Submit</span>`;
         }
       }
+    }
+
+    function cleanAadhaarLengthInvalid(val) {
+      return String(val || "").replace(/\D/g, "").length !== 12;
     }
 
     async function submitInlineForgotPasswordVerifyOtp() {
@@ -19915,7 +19855,7 @@ function formatMonthLabel(rawVal) {
 
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifying...</span>`;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifying &amp; Emailing...</span>`;
       }
 
       try {
@@ -19931,34 +19871,17 @@ function formatMonthLabel(rawVal) {
           triggerSideToast("OTP Failed", errMsg, false);
           return;
         }
-        window.__fpResetSession = {
-          resetToken: String(res.resetToken || "").trim(),
-          aadhaar: cleanAadh,
-          email: cleanEmail
-        };
         if (otpIn) otpIn.value = "";
+        if (aadhIn) aadhIn.value = "";
+        if (emailIn) emailIn.value = "";
         const credBox = document.getElementById("fpCredentialsStepBox");
         const otpBox = document.getElementById("fpOtpStepBox");
-        const resetBox = document.getElementById("fpResetDetailsStepBox");
         if (credBox) credBox.style.display = "none";
         if (otpBox) otpBox.style.display = "none";
-        if (resetBox) resetBox.style.display = "block";
 
-        const rNameIn = document.getElementById("fpResetNameInput");
-        const rUserIn = document.getElementById("fpResetUsernameInput");
-        const rPassIn = document.getElementById("fpResetPasswordInput");
-        const rIdIn = document.getElementById("fpResetReenterIdInput");
-        const rContactIn = document.getElementById("fpResetContactNoInput");
-        if (rNameIn) rNameIn.value = String(res.prefill?.name || "");
-        if (rUserIn) rUserIn.value = String(res.prefill?.username || "");
-        if (rPassIn) rPassIn.value = "";
-        if (rIdIn) rIdIn.value = String(res.prefill?.username || "");
-        if (rContactIn) rContactIn.value = String(res.prefill?.contactNo || "");
-
-        const okMsg = res.message || "OTP verified! Please enter your 5 account details below to save and receive them on Gmail.";
+        const okMsg = res.message || `OTP verified! Your Name, Username, Password, Aadhaar / Renter ID, and Contact Number have been automatically sent to ${cleanEmail}.`;
         setInlineForgotPasswordStatus(okMsg, "success");
-        triggerSideToast("OTP Verified", "Fill the 5 details below to complete recovery.", true);
-        if (rNameIn && typeof rNameIn.focus === "function") rNameIn.focus();
+        triggerSideToast("Details Sent", `All account details sent to ${cleanEmail}.`, true);
       } catch (err) {
         const msg = err?.message || "Could not verify OTP right now.";
         setInlineForgotPasswordStatus(msg, "error");
@@ -19967,93 +19890,6 @@ function formatMonthLabel(rawVal) {
         if (btn) {
           btn.disabled = false;
           btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Verify OTP</span>`;
-        }
-      }
-    }
-
-    async function submitInlineForgotPasswordResetDetails() {
-      const sess = window.__fpResetSession || {};
-      const resetToken = String(sess.resetToken || "").trim();
-      const cleanAadh = String(sess.aadhaar || document.getElementById("fpAadhaarInput")?.value || "").replace(/\D/g, "").slice(0, 12);
-      const cleanEmail = String(sess.email || document.getElementById("fpEmailInput")?.value || "").trim().toLowerCase();
-
-      const nameVal = String(document.getElementById("fpResetNameInput")?.value || "").trim();
-      const usernameVal = String(document.getElementById("fpResetUsernameInput")?.value || "").trim();
-      const passwordVal = String(document.getElementById("fpResetPasswordInput")?.value || "").trim();
-      const reenterIdVal = String(document.getElementById("fpResetReenterIdInput")?.value || "").trim();
-      const contactNoVal = String(document.getElementById("fpResetContactNoInput")?.value || "").trim();
-
-      if (!resetToken || cleanAadh.length !== 12 || !cleanEmail) {
-        setInlineForgotPasswordStatus("Verification session expired. Please request and verify OTP again.", "error");
-        return triggerSideToast("Session Expired", "Please verify OTP again.", false);
-      }
-      if (!nameVal) {
-        setInlineForgotPasswordStatus("Please enter Name (Field 1).", "error");
-        return triggerSideToast("Name Required", "Please enter your Name.", false);
-      }
-      if (usernameVal.length < 3) {
-        setInlineForgotPasswordStatus("Username (Field 2) must be at least 3 characters or digits.", "error");
-        return triggerSideToast("Invalid Username", "Username must be at least 3 characters.", false);
-      }
-      if (!passwordVal) {
-        setInlineForgotPasswordStatus("Please enter a new Password (Field 3).", "error");
-        return triggerSideToast("Password Required", "Please enter a new Password.", false);
-      }
-      if (!reenterIdVal || reenterIdVal.toLowerCase() !== usernameVal.toLowerCase()) {
-        setInlineForgotPasswordStatus("Re-enter ID (Field 4) must match Username (Field 2).", "error");
-        return triggerSideToast("ID Mismatch", "Re-enter ID must match Username.", false);
-      }
-      if (!contactNoVal || contactNoVal.replace(/\D/g, "").length < 7) {
-        setInlineForgotPasswordStatus("Please enter a valid Contact No (Field 5).", "error");
-        return triggerSideToast("Contact Required", "Please enter a valid Contact No.", false);
-      }
-
-      const btn = document.getElementById("btnFpCompleteReset");
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Saving &amp; Sending Email...</span>`;
-      }
-      setInlineForgotPasswordStatus("Updating account details and sending confirmation to Gmail...", "info");
-
-      try {
-        const res = await sendFirebaseAction({
-          action: "completeForgotPasswordReset",
-          aadhaar: cleanAadh,
-          email: cleanEmail,
-          resetToken: resetToken,
-          name: nameVal,
-          username: usernameVal,
-          password: passwordVal,
-          reenterId: reenterIdVal,
-          contactNo: contactNoVal
-        });
-        if (!res || res.status !== "success") {
-          const errMsg = res?.message || "Could not update details. Please try again.";
-          setInlineForgotPasswordStatus(errMsg, "error");
-          triggerSideToast("Update Failed", errMsg, false);
-          return;
-        }
-        if (Array.isArray(res.users) && res.users.length > 0) {
-          DB.users = res.users;
-          if (typeof saveLocalUsersMaster === "function") saveLocalUsersMaster(DB.users);
-          if (typeof saveDbSnapshotToCache === "function") saveDbSnapshotToCache();
-        }
-        window.__fpResetSession = null;
-        const okMsg = res.message || `All 5 details updated & sent to ${cleanEmail}. You can now sign in with your updated credentials.`;
-        setInlineForgotPasswordStatus(okMsg, "success");
-        triggerSideToast("Recovery Complete", `Details saved and emailed to ${cleanEmail}.`, true);
-        const loginUserIn = document.getElementById("loginUsername");
-        const loginPassIn = document.getElementById("loginPassword");
-        if (loginUserIn) loginUserIn.value = reenterIdVal;
-        if (loginPassIn) loginPassIn.value = "";
-      } catch (err) {
-        const msg = err?.message || "Could not save details right now.";
-        setInlineForgotPasswordStatus(msg, "error");
-        triggerSideToast("Reset Error", msg, false);
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> <span>Save &amp; Email Details</span>`;
         }
       }
     }
