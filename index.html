@@ -6,7 +6,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Management Portal</title>
+  <title>Home </title>
   <meta name="description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
   <meta property="og:title" content="Home Management Portal" />
   <meta property="og:description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
@@ -7520,9 +7520,6 @@
         </div>
         <div>
           <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Contact Property Admin</h3>
-          <p style="margin:2px 0 0 0; font-size:0.75rem; color:var(--text-muted);">
-            Direct support, phone, WhatsApp &amp; official contact details
-          </p>
         </div>
       </div>
       <div id="contactUsDynamicBody" style="display:flex; flex-direction:column; gap:10px;"></div>
@@ -8111,9 +8108,6 @@
           <i class="fa-solid fa-bell"></i>
         </div>
         <div class="exec-modal-title-wrap">
-          <span class="exec-modal-badge" style="background:rgba(245,158,11,0.2); color:#fbbf24; border:1px solid rgba(245,158,11,0.4);">
-            <i class="fa-solid fa-bullhorn"></i> Official Notice Board
-          </span>
           <h3 class="exec-modal-title">Admin Notifications</h3>
         </div>
       </div>
@@ -8760,20 +8754,6 @@
         
         <!-- Option: Change Background Photo (Global HD Wallpaper across all screens via Google Drive + Sheet) -->
         <div id="otherPanelChangeBg" class="stat-pill admin-only" style="text-align: left; display: none;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
-            <div>
-              <span style="font-weight:800; font-size:0.88rem; color:#ec4899;">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Global Portal HD Background Wallpaper (All Screens)
-              </span>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Upload a photo or paste an image link below. Uploads auto-save to Google Drive with public view access, update Google Sheets automatically, and display across <strong>all screens/pages</strong>.
-              </div>
-            </div>
-            <span style="font-size:0.7rem; color:#10b981; font-weight:700; background:rgba(16,185,129,0.15); padding:3px 8px; border-radius:12px;">
-              <i class="fa-solid fa-high-definition"></i> Drive + Sheet • All Pages
-            </span>
-          </div>
-
           <div style="display:flex; flex-direction:column; gap:12px;">
             <div style="background:var(--bg-input); padding:12px; border-radius:12px; border:1px solid var(--glass-border);">
               <label style="font-size:0.76rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:6px; margin-bottom:6px;">
@@ -9582,16 +9562,6 @@
       <div style="display:flex; justify-content:space-between; align-items:center; padding-right: 36px; flex-wrap:wrap; gap:8px;">
         <h3 id="modalHeaderTitle">Flat Space</h3>
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-          <button
-            type="button"
-            id="btnFlatHeaderQrCollect"
-            class="btn-ledger-action"
-            style="background:linear-gradient(135deg, #10b981, #059669); color:#ffffff; border:none; padding:5px 13px; border-radius:20px; font-size:0.78rem; font-weight:800; box-shadow:0 4px 12px rgba(16,185,129,0.3); display:inline-flex; align-items:center; gap:6px; cursor:pointer;"
-            onclick="openRentCollectionQrModal()"
-            title="Show UPI QR Code Pre-filled with Property UPI & Current Amount Due"
-          >
-            <i class="fa-solid fa-qrcode"></i> Collect Rent QR
-          </button>
           <span id="modalFlatTag" style="background:var(--primary); color:#ffffff; padding:4px 12px; border-radius:20px; font-size:0.82rem; font-weight:700;">--</span>
         </div>
       </div>
@@ -9928,9 +9898,6 @@
             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <button type="button" class="btn-ledger-action" style="padding:3px 9px; font-size:0.68rem; color:#10b981; border-color:rgba(16,185,129,0.45);" onclick="toggleSplitPaymentLedgerDrawer()">
                 <i class="fa-solid fa-layer-group"></i> + Split / Partial Installments (<span id="splitInstallmentsCountBadge">0</span>)
-              </button>
-              <button type="button" class="btn-ledger-action" style="padding:3px 9px; font-size:0.68rem; color:#38bdf8; border-color:rgba(56,189,248,0.45);" onclick="openSubmitPaymentProofModalForCurrentFlat()">
-                <i class="fa-solid fa-receipt"></i> Submit UTR / Payment Proof
               </button>
             </div>
           </div>
@@ -10377,9 +10344,6 @@
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
-          <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">
-            Showing <span id="rhFilteredCountLabel" style="color:var(--primary); font-weight:800;">All</span> Tenant Record(s)
-          </div>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-left:auto;">
             <div style="position:relative; min-width:250px; flex:1;">
               <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.84rem; pointer-events:none;"></i>
@@ -10392,22 +10356,6 @@
                 oninput="filterRenterHistoryRecords()"
               >
             </div>
-            <input
-              type="date"
-              id="rhDateFrom"
-              class="form-control"
-              style="width:136px; padding:7px 10px; font-size:0.78rem; border-radius:12px;"
-              title="From Date"
-              onchange="filterRenterHistoryRecords()"
-            >
-            <input
-              type="date"
-              id="rhDateTo"
-              class="form-control"
-              style="width:136px; padding:7px 10px; font-size:0.78rem; border-radius:12px;"
-              title="To Date"
-              onchange="filterRenterHistoryRecords()"
-            >
             <button
               type="button"
               class="btn-ledger-action"
@@ -18396,9 +18344,6 @@ function formatMonthLabel(rawVal) {
                   <i class="fa-solid fa-camera"></i>
                 </div>
                 <div>
-                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#34d399;">
-                    Live Camera Photo Verification • Auto-Saved to Google Drive
-                  </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.12rem; font-weight:900; color:var(--text-main);">
                     Monthly Meter Photos (${activeUploadMonthLabel})
                   </h3>
@@ -18464,7 +18409,6 @@ function formatMonthLabel(rawVal) {
                           </div>
                           <div>
                             <div style="font-size:0.86rem; font-weight:900; color:var(--text-main); line-height:1.2;">${cat.title}</div>
-                            <div style="font-size:0.69rem; color:var(--text-muted); margin-top:2px;">${cat.subtitle}</div>
                           </div>
                         </div>
                         <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:transparent; color:${isSlotReRequested ? "#fbbf24" : (isSlotRequested && !displayImgUrl ? "#38bdf8" : (displayImgUrl ? "#34d399" : "var(--text-muted)"))}; border:1px solid ${isSlotReRequested ? "rgba(245,158,11,0.45)" : (isSlotRequested && !displayImgUrl ? "rgba(56,189,248,0.45)" : (displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"))}; white-space:nowrap;">
@@ -18831,13 +18775,7 @@ function formatMonthLabel(rawVal) {
                 <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#38bdf8;">
                   <i class="fa-solid fa-file-invoice" style="margin-right:5px;"></i> All My Receipts (${totalAadhaarReceipts})
                 </div>
-                <h3 style="margin:3px 0 0 0; font-size:1.15rem; font-weight:900; color:var(--text-main);">
-                  Receipts Linked to Your Account
-                </h3>
               </div>
-              <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">
-                Click any receipt below to open &amp; download
-              </span>
             </div>
             ${myBills.length > 0 ? `
               <div style="display:flex; flex-direction:column; gap:10px;">
@@ -18908,9 +18846,6 @@ function formatMonthLabel(rawVal) {
                   <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
                 <div>
-                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#fbbf24;">
-                    Resident Maintenance Center
-                  </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
                     Maintenance &amp; Complaint Tracker
                   </h3>
@@ -18932,9 +18867,6 @@ function formatMonthLabel(rawVal) {
                 <div style="font-size:0.88rem; font-weight:800; color:#fbbf24;">
                   <i class="fa-solid fa-plus-circle"></i> Raise a Maintenance Complaint
                 </div>
-                <span style="font-size:0.69rem; font-weight:700; color:#34d399; background:transparent; padding:3px 9px; border-radius:999px; border:1px solid rgba(16,185,129,0.3);">
-                  <i class="fa-solid fa-cloud-arrow-up"></i> Live Google Sheets
-                </span>
               </div>
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:10px;">
                 <select id="renterInlineTicketCategory" class="form-control" style="padding:9px 12px; font-size:0.84rem;">
@@ -19261,9 +19193,6 @@ function formatMonthLabel(rawVal) {
                   <i class="fa-solid fa-user-shield"></i>
                 </div>
                 <div>
-                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#c084fc;">
-                    Verified Resident KYC Profile • Email OTP Verified Updates
-                  </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
                     ${escapeHtml(renterNameDisplay)} — My Profile
                   </h3>
@@ -19334,9 +19263,6 @@ function formatMonthLabel(rawVal) {
                 <span style="font-size:0.84rem; font-weight:800; color:#38bdf8;">
                   <i class="fa-solid fa-clipboard-check"></i> Move-In / Move-Out Inventory &amp; Appliance Checklist
                 </span>
-                <span style="font-size:0.68rem; font-weight:700; color:var(--text-muted);">
-                  Flat ${escapeHtml(targetFlat)} (${escapeHtml(targetProp)})
-                </span>
               </div>
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
                 <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
@@ -19388,17 +19314,11 @@ function formatMonthLabel(rawVal) {
                   <i class="fa-solid fa-mobile-screen-button"></i>
                 </div>
                 <div>
-                  <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#38bdf8;">
-                    Resident Mobile Application
-                  </div>
                   <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
                     Download Official App
                   </h3>
                 </div>
               </div>
-              <span style="font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:999px; border:1px solid var(--glass-border); color:var(--text-muted);">
-                Android &amp; iOS
-              </span>
             </div>
 
             <div class="renter-download-grid">
@@ -19408,9 +19328,6 @@ function formatMonthLabel(rawVal) {
                 </div>
                 <div>
                   <div style="font-size:1rem; font-weight:900; color:var(--text-main);">Android APK</div>
-                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
-                    ${hasAndroidLink ? "Official APK installer ready" : "Link not uploaded yet"}
-                  </div>
                 </div>
                 <button type="button" class="btn-primary" style="width:100%; padding:10px 14px; font-size:0.82rem; background:linear-gradient(135deg,#10b981,#059669);" onclick="event.stopPropagation(); triggerRenterAppDownload('android')">
                   <i class="fa-brands fa-android"></i>
@@ -19424,9 +19341,6 @@ function formatMonthLabel(rawVal) {
                 </div>
                 <div>
                   <div style="font-size:1rem; font-weight:900; color:var(--text-main);">iOS App</div>
-                  <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
-                    ${hasIosLink ? "Official iOS app link ready" : "Link not uploaded yet"}
-                  </div>
                 </div>
                 <button type="button" class="btn-primary" style="width:100%; padding:10px 14px; font-size:0.82rem; background:linear-gradient(135deg,#38bdf8,#2563eb);" onclick="event.stopPropagation(); triggerRenterAppDownload('ios')">
                   <i class="fa-brands fa-apple"></i>
@@ -19812,9 +19726,9 @@ function formatMonthLabel(rawVal) {
         }
         if (otpBox) otpBox.style.display = "block";
         if (otpHint) {
-          otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter the 4-digit OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
+          otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
         }
-        setInlineForgotPasswordStatus(`4-digit OTP sent to ${cleanEmail}. Please check your Gmail/inbox and enter it below.`, "success");
+        setInlineForgotPasswordStatus(` OTP sent to ${cleanEmail}. Please check your Gmail/inbox and enter it below.`, "success");
         triggerSideToast("OTP Sent", `4-digit OTP sent to ${cleanEmail}.`, true);
         const otpIn = document.getElementById("fpOtpInput");
         if (otpIn && typeof otpIn.focus === "function") otpIn.focus();
@@ -19855,7 +19769,7 @@ function formatMonthLabel(rawVal) {
 
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifying &amp; Emailing...</span>`;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifying...</span>`;
       }
 
       try {
@@ -29288,6 +29202,8 @@ function formatMonthLabel(rawVal) {
         resolvedContact.contractMobile ||
         "N/A";
 
+      const isRenterUser = String(activeRole || "").trim().toLowerCase() === "renter";
+
       document.getElementById("receiptBodyDetails").innerHTML = `
         <!-- Clean Receipt Content (Requirement 4: Billing Date Clearly Displayed on Receipt) -->
         <div id="receiptItemsListContainer">
@@ -29336,12 +29252,12 @@ function formatMonthLabel(rawVal) {
             <span id="recDynamicTotalDisplay" style="color:var(--primary);">₹0</span>
           </div>
 
-          <div class="receipt-line" id="row_rec_paid">
+          <div class="receipt-line" id="row_rec_paid" style="${isRenterUser ? "" : "display:none !important;"}">
             <span>Amount Paid (${payModeStr}):</span>
             <strong style="color:var(--accent-green);">₹${paidAmtVal.toLocaleString('en-IN')}</strong>
           </div>
 
-          <div class="receipt-line" id="row_rec_status">
+          <div class="receipt-line" id="row_rec_status" style="${isRenterUser ? "" : "display:none !important;"}">
             <span>Payment Status / Balance:</span>
             <strong id="recDynamicClosingStatusDisplay">--</strong>
           </div>
@@ -29429,7 +29345,6 @@ function formatMonthLabel(rawVal) {
       recalculateReceiptSelection();
 
       // Requirement 2: When the renter opens their profile and goes to history, remove "Share to WhatsApp", "Download Image", and "Save as PDF" options
-      const isRenterUser = String(activeRole || "").trim().toLowerCase() === "renter";
       const btnWa = document.getElementById("btnOpenWaChecklist");
       const waDrawer = document.getElementById("waShareChecklistDrawer");
       const actionRow = document.getElementById("receiptActionButtonsRow");
@@ -36158,9 +36073,6 @@ function formatMonthLabel(rawVal) {
               <i class="fa-solid fa-address-book"></i>
             </div>
             <h4 style="font-size:0.95rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">No Contact Info Configured</h4>
-            <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.45; margin:0;">
-              No official contact details have been assigned for <strong>${escapeHtml(targetProp === "ALL" ? "All Properties" : (targetProp || "your property"))}</strong> yet.
-            </p>
           </div>
         `;
         return;
