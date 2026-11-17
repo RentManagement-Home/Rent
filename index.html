@@ -9223,9 +9223,6 @@
           <i class="fa-solid fa-door-open"></i>
         </div>
         <div class="exec-modal-title-wrap">
-          <span class="exec-modal-badge" style="background:rgba(14,165,233,0.2); color:#38bdf8; border:1px solid rgba(14,165,233,0.4);">
-            <i class="fa-solid fa-layer-group"></i> Unit Creation
-          </span>
           <h3 class="exec-modal-title">Add New Flat</h3>
         </div>
       </div>
@@ -11484,6 +11481,7 @@
       "recordBill",
       "updateSingleBill",
       "deleteBill",
+      "checkApproachingBillDueEmails",
       "saveFdRecord",
       "deleteFdRecord",
       "saveKhetRecord",
@@ -21250,6 +21248,9 @@ function formatMonthLabel(rawVal) {
           if (typeof syncAdminOpsHubBadges === "function") {
             syncAdminOpsHubBadges();
           }
+          if (res._liveSheetVerified === true && typeof triggerDailyApproachingDueEmailCheck === "function") {
+            triggerDailyApproachingDueEmailCheck();
+          }
         }
       } catch (err) {
         console.error("Background Sync Error:", err);
@@ -28307,6 +28308,28 @@ function formatMonthLabel(rawVal) {
       renderAllRentersGraphForFlat(selectedFlat.PropertyName, selectedFlat.FlatName);
       if (typeof computeMoveOutSettlementPreview === "function") computeMoveOutSettlementPreview();
 
+      const matchedBillRenterUser = (DB.users || []).find(u => {
+        const uEmail = String(u.Email || u.email || "").trim();
+        if (!uEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(uEmail)) return false;
+        const uAadh = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "");
+        if (newBillObj.TenantAadhaar && uAadh && uAadh === normalizeAadhaar12(newBillObj.TenantAadhaar)) return true;
+        if (isSamePropAndFlat(u.AssignedProperty, u.AssignedFlat, newBillObj.PropertyName, newBillObj.FlatName) && String(u.Role || "").toLowerCase() === "renter") return true;
+        return Boolean(newBillObj.TenantName) && String(u.FullName || "").trim().toLowerCase() === String(newBillObj.TenantName || "").trim().toLowerCase();
+      });
+      const resolvedTenantEmail = matchedBillRenterUser ? String(matchedBillRenterUser.Email || matchedBillRenterUser.email || "").trim() : "";
+      const configuredDueDay = Math.max(
+        1,
+        Math.min(
+          28,
+          parseInt(
+            document.getElementById("lateFeeDueDay")?.value ||
+              DB.globalConfig?.billEmailNotificationLog?.dueDay ||
+              "10",
+            10
+          ) || 10
+        )
+      );
+
       const billRes = await sendFirebaseAction({
         action: "recordBill",
         billId: newBillObj.BillID,
@@ -28318,6 +28341,8 @@ function formatMonthLabel(rawVal) {
         tenantName: newBillObj.TenantName,
         snapshotTenantName: newBillObj.SnapshotTenantName,
         tenantAadhaar: newBillObj.TenantAadhaar,
+        tenantEmail: resolvedTenantEmail,
+        dueDay: configuredDueDay,
         baseRent: newBillObj.BaseRent,
         elecPrev: newBillObj.ElecPrev,
         elecCurr: newBillObj.ElecCurr,
@@ -28364,6 +28389,9 @@ function formatMonthLabel(rawVal) {
       if (billRes && billRes.status === "error") {
         triggerSideToast("Google Drive Upload Warning", billRes.message || "Bill saved locally, but Google Drive meter proof upload failed.", false);
       }
+      if (billRes && billRes.newBillEmailSent) {
+        triggerSideToast("Renter Email Sent", `New bill notification sent to ${billRes.newBillEmailTo || "renter"}.`, true);
+      }
       if (billRes) {
         let proofSynced = false;
         const isCurrentMonthShown = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value) === chosenMonth;
@@ -28398,6 +28426,67 @@ function formatMonthLabel(rawVal) {
           saveDbSnapshotToCache();
           populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
         }
+      }
+    }
+
+    let isDueEmailAutoCheckInFlight = false;
+    async function triggerDailyApproachingDueEmailCheck() {
+      if (isDueEmailAutoCheckInFlight || !activeUser) return;
+      const todayKey = typeof getLocalTodayIsoDate === "function" ? getLocalTodayIsoDate() : new Date().toISOString().split("T")[0];
+      const storageKey = "portal_due_email_autocheck_ymd_v1";
+      try {
+        if (localStorage.getItem(storageKey) === todayKey) return;
+      } catch (e) {}
+
+      const hasAnyUnpaidBill = (DB.bills || []).some(b => {
+        const tot = parseFloat(b?.TotalBilled) || 0;
+        const paid = parseFloat(b?.PaidAmount) || 0;
+        return tot - paid > 0;
+      });
+      if (!hasAnyUnpaidBill) {
+        try { localStorage.setItem(storageKey, todayKey); } catch (e) {}
+        return;
+      }
+
+      const serverEmailLog = DB.globalConfig?.billEmailNotificationLog || {};
+      const dueDayVal = Math.max(
+        1,
+        Math.min(
+          28,
+          parseInt(
+            document.getElementById("lateFeeDueDay")?.value ||
+              serverEmailLog.dueDay ||
+              "10",
+            10
+          ) || 10
+        )
+      );
+      if (serverEmailLog.lastAutoCheckYmd === todayKey && Number(serverEmailLog.dueDay || 10) === dueDayVal) {
+        try { localStorage.setItem(storageKey, todayKey); } catch (e) {}
+        return;
+      }
+
+      isDueEmailAutoCheckInFlight = true;
+      try {
+        const res = await sendGasSheetAction({
+          action: "checkApproachingBillDueEmails",
+          dueDay: dueDayVal,
+          daysBefore: 3
+        });
+        if (res && res.status === "success") {
+          try { localStorage.setItem(storageKey, todayKey); } catch (e) {}
+          if (Number(res.sentCount) > 0 && String(activeRole || "").toLowerCase() === "admin") {
+            triggerSideToast(
+              "Due Date Reminders Sent",
+              `Automatically emailed ${res.sentCount} renter${Number(res.sentCount) === 1 ? "" : "s"} for upcoming bill due dates.`,
+              true
+            );
+          }
+        }
+      } catch (e) {
+        console.warn("Approaching due-date email check skipped:", e);
+      } finally {
+        isDueEmailAutoCheckInFlight = false;
       }
     }
 
