@@ -4219,7 +4219,6 @@
     background-image: none !important;
     box-shadow: none !important;
   }
-  .renter-modern-portal .renter-hero-banner,
   .renter-modern-portal .renter-kpi-summary-box,
   .renter-modern-portal .renter-statement-card,
   .renter-modern-portal .renter-payment-card,
@@ -4243,7 +4242,6 @@
   .renter-modern-portal input:not([type="file"]):not([type="checkbox"]):not([type="radio"]),
   .renter-modern-portal textarea,
   .renter-modern-portal #renterHeroAadhaarCardBox,
-  .renter-modern-portal #renterDashboardPaymentCircleCard,
   .renter-modern-portal #renterDashboardLatestReceiptSideCard,
   .renter-modern-portal #renterDashboardLatestReceiptBtn,
   .renter-modern-portal #renterAadhaarLinkedReceiptsCard,
@@ -4268,7 +4266,6 @@
     -webkit-backdrop-filter: blur(8px) !important;
     box-shadow: none !important;
   }
-  body.theme-white .renter-modern-portal .renter-hero-banner,
   body.theme-white .renter-modern-portal .renter-kpi-summary-box,
   body.theme-white .renter-modern-portal .renter-statement-card,
   body.theme-white .renter-modern-portal .renter-payment-card,
@@ -4292,7 +4289,6 @@
   body.theme-white .renter-modern-portal input:not([type="file"]):not([type="checkbox"]):not([type="radio"]),
   body.theme-white .renter-modern-portal textarea,
   body.theme-white .renter-modern-portal #renterHeroAadhaarCardBox,
-  body.theme-white .renter-modern-portal #renterDashboardPaymentCircleCard,
   body.theme-white .renter-modern-portal #renterDashboardLatestReceiptSideCard,
   body.theme-white .renter-modern-portal #renterDashboardLatestReceiptBtn,
   body.theme-white .renter-modern-portal #renterAadhaarLinkedReceiptsCard,
@@ -4312,6 +4308,24 @@
   body.theme-white .renter-modern-portal button:not(.btn-primary):not(.renter-upi-launch-btn) {
     background: rgba(255, 255, 255, 0.25) !important;
     background-color: rgba(255, 255, 255, 0.25) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: none !important;
+  }
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal #renterDashboardPaymentCircleCard {
+    background: rgba(15, 23, 42, 0.01) !important;
+    background-color: rgba(15, 23, 42, 0.01) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    box-shadow: none !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal #renterDashboardPaymentCircleCard {
+    background: rgba(255, 255, 255, 0.01) !important;
+    background-color: rgba(255, 255, 255, 0.01) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -7156,19 +7170,6 @@
       </div>
 
       <div class="nav-right">
-        <!-- Live Total Profit & Loss Section -->
-        <div class="pnl-tracker" title="Real-Time Total Profit (Collected) & Loss (Pending Dues)">
-          <div class="pnl-item pnl-profit">
-            <i class="fa-solid fa-arrow-trend-up"></i>
-            <span>Profit: <strong id="topTotalProfit">₹0</strong></span>
-          </div>
-          <div class="pnl-divider"></div>
-          <div class="pnl-item pnl-loss">
-            <i class="fa-solid fa-arrow-trend-down"></i>
-            <span>Loss/Due: <strong id="topTotalLoss">₹0</strong></span>
-          </div>
-        </div>
-
         <!-- Action Icons Grouped Together (All Unified with Home Icon Design) -->
         <div class="nav-actions-group">
           <!-- Top Dashboard Live Chat Button -->
@@ -8484,6 +8485,10 @@
       <!-- Horizontal Left-to-Right Options Box (Notifications, Create User ID, Delete Center + All 7 Modules One by One to the Right Side) -->
       <div class="settings-horizontal-options-box">
         <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid">
+          <div id="settingsTabBtnNotifications" class="flat-nav-item settings-nav-card nav-notify" style="display:none;" onclick="switchSettingsSubTab(event, 'setSubNotifications')">
+            <div class="s-nav-icon"><i class="fa-solid fa-bell"></i></div>
+            <div class="s-nav-title">Notifications</div>
+          </div>
           <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create active" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
             <div class="s-nav-icon"><i class="fa-solid fa-user-plus"></i></div>
             <div class="s-nav-title">Create User ID</div>
@@ -8994,33 +8999,33 @@
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
             <div class="form-group" style="margin-bottom:0;">
               <label>Support Contact Person / Admin Name</label>
-              <input type="text" id="cfgContactName" class="form-control" placeholder="e.g. Property Admin / Help Desk">
+              <input type="text" id="cfgContactName" class="form-control" placeholder="e.g. Property Admin / Help Desk" oninput="markContactSettingsDirty()">
             </div>
             <div class="form-group" style="margin-bottom:0;">
               <label>Mobile Number</label>
-              <input type="tel" id="cfgContactMobile" class="form-control" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)">
+              <input type="tel" id="cfgContactMobile" class="form-control" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value); markContactSettingsDirty();">
             </div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
             <div class="form-group" style="margin-bottom:0;">
               <label>Support Phone Number</label>
-              <input type="tel" id="cfgContactPhone" class="form-control" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)">
+              <input type="tel" id="cfgContactPhone" class="form-control" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value); markContactSettingsDirty();">
             </div>
             <div class="form-group" style="margin-bottom:0;">
               <label>WhatsApp Support Phone</label>
-              <input type="tel" id="cfgContactWhatsapp" class="form-control" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)">
+              <input type="tel" id="cfgContactWhatsapp" class="form-control" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value); markContactSettingsDirty();">
             </div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
             <div class="form-group" style="margin-bottom:0;">
               <label>Support Email ID</label>
-              <input type="email" id="cfgContactEmail" class="form-control" placeholder="support@apnaflat.com">
+              <input type="email" id="cfgContactEmail" class="form-control" placeholder="support@apnaflat.com" oninput="markContactSettingsDirty()">
             </div>
             <div class="form-group" style="margin-bottom:0;">
               <label>Official Property Address</label>
-              <input type="text" id="cfgContactAddress" class="form-control" placeholder="Management Office, Main Gate">
+              <input type="text" id="cfgContactAddress" class="form-control" placeholder="Management Office, Main Gate" oninput="markContactSettingsDirty()">
             </div>
           </div>
 
@@ -9029,7 +9034,7 @@
               <label for="cfgContactProperty" style="font-size:0.72rem; font-weight:800; color:#f59e0b; margin:0; white-space:nowrap; display:flex; align-items:center; gap:5px;">
                 <i class="fa-solid fa-building-user"></i> Which property does this contact info belong to?
               </label>
-              <select id="cfgContactProperty" class="form-control" style="width:auto; min-width:120px; max-width:190px; padding:4px 8px; height:30px; font-size:0.75rem; font-weight:700; color:var(--text-main); background:var(--bg-card); cursor:pointer;" onchange="onContactSettingsPropertyChange()">
+              <select id="cfgContactProperty" class="form-control" style="width:auto; min-width:120px; max-width:190px; padding:4px 8px; height:30px; font-size:0.75rem; font-weight:700; color:var(--text-main); background:var(--bg-card); cursor:pointer;" onchange="onContactSettingsPropertyChange(true)">
                 <option value="ALL">All</option>
               </select>
             </div>
@@ -10314,6 +10319,26 @@
                 Automatically verified via Aadhaar Card number.
               </div>
             </div>
+
+            <!-- 2D. Flat Location & Flat Number Details (Bottom of 2. Renter & Aadhaar Documents) -->
+            <div id="flatLocationNumberCard" style="background:var(--bg-input); border-radius:16px; padding:14px; border:1.5px solid rgba(56, 189, 248, 0.35); box-shadow:0 4px 14px rgba(0,0,0,0.16); text-align:left;">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
+                <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-location-dot" style="color:#38bdf8;"></i> Flat Location &amp; Number
+                </span>
+              </div>
+              <div class="form-group" style="margin-bottom:10px;">
+                <label for="renterFlatLocationInput">Flat Location</label>
+                <input type="text" id="renterFlatLocationInput" class="form-control" placeholder="e.g. 1st Floor, North Wing / Building A">
+              </div>
+              <div class="form-group" style="margin-bottom:12px;">
+                <label for="renterFlatNumberInput">Flat Number</label>
+                <input type="text" id="renterFlatNumberInput" class="form-control" placeholder="e.g. 101 or 2B">
+              </div>
+              <button type="button" id="btnSaveProfileFlatLocationNumber" class="btn-primary admin-only" onclick="saveProfileFlatLocationAndNumber()">
+                <i class="fa-solid fa-floppy-disk"></i> Save Flat Location &amp; Number
+              </button>
+            </div>
           </div>
 
           <!-- RIGHT SIDE: NUMBER 3 (Rent & Utility Details — Manual Save Only via Save Button) -->
@@ -11570,6 +11595,7 @@
       "deleteFlat",
       "updateMasterRentAndRates",
       "updateFlatUtilities",
+      "updateFlatLocationDetails",
       "saveRenterProfile",
       "updateRenterProfile",
       "uploadRenterDocument",
@@ -13905,8 +13931,8 @@
 
     // Requirement 2: "Shift to another flat" Button & Full Profile Transfer Workflow
     function openShiftRenterModal() {
-      if (activeRole === "Viewer" || activeRole === "Renter") {
-        return triggerSideToast("Admin Permission Required", "Only the Admin can shift a renter to another flat.", false);
+      if (activeRole === "Viewer" || activeRole === "Renter" || (activeRole === "Manager" && !hasManagerPermission("renterProfile"))) {
+        return triggerSideToast("Permission Required", "You do not have permission to shift a renter to another flat.", false);
       }
       if (!selectedFlat) {
         return triggerSideToast("No Flat Open", "Please open a flat profile first.", false);
@@ -15077,8 +15103,16 @@ function formatMonthLabel(rawVal) {
         syncTimer = null;
       }
 
-      document.body.classList.remove("role-renter", "role-viewer", "role-admin", "is-renter-mode");
-      document.documentElement.classList.remove("role-renter", "role-viewer", "role-admin", "is-renter-mode");
+      document.body.classList.remove("role-renter", "role-viewer", "role-admin", "role-manager", "role-restricted", "is-renter-mode");
+      document.documentElement.classList.remove("role-renter", "role-viewer", "role-admin", "role-manager", "role-restricted", "is-renter-mode");
+      window.__lastAppliedRoleSig = "";
+      window.isContactSettingsDirty = false;
+      activeManagerPermissions = [];
+      const globalSearchDrop = document.getElementById("globalSearchResultsBox");
+      if (globalSearchDrop) {
+        globalSearchDrop.classList.remove("active");
+        globalSearchDrop.innerHTML = "";
+      }
 
       document.getElementById("dashboardScreen")?.classList.remove("active");
       document.getElementById("loginScreen")?.classList.add("active");
@@ -15543,6 +15577,7 @@ function formatMonthLabel(rawVal) {
 
     // Requirement 1: Top Dashboard for Renter displays centered Due and Advance text ONLY (no background boxes)
     function updateRenterTopDashboardBalance(currentMonthBillObj) {
+      if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
       const pnlTracker = document.querySelector(".pnl-tracker");
       if (!pnlTracker) return;
 
@@ -15973,6 +16008,13 @@ function formatMonthLabel(rawVal) {
 
     function openDefaultAdminPortfolioHub(e) {
       if (e && typeof e.stopPropagation === "function") e.stopPropagation();
+      const portfolioSection = document.getElementById("adminPortfolioHubSection");
+      const isAlreadyOpen = document.body.classList.contains("admin-portfolio-hub-open") ||
+        (portfolioSection && portfolioSection.style.display === "block");
+      if (isAlreadyOpen) {
+        closeAdminPortfolioHub();
+        return;
+      }
       if (activeRole === "Manager") {
         if (hasManagerPermission("kharch")) return openAdminPortfolioHub("kharch");
         if (hasManagerPermission("khet")) return openAdminPortfolioHub("khet");
@@ -16007,9 +16049,9 @@ function formatMonthLabel(rawVal) {
       document.querySelectorAll("#adminPortfolioHubCarouselTrack .admin-ops-carousel-card").forEach(btn => {
         const btnKey = btn.getAttribute("data-portfolio-tab");
         if (activeRole === "Manager") {
-          btn.style.display = hasManagerPermission(btnKey) ? "inline-flex" : "none";
+          btn.style.setProperty("display", hasManagerPermission(btnKey) ? "inline-flex" : "none", "important");
         } else {
-          btn.style.display = "inline-flex";
+          btn.style.setProperty("display", "inline-flex", "important");
         }
         btn.classList.toggle("active", btnKey === activeKey);
       });
@@ -18759,8 +18801,8 @@ function formatMonthLabel(rawVal) {
               </div>
             </div>
 
-            <!-- Right Side: Latest Receipt Summary Card -->
-            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.25); border: 1.5px solid var(--glass-border); display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+            <!-- Right Side: Latest Receipt Summary Card (Hidden when full payment is completed) -->
+            <div class="renter-kpi-summary-box" id="renterDashboardLatestReceiptSideCard" style="flex: 1 1 320px; max-width: 440px; margin: 0; padding: 16px 18px; border-radius: 16px; background: rgba(15,23,42,0.25); border: 1.5px solid var(--glass-border); display: ${hasLatestReceiptForChart && (isChartOverpaid || isChartExactPaid || chartDueAmt === 0) ? "none" : "flex"}; flex-direction: column; justify-content: space-between; gap: 12px;">
               <div>
                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
                   <div style="display:flex; align-items:center; gap:9px;">
@@ -19656,17 +19698,17 @@ function formatMonthLabel(rawVal) {
       const flatsContainer = document.getElementById("flatsList");
       if (flatsContainer) flatsContainer.classList.remove("viewer-single-flat-mode");
       if (activeRole === "Manager" && !hasManagerPermission("properties")) {
-        if (propsBar) propsBar.style.display = "none";
+        if (propsBar) propsBar.style.setProperty("display", "none", "important");
         if (flatsContainer) {
           flatsContainer.innerHTML = "";
-          flatsContainer.style.display = "none";
+          flatsContainer.style.setProperty("display", "none", "important");
         }
         updateGlobalProfitAndLoss();
         renderHomeKhetSection();
         return;
       }
       if (renterQuickNavEl) renterQuickNavEl.style.display = "none";
-      if (propsBar) propsBar.style.display = "";
+      if (propsBar) propsBar.style.removeProperty("display");
 
       if (
         selectedProperty &&
@@ -20025,7 +20067,7 @@ function formatMonthLabel(rawVal) {
       const rNavHelp = document.getElementById("btnRenterNavHelpCenter");
       const btnNotif = document.getElementById("btnDashboardNotification");
       const pnlTracker = document.querySelector(".pnl-tracker");
-      const searchWrap = document.querySelector(".header-search-wrap");
+      const searchWrap = document.getElementById("searchContainer") || document.querySelector(".header-search-wrap");
       const homePortfolioAnchor = document.getElementById("homePortfolioDropdownAnchor");
       const pfTabKharch = document.querySelector('#adminPortfolioHubCarouselTrack [data-portfolio-tab="kharch"]');
       const pfTabKhet = document.querySelector('#adminPortfolioHubCarouselTrack [data-portfolio-tab="khet"]');
@@ -20033,6 +20075,7 @@ function formatMonthLabel(rawVal) {
       const plusAnchor = document.getElementById("plusMenuDropdownAnchor") || document.querySelector(".plus-icon-box-btn")?.closest(".dropdown-anchor");
       const adminOpsBtn = document.getElementById("btnAdminResidentOpsHub");
       const settingsBtn = document.querySelector(".settings-icon-box-btn");
+      const khetHomeContainer = document.getElementById("homeKhetSectionContainer");
 
       if (adminOpsBtn) {
         adminOpsBtn.style.setProperty("display", activeRole === "Admin" ? "inline-flex" : "none", "important");
@@ -20054,19 +20097,34 @@ function formatMonthLabel(rawVal) {
       if (activeRole === "Manager") {
         if (pnlTracker) pnlTracker.style.setProperty("display", hasManagerPermission("pnl") ? "inline-flex" : "none", "important");
         if (searchWrap) searchWrap.style.setProperty("display", hasManagerPermission("search") ? "flex" : "none", "important");
+        if (!hasManagerPermission("search")) {
+          const gsBox = document.getElementById("globalSearchResultsBox");
+          if (gsBox) {
+            gsBox.classList.remove("active");
+            gsBox.innerHTML = "";
+          }
+        }
         if (rNavChat) rNavChat.style.setProperty("display", hasManagerPermission("liveChat") ? "inline-flex" : "none", "important");
         const hasAnyPortfolioPerm = hasManagerPermission("kharch") || hasManagerPermission("khet") || hasManagerPermission("fd");
         if (homePortfolioAnchor) homePortfolioAnchor.style.setProperty("display", hasAnyPortfolioPerm ? "inline-flex" : "none", "important");
-        if (pfTabKharch) pfTabKharch.style.display = hasManagerPermission("kharch") ? "inline-flex" : "none";
-        if (pfTabKhet) pfTabKhet.style.display = hasManagerPermission("khet") ? "inline-flex" : "none";
-        if (pfTabFd) pfTabFd.style.display = hasManagerPermission("fd") ? "inline-flex" : "none";
+        if (pfTabKharch) pfTabKharch.style.setProperty("display", hasManagerPermission("kharch") ? "inline-flex" : "none", "important");
+        if (pfTabKhet) pfTabKhet.style.setProperty("display", hasManagerPermission("khet") ? "inline-flex" : "none", "important");
+        if (pfTabFd) pfTabFd.style.setProperty("display", hasManagerPermission("fd") ? "inline-flex" : "none", "important");
+        if (khetHomeContainer) {
+          if (hasManagerPermission("khet")) khetHomeContainer.style.removeProperty("display");
+          else khetHomeContainer.style.setProperty("display", "none", "important");
+        }
         if (plusAnchor) plusAnchor.style.setProperty("display", hasManagerPermission("addMenu") ? "inline-flex" : "none", "important");
         if (settingsBtn) settingsBtn.style.setProperty("display", hasAnySettingsPermission() ? "inline-flex" : "none", "important");
+        if (!hasAnyPortfolioPerm && typeof closeAdminPortfolioHub === "function") {
+          closeAdminPortfolioHub(true);
+        }
       } else if (activeRole === "Renter" || activeRole === "Viewer") {
         if (pnlTracker) pnlTracker.style.removeProperty("display");
         if (searchWrap) searchWrap.style.removeProperty("display");
         if (rNavChat) rNavChat.style.setProperty("display", "inline-flex", "important");
         if (homePortfolioAnchor) homePortfolioAnchor.style.setProperty("display", "none", "important");
+        if (khetHomeContainer) khetHomeContainer.style.setProperty("display", "none", "important");
         if (plusAnchor) plusAnchor.style.setProperty("display", "none", "important");
         if (settingsBtn) settingsBtn.style.removeProperty("display");
       } else {
@@ -20074,9 +20132,10 @@ function formatMonthLabel(rawVal) {
         if (searchWrap) searchWrap.style.removeProperty("display");
         if (rNavChat) rNavChat.style.setProperty("display", "inline-flex", "important");
         if (homePortfolioAnchor) homePortfolioAnchor.style.setProperty("display", "inline-flex", "important");
-        if (pfTabKharch) pfTabKharch.style.display = "inline-flex";
-        if (pfTabKhet) pfTabKhet.style.display = "inline-flex";
-        if (pfTabFd) pfTabFd.style.display = "inline-flex";
+        if (pfTabKharch) pfTabKharch.style.setProperty("display", "inline-flex", "important");
+        if (pfTabKhet) pfTabKhet.style.setProperty("display", "inline-flex", "important");
+        if (pfTabFd) pfTabFd.style.setProperty("display", "inline-flex", "important");
+        if (khetHomeContainer) khetHomeContainer.style.removeProperty("display");
         if (plusAnchor) plusAnchor.style.removeProperty("display");
         if (settingsBtn) settingsBtn.style.removeProperty("display");
       }
@@ -20086,7 +20145,8 @@ function formatMonthLabel(rawVal) {
 
       const shiftBtn = document.getElementById("btnShiftToAnotherFlat");
       if (shiftBtn) {
-        shiftBtn.style.display = (activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("renterProfile"))) ? "flex" : "none";
+        const allowShift = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("renterProfile"));
+        shiftBtn.style.setProperty("display", allowShift ? "flex" : "none", "important");
       }
 
       if (typeof syncFloatingCornerButtonsByRole === "function") {
@@ -20123,26 +20183,32 @@ function formatMonthLabel(rawVal) {
       const panelEditEvery = document.getElementById("otherPanelEditEverything");
       const btnChangeBg = document.getElementById("btnOtherOptChangeBg");
       const panelChangeBg = document.getElementById("otherPanelChangeBg");
+      const btnSheetSetup = document.getElementById("btnOtherOptSheetSetup");
+      const panelSheetSetup = document.getElementById("otherPanelSheetSetup");
       const btnGrid = document.getElementById("otherOptionsBtnGrid");
       const hasControlOf = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"));
       if (!hasControlOf) {
-        if (btnLoginHist) btnLoginHist.style.display = "none";
+        if (btnLoginHist) btnLoginHist.style.setProperty("display", "none", "important");
         if (panelLoginHist) panelLoginHist.style.display = "none";
-        if (btnEditEvery) btnEditEvery.style.display = "none";
+        if (btnEditEvery) btnEditEvery.style.setProperty("display", "none", "important");
         if (panelEditEvery) panelEditEvery.style.display = "none";
-        if (btnChangeBg) btnChangeBg.style.display = "none";
+        if (btnChangeBg) btnChangeBg.style.setProperty("display", "none", "important");
         if (panelChangeBg) panelChangeBg.style.display = "none";
+        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "none", "important");
+        if (panelSheetSetup) panelSheetSetup.style.display = "none";
         if (btnGrid) btnGrid.style.gridTemplateColumns = "1fr";
       } else {
-        if (btnLoginHist) btnLoginHist.style.display = "flex";
-        if (btnEditEvery) btnEditEvery.style.display = "flex";
-        if (btnChangeBg) btnChangeBg.style.display = "flex";
+        if (btnLoginHist) btnLoginHist.style.setProperty("display", "flex", "important");
+        if (btnEditEvery) btnEditEvery.style.setProperty("display", "flex", "important");
+        if (btnChangeBg) btnChangeBg.style.setProperty("display", "flex", "important");
+        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "flex", "important");
         if (btnGrid) btnGrid.style.gridTemplateColumns = "repeat(2, 1fr)";
       }
     }
 
     function applyServerLoginPayload(res) {
       authSessionEpoch++;
+      window.__lastAppliedRoleSig = "";
       hasCompletedInitialSync = true;
       window.activeRenterHomeSection = "dashboard";
       window.renterAadhaarReceiptsPage = 0;
@@ -20226,7 +20292,14 @@ function formatMonthLabel(rawVal) {
       activeAssignedProperty = res.assignedProperty || res.userAssignedProperty || matchedU?.AssignedProperty || "";
       activeAssignedFlat = res.assignedFlat || res.userAssignedFlat || matchedU?.AssignedFlat || "";
       activeAssignedAadhaar = normalizeAadhaar12(res.assignedAadhaar ?? res.userAssignedAadhaar ?? matchedU?.AssignedAadhaar ?? matchedU?.AadhaarNumber);
-      activeManagerPermissions = normalizeManagerPermissionsList(res.managerPermissions || res.userManagerPermissions || matchedU?.ManagerPermissions || []);
+      const rawMgrPerms = (res.managerPermissions !== undefined && res.managerPermissions !== "")
+        ? res.managerPermissions
+        : (res.userManagerPermissions !== undefined && res.userManagerPermissions !== ""
+          ? res.userManagerPermissions
+          : (uObj.ManagerPermissions !== undefined && uObj.ManagerPermissions !== ""
+            ? uObj.ManagerPermissions
+            : (matchedU?.ManagerPermissions ?? [])));
+      activeManagerPermissions = normalizeManagerPermissionsList(rawMgrPerms);
       if (res.sessionToken || matchedU?.ActiveSessionToken) {
         activeSessionToken = String(res.sessionToken || matchedU?.ActiveSessionToken || activeSessionToken).trim();
       }
@@ -21687,7 +21760,7 @@ function formatMonthLabel(rawVal) {
     }
 
 
-    // Requirement 5: Dynamic Profit & Loss by Selected Property (Displays total for all properties by default; dynamically switches to selected property when clicked)
+    // Requirement 2: Profit & Loss strictly based on the latest month that has receipts (the latest receipt month)
     function updateGlobalProfitAndLoss() {
       const pnlTracker = document.querySelector(".pnl-tracker");
 
@@ -21711,39 +21784,60 @@ function formatMonthLabel(rawVal) {
       }
 
       const countedBillIds = new Set();
+      const scopedReceiptBills = [];
 
-      targetFlats.forEach(flat => {
-        const activeFlatRenters = (DB.renters || []).filter(r =>
-          isSamePropAndFlat(r.PropertyName, r.FlatName, flat.PropertyName, flat.FlatName) &&
-          String(r.Status || "").trim().toLowerCase() === "active"
+      const isValidReceiptBill = (b) => {
+        if (!b || typeof b !== "object") return false;
+        if (b.ReceiptGenerated === false || String(b.ReceiptGenerated).trim().toLowerCase() === "false") return false;
+        const ym = normalizeMonthYear(b.MonthYear || b.BillDate || b.PaymentDate || "");
+        if (!/^\d{4}-\d{2}$/.test(ym)) return false;
+        const paid = parseFloat(b.PaidAmount) || 0;
+        const totalBilled = parseFloat(b.TotalBilled !== undefined ? b.TotalBilled : b.TotalAmount) || 0;
+        const baseRent = parseFloat(b.BaseRent) || 0;
+        const pending = parseFloat(b.PendingAmount) || 0;
+        return Boolean(
+          b.ReceiptGenerated === true ||
+          String(b.ReceiptGenerated).trim().toLowerCase() === "true" ||
+          b.CalculationDone === true ||
+          String(b.CalculationDone).trim().toLowerCase() === "true" ||
+          paid > 0 ||
+          totalBilled > 0 ||
+          baseRent > 0 ||
+          pending > 0
         );
+      };
 
-        activeFlatRenters.forEach(renter => {
-          const renterBills = sortBillsChronologically(getBillsForSpecificRenter(flat.PropertyName, flat.FlatName, renter)).filter(b => {
-            const key = String(b.BillID || `${b.PropertyName}_${b.FlatName}_${b.MonthYear}_${b.TenantName}`);
-            if (countedBillIds.has(key)) return false;
-            countedBillIds.add(key);
-            return true;
-          });
-
-          if (renterBills.length > 0) {
-            let stayStandaloneBilled = 0;
-            let stayPaid = 0;
-            renterBills.forEach((b, idx) => {
-              const openingCarry = idx === 0 ? (parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0) : 0;
-              const standalone = getBillStandaloneMonthlyCharge(b);
-              const paid = parseFloat(b.PaidAmount) || 0;
-              stayStandaloneBilled += (standalone + openingCarry);
-              stayPaid += paid;
-            });
-            totalProfit += stayPaid;
-            const stayNetDue = Math.round((stayStandaloneBilled - stayPaid) * 100) / 100;
-            if (stayNetDue > 0) {
-              totalLoss += stayNetDue;
-            }
-          }
-        });
+      (DB.bills || []).forEach(b => {
+        const belongsToTargetFlat = targetFlats.some(flat =>
+          isSamePropAndFlat(b.PropertyName, b.FlatName, flat.PropertyName, flat.FlatName)
+        );
+        if (!belongsToTargetFlat) return;
+        if (!isValidReceiptBill(b)) return;
+        const ym = normalizeMonthYear(b.MonthYear || b.BillDate || b.PaymentDate || "");
+        const key = String(b.BillID || `${b.PropertyName}_${b.FlatName}_${ym}_${b.RenterID || b.TenantName || ""}`);
+        if (countedBillIds.has(key)) return;
+        countedBillIds.add(key);
+        scopedReceiptBills.push({ bill: b, monthYear: ym });
       });
+
+      let latestReceiptMonth = "";
+      scopedReceiptBills.forEach(entry => {
+        if (entry.monthYear && entry.monthYear > latestReceiptMonth) {
+          latestReceiptMonth = entry.monthYear;
+        }
+      });
+
+      if (latestReceiptMonth) {
+        scopedReceiptBills
+          .filter(entry => entry.monthYear === latestReceiptMonth)
+          .forEach(({ bill }) => {
+            const paid = parseFloat(bill.PaidAmount) || 0;
+            const rawNetPayable = getBillRawNetPayable(bill);
+            const billDue = Math.max(0, Math.round((rawNetPayable - paid) * 100) / 100);
+            totalProfit += paid;
+            totalLoss += billDue;
+          });
+      }
 
       totalProfit = Math.round(totalProfit * 100) / 100;
       totalLoss = Math.round(totalLoss * 100) / 100;
@@ -21753,9 +21847,10 @@ function formatMonthLabel(rawVal) {
       if (profEl) profEl.innerText = `₹${totalProfit.toLocaleString('en-IN')}`;
       if (lossEl) lossEl.innerText = `₹${totalLoss.toLocaleString('en-IN')}`;
       if (pnlTracker) {
+        const monthDisplay = latestReceiptMonth ? formatMonthLabel(latestReceiptMonth) : "Latest Receipt Month";
         pnlTracker.title = selectedProperty
-          ? `Showing Profit & Loss for ${selectedProperty} (Click property again to view All Properties)`
-          : "Showing Total Profit & Loss for All Properties";
+          ? `Showing ${monthDisplay} Profit & Loss for ${selectedProperty} (Latest receipt month)`
+          : `Showing ${monthDisplay} Profit & Loss for All Properties (Latest receipt month)`;
       }
     }
 
@@ -21945,6 +22040,14 @@ function formatMonthLabel(rawVal) {
     function handleGlobalSearch(query) {
       if (String(activeRole || "").trim().toLowerCase() === "renter") {
         renderAllDashboardUI();
+        return;
+      }
+      if (activeRole === "Manager" && !hasManagerPermission("search")) {
+        const dropdownBlocked = document.getElementById("globalSearchResultsBox");
+        if (dropdownBlocked) {
+          dropdownBlocked.classList.remove("active");
+          dropdownBlocked.innerHTML = "";
+        }
         return;
       }
       const q = String(query || "").trim().toLowerCase();
@@ -23104,11 +23207,11 @@ function formatMonthLabel(rawVal) {
       const btnTickets = document.getElementById("btnOtherOptTickets");
       const btnAudit = document.getElementById("btnOtherOptAuditLog");
       const btnSheetSetup = document.getElementById("btnOtherOptSheetSetup");
-      const isAdmin = String(activeRole || "").trim().toLowerCase() === "admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"));
+      const canControlAll = String(activeRole || "").trim().toLowerCase() === "admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"));
 
-      if ((opt === "history" || opt === "editEverything" || opt === "changeBg" || opt === "contactSettings" || opt === "tickets" || opt === "auditLog" || opt === "sheetSetup") && !isAdmin) {
-        triggerSideToast("Admin Permission Required", "Only authorized accounts have access to this section.", false);
-        opt = "users";
+      if ((opt === "users" || opt === "history" || opt === "editEverything" || opt === "changeBg" || opt === "contactSettings" || opt === "tickets" || opt === "auditLog" || opt === "sheetSetup") && !canControlAll) {
+        triggerSideToast("Permission Required", "You do not have permission to access this section.", false);
+        return;
       }
 
       if (typeof restoreSharedAdminWorkspacesToSettings === "function") {
@@ -24013,6 +24116,10 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Access Restricted", "You do not have permission to open Settings.", false);
       }
 
+      if (!isAdmin && !hasAnySettingsPermission()) {
+        return triggerSideToast("Access Restricted", "You do not have permission to access Settings.", false);
+      }
+
       if (initialSubTabId === "setSubOther") {
         initialSubTabId = "setSubDeleteManage";
       }
@@ -24020,19 +24127,20 @@ function formatMonthLabel(rawVal) {
       // Restore shared workspaces back into Settings modal before opening Settings
       restoreSharedAdminWorkspacesToSettings();
 
-      // Configure horizontal tab buttons based on Admin vs Manager permissions
+      const canControlAll = isAdmin || (isManager && hasManagerPermission("controlOf"));
+
+      // Configure horizontal tab buttons based on Admin vs Manager permissions (override !important CSS cleanly)
       const tabConfigs = [
-        { btnId: "settingsTabBtnScreenshotVerify", tabId: "setSubScreenshotVerification", allowed: isAdmin || hasManagerPermission("notifications") || hasManagerPermission("billing") || hasManagerPermission("controlOf") },
-        { btnId: "settingsTabBtnNotifications", tabId: "setSubNotifications", allowed: isAdmin || hasManagerPermission("notifications") },
+        { btnId: "settingsTabBtnNotifications", tabId: "setSubNotifications", allowed: isManager && hasManagerPermission("notifications") },
         { btnId: "settingsTabBtnCreateUser", tabId: "setSubCreateUser", allowed: isAdmin || hasManagerPermission("createUser") },
-        { btnId: "settingsTabBtnDeleteCenter", tabId: "setSubDeleteManage", allowed: isAdmin || hasManagerPermission("deleteCenter") || hasManagerPermission("controlOf") }
+        { btnId: "settingsTabBtnDeleteCenter", tabId: "setSubDeleteManage", allowed: isAdmin || hasManagerPermission("deleteCenter") }
       ];
 
       let firstAllowedTabId = "";
       tabConfigs.forEach(cfg => {
         const btnEl = document.getElementById(cfg.btnId);
         if (btnEl) {
-          btnEl.style.display = cfg.allowed ? "inline-flex" : "none";
+          btnEl.style.setProperty("display", cfg.allowed ? "flex" : "none", "important");
           if (cfg.allowed && !firstAllowedTabId) {
             firstAllowedTabId = cfg.tabId;
           }
@@ -24041,7 +24149,7 @@ function formatMonthLabel(rawVal) {
 
       const targetTabId = (initialSubTabId && tabConfigs.some(c => c.tabId === initialSubTabId && c.allowed))
         ? initialSubTabId
-        : (firstAllowedTabId || "setSubCreateUser");
+        : firstAllowedTabId;
 
       const btnLoginHist = document.getElementById("btnOtherOptLoginHistory");
       const panelLoginHist = document.getElementById("otherPanelLoginHistory");
@@ -24051,7 +24159,11 @@ function formatMonthLabel(rawVal) {
       const panelChangeBg = document.getElementById("otherPanelChangeBg");
       const btnContact = document.getElementById("btnOtherOptContactSettings");
       const panelContact = document.getElementById("otherPanelContactSettings");
-      const btnGrid = document.getElementById("otherOptionsBtnGrid");
+      const btnTickets = document.getElementById("btnOtherOptTickets");
+      const btnAudit = document.getElementById("btnOtherOptAuditLog");
+      const btnUsers = document.getElementById("btnOtherOptUsers");
+      const btnSheetSetup = document.getElementById("btnOtherOptSheetSetup");
+      const panelSheetSetup = document.getElementById("otherPanelSheetSetup");
 
       populateCreateUserFlatsDropdown();
       populateRenterQuickSelectDropdowns();
@@ -24062,30 +24174,29 @@ function formatMonthLabel(rawVal) {
         renderLiveChatChannelsAndMessages();
       }
 
-      const canControlAll = isAdmin || (isManager && hasManagerPermission("controlOf"));
-      const btnTickets = document.getElementById("btnOtherOptTickets");
-      const btnAudit = document.getElementById("btnOtherOptAuditLog");
-      const btnUsers = document.getElementById("btnOtherOptUsers");
       if (!canControlAll) {
-        if (btnLoginHist) btnLoginHist.style.display = "none";
+        if (btnLoginHist) btnLoginHist.style.setProperty("display", "none", "important");
         if (panelLoginHist) panelLoginHist.style.display = "none";
-        if (btnEditEvery) btnEditEvery.style.display = "none";
+        if (btnEditEvery) btnEditEvery.style.setProperty("display", "none", "important");
         if (panelEditEvery) panelEditEvery.style.display = "none";
-        if (btnChangeBg) btnChangeBg.style.display = "none";
+        if (btnChangeBg) btnChangeBg.style.setProperty("display", "none", "important");
         if (panelChangeBg) panelChangeBg.style.display = "none";
-        if (btnContact) btnContact.style.display = "none";
+        if (btnContact) btnContact.style.setProperty("display", "none", "important");
         if (panelContact) panelContact.style.display = "none";
-        if (btnTickets) btnTickets.style.display = "none";
-        if (btnAudit) btnAudit.style.display = "none";
-        if (btnUsers) btnUsers.style.display = "none";
+        if (btnTickets) btnTickets.style.setProperty("display", "none", "important");
+        if (btnAudit) btnAudit.style.setProperty("display", "none", "important");
+        if (btnUsers) btnUsers.style.setProperty("display", "none", "important");
+        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "none", "important");
+        if (panelSheetSetup) panelSheetSetup.style.display = "none";
       } else {
-        if (btnUsers) btnUsers.style.display = "flex";
-        if (btnLoginHist) btnLoginHist.style.display = "flex";
-        if (btnEditEvery) btnEditEvery.style.display = "flex";
-        if (btnChangeBg) btnChangeBg.style.display = "flex";
-        if (btnContact) btnContact.style.display = "flex";
-        if (btnTickets) btnTickets.style.display = "flex";
-        if (btnAudit) btnAudit.style.display = "flex";
+        if (btnUsers) btnUsers.style.setProperty("display", "flex", "important");
+        if (btnLoginHist) btnLoginHist.style.setProperty("display", "flex", "important");
+        if (btnEditEvery) btnEditEvery.style.setProperty("display", "flex", "important");
+        if (btnChangeBg) btnChangeBg.style.setProperty("display", "flex", "important");
+        if (btnContact) btnContact.style.setProperty("display", "flex", "important");
+        if (btnTickets) btnTickets.style.setProperty("display", "flex", "important");
+        if (btnAudit) btnAudit.style.setProperty("display", "flex", "important");
+        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "flex", "important");
         renderLoginHistoryPage();
       }
 
@@ -24093,7 +24204,11 @@ function formatMonthLabel(rawVal) {
       if (typeof renderAdminScreenshotVerificationGrid === "function") {
         renderAdminScreenshotVerificationGrid();
       }
-      switchSettingsSubTab(null, targetTabId);
+      if (targetTabId) {
+        switchSettingsSubTab(null, targetTabId);
+      } else if (canControlAll) {
+        switchOtherSubOption("users");
+      }
       openModal("settingsModal");
     }
 
@@ -25053,6 +25168,16 @@ function formatMonthLabel(rawVal) {
     function switchSettingsSubTab(evt, subTabId) {
       if (subTabId === "setSubOther") {
         subTabId = "setSubDeleteManage";
+      }
+      if (activeRole === "Manager") {
+        const permForTab = {
+          setSubNotifications: "notifications",
+          setSubCreateUser: "createUser",
+          setSubDeleteManage: "deleteCenter"
+        }[subTabId];
+        if (permForTab && !hasManagerPermission(permForTab)) {
+          return triggerSideToast("Permission Required", "You do not have permission to access this Settings section.", false);
+        }
       }
       const parent = document.getElementById("settingsModal");
       if (!parent) return;
@@ -27972,6 +28097,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function openFlatDetailsModal(flat, renter) {
+      if (activeRole === "Manager" && !hasManagerPermission("properties")) {
+        return triggerSideToast("Access Restricted", "You do not have permission to view or open Flats & Properties.", false);
+      }
       const viewerScope = resolveViewerAssignedScope();
       if (activeRole === "Renter") {
         const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
@@ -28015,6 +28143,10 @@ function formatMonthLabel(rawVal) {
       document.getElementById("profUpiName").value = resolvedContact.upiName;
       document.getElementById("profUpiId").value = resolvedContact.upiId;
       document.getElementById("profContractMobile").value = resolvedContact.contractMobile;
+      const profLocEl = document.getElementById("renterFlatLocationInput");
+      if (profLocEl) profLocEl.value = String(flat.FlatLocation ?? flat.Location ?? renter?.FlatLocation ?? "").trim();
+      const profNumEl = document.getElementById("renterFlatNumberInput");
+      if (profNumEl) profNumEl.value = String(flat.FlatNumber ?? renter?.FlatNumber ?? "").trim();
 
       // Group A5 & A6: Populate Escalation %, Security Deposit, Deposit Date & Mode
       if (document.getElementById("profEscalationPct")) {
@@ -28140,10 +28272,13 @@ function formatMonthLabel(rawVal) {
       } else {
         const canBill = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
         const canEditProf = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("renterProfile"));
+        if (qrHeaderBtn) {
+          qrHeaderBtn.style.setProperty("display", canBill ? "" : "none", "important");
+        }
         const navItems = modal.querySelectorAll(".flat-nav-item");
         const tabContents = modal.querySelectorAll(".tab-content");
         if (navItems[0]) {
-          navItems[0].style.display = canBill ? "" : "none";
+          navItems[0].style.setProperty("display", canBill ? "" : "none", "important");
         }
         const defaultTabIdx = canBill ? 0 : 1;
         if (navBar) {
@@ -28153,6 +28288,10 @@ function formatMonthLabel(rawVal) {
         }
         navItems.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
         tabContents.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
+        modal.querySelectorAll("#tabCalc .admin-only, #tabCalc .pencil-lock-btn").forEach(el => {
+          if (canBill) el.style.removeProperty("display");
+          else el.style.setProperty("display", "none", "important");
+        });
         modal.querySelectorAll("#tabProfile input, #tabProfile select, #tabProfile textarea").forEach(inp => {
           if (canEditProf) {
             if (inp.id !== "profFlatNumber") {
@@ -28167,7 +28306,15 @@ function formatMonthLabel(rawVal) {
           }
         });
         modal.querySelectorAll("#tabProfile .admin-only").forEach(el => {
-          el.style.display = canEditProf ? "" : "none";
+          if (canEditProf) {
+            if (el.id === "btnShiftToAnotherFlat") {
+              el.style.setProperty("display", "flex", "important");
+            } else {
+              el.style.removeProperty("display");
+            }
+          } else {
+            el.style.setProperty("display", "none", "important");
+          }
         });
       }
 
@@ -28398,8 +28545,11 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitBillCalculation() {
-      if (activeRole === "Viewer") {
+      if (activeRole === "Viewer" || activeRole === "Renter") {
         return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
+      if (activeRole === "Manager" && !hasManagerPermission("billing")) {
+        return triggerSideToast("Permission Required", "You do not have Bill & Payment Control permission.", false);
       }
 
       if (window.meterProofUploadPromise) {
@@ -30512,8 +30662,11 @@ function formatMonthLabel(rawVal) {
 
     // Action Button 2: Edit Everything for That Month (Switches to Calculator & Unlocks All Details for Editing)
     function editBillMonthFromHistory(monthYear, billId = "") {
-      if (activeRole === "Viewer") {
+      if (activeRole === "Viewer" || activeRole === "Renter") {
         return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
+      if (activeRole === "Manager" && !hasManagerPermission("billing")) {
+        return triggerSideToast("Permission Required", "You do not have Bill & Payment Control permission.", false);
       }
       const cleanM = normalizeMonthYear(monthYear);
 
@@ -31557,6 +31710,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function openFdModal() {
+      if (activeRole === "Manager" && !hasManagerPermission("fd")) {
+        return triggerSideToast("Permission Required", "You do not have Fixed Deposit (FD) permission.", false);
+      }
       openAdminPortfolioHub("fd");
     }
 
@@ -32484,6 +32640,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function openKharchModal() {
+      if (activeRole === "Manager" && !hasManagerPermission("kharch")) {
+        return triggerSideToast("Permission Required", "You do not have Kharch (Expenses) permission.", false);
+      }
       openAdminPortfolioHub("kharch");
     }
 
@@ -32946,6 +33105,9 @@ function formatMonthLabel(rawVal) {
     }
 
     function openKhetModal() {
+      if (activeRole === "Manager" && !hasManagerPermission("khet")) {
+        return triggerSideToast("Permission Required", "You do not have Khet (Field) Records permission.", false);
+      }
       openAdminPortfolioHub("khet");
     }
 
@@ -33466,6 +33628,11 @@ function formatMonthLabel(rawVal) {
     }
 
     function renderHomeKhetSection() {
+      const container = document.getElementById("homeKhetSectionContainer");
+      if (activeRole === "Manager" && !hasManagerPermission("khet")) {
+        if (container) container.style.setProperty("display", "none", "important");
+        return;
+      }
       populateKhetPartnerFilterAndQuickFill();
     }
 
@@ -33608,7 +33775,10 @@ function formatMonthLabel(rawVal) {
     // 9. Profile Form Logic & Strict Flat-Isolated Rent, Rates & Flat Name Updates (Bug 6 Fix: Never auto-save; only save when clicking Save button)
     async function saveUtilitiesLeft(isAutoSave = false) {
       if (isAutoSave) return;
-      if (activeRole === "Viewer" || !selectedFlat) return;
+      if (activeRole === "Viewer" || activeRole === "Renter" || !selectedFlat) return;
+      if (activeRole === "Manager" && !hasManagerPermission("renterProfile")) {
+        return triggerSideToast("Permission Required", "You do not have Renter Profile Control permission.", false);
+      }
       rebindSelectedFlatAndRenterReferences();
 
       const oldFlatName = String(selectedFlat.FlatName || "").trim();
@@ -33648,12 +33818,19 @@ function formatMonthLabel(rawVal) {
       const depositDateVal = document.getElementById("profDepositDate")?.value || "";
       const depositModeVal = document.getElementById("profDepositMode")?.value || "UPI";
 
+      const locElLeft = document.getElementById("renterFlatLocationInput");
+      const numElLeft = document.getElementById("renterFlatNumberInput");
+      const flatLocationVal = String(locElLeft ? locElLeft.value : (selectedFlat.FlatLocation || "")).trim();
+      const flatNumberVal = String(numElLeft ? numElLeft.value : (selectedFlat.FlatNumber || "")).trim();
+
       const payload = {
         action: "updateFlatUtilities",
         propertyName: selectedFlat.PropertyName,
         oldFlatName: oldFlatName,
         newFlatName: newFlatName,
         flatName: newFlatName,
+        flatLocation: flatLocationVal,
+        flatNumber: flatNumberVal,
         rentAmount: exactRentVal !== "" ? exactRentVal : 0,
         pngNumber: document.getElementById("profPngNumber").value.trim(),
         pngMeterNumber: document.getElementById("profPngMeter").value.trim(),
@@ -33678,6 +33855,8 @@ function formatMonthLabel(rawVal) {
       DB.flats.forEach(f => {
         if (isSamePropAndFlat(f.PropertyName, f.FlatName, selectedFlat.PropertyName, oldFlatName)) {
           f.FlatName = newFlatName;
+          f.FlatLocation = flatLocationVal;
+          f.FlatNumber = flatNumberVal;
           f.RentAmount = payload.rentAmount;
           f.ElecRate = payload.elecFixedRate;
           f.PNGRate = payload.pngFixedRate;
@@ -33701,6 +33880,8 @@ function formatMonthLabel(rawVal) {
       });
 
       selectedFlat.FlatName = newFlatName;
+      selectedFlat.FlatLocation = flatLocationVal;
+      selectedFlat.FlatNumber = flatNumberVal;
       selectedFlat.RentAmount = payload.rentAmount;
       selectedFlat.ElecRate = payload.elecFixedRate;
       selectedFlat.PNGRate = payload.pngFixedRate;
@@ -33728,6 +33909,8 @@ function formatMonthLabel(rawVal) {
             isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, newFlatName)) {
           r.FlatName = newFlatName;
           if (String(r.Status).trim().toLowerCase() === "active") {
+            r.FlatLocation = flatLocationVal;
+            r.FlatNumber = flatNumberVal;
             r.RentAmount = payload.rentAmount;
             r.PNGNumber = payload.pngNumber;
             r.PNGMeterNumber = payload.pngMeterNumber;
@@ -34043,7 +34226,10 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitRenterProfileRight() {
-      if (activeRole === "Viewer" || !selectedFlat) return;
+      if (activeRole === "Viewer" || activeRole === "Renter" || !selectedFlat) return;
+      if (activeRole === "Manager" && !hasManagerPermission("renterProfile")) {
+        return triggerSideToast("Permission Required", "You do not have Renter Profile Control permission.", false);
+      }
       rebindSelectedFlatAndRenterReferences();
       const statusVal = document.getElementById("renterStatus").value;
       const rName = document.getElementById("renterName").value.trim();
@@ -34146,11 +34332,26 @@ function formatMonthLabel(rawVal) {
       const rawEndInput = toInputDateValue(document.getElementById("renterEndDate").value);
       const endDateVal = rawEndInput || (statusVal === "Inactive" ? (toInputDateValue(activeFlatRenterObj?.EndDate) || getLocalTodayIsoDate()) : "");
 
+      const locElRight = document.getElementById("renterFlatLocationInput");
+      const numElRight = document.getElementById("renterFlatNumberInput");
+      const flatLocVal = String(locElRight ? locElRight.value : (selectedFlat.FlatLocation || "")).trim();
+      const flatNumVal = String(numElRight ? numElRight.value : (selectedFlat.FlatNumber || "")).trim();
+      selectedFlat.FlatLocation = flatLocVal;
+      selectedFlat.FlatNumber = flatNumVal;
+      (DB.flats || []).forEach(f => {
+        if (isSamePropAndFlat(f.PropertyName, f.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) {
+          f.FlatLocation = flatLocVal;
+          f.FlatNumber = flatNumVal;
+        }
+      });
+
       const payload = {
         action: "updateRenterProfile",
         renterId: targetRenterId,
         propertyName: selectedFlat.PropertyName,
         flatName: selectedFlat.FlatName,
+        flatLocation: flatLocVal,
+        flatNumber: flatNumVal,
         renterName: rName,
         identityDocNumber: cleanAadhaar,
         mobileNumber: cleanMobile,
@@ -34237,6 +34438,8 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.UPIName = payload.upiName;
           existingRenterRecord.UPIID = payload.upiId;
           existingRenterRecord.ContractMobile = payload.contractMobile;
+          existingRenterRecord.FlatLocation = flatLocVal;
+          existingRenterRecord.FlatNumber = flatNumVal;
           existingRenterRecord.UpdatedAt = new Date().toISOString();
 
           stampUnassignedFlatBillsToDepartingRenter(selectedFlat.PropertyName, selectedFlat.FlatName, existingRenterRecord);
@@ -34311,6 +34514,8 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.UPIName = payload.upiName;
           existingRenterRecord.UPIID = payload.upiId;
           existingRenterRecord.ContractMobile = payload.contractMobile;
+          existingRenterRecord.FlatLocation = flatLocVal;
+          existingRenterRecord.FlatNumber = flatNumVal;
           existingRenterRecord.UpdatedAt = new Date().toISOString();
           activeFlatRenterObj = existingRenterRecord;
         } else {
@@ -34318,6 +34523,8 @@ function formatMonthLabel(rawVal) {
             RenterID: targetRenterId,
             PropertyName: payload.propertyName,
             FlatName: payload.flatName,
+            FlatLocation: flatLocVal,
+            FlatNumber: flatNumVal,
             RenterName: payload.renterName,
             IdentityDocNumber: payload.identityDocNumber,
             MobileNumber: payload.mobileNumber,
@@ -34475,6 +34682,58 @@ function formatMonthLabel(rawVal) {
       updateRenterImageSlotUI("identity_back", "");
       updateRenterTenureStatusUI(null, "");
       syncProfileReactivateButtonVisibility();
+      const locResetEl = document.getElementById("renterFlatLocationInput");
+      if (locResetEl) locResetEl.value = String(selectedFlat?.FlatLocation ?? selectedFlat?.Location ?? "").trim();
+      const numResetEl = document.getElementById("renterFlatNumberInput");
+      if (numResetEl) numResetEl.value = String(selectedFlat?.FlatNumber ?? "").trim();
+    }
+
+    async function saveProfileFlatLocationAndNumber() {
+      if (activeRole === "Viewer" || activeRole === "Renter" || !selectedFlat) return;
+      if (activeRole === "Manager" && !hasManagerPermission("renterProfile")) {
+        return triggerSideToast("Permission Required", "You do not have Renter Profile Control permission.", false);
+      }
+      rebindSelectedFlatAndRenterReferences();
+      const flatLocation = String(document.getElementById("renterFlatLocationInput")?.value || "").trim();
+      const flatNumber = String(document.getElementById("renterFlatNumberInput")?.value || "").trim();
+
+      selectedFlat.FlatLocation = flatLocation;
+      selectedFlat.FlatNumber = flatNumber;
+      (DB.flats || []).forEach(f => {
+        if (isSamePropAndFlat(f.PropertyName, f.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) {
+          f.FlatLocation = flatLocation;
+          f.FlatNumber = flatNumber;
+        }
+      });
+
+      const targetRenterId = activeFlatRenterObj?.RenterID || "";
+      (DB.renters || []).forEach(r => {
+        const matchesId = targetRenterId && String(r.RenterID || "").trim() === String(targetRenterId).trim();
+        const matchesActiveFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
+          String(r.Status || "").trim().toLowerCase() === "active";
+        if (matchesId || matchesActiveFlat) {
+          r.FlatLocation = flatLocation;
+          r.FlatNumber = flatNumber;
+          r.UpdatedAt = new Date().toISOString();
+          if (!activeFlatRenterObj || matchesId) activeFlatRenterObj = r;
+        }
+      });
+
+      if (typeof recordAdminAuditLog === "function") {
+        recordAdminAuditLog("UPDATE_FLAT_LOCATION_NUMBER", `${selectedFlat.PropertyName} - Flat ${selectedFlat.FlatName}`, `Location: ${flatLocation || "--"}, Number: ${flatNumber || "--"}`);
+      }
+      saveDbSnapshotToCache();
+      renderAllDashboardUI();
+      triggerSideToast("Flat Location & Number Saved", "Flat Location and Flat Number saved to the database.", true);
+
+      await sendFirebaseAction({
+        action: "updateFlatLocationDetails",
+        propertyName: selectedFlat.PropertyName,
+        flatName: selectedFlat.FlatName,
+        renterId: targetRenterId,
+        flatLocation,
+        flatNumber
+      });
     }
 
     // 10. Modals, Strict Property-Targeted Flat Creation & Complete Cascade Deletion
@@ -34484,6 +34743,9 @@ function formatMonthLabel(rawVal) {
     function closeHomePortfolioMenu() {}
     function toggleActionMenu(e) {
       if (e && typeof e.stopPropagation === "function") e.stopPropagation();
+      if (activeRole === "Manager" && !hasManagerPermission("addMenu")) {
+        return triggerSideToast("Access Restricted", "You do not have Plus (+) Menu permission.", false);
+      }
       document.getElementById("actionMenu")?.classList.toggle("show");
     }
     function closeActionMenu() {
@@ -34500,6 +34762,15 @@ function formatMonthLabel(rawVal) {
 
     function openModal(id) {
       const el = typeof id === "string" ? document.getElementById(id) : id;
+      const elId = el?.id || (typeof id === "string" ? id : "");
+      if (activeRole === "Manager") {
+        if (["addPropertyModal", "editPropertyModal", "addFlatModal", "addRenterModal"].includes(elId) && !hasManagerPermission("addMenu")) {
+          return triggerSideToast("Access Restricted", "You do not have Plus (+) Menu permission.", false);
+        }
+        if (["deletePropertyModal", "deleteFlatModal"].includes(elId) && !hasManagerPermission("deleteCenter")) {
+          return triggerSideToast("Access Restricted", "You do not have Delete Center permission.", false);
+        }
+      }
       if (el) {
         el.classList.add("active");
         document.getElementById("actionMenu")?.classList.remove("show");
@@ -34550,6 +34821,9 @@ function formatMonthLabel(rawVal) {
 
     // Requirement 1: Add Flat Modal — Only 2 Compulsory Fields (Property Section * & Flat Name *)
     function openAddFlatModal() {
+      if (activeRole === "Manager" && !hasManagerPermission("addMenu")) {
+        return triggerSideToast("Access Restricted", "You do not have Plus (+) Menu permission.", false);
+      }
       syncPropertyDropdowns();
       const addFlatPropSelect = document.getElementById("addFlatPropDropdown");
       if (selectedProperty && addFlatPropSelect) {
@@ -34567,6 +34841,9 @@ function formatMonthLabel(rawVal) {
     let addRenterModalIdUrl = "";
 
     function openAddRenterModal() {
+      if (activeRole === "Manager" && !hasManagerPermission("addMenu")) {
+        return triggerSideToast("Access Restricted", "You do not have Plus (+) Menu permission.", false);
+      }
       syncPropertyDropdowns();
       const propSelect = document.getElementById("addRenterPropDropdown");
       if (propSelect) {
@@ -36096,8 +36373,9 @@ function formatMonthLabel(rawVal) {
 
       document.body.classList.toggle("flat-details-open", isFlatModalOpen);
 
-      if (chatWidget && isFlatModalOpen) {
-        chatWidget.style.display = "none";
+      const isManagerBlockedChat = activeRole === "Manager" && !hasManagerPermission("liveChat");
+      if (chatWidget && (isFlatModalOpen || isManagerBlockedChat)) {
+        chatWidget.style.setProperty("display", "none", "important");
       }
 
       const isAdmin = activeRole === "Admin";
@@ -36307,6 +36585,13 @@ function formatMonthLabel(rawVal) {
       };
     }
 
+    window.isContactSettingsDirty = false;
+    window.contactSettingsLastSavedAt = 0;
+
+    function markContactSettingsDirty() {
+      window.isContactSettingsDirty = true;
+    }
+
     async function saveAdminContactSettings() {
       const propSelect = document.getElementById("cfgContactProperty");
       const chosenProp = String(propSelect?.value || "ALL").trim();
@@ -36366,6 +36651,8 @@ function formatMonthLabel(rawVal) {
       };
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.contactConfig = cfg;
+      window.isContactSettingsDirty = false;
+      window.contactSettingsLastSavedAt = Date.now();
 
       if (typeof recordAdminAuditLog === "function") {
         recordAdminAuditLog("SAVE_CONTACT_INFO", chosenProp === "ALL" ? "All Properties" : chosenProp, `Contact: ${name || "N/A"}, Phone: ${phone || mobile || "N/A"}`);
@@ -36391,17 +36678,19 @@ function formatMonthLabel(rawVal) {
       } catch (e) {}
     }
 
-    function initAdminContactSettingsInputs() {
+    function initAdminContactSettingsInputs(forceReset = false) {
       const propSelect = document.getElementById("cfgContactProperty");
       const propNames = (DB.properties || []).map(p => String(p.PropertyName || "").trim()).filter(Boolean);
       const distinctProps = [...new Set(propNames)];
+      const nextPropsSig = distinctProps.join("||");
 
-      if (propSelect) {
+      if (propSelect && propSelect.dataset.propsSig !== nextPropsSig) {
         const currentSelected = propSelect.value;
         const optionsHtml = [`<option value="ALL">All</option>`].concat(
           distinctProps.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`)
         ).join("");
         propSelect.innerHTML = optionsHtml;
+        propSelect.dataset.propsSig = nextPropsSig;
         if (currentSelected && (currentSelected === "ALL" || distinctProps.includes(currentSelected))) {
           propSelect.value = currentSelected;
         } else {
@@ -36409,10 +36698,27 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      onContactSettingsPropertyChange();
+      const ws = document.getElementById("sharedContactSettingsWorkspace");
+      const activeEl = document.activeElement;
+      const hasActiveInputFocus = Boolean(
+        ws &&
+        activeEl &&
+        ws.contains(activeEl) &&
+        ["INPUT", "TEXTAREA", "SELECT"].includes(String(activeEl.tagName || "").toUpperCase())
+      );
+      const recentlySaved = (Date.now() - (window.contactSettingsLastSavedAt || 0)) < 6000;
+
+      if (!forceReset && (window.isContactSettingsDirty || hasActiveInputFocus || recentlySaved)) {
+        return;
+      }
+
+      onContactSettingsPropertyChange(false);
     }
 
-    function onContactSettingsPropertyChange() {
+    function onContactSettingsPropertyChange(fromUserSelect = false) {
+      if (fromUserSelect === true) {
+        window.isContactSettingsDirty = false;
+      }
       const propSelect = document.getElementById("cfgContactProperty");
       const chosenProp = propSelect ? propSelect.value : "ALL";
       const cfg = getAdminContactSettings(chosenProp);
@@ -37524,10 +37830,13 @@ function formatMonthLabel(rawVal) {
     // Requirement 6: Whenever a user opens the chat section, never show the previous chat conversation.
     // Directly show the directory asking them who they want to talk to.
     function openModularLiveChatWidget() {
+      if (activeRole === "Manager" && !hasManagerPermission("liveChat")) {
+        return triggerSideToast("Access Restricted", "You do not have Live Chat permission.", false);
+      }
       const w = document.getElementById("modularLiveChatWidget");
       if (!w) return;
       w.classList.remove("minimized");
-      w.style.display = "flex";
+      w.style.setProperty("display", "flex", "important");
 
       activeSelectedChatChannelId = "";
       activeSelectedTargetAdminUsername = "";
@@ -38445,6 +38754,9 @@ function formatMonthLabel(rawVal) {
     async function saveFlatApplianceChecklist() {
       if (activeRole === "Viewer") {
         return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
+      }
+      if (activeRole === "Manager" && !hasManagerPermission("renterProfile")) {
+        return triggerSideToast("Permission Required", "You do not have Renter Profile Control permission.", false);
       }
       if (!selectedFlat) return;
       const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
