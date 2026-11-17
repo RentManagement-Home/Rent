@@ -724,9 +724,9 @@
     /* Requirement 8: High-Prominence Search Bar & Highlighted Search Icon Badge */
     .nav-center {
       position: relative;
-      flex: 1;
-      max-width: 420px;
-      min-width: 200px;
+      flex: 1 1 190px;
+      max-width: 340px;
+      min-width: 170px;
       z-index: 950;
     }
     .search-input {
@@ -842,8 +842,10 @@
     .nav-right {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 10px;
       flex-wrap: wrap;
+      flex: 0 1 auto;
     }
 
     .nav-actions-group {
@@ -2008,6 +2010,9 @@
       gap: 10px;
       align-items: end;
     }
+    .calc-utility-row.calc-utility-row-5 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
     .calc-field-col label {
       display: block;
       font-size: 0.72rem;
@@ -2326,16 +2331,14 @@
         align-items: stretch !important;
         gap: 8px !important;
       }
-      .pnl-tracker {
+      .pnl-tracker,
+      .admin-header-pnl-tracker {
         order: 1;
         width: 100% !important;
         max-width: 100% !important;
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-around !important;
-        align-items: center !important;
-        flex-wrap: wrap !important;
-        gap: 6px 12px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 4px !important;
         padding: 8px 12px !important;
         font-size: 0.78rem !important;
         box-sizing: border-box !important;
@@ -3679,6 +3682,97 @@
   body.admin-portfolio-hub-open .stylish-house-trigger .house-main-svg {
     color: #ffffff !important;
   }
+  /* Admin Dashboard Profit & Loss Widget (Header Right, Next to Search Bar) */
+  .admin-dashboard-pnl-section.admin-header-pnl-tracker {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3px;
+    padding: 6px 12px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.78) 0%, rgba(30, 41, 59, 0.72) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(99, 102, 241, 0.38);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    min-width: 245px;
+    max-width: 340px;
+    flex-shrink: 1;
+  }
+  body.theme-white .admin-dashboard-pnl-section.admin-header-pnl-tracker {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(241, 245, 249, 0.92) 100%);
+    border-color: rgba(79, 70, 229, 0.3);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  }
+  .admin-pnl-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .admin-pnl-mini-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-main);
+    white-space: nowrap;
+  }
+  .admin-pnl-scope-badge {
+    font-size: 0.64rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.44);
+    color: #a5b4fc;
+    max-width: 175px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  body.theme-white .admin-pnl-scope-badge {
+    background: rgba(79, 70, 229, 0.1);
+    border-color: rgba(79, 70, 229, 0.3);
+    color: #4338ca;
+  }
+  .admin-pnl-values-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .admin-pnl-values-row .pnl-item {
+    font-size: 0.82rem;
+    font-weight: 900;
+    gap: 5px;
+  }
+  .admin-pnl-inline-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    opacity: 0.9;
+  }
+  .admin-pnl-mini-meta {
+    font-size: 0.63rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  body.role-renter #adminDashboardPnlSection,
+  body.role-renter #adminDashboardPnlSection.pnl-tracker,
+  body.admin-ops-hub-open #adminDashboardPnlSection,
+  body.admin-ops-hub-open #adminDashboardPnlSection.pnl-tracker,
+  body.admin-portfolio-hub-open #adminDashboardPnlSection,
+  body.admin-portfolio-hub-open #adminDashboardPnlSection.pnl-tracker,
+  body.admin-flat-hub-open #adminDashboardPnlSection,
+  body.admin-flat-hub-open #adminDashboardPnlSection.pnl-tracker,
   body.admin-ops-hub-open #dashboardScreen .properties-bar,
   body.admin-ops-hub-open #dashboardScreen #flatsList,
   body.admin-portfolio-hub-open #dashboardScreen .properties-bar,
@@ -7170,6 +7264,23 @@
       </div>
 
       <div class="nav-right">
+        <!-- Admin Profit & Loss Overview (Right Side, Directly Next to Search Bar) -->
+        <div id="adminDashboardPnlSection" class="admin-dashboard-pnl-section pnl-tracker admin-header-pnl-tracker" style="display:none;" aria-label="Profit and Loss Overview">
+          <div class="admin-pnl-values-row">
+            <div class="pnl-item pnl-profit" title="Total Profit (Collected from latest receipt)">
+              <i class="fa-solid fa-arrow-trend-up"></i>
+              <span class="admin-pnl-inline-label">Profit:</span>
+              <strong id="topTotalProfit">₹0</strong>
+            </div>
+            <div class="pnl-divider"></div>
+            <div class="pnl-item pnl-loss" title="Total Loss / Pending Due (Unpaid balance on latest receipt)">
+              <i class="fa-solid fa-arrow-trend-down"></i>
+              <span class="admin-pnl-inline-label">Loss:</span>
+              <strong id="topTotalLoss">₹0</strong>
+            </div>
+          </div>
+        </div>
+
         <!-- Action Icons Grouped Together (All Unified with Home Icon Design) -->
         <div class="nav-actions-group">
           <!-- Top Dashboard Live Chat Button -->
@@ -9793,7 +9904,7 @@
             <span><i class="fa-solid fa-fire-flame-simple"></i> PNG Gas Consumption</span>
             <span id="pngRolloverHint" style="font-size:0.72rem; color:var(--accent-green); font-weight:700;"></span>
           </div>
-          <div class="calc-utility-row">
+          <div class="calc-utility-row calc-utility-row-5">
             <div class="calc-field-col">
               <label>Prev Reading </label>
               <div class="editable-input-wrap">
@@ -9815,6 +9926,10 @@
                   <i class="fa-solid fa-pen"></i>
                 </button>
               </div>
+            </div>
+            <div class="calc-field-col">
+              <label for="calcPngAdditionalCharge">Additional Charge (₹)</label>
+              <input type="number" id="calcPngAdditionalCharge" class="form-control" placeholder="0" oninput="runBillMath()">
             </div>
             <div class="calc-field-col">
               <label>Units &amp; Charge</label>
@@ -9845,7 +9960,7 @@
             <span><i class="fa-solid fa-faucet-drip"></i> Water Consumption</span>
             <span id="waterRolloverHint" style="font-size:0.72rem; color:var(--accent-green); font-weight:700;"></span>
           </div>
-          <div class="calc-utility-row">
+          <div class="calc-utility-row calc-utility-row-5">
             <div class="calc-field-col">
               <label>Prev Reading </label>
               <div class="editable-input-wrap">
@@ -9867,6 +9982,10 @@
                   <i class="fa-solid fa-pen"></i>
                 </button>
               </div>
+            </div>
+            <div class="calc-field-col">
+              <label for="calcWaterAdditionalCharge">Additional Charge (₹)</label>
+              <input type="number" id="calcWaterAdditionalCharge" class="form-control" placeholder="0" oninput="runBillMath()">
             </div>
             <div class="calc-field-col">
               <label>Units &amp; Charge</label>
@@ -10320,23 +10439,41 @@
               </div>
             </div>
 
-            <!-- 2D. Flat Location & Flat Number Details (Bottom of 2. Renter & Aadhaar Documents) -->
+            <!-- 2D. Flat Location & BHK / Room Details (Bottom of 2. Renter & Aadhaar Documents) -->
             <div id="flatLocationNumberCard" style="background:var(--bg-input); border-radius:16px; padding:14px; border:1.5px solid rgba(56, 189, 248, 0.35); box-shadow:0 4px 14px rgba(0,0,0,0.16); text-align:left;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
                 <span style="font-size:0.78rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:6px;">
-                  <i class="fa-solid fa-location-dot" style="color:#38bdf8;"></i> Flat Location &amp; Number
+                  <i class="fa-solid fa-location-dot" style="color:#38bdf8;"></i> Flat Location &amp; BHK / Room Details
                 </span>
               </div>
               <div class="form-group" style="margin-bottom:10px;">
                 <label for="renterFlatLocationInput">Flat Location</label>
                 <input type="text" id="renterFlatLocationInput" class="form-control" placeholder="e.g. 1st Floor, North Wing / Building A">
               </div>
-              <div class="form-group" style="margin-bottom:12px;">
-                <label for="renterFlatNumberInput">Flat Number</label>
-                <input type="text" id="renterFlatNumberInput" class="form-control" placeholder="e.g. 101 or 2B">
+              <div class="form-group" style="margin-bottom:10px;">
+                <label for="renterBhkDetailsInput">BHK / Room Details</label>
+                <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; margin-bottom:8px;">
+                  <div>
+                    <label for="renterBhkRoomsInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Rooms</label>
+                    <input type="number" id="renterBhkRoomsInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
+                  </div>
+                  <div>
+                    <label for="renterBhkKitchenInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Kitchen</label>
+                    <input type="number" id="renterBhkKitchenInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
+                  </div>
+                  <div>
+                    <label for="renterBhkBathroomInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Bathroom</label>
+                    <input type="number" id="renterBhkBathroomInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
+                  </div>
+                  <div>
+                    <label for="renterBhkToiletInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Toilet (Latrine)</label>
+                    <input type="number" id="renterBhkToiletInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
+                  </div>
+                </div>
+                <input type="text" id="renterBhkDetailsInput" class="form-control" placeholder="e.g. 2 BHK (2 Rooms, 1 Kitchen, 1 Bathroom, 1 Toilet)" oninput="parseBhkCountsFromSummaryInput(this.value)">
               </div>
               <button type="button" id="btnSaveProfileFlatLocationNumber" class="btn-primary admin-only" onclick="saveProfileFlatLocationAndNumber()">
-                <i class="fa-solid fa-floppy-disk"></i> Save Flat Location &amp; Number
+                <i class="fa-solid fa-floppy-disk"></i> Save Flat Location &amp; BHK Details
               </button>
             </div>
           </div>
@@ -10370,6 +10507,7 @@
               <label>Electricity Fixed Rate (₹/Unit)</label>
               <input type="number" id="profElecRate" class="form-control">
             </div>
+            <div class="form-group"><label for="profPropertyAddress">Property Location Address</label><input type="text" id="profPropertyAddress" class="form-control" placeholder="Enter full property location address..."></div>
             <div class="form-group"><label>Property UPI Display Name</label><input type="text" id="profUpiName" class="form-control"></div>
             <div class="form-group"><label>Property UPI ID / VPA</label><input type="text" id="profUpiId" class="form-control"></div>
             <div class="form-group"><label>Owner Contract Phone (+91)</label><input type="tel" id="profContractMobile" class="form-control" maxlength="20" inputmode="tel" placeholder="+91 9876543210" onfocus="ensureContractPhonePrefix(this)" oninput="this.value = formatContractPhoneInput(this.value)"></div>
@@ -14346,16 +14484,26 @@ function formatMonthLabel(rawVal) {
     }
 
     function resolveFlatUpiAndContact(propertyName, flatObj, renterObj) {
+      const targetPropLower = String(propertyName || flatObj?.PropertyName || renterObj?.PropertyName || "").trim().toLowerCase();
       const propObj = findPropertyObject(propertyName || flatObj?.PropertyName || renterObj?.PropertyName);
       const domProfContract = sanitizeContactPhoneDisplay(document.getElementById("profContractMobile")?.value);
       const propContract = sanitizeContactPhoneDisplay(propObj?.ContractNumber || propObj?.ContractMobile);
       const flatContract = sanitizeContactPhoneDisplay(flatObj?.ContractMobile || flatObj?.ContractNumber);
       const renterContract = sanitizeContactPhoneDisplay(renterObj?.ContractMobile);
       const anyFlatWithContract = (DB.flats || []).find(f =>
-        String(f.PropertyName || "").trim().toLowerCase() === String(propertyName || flatObj?.PropertyName || "").trim().toLowerCase() &&
+        String(f.PropertyName || "").trim().toLowerCase() === targetPropLower &&
         sanitizeContactPhoneDisplay(f.ContractMobile || f.ContractNumber)
       );
       const fallbackFlatContract = sanitizeContactPhoneDisplay(anyFlatWithContract?.ContractMobile || anyFlatWithContract?.ContractNumber);
+
+      const anyFlatWithAddress = (DB.flats || []).find(f =>
+        String(f.PropertyName || "").trim().toLowerCase() === targetPropLower &&
+        String(f.PropertyAddress || f.PropertyLocationAddress || "").trim()
+      );
+      const propAddress = String(propObj?.PropertyAddress || propObj?.PropertyLocationAddress || propObj?.Address || "").trim();
+      const flatAddress = String(flatObj?.PropertyAddress || flatObj?.PropertyLocationAddress || "").trim();
+      const renterAddress = String(renterObj?.PropertyAddress || renterObj?.PropertyLocationAddress || "").trim();
+      const fallbackFlatAddress = String(anyFlatWithAddress?.PropertyAddress || anyFlatWithAddress?.PropertyLocationAddress || "").trim();
 
       const propUpiName = String(propObj?.UPIName || "").trim();
       const flatUpiName = String(flatObj?.UPIName || "").trim();
@@ -14368,7 +14516,8 @@ function formatMonthLabel(rawVal) {
       return {
         upiName: propUpiName || flatUpiName || renterUpiName || "",
         upiId: propUpiId || flatUpiId || renterUpiId || "",
-        contractMobile: propContract || flatContract || renterContract || fallbackFlatContract || domProfContract || ""
+        contractMobile: propContract || flatContract || renterContract || fallbackFlatContract || domProfContract || "",
+        propertyAddress: propAddress || flatAddress || renterAddress || fallbackFlatAddress || ""
       };
     }
 
@@ -17630,6 +17779,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function renderAllDashboardUI() {
+      if (typeof updateGlobalProfitAndLoss === "function") updateGlobalProfitAndLoss();
       const viewerScope = resolveViewerAssignedScope();
       const renterQuickNavEl = document.getElementById("renterQuickScrollNavBar");
       if (String(activeRole || "").trim().toLowerCase() === "renter") {
@@ -21599,13 +21749,15 @@ function formatMonthLabel(rawVal) {
         ? (parseFloat(b.ElecTotal) || 0)
         : (elecUnits * (parseFloat(b.ElecRate) || 0));
       const pngUnits = Math.max(0, (parseFloat(b.PNGCurr) || 0) - (parseFloat(b.PNGPrev) || 0));
+      const pngAddCharge = parseFloat(b.PNGAdditionalCharge) || 0;
       const pngTotal = (b.PNGTotal !== undefined && b.PNGTotal !== "")
         ? (parseFloat(b.PNGTotal) || 0)
-        : (pngUnits * (parseFloat(b.PNGRate) || 0));
+        : ((pngUnits * (parseFloat(b.PNGRate) || 0)) + pngAddCharge);
       const waterUnits = Math.max(0, (parseFloat(b.WaterCurr) || 0) - (parseFloat(b.WaterPrev) || 0));
+      const waterAddCharge = parseFloat(b.WaterAdditionalCharge) || 0;
       const waterTotal = (b.WaterTotal !== undefined && b.WaterTotal !== "")
         ? (parseFloat(b.WaterTotal) || 0)
-        : (waterUnits * (parseFloat(b.WaterRate) || 0));
+        : ((waterUnits * (parseFloat(b.WaterRate) || 0)) + waterAddCharge);
       const addAmt = parseFloat(b.AdditionalAmount ?? b.ExtraAmount) || 0;
       const componentSum = Math.round((baseRent + elecTotal + pngTotal + waterTotal + addAmt) * 100) / 100;
 
@@ -21760,31 +21912,26 @@ function formatMonthLabel(rawVal) {
     }
 
 
-    // Requirement 2: Profit & Loss strictly based on the latest month that has receipts (the latest receipt month)
+    // Admin Dashboard Profit & Loss: calculated from the latest receipt of the current (active) renter(s)
+    // When no property is selected: combined across all properties. When a property is selected: that single property only.
     function updateGlobalProfitAndLoss() {
+      const pnlSection = document.getElementById("adminDashboardPnlSection");
       const pnlTracker = document.querySelector(".pnl-tracker");
+      const canShowPnl = Boolean(
+        activeUser &&
+        (activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("pnl")))
+      );
+
+      if (pnlSection) {
+        pnlSection.style.display = canShowPnl ? "" : "none";
+      }
 
       let totalProfit = 0;
       let totalLoss = 0;
+      let countedReceipts = 0;
 
       const viewerScope = resolveViewerAssignedScope();
       const cleanSelectedProp = String(selectedProperty || "").trim().toLowerCase();
-
-      let targetFlats = DB.flats || [];
-      if ((isRestrictedRole(activeRole) || activeRole === "Manager") && viewerScope) {
-        if (viewerScope.mode === "FLAT") {
-          targetFlats = targetFlats.filter(f => isSamePropAndFlat(f.PropertyName, f.FlatName, viewerScope.prop, viewerScope.flat));
-        } else {
-          targetFlats = targetFlats.filter(f => isPropertyAllowedForViewer(f.PropertyName, viewerScope));
-        }
-      }
-
-      if (cleanSelectedProp) {
-        targetFlats = targetFlats.filter(f => String(f.PropertyName || "").trim().toLowerCase() === cleanSelectedProp);
-      }
-
-      const countedBillIds = new Set();
-      const scopedReceiptBills = [];
 
       const isValidReceiptBill = (b) => {
         if (!b || typeof b !== "object") return false;
@@ -21807,50 +21954,94 @@ function formatMonthLabel(rawVal) {
         );
       };
 
-      (DB.bills || []).forEach(b => {
-        const belongsToTargetFlat = targetFlats.some(flat =>
-          isSamePropAndFlat(b.PropertyName, b.FlatName, flat.PropertyName, flat.FlatName)
-        );
-        if (!belongsToTargetFlat) return;
-        if (!isValidReceiptBill(b)) return;
-        const ym = normalizeMonthYear(b.MonthYear || b.BillDate || b.PaymentDate || "");
-        const key = String(b.BillID || `${b.PropertyName}_${b.FlatName}_${ym}_${b.RenterID || b.TenantName || ""}`);
-        if (countedBillIds.has(key)) return;
-        countedBillIds.add(key);
-        scopedReceiptBills.push({ bill: b, monthYear: ym });
-      });
-
-      let latestReceiptMonth = "";
-      scopedReceiptBills.forEach(entry => {
-        if (entry.monthYear && entry.monthYear > latestReceiptMonth) {
-          latestReceiptMonth = entry.monthYear;
+      const isPropertyInScope = (propName) => {
+        const cleanProp = String(propName || "").trim().toLowerCase();
+        if (!cleanProp) return false;
+        if (cleanSelectedProp && cleanProp !== cleanSelectedProp) return false;
+        if ((isRestrictedRole(activeRole) || activeRole === "Manager") && viewerScope) {
+          if (viewerScope.mode === "FLAT") {
+            return cleanProp === String(viewerScope.prop || "").trim().toLowerCase();
+          }
+          return isPropertyAllowedForViewer(propName, viewerScope);
         }
+        return true;
+      };
+
+      let targetFlats = (DB.flats || []).filter(f => isPropertyInScope(f.PropertyName));
+      if ((isRestrictedRole(activeRole) || activeRole === "Manager") && viewerScope && viewerScope.mode === "FLAT") {
+        targetFlats = targetFlats.filter(f => isSamePropAndFlat(f.PropertyName, f.FlatName, viewerScope.prop, viewerScope.flat));
+      }
+
+      const activeRentersScoped = [];
+      const seenRenterKeys = new Set();
+
+      (DB.renters || []).forEach((r, idx) => {
+        if (String(r.Status || "").trim().toLowerCase() !== "active") return;
+        if (!isPropertyInScope(r.PropertyName)) return;
+        if ((isRestrictedRole(activeRole) || activeRole === "Manager") && viewerScope && viewerScope.mode === "FLAT") {
+          if (!isSamePropAndFlat(r.PropertyName, r.FlatName, viewerScope.prop, viewerScope.flat)) return;
+        }
+        if (targetFlats.length > 0 && !targetFlats.some(f => isSamePropAndFlat(f.PropertyName, f.FlatName, r.PropertyName, r.FlatName))) {
+          // Include even if Flat record isn't in DB.flats as long as it belongs to an allowed property
+        }
+        const rKey = `${String(r.PropertyName || "").trim().toLowerCase()}::${String(r.FlatName || "").trim().toLowerCase()}::${String(r.RenterID || r.RenterName || idx).trim().toLowerCase()}`;
+        if (seenRenterKeys.has(rKey)) return;
+        seenRenterKeys.add(rKey);
+        activeRentersScoped.push(r);
       });
 
-      if (latestReceiptMonth) {
-        scopedReceiptBills
-          .filter(entry => entry.monthYear === latestReceiptMonth)
-          .forEach(({ bill }) => {
-            const paid = parseFloat(bill.PaidAmount) || 0;
-            const rawNetPayable = getBillRawNetPayable(bill);
-            const billDue = Math.max(0, Math.round((rawNetPayable - paid) * 100) / 100);
-            totalProfit += paid;
-            totalLoss += billDue;
+      const billOrderMap = new Map();
+      (DB.bills || []).forEach((b, idx) => billOrderMap.set(b, idx));
+
+      activeRentersScoped.forEach(renter => {
+        let renterReceipts = [];
+        if (typeof getBillsForSpecificRenter === "function") {
+          renterReceipts = getBillsForSpecificRenter(renter.PropertyName, renter.FlatName, renter).filter(isValidReceiptBill);
+        } else {
+          const rId = String(renter.RenterID || "").trim();
+          const rName = String(renter.RenterName || "").trim().toLowerCase();
+          renterReceipts = (DB.bills || []).filter(b => {
+            if (!isSamePropAndFlat(b.PropertyName, b.FlatName, renter.PropertyName, renter.FlatName)) return false;
+            if (!isValidReceiptBill(b)) return false;
+            const bRId = String(b.RenterID || "").trim();
+            if (bRId && rId) return bRId === rId;
+            return rName && String(b.TenantName || "").trim().toLowerCase() === rName;
           });
-      }
+        }
+        if (renterReceipts.length === 0) return;
+
+        renterReceipts.sort((a, b) => {
+          const mA = normalizeMonthYear(a.MonthYear || a.BillDate || a.PaymentDate || "");
+          const mB = normalizeMonthYear(b.MonthYear || b.BillDate || b.PaymentDate || "");
+          if (mA !== mB) return mB.localeCompare(mA);
+          const dA = toInputDateValue(a.BillDate || a.PaymentDate || "") || "";
+          const dB = toInputDateValue(b.BillDate || b.PaymentDate || "") || "";
+          if (dA !== dB) return dB.localeCompare(dA);
+          return (billOrderMap.get(b) ?? 0) - (billOrderMap.get(a) ?? 0);
+        });
+
+        const latestReceipt = renterReceipts[0];
+        if (!latestReceipt) return;
+        const paid = parseFloat(latestReceipt.PaidAmount) || 0;
+        const rawNetPayable = getBillRawNetPayable(latestReceipt);
+        const billDue = Math.max(0, Math.round((rawNetPayable - paid) * 100) / 100);
+        totalProfit += paid;
+        totalLoss += billDue;
+        countedReceipts += 1;
+      });
 
       totalProfit = Math.round(totalProfit * 100) / 100;
       totalLoss = Math.round(totalLoss * 100) / 100;
 
       const profEl = document.getElementById("topTotalProfit");
       const lossEl = document.getElementById("topTotalLoss");
+
       if (profEl) profEl.innerText = `₹${totalProfit.toLocaleString('en-IN')}`;
       if (lossEl) lossEl.innerText = `₹${totalLoss.toLocaleString('en-IN')}`;
       if (pnlTracker) {
-        const monthDisplay = latestReceiptMonth ? formatMonthLabel(latestReceiptMonth) : "Latest Receipt Month";
         pnlTracker.title = selectedProperty
-          ? `Showing ${monthDisplay} Profit & Loss for ${selectedProperty} (Latest receipt month)`
-          : `Showing ${monthDisplay} Profit & Loss for All Properties (Latest receipt month)`;
+          ? `Profit & Loss for ${selectedProperty} (Latest receipt of current renters)`
+          : `Combined Profit & Loss across All Properties (Latest receipt of current renters)`;
       }
     }
 
@@ -25553,8 +25744,8 @@ function formatMonthLabel(rawVal) {
       setCalculatorFullMonthLockState(false);
       const lockableIds = [
         "calcRent", "calcElecPrev", "calcElecCurr", "calcElecRate",
-        "calcPngPrev", "calcPngCurr", "calcPngRate",
-        "calcWaterPrev", "calcWaterCurr", "calcWaterRate",
+        "calcPngPrev", "calcPngCurr", "calcPngRate", "calcPngAdditionalCharge",
+        "calcWaterPrev", "calcWaterCurr", "calcWaterRate", "calcWaterAdditionalCharge",
         "calcAddName", "calcAddAmount", "calcPrevCarryBalance",
         "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes",
         "calcMeterProofUrl", "calcPngProofUrl", "calcWaterProofUrl"
@@ -25657,8 +25848,8 @@ function formatMonthLabel(rawVal) {
     function setCalculatorFullMonthLockState(isLocked, reasonText = "") {
       const allInputIds = [
         "calcRent", "calcElecPrev", "calcElecCurr", "calcElecRate",
-        "calcPngPrev", "calcPngCurr", "calcPngRate",
-        "calcWaterPrev", "calcWaterCurr", "calcWaterRate",
+        "calcPngPrev", "calcPngCurr", "calcPngRate", "calcPngAdditionalCharge",
+        "calcWaterPrev", "calcWaterCurr", "calcWaterRate", "calcWaterAdditionalCharge",
         "calcAddName", "calcAddAmount", "calcPrevCarryBalance",
         "calcPaidNow", "calcBillDatePicker", "calcPaymentDate", "calcNotes",
         "calcMeterProofUrl", "calcPngProofUrl", "calcWaterProofUrl"
@@ -25881,10 +26072,14 @@ function formatMonthLabel(rawVal) {
       document.getElementById("calcPngPrev").value = existingBill.PNGPrev ?? "";
       document.getElementById("calcPngCurr").value = existingBill.PNGCurr ?? "";
       document.getElementById("calcPngRate").value = existingBill.PNGRate !== undefined && existingBill.PNGRate !== null ? existingBill.PNGRate : "";
+      const pngAddEl = document.getElementById("calcPngAdditionalCharge");
+      if (pngAddEl) pngAddEl.value = existingBill.PNGAdditionalCharge !== undefined && existingBill.PNGAdditionalCharge !== null && existingBill.PNGAdditionalCharge !== "" && Number(existingBill.PNGAdditionalCharge) !== 0 ? existingBill.PNGAdditionalCharge : "";
 
       document.getElementById("calcWaterPrev").value = existingBill.WaterPrev ?? "";
       document.getElementById("calcWaterCurr").value = existingBill.WaterCurr ?? "";
       document.getElementById("calcWaterRate").value = existingBill.WaterRate !== undefined && existingBill.WaterRate !== null ? existingBill.WaterRate : "";
+      const waterAddEl = document.getElementById("calcWaterAdditionalCharge");
+      if (waterAddEl) waterAddEl.value = existingBill.WaterAdditionalCharge !== undefined && existingBill.WaterAdditionalCharge !== null && existingBill.WaterAdditionalCharge !== "" && Number(existingBill.WaterAdditionalCharge) !== 0 ? existingBill.WaterAdditionalCharge : "";
 
       const addAmtVal = parseFloat(existingBill.AdditionalAmount) || 0;
       document.getElementById("calcAddName").value = existingBill.AdditionalName || "";
@@ -25986,6 +26181,10 @@ function formatMonthLabel(rawVal) {
         document.getElementById("calcElecPrev").value = flatMeterHistory.hasPriorReading ? flatMeterHistory.elecPrev : 0;
         document.getElementById("calcPngPrev").value = flatMeterHistory.hasPriorReading ? flatMeterHistory.pngPrev : 0;
         document.getElementById("calcWaterPrev").value = flatMeterHistory.hasPriorReading ? flatMeterHistory.waterPrev : 0;
+        const pngAddPeriodEl = document.getElementById("calcPngAdditionalCharge");
+        if (pngAddPeriodEl) pngAddPeriodEl.value = "";
+        const waterAddPeriodEl = document.getElementById("calcWaterAdditionalCharge");
+        if (waterAddPeriodEl) waterAddPeriodEl.value = "";
 
         if (statusTag) {
           const periodBadge = periodRes.mode === "VACANT"
@@ -26131,6 +26330,10 @@ function formatMonthLabel(rawVal) {
         document.getElementById("calcElecCurr").value = "";
         document.getElementById("calcPngCurr").value = "";
         document.getElementById("calcWaterCurr").value = "";
+        const pngAddResetEl = document.getElementById("calcPngAdditionalCharge");
+        if (pngAddResetEl) pngAddResetEl.value = "";
+        const waterAddResetEl = document.getElementById("calcWaterAdditionalCharge");
+        if (waterAddResetEl) waterAddResetEl.value = "";
         document.getElementById("calcAddName").value = "";
         document.getElementById("calcAddAmount").value = "";
         document.getElementById("calcPrevCarryBalance").value = (periodResForMonth.renter && autoCarryBalance !== 0) ? autoCarryBalance : "";
@@ -27067,14 +27270,16 @@ function formatMonthLabel(rawVal) {
       rent: true,
       elec: true,
       water: true,
-      png: true
+      png: true,
+      other: true
     };
 
     const FLAT_EXPENSE_SERIES = [
       { key: "rent",  label: "Rent",        color: "#10b981", bg: "rgba(16, 185, 129, 0.16)" },
       { key: "elec",  label: "Electricity", color: "#f59e0b", bg: "rgba(245, 158, 11, 0.16)" },
       { key: "water", label: "Water",       color: "#06b6d4", bg: "rgba(6, 182, 212, 0.16)" },
-      { key: "png",   label: "PNG Gas",     color: "#ec4899", bg: "rgba(236, 72, 153, 0.16)" }
+      { key: "png",   label: "PNG Gas",     color: "#ec4899", bg: "rgba(236, 72, 153, 0.16)" },
+      { key: "other", label: "Other",       color: "#8b5cf6", bg: "rgba(139, 92, 246, 0.16)" }
     ];
 
     function toggleFlatGraph1Expense(expenseKey) {
@@ -27112,16 +27317,19 @@ function formatMonthLabel(rawVal) {
       const pCurr = parseFloat(b.PNGCurr) || 0;
       const pUnits = b.PNGUnits !== undefined && b.PNGUnits !== "" ? (parseFloat(b.PNGUnits) || 0) : Math.max(0, pCurr - pPrev);
       const pRate = parseFloat(b.PNGRate) || 0;
-      const p = b.PNGTotal !== undefined && b.PNGTotal !== "" ? (parseFloat(b.PNGTotal) || 0) : (pUnits * pRate);
+      const pAdd = parseFloat(b.PNGAdditionalCharge) || 0;
+      const p = b.PNGTotal !== undefined && b.PNGTotal !== "" ? (parseFloat(b.PNGTotal) || 0) : ((pUnits * pRate) + pAdd);
 
       const wPrev = parseFloat(b.WaterPrev) || 0;
       const wCurr = parseFloat(b.WaterCurr) || 0;
       const wUnits = b.WaterUnits !== undefined && b.WaterUnits !== "" ? (parseFloat(b.WaterUnits) || 0) : Math.max(0, wCurr - wPrev);
       const wRate = parseFloat(b.WaterRate) || 0;
-      const w = b.WaterTotal !== undefined && b.WaterTotal !== "" ? (parseFloat(b.WaterTotal) || 0) : (wUnits * wRate);
+      const wAdd = parseFloat(b.WaterAdditionalCharge) || 0;
+      const w = b.WaterTotal !== undefined && b.WaterTotal !== "" ? (parseFloat(b.WaterTotal) || 0) : ((wUnits * wRate) + wAdd);
 
-      const tot = parseFloat(b.TotalBilled) || (r + e + p + w);
-      return { rent: r, elec: e, water: w, png: p, total: tot };
+      const other = Math.max(0, parseFloat(b.AdditionalAmount ?? b.ExtraAmount) || 0);
+      const tot = parseFloat(b.TotalBilled) || (r + e + p + w + other);
+      return { rent: r, elec: e, water: w, png: p, other: other, total: tot };
     }
 
     // Requirement 4: Dynamic Graph Scale & Visual Height Computation (No Fixed Upper Limit — Scales cleanly to ₹10k, ₹20k, ₹50k, ₹1L+ or higher)
@@ -27154,7 +27362,7 @@ function formatMonthLabel(rawVal) {
       return { niceMax, dynamicHeight, actualMax };
     }
 
-    // FIRST GRAPH: Total Breakdown for Rent, Electricity, Water, and PNG Gas (Theme-Adaptive & Dynamic Height/Scale)
+    // FIRST GRAPH: Total Breakdown for Rent, Electricity, Water, PNG Gas, and Other (Theme-Adaptive & Dynamic Height/Scale)
     function buildFirstExpenseBreakdownGraphHtml(allFlatBills, prop, flat) {
       const isLightTheme = document.body.classList.contains("theme-white");
       const svgTextPrimary = isLightTheme ? "#0f172a" : "#e2e8f0";
@@ -27188,17 +27396,18 @@ function formatMonthLabel(rawVal) {
         return norm.startsWith(String(flatGraph1SelectedScope) + "-");
       });
 
-      const totals = { rent: 0, elec: 0, water: 0, png: 0 };
+      const totals = { rent: 0, elec: 0, water: 0, png: 0, other: 0 };
       scopedBills.forEach(b => {
         const parts = extractBillExpenseParts(b);
         totals.rent += parts.rent;
         totals.elec += parts.elec;
         totals.water += parts.water;
         totals.png += parts.png;
+        totals.other += parts.other;
       });
 
       const enabledExpenses = FLAT_EXPENSE_SERIES.filter(s => flatGraph1ExpenseFilters[s.key]);
-      const grandTotalAllFour = totals.rent + totals.elec + totals.water + totals.png;
+      const grandTotalAllFour = totals.rent + totals.elec + totals.water + totals.png + totals.other;
 
       let rawHighestVal = 0;
       enabledExpenses.forEach(s => {
@@ -27287,7 +27496,7 @@ function formatMonthLabel(rawVal) {
           <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; margin-bottom:12px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">
             <div>
               <h4 style="font-size:0.98rem; font-weight:800; color:var(--text-main); margin:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span><i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 1. Total Expense Breakdown — Rent, Electricity, Water &amp; PNG Gas (Active Users Only)</span>
+                <span><i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 1. Total Expense Breakdown — Rent, Electricity, Water, PNG Gas &amp; Other (Active Users Only)</span>
                 <button type="button" onclick="openFlatGraphZoomModal('graph1')" style="display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:0.7rem; font-weight:800; ${enlargeBtnStyle} cursor:pointer;">
                   <i class="fa-solid fa-expand"></i> Click to Enlarge &amp; Zoom (HD)
                 </button>
@@ -27307,7 +27516,7 @@ function formatMonthLabel(rawVal) {
               <i class="fa-solid fa-filter"></i> Filter Expenses:
             </span>
             ${expenseFilterPillsHtml}
-            <button type="button" class="btn-ledger-action" style="padding:4px 9px; font-size:0.68rem;" onclick="toggleFlatGraph1Expense('ALL_ON')">Show All 4</button>
+            <button type="button" class="btn-ledger-action" style="padding:4px 9px; font-size:0.68rem;" onclick="toggleFlatGraph1Expense('ALL_ON')">Show All 5</button>
           </div>
 
           <!-- SVG Total Breakdown Bar Chart (Click to Open Fullscreen HD Zoom Layout) -->
@@ -27329,7 +27538,7 @@ function formatMonthLabel(rawVal) {
           <!-- Clear Bottom Color Legend Indicating Which Color Represents Which Expense -->
           <div style="margin-top:12px; padding-top:12px; border-top:1px dashed var(--glass-border);">
             <div style="font-size:0.71rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
-              <i class="fa-solid fa-palette"></i> Expense Color Legend (Rent • Electricity • Water • PNG Gas):
+              <i class="fa-solid fa-palette"></i> Expense Color Legend (Rent • Electricity • Water • PNG Gas • Other):
             </div>
             <div style="display:flex; align-items:center; flex-wrap:wrap; gap:10px;">
               ${legendBelowHtml}
@@ -27698,22 +27907,24 @@ function formatMonthLabel(rawVal) {
           return norm.startsWith(String(flatGraph1SelectedScope) + "-");
         });
 
-        const totals = { rent: 0, elec: 0, water: 0, png: 0 };
-        const counts = { rent: 0, elec: 0, water: 0, png: 0 };
+        const totals = { rent: 0, elec: 0, water: 0, png: 0, other: 0 };
+        const counts = { rent: 0, elec: 0, water: 0, png: 0, other: 0 };
         scopedBills.forEach(b => {
           const parts = extractBillExpenseParts(b);
           totals.rent += parts.rent;
           totals.elec += parts.elec;
           totals.water += parts.water;
           totals.png += parts.png;
+          totals.other += parts.other;
           if (parts.rent > 0) counts.rent++;
           if (parts.elec > 0) counts.elec++;
           if (parts.water > 0) counts.water++;
           if (parts.png > 0) counts.png++;
+          if (parts.other > 0) counts.other++;
         });
 
         const enabledExpenses = FLAT_EXPENSE_SERIES.filter(s => flatGraph1ExpenseFilters[s.key]);
-        const grandTotalAllFour = totals.rent + totals.elec + totals.water + totals.png;
+        const grandTotalAllFour = totals.rent + totals.elec + totals.water + totals.png + totals.other;
         let rawZoomMax1 = 0;
         enabledExpenses.forEach(s => { if (totals[s.key] > rawZoomMax1) rawZoomMax1 = totals[s.key]; });
         const zoomScale1 = computeDynamicGraphScale(rawZoomMax1, 380);
@@ -28096,6 +28307,28 @@ function formatMonthLabel(rawVal) {
       );
     }
 
+    function updateFlatModalHeaderTitle(flat, renterObj) {
+      const titleEl = document.getElementById("modalHeaderTitle");
+      if (!titleEl || !flat) return;
+      if (String(activeRole || "").trim().toLowerCase() === "renter") {
+        titleEl.innerText = "My Profile";
+        return;
+      }
+      const propName = String(flat.PropertyName || "").trim();
+      const flatName = String(flat.FlatName || "").trim();
+      const passedActive = renterObj && String(renterObj.Status || "Active").trim().toLowerCase() === "active"
+        ? renterObj
+        : null;
+      const resolvedActive = passedActive || (DB.renters || []).find(r =>
+        isSamePropAndFlat(r.PropertyName, r.FlatName, propName, flatName) &&
+        String(r.Status || "").trim().toLowerCase() === "active"
+      ) || null;
+      const activeRenterName = String(resolvedActive?.RenterName || "").trim();
+      titleEl.innerText = activeRenterName
+        ? `${propName} - ${activeRenterName}`
+        : `${propName} - Vacant`;
+    }
+
     function openFlatDetailsModal(flat, renter) {
       if (activeRole === "Manager" && !hasManagerPermission("properties")) {
         return triggerSideToast("Access Restricted", "You do not have permission to view or open Flats & Properties.", false);
@@ -28119,7 +28352,7 @@ function formatMonthLabel(rawVal) {
 
       selectedFlat = flat;
       activeFlatRenterObj = renter || null;
-      document.getElementById("modalHeaderTitle").innerText = `${flat.PropertyName} - Space Details`;
+      updateFlatModalHeaderTitle(flat, renter);
       document.getElementById("modalFlatTag").innerText = `Flat ${flat.FlatName}`;
 
       const now = new Date();
@@ -28143,10 +28376,11 @@ function formatMonthLabel(rawVal) {
       document.getElementById("profUpiName").value = resolvedContact.upiName;
       document.getElementById("profUpiId").value = resolvedContact.upiId;
       document.getElementById("profContractMobile").value = resolvedContact.contractMobile;
+      const profPropAddrEl = document.getElementById("profPropertyAddress");
+      if (profPropAddrEl) profPropAddrEl.value = resolvedContact.propertyAddress || "";
       const profLocEl = document.getElementById("renterFlatLocationInput");
       if (profLocEl) profLocEl.value = String(flat.FlatLocation ?? flat.Location ?? renter?.FlatLocation ?? "").trim();
-      const profNumEl = document.getElementById("renterFlatNumberInput");
-      if (profNumEl) profNumEl.value = String(flat.FlatNumber ?? renter?.FlatNumber ?? "").trim();
+      populateProfileBhkDetailsInputs(flat, renter);
 
       // Group A5 & A6: Populate Escalation %, Security Deposit, Deposit Date & Mode
       if (document.getElementById("profEscalationPct")) {
@@ -28481,16 +28715,18 @@ function formatMonthLabel(rawVal) {
       const pngPrev = parseFloat(document.getElementById("calcPngPrev")?.value) || 0;
       const pngCurr = parseFloat(document.getElementById("calcPngCurr")?.value) || 0;
       const pngRate = parseFloat(document.getElementById("calcPngRate")?.value) || 0;
+      const pngAddCharge = parseFloat(document.getElementById("calcPngAdditionalCharge")?.value) || 0;
       const pngUnits = pngCurr > pngPrev ? (pngCurr - pngPrev) : 0;
-      const pngTotal = Math.round(pngUnits * pngRate * 100) / 100;
+      const pngTotal = Math.round(((pngUnits * pngRate) + pngAddCharge) * 100) / 100;
       const pngSummary = document.getElementById("calcPngSummary");
       if (pngSummary) pngSummary.innerText = `${pngUnits} U (₹${pngTotal})`;
 
       const waterPrev = parseFloat(document.getElementById("calcWaterPrev")?.value) || 0;
       const waterCurr = parseFloat(document.getElementById("calcWaterCurr")?.value) || 0;
       const waterRate = parseFloat(document.getElementById("calcWaterRate")?.value) || 0;
+      const waterAddCharge = parseFloat(document.getElementById("calcWaterAdditionalCharge")?.value) || 0;
       const waterUnits = waterCurr > waterPrev ? (waterCurr - waterPrev) : 0;
-      const waterTotal = Math.round(waterUnits * waterRate * 100) / 100;
+      const waterTotal = Math.round(((waterUnits * waterRate) + waterAddCharge) * 100) / 100;
       const waterSummary = document.getElementById("calcWaterSummary");
       if (waterSummary) waterSummary.innerText = `${waterUnits} U (₹${waterTotal})`;
 
@@ -28623,12 +28859,16 @@ function formatMonthLabel(rawVal) {
       const pngPrev = parseFloat(document.getElementById("calcPngPrev").value) || 0;
       const pngCurr = parseFloat(document.getElementById("calcPngCurr").value) || pngPrev;
       const pngRate = parseFloat(document.getElementById("calcPngRate").value) || 0;
+      const pngAddCharge = parseFloat(document.getElementById("calcPngAdditionalCharge")?.value) || 0;
       const pngUnits = Math.max(0, pngCurr - pngPrev);
+      const pngTotalComputed = Math.round(((pngUnits * pngRate) + pngAddCharge) * 100) / 100;
 
       const waterPrev = parseFloat(document.getElementById("calcWaterPrev").value) || 0;
       const waterCurr = parseFloat(document.getElementById("calcWaterCurr").value) || waterPrev;
       const waterRate = parseFloat(document.getElementById("calcWaterRate").value) || 0;
+      const waterAddCharge = parseFloat(document.getElementById("calcWaterAdditionalCharge")?.value) || 0;
       const waterUnits = Math.max(0, waterCurr - waterPrev);
+      const waterTotalComputed = Math.round(((waterUnits * waterRate) + waterAddCharge) * 100) / 100;
 
       const addToggle = document.getElementById("calcAddToggle").value;
       const addAmt = parseFloat(document.getElementById("calcAddAmount").value) || 0;
@@ -28639,7 +28879,7 @@ function formatMonthLabel(rawVal) {
       const totalBilled = parseFloat(document.getElementById("calcGrandTotal").innerText.replace("₹ ","")) || 0;
       const paidAmount = parseFloat(document.getElementById("calcPaidNow").value) || 0;
 
-      const rawGrandForStatus = Math.round((baseRentNum + (elecUnits * elecRate) + (pngUnits * pngRate) + (waterUnits * waterRate) + netAddAmt + prevCarryBalance) * 100) / 100;
+      const rawGrandForStatus = Math.round((baseRentNum + (elecUnits * elecRate) + pngTotalComputed + waterTotalComputed + netAddAmt + prevCarryBalance) * 100) / 100;
       const diffPayment = Math.round((paidAmount - rawGrandForStatus) * 100) / 100;
       let billStatus = "Fully Paid";
       if (diffPayment < 0) billStatus = "Due";
@@ -28692,12 +28932,14 @@ function formatMonthLabel(rawVal) {
         PNGCurr: pngCurr,
         PNGUnits: pngUnits,
         PNGRate: pngRate,
-        PNGTotal: pngUnits * pngRate,
+        PNGAdditionalCharge: pngAddCharge,
+        PNGTotal: pngTotalComputed,
         WaterPrev: waterPrev,
         WaterCurr: waterCurr,
         WaterUnits: waterUnits,
         WaterRate: waterRate,
-        WaterTotal: waterUnits * waterRate,
+        WaterAdditionalCharge: waterAddCharge,
+        WaterTotal: waterTotalComputed,
         AdditionalName: document.getElementById("calcAddName").value.trim(),
         AdditionalAmount: netAddAmt,
         TotalBilled: totalBilled,
@@ -28807,11 +29049,13 @@ function formatMonthLabel(rawVal) {
         pngCurr: newBillObj.PNGCurr,
         pngUnits: newBillObj.PNGUnits,
         pngRate: newBillObj.PNGRate,
+        pngAdditionalCharge: newBillObj.PNGAdditionalCharge,
         pngTotal: newBillObj.PNGTotal,
         waterPrev: newBillObj.WaterPrev,
         waterCurr: newBillObj.WaterCurr,
         waterUnits: newBillObj.WaterUnits,
         waterRate: newBillObj.WaterRate,
+        waterAdditionalCharge: newBillObj.WaterAdditionalCharge,
         waterTotal: newBillObj.WaterTotal,
         additionalName: newBillObj.AdditionalName,
         additionalAmount: newBillObj.AdditionalAmount,
@@ -29024,13 +29268,15 @@ function formatMonthLabel(rawVal) {
         const pngCurr = parseFloat(bill.PNGCurr) || 0;
         const pngUnits = bill.PNGUnits !== undefined && bill.PNGUnits !== "" ? (parseFloat(bill.PNGUnits) || 0) : Math.max(0, pngCurr - pngPrev);
         const pngRate = parseFloat(bill.PNGRate) || 0;
-        const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : (pngUnits * pngRate);
+        const pngAddCharge = parseFloat(bill.PNGAdditionalCharge ?? bill.PngAdditionalCharge) || 0;
+        const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : ((pngUnits * pngRate) + pngAddCharge);
 
         const waterPrev = parseFloat(bill.WaterPrev) || 0;
         const waterCurr = parseFloat(bill.WaterCurr) || 0;
         const waterUnits = bill.WaterUnits !== undefined && bill.WaterUnits !== "" ? (parseFloat(bill.WaterUnits) || 0) : Math.max(0, waterCurr - waterPrev);
         const waterRate = parseFloat(bill.WaterRate) || 0;
-        const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : (waterUnits * waterRate);
+        const waterAddCharge = parseFloat(bill.WaterAdditionalCharge) || 0;
+        const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : ((waterUnits * waterRate) + waterAddCharge);
 
         const paidDateDisplay = formatDateOnly(bill.PaymentDate || bill.BillDate);
         const hasMeterProof = Boolean(bill.MeterProofUrl);
@@ -29057,6 +29303,7 @@ function formatMonthLabel(rawVal) {
             <div style="line-height:1.35; font-size:0.76rem;">
               <div>Prev: <strong>${pngPrev}</strong> | Curr: <strong>${pngCurr}</strong></div>
               <div>Consumed: <strong>${pngUnits} U</strong> @ ₹${pngRate}/U</div>
+              ${pngAddCharge > 0 ? `<div style="color:#f472b6;">Add. Charge: <strong>+₹${pngAddCharge.toLocaleString('en-IN')}</strong></div>` : ''}
               <div style="color:var(--primary); font-weight:800;">Total: ₹${pngTotal.toLocaleString('en-IN')}</div>
               ${hasPngProof ? `<div style="margin-top:2px;"><button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.65rem; background:rgba(244,114,182,0.16); color:#f472b6;" onclick="openMeterProofViewer('${safeBillIdArg}', 'png')"><i class="fa-solid fa-camera"></i> PNG Proof</button></div>` : ''}
             </div>
@@ -29065,6 +29312,7 @@ function formatMonthLabel(rawVal) {
             <div style="line-height:1.35; font-size:0.76rem;">
               <div>Prev: <strong>${waterPrev}</strong> | Curr: <strong>${waterCurr}</strong></div>
               <div>Consumed: <strong>${waterUnits} U</strong> @ ₹${waterRate}/U</div>
+              ${waterAddCharge > 0 ? `<div style="color:#38bdf8;">Add. Charge: <strong>+₹${waterAddCharge.toLocaleString('en-IN')}</strong></div>` : ''}
               <div style="color:var(--primary); font-weight:800;">Total: ₹${waterTotal.toLocaleString('en-IN')}</div>
               ${hasWaterProof ? `<div style="margin-top:2px;"><button type="button" class="btn-ledger-action" style="padding:2px 6px; font-size:0.65rem; background:rgba(56,189,248,0.16); color:#38bdf8;" onclick="openMeterProofViewer('${safeBillIdArg}', 'water')"><i class="fa-solid fa-camera"></i> Water Proof</button></div>` : ''}
             </div>
@@ -29234,12 +29482,14 @@ function formatMonthLabel(rawVal) {
       const pngPrev = parseFloat(document.getElementById("calcPngPrev")?.value) || 0;
       const pngCurr = parseFloat(document.getElementById("calcPngCurr")?.value) || 0;
       const pngRate = parseFloat(document.getElementById("calcPngRate")?.value) || 0;
-      const pngTotal = pngCurr > pngPrev ? (pngCurr - pngPrev) * pngRate : 0;
+      const pngAddCharge = parseFloat(document.getElementById("calcPngAdditionalCharge")?.value) || 0;
+      const pngTotal = (pngCurr > pngPrev ? (pngCurr - pngPrev) * pngRate : 0) + pngAddCharge;
 
       const waterPrev = parseFloat(document.getElementById("calcWaterPrev")?.value) || 0;
       const waterCurr = parseFloat(document.getElementById("calcWaterCurr")?.value) || 0;
       const waterRate = parseFloat(document.getElementById("calcWaterRate")?.value) || 0;
-      const waterTotal = waterCurr > waterPrev ? (waterCurr - waterPrev) * waterRate : 0;
+      const waterAddCharge = parseFloat(document.getElementById("calcWaterAdditionalCharge")?.value) || 0;
+      const waterTotal = (waterCurr > waterPrev ? (waterCurr - waterPrev) * waterRate : 0) + waterAddCharge;
 
       const addToggle = document.getElementById("calcAddToggle")?.value || "+";
       const addAmt = parseFloat(document.getElementById("calcAddAmount")?.value) || 0;
@@ -29693,13 +29943,15 @@ function formatMonthLabel(rawVal) {
       const pngCurr = parseFloat(bill.PNGCurr) || 0;
       const pngUnits = bill.PNGUnits !== undefined && bill.PNGUnits !== "" ? (parseFloat(bill.PNGUnits) || 0) : Math.max(0, pngCurr - pngPrev);
       const pngRate = parseFloat(bill.PNGRate) || 0;
-      const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : (pngUnits * pngRate);
+      const pngAddVal = parseFloat(bill.PNGAdditionalCharge) || 0;
+      const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : ((pngUnits * pngRate) + pngAddVal);
 
       const waterPrev = parseFloat(bill.WaterPrev) || 0;
       const waterCurr = parseFloat(bill.WaterCurr) || 0;
       const waterUnits = bill.WaterUnits !== undefined && bill.WaterUnits !== "" ? (parseFloat(bill.WaterUnits) || 0) : Math.max(0, waterCurr - waterPrev);
       const waterRate = parseFloat(bill.WaterRate) || 0;
-      const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : (waterUnits * waterRate);
+      const waterAddVal = parseFloat(bill.WaterAdditionalCharge) || 0;
+      const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : ((waterUnits * waterRate) + waterAddVal);
 
       const addNameStr = bill.AdditionalName || bill.ExtraDesc || "None";
       const addAmtVal = parseFloat(bill.AdditionalAmount ?? bill.ExtraAmount) || 0;
@@ -29755,12 +30007,12 @@ function formatMonthLabel(rawVal) {
           </div>
 
           <div class="receipt-line" id="row_rec_png">
-            <span>PNG Gas (${pngPrev} to ${pngCurr} = ${pngUnits}U @ ₹${pngRate}):</span>
+            <span>PNG Gas (${pngPrev} to ${pngCurr} = ${pngUnits}U @ ₹${pngRate}${pngAddVal ? ` + ₹${pngAddVal.toLocaleString('en-IN')} Add.` : ''}):</span>
             <strong>₹${pngTotal.toLocaleString('en-IN')}</strong>
           </div>
 
           <div class="receipt-line" id="row_rec_water">
-            <span>Water (${waterPrev} to ${waterCurr} = ${waterUnits}U @ ₹${waterRate}):</span>
+            <span>Water (${waterPrev} to ${waterCurr} = ${waterUnits}U @ ₹${waterRate}${waterAddVal ? ` + ₹${waterAddVal.toLocaleString('en-IN')} Add.` : ''}):</span>
             <strong>₹${waterTotal.toLocaleString('en-IN')}</strong>
           </div>
 
@@ -30129,13 +30381,15 @@ function formatMonthLabel(rawVal) {
       const pngCurr = parseFloat(bill.PNGCurr) || 0;
       const pngUnits = bill.PNGUnits !== undefined && bill.PNGUnits !== "" ? (parseFloat(bill.PNGUnits) || 0) : Math.max(0, pngCurr - pngPrev);
       const pngRate = parseFloat(bill.PNGRate) || 0;
-      const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : (pngUnits * pngRate);
+      const pngAddVal = parseFloat(bill.PNGAdditionalCharge) || 0;
+      const pngTotal = bill.PNGTotal !== undefined && bill.PNGTotal !== "" ? (parseFloat(bill.PNGTotal) || 0) : ((pngUnits * pngRate) + pngAddVal);
 
       const waterPrev = parseFloat(bill.WaterPrev) || 0;
       const waterCurr = parseFloat(bill.WaterCurr) || 0;
       const waterUnits = bill.WaterUnits !== undefined && bill.WaterUnits !== "" ? (parseFloat(bill.WaterUnits) || 0) : Math.max(0, waterCurr - waterPrev);
       const waterRate = parseFloat(bill.WaterRate) || 0;
-      const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : (waterUnits * waterRate);
+      const waterAddVal = parseFloat(bill.WaterAdditionalCharge) || 0;
+      const waterTotal = bill.WaterTotal !== undefined && bill.WaterTotal !== "" ? (parseFloat(bill.WaterTotal) || 0) : ((waterUnits * waterRate) + waterAddVal);
 
       const addNameStr = bill.AdditionalName || bill.ExtraDesc || "None";
       const addAmtVal = parseFloat(bill.AdditionalAmount ?? bill.ExtraAmount) || 0;
@@ -30187,14 +30441,14 @@ function formatMonthLabel(rawVal) {
       }
       if (checkedKeys.has("png")) {
         rows.push({
-          label: `PNG Gas (${pngPrev} to ${pngCurr} = ${pngUnits}U @ ₹${pngRate}):`,
+          label: `PNG Gas (${pngPrev} to ${pngCurr} = ${pngUnits}U @ ₹${pngRate}${pngAddVal ? ` + ₹${pngAddVal.toLocaleString('en-IN')} Add.` : ''}):`,
           value: `₹${pngTotal.toLocaleString('en-IN')}`,
           color: "#0f172a"
         });
       }
       if (checkedKeys.has("water")) {
         rows.push({
-          label: `Water (${waterPrev} to ${waterCurr} = ${waterUnits}U @ ₹${waterRate}):`,
+          label: `Water (${waterPrev} to ${waterCurr} = ${waterUnits}U @ ₹${waterRate}${waterAddVal ? ` + ₹${waterAddVal.toLocaleString('en-IN')} Add.` : ''}):`,
           value: `₹${waterTotal.toLocaleString('en-IN')}`,
           color: "#0f172a"
         });
@@ -33729,29 +33983,37 @@ function formatMonthLabel(rawVal) {
       }).join("");
     }
 
-    // Helper: Propagate UPI Name, UPI ID, and Contact Mobile across the parent Property and all associated Flats & Active Renters
-    function propagatePropertyWideUpiAndContactLocal(propertyName, upiName, upiId, contractMobile, allowEmptyOverwrite = false) {
+    // Helper: Propagate UPI Name, UPI ID, Contact Mobile, and Property Address across the parent Property and all associated Flats & Active Renters
+    function propagatePropertyWideUpiAndContactLocal(propertyName, upiName, upiId, contractMobile, allowEmptyOverwrite = false, propertyAddress = undefined) {
       const targetPropKey = String(propertyName || "").trim().toLowerCase();
       if (!targetPropKey) return;
 
       DB.properties.forEach(p => {
         if (String(p.PropertyName || "").trim().toLowerCase() === targetPropKey) {
-          if (allowEmptyOverwrite || upiName !== undefined && String(upiName).trim() !== "") p.UPIName = upiName;
-          if (allowEmptyOverwrite || upiId !== undefined && String(upiId).trim() !== "") p.UPIID = upiId;
-          if (allowEmptyOverwrite || contractMobile !== undefined && String(contractMobile).trim() !== "") {
+          if (allowEmptyOverwrite || (upiName !== undefined && String(upiName).trim() !== "")) p.UPIName = upiName;
+          if (allowEmptyOverwrite || (upiId !== undefined && String(upiId).trim() !== "")) p.UPIID = upiId;
+          if (allowEmptyOverwrite || (contractMobile !== undefined && String(contractMobile).trim() !== "")) {
             p.ContractNumber = contractMobile;
             p.ContractMobile = contractMobile;
+          }
+          if (propertyAddress !== undefined && (allowEmptyOverwrite || String(propertyAddress).trim() !== "")) {
+            p.PropertyAddress = propertyAddress;
+            p.PropertyLocationAddress = propertyAddress;
           }
         }
       });
 
       DB.flats.forEach(f => {
         if (String(f.PropertyName || "").trim().toLowerCase() === targetPropKey) {
-          if (allowEmptyOverwrite || upiName !== undefined && String(upiName).trim() !== "") f.UPIName = upiName;
-          if (allowEmptyOverwrite || upiId !== undefined && String(upiId).trim() !== "") f.UPIID = upiId;
-          if (allowEmptyOverwrite || contractMobile !== undefined && String(contractMobile).trim() !== "") {
+          if (allowEmptyOverwrite || (upiName !== undefined && String(upiName).trim() !== "")) f.UPIName = upiName;
+          if (allowEmptyOverwrite || (upiId !== undefined && String(upiId).trim() !== "")) f.UPIID = upiId;
+          if (allowEmptyOverwrite || (contractMobile !== undefined && String(contractMobile).trim() !== "")) {
             f.ContractMobile = contractMobile;
             f.ContractNumber = contractMobile;
+          }
+          if (propertyAddress !== undefined && (allowEmptyOverwrite || String(propertyAddress).trim() !== "")) {
+            f.PropertyAddress = propertyAddress;
+            f.PropertyLocationAddress = propertyAddress;
           }
         }
       });
@@ -33761,10 +34023,14 @@ function formatMonthLabel(rawVal) {
           String(r.PropertyName || "").trim().toLowerCase() === targetPropKey &&
           String(r.Status || "").trim().toLowerCase() === "active"
         ) {
-          if (allowEmptyOverwrite || upiName !== undefined && String(upiName).trim() !== "") r.UPIName = upiName;
-          if (allowEmptyOverwrite || upiId !== undefined && String(upiId).trim() !== "") r.UPIID = upiId;
-          if (allowEmptyOverwrite || contractMobile !== undefined && String(contractMobile).trim() !== "") {
+          if (allowEmptyOverwrite || (upiName !== undefined && String(upiName).trim() !== "")) r.UPIName = upiName;
+          if (allowEmptyOverwrite || (upiId !== undefined && String(upiId).trim() !== "")) r.UPIID = upiId;
+          if (allowEmptyOverwrite || (contractMobile !== undefined && String(contractMobile).trim() !== "")) {
             r.ContractMobile = contractMobile;
+          }
+          if (propertyAddress !== undefined && (allowEmptyOverwrite || String(propertyAddress).trim() !== "")) {
+            r.PropertyAddress = propertyAddress;
+            r.PropertyLocationAddress = propertyAddress;
           }
         }
       });
@@ -33819,9 +34085,9 @@ function formatMonthLabel(rawVal) {
       const depositModeVal = document.getElementById("profDepositMode")?.value || "UPI";
 
       const locElLeft = document.getElementById("renterFlatLocationInput");
-      const numElLeft = document.getElementById("renterFlatNumberInput");
       const flatLocationVal = String(locElLeft ? locElLeft.value : (selectedFlat.FlatLocation || "")).trim();
-      const flatNumberVal = String(numElLeft ? numElLeft.value : (selectedFlat.FlatNumber || "")).trim();
+      const bhkDataLeft = collectProfileBhkDetails();
+      const propertyAddressVal = String(document.getElementById("profPropertyAddress")?.value || "").trim();
 
       const payload = {
         action: "updateFlatUtilities",
@@ -33830,7 +34096,12 @@ function formatMonthLabel(rawVal) {
         newFlatName: newFlatName,
         flatName: newFlatName,
         flatLocation: flatLocationVal,
-        flatNumber: flatNumberVal,
+        bhkDetails: bhkDataLeft.bhkDetails,
+        roomsCount: bhkDataLeft.roomsCount,
+        kitchenCount: bhkDataLeft.kitchenCount,
+        bathroomCount: bhkDataLeft.bathroomCount,
+        toiletCount: bhkDataLeft.toiletCount,
+        propertyAddress: propertyAddressVal,
         rentAmount: exactRentVal !== "" ? exactRentVal : 0,
         pngNumber: document.getElementById("profPngNumber").value.trim(),
         pngMeterNumber: document.getElementById("profPngMeter").value.trim(),
@@ -33856,7 +34127,13 @@ function formatMonthLabel(rawVal) {
         if (isSamePropAndFlat(f.PropertyName, f.FlatName, selectedFlat.PropertyName, oldFlatName)) {
           f.FlatName = newFlatName;
           f.FlatLocation = flatLocationVal;
-          f.FlatNumber = flatNumberVal;
+          f.BHKDetails = bhkDataLeft.bhkDetails;
+          f.RoomsCount = bhkDataLeft.roomsCount;
+          f.KitchenCount = bhkDataLeft.kitchenCount;
+          f.BathroomCount = bhkDataLeft.bathroomCount;
+          f.ToiletCount = bhkDataLeft.toiletCount;
+          f.PropertyAddress = propertyAddressVal;
+          f.PropertyLocationAddress = propertyAddressVal;
           f.RentAmount = payload.rentAmount;
           f.ElecRate = payload.elecFixedRate;
           f.PNGRate = payload.pngFixedRate;
@@ -33881,7 +34158,13 @@ function formatMonthLabel(rawVal) {
 
       selectedFlat.FlatName = newFlatName;
       selectedFlat.FlatLocation = flatLocationVal;
-      selectedFlat.FlatNumber = flatNumberVal;
+      selectedFlat.BHKDetails = bhkDataLeft.bhkDetails;
+      selectedFlat.RoomsCount = bhkDataLeft.roomsCount;
+      selectedFlat.KitchenCount = bhkDataLeft.kitchenCount;
+      selectedFlat.BathroomCount = bhkDataLeft.bathroomCount;
+      selectedFlat.ToiletCount = bhkDataLeft.toiletCount;
+      selectedFlat.PropertyAddress = propertyAddressVal;
+      selectedFlat.PropertyLocationAddress = propertyAddressVal;
       selectedFlat.RentAmount = payload.rentAmount;
       selectedFlat.ElecRate = payload.elecFixedRate;
       selectedFlat.PNGRate = payload.pngFixedRate;
@@ -33902,6 +34185,7 @@ function formatMonthLabel(rawVal) {
       selectedFlat.DepositMode = payload.depositMode;
 
       document.getElementById("modalFlatTag").innerText = `Flat ${newFlatName}`;
+      updateFlatModalHeaderTitle(selectedFlat, activeFlatRenterObj);
 
       // Keep renters of this specific flat linked to the updated flat name & active rates
       DB.renters.forEach(r => {
@@ -33910,7 +34194,13 @@ function formatMonthLabel(rawVal) {
           r.FlatName = newFlatName;
           if (String(r.Status).trim().toLowerCase() === "active") {
             r.FlatLocation = flatLocationVal;
-            r.FlatNumber = flatNumberVal;
+            r.BHKDetails = bhkDataLeft.bhkDetails;
+            r.RoomsCount = bhkDataLeft.roomsCount;
+            r.KitchenCount = bhkDataLeft.kitchenCount;
+            r.BathroomCount = bhkDataLeft.bathroomCount;
+            r.ToiletCount = bhkDataLeft.toiletCount;
+            r.PropertyAddress = propertyAddressVal;
+            r.PropertyLocationAddress = propertyAddressVal;
             r.RentAmount = payload.rentAmount;
             r.PNGNumber = payload.pngNumber;
             r.PNGMeterNumber = payload.pngMeterNumber;
@@ -33942,7 +34232,9 @@ function formatMonthLabel(rawVal) {
         selectedFlat.PropertyName,
         payload.upiName,
         payload.upiId,
-        payload.contractMobile
+        payload.contractMobile,
+        false,
+        propertyAddressVal
       );
 
       saveLocalFlatUtilityAndDateMeta(
@@ -34333,15 +34625,31 @@ function formatMonthLabel(rawVal) {
       const endDateVal = rawEndInput || (statusVal === "Inactive" ? (toInputDateValue(activeFlatRenterObj?.EndDate) || getLocalTodayIsoDate()) : "");
 
       const locElRight = document.getElementById("renterFlatLocationInput");
-      const numElRight = document.getElementById("renterFlatNumberInput");
       const flatLocVal = String(locElRight ? locElRight.value : (selectedFlat.FlatLocation || "")).trim();
-      const flatNumVal = String(numElRight ? numElRight.value : (selectedFlat.FlatNumber || "")).trim();
+      const bhkDataRight = collectProfileBhkDetails();
+      const propAddrRight = String(document.getElementById("profPropertyAddress")?.value || selectedFlat.PropertyAddress || "").trim();
       selectedFlat.FlatLocation = flatLocVal;
-      selectedFlat.FlatNumber = flatNumVal;
+      selectedFlat.BHKDetails = bhkDataRight.bhkDetails;
+      selectedFlat.RoomsCount = bhkDataRight.roomsCount;
+      selectedFlat.KitchenCount = bhkDataRight.kitchenCount;
+      selectedFlat.BathroomCount = bhkDataRight.bathroomCount;
+      selectedFlat.ToiletCount = bhkDataRight.toiletCount;
+      if (propAddrRight) {
+        selectedFlat.PropertyAddress = propAddrRight;
+        selectedFlat.PropertyLocationAddress = propAddrRight;
+      }
       (DB.flats || []).forEach(f => {
         if (isSamePropAndFlat(f.PropertyName, f.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) {
           f.FlatLocation = flatLocVal;
-          f.FlatNumber = flatNumVal;
+          f.BHKDetails = bhkDataRight.bhkDetails;
+          f.RoomsCount = bhkDataRight.roomsCount;
+          f.KitchenCount = bhkDataRight.kitchenCount;
+          f.BathroomCount = bhkDataRight.bathroomCount;
+          f.ToiletCount = bhkDataRight.toiletCount;
+          if (propAddrRight) {
+            f.PropertyAddress = propAddrRight;
+            f.PropertyLocationAddress = propAddrRight;
+          }
         }
       });
 
@@ -34351,7 +34659,12 @@ function formatMonthLabel(rawVal) {
         propertyName: selectedFlat.PropertyName,
         flatName: selectedFlat.FlatName,
         flatLocation: flatLocVal,
-        flatNumber: flatNumVal,
+        bhkDetails: bhkDataRight.bhkDetails,
+        roomsCount: bhkDataRight.roomsCount,
+        kitchenCount: bhkDataRight.kitchenCount,
+        bathroomCount: bhkDataRight.bathroomCount,
+        toiletCount: bhkDataRight.toiletCount,
+        propertyAddress: propAddrRight,
         renterName: rName,
         identityDocNumber: cleanAadhaar,
         mobileNumber: cleanMobile,
@@ -34439,7 +34752,13 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.UPIID = payload.upiId;
           existingRenterRecord.ContractMobile = payload.contractMobile;
           existingRenterRecord.FlatLocation = flatLocVal;
-          existingRenterRecord.FlatNumber = flatNumVal;
+          existingRenterRecord.BHKDetails = bhkDataRight.bhkDetails;
+          existingRenterRecord.RoomsCount = bhkDataRight.roomsCount;
+          existingRenterRecord.KitchenCount = bhkDataRight.kitchenCount;
+          existingRenterRecord.BathroomCount = bhkDataRight.bathroomCount;
+          existingRenterRecord.ToiletCount = bhkDataRight.toiletCount;
+          existingRenterRecord.PropertyAddress = propAddrRight;
+          existingRenterRecord.PropertyLocationAddress = propAddrRight;
           existingRenterRecord.UpdatedAt = new Date().toISOString();
 
           stampUnassignedFlatBillsToDepartingRenter(selectedFlat.PropertyName, selectedFlat.FlatName, existingRenterRecord);
@@ -34515,7 +34834,13 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.UPIID = payload.upiId;
           existingRenterRecord.ContractMobile = payload.contractMobile;
           existingRenterRecord.FlatLocation = flatLocVal;
-          existingRenterRecord.FlatNumber = flatNumVal;
+          existingRenterRecord.BHKDetails = bhkDataRight.bhkDetails;
+          existingRenterRecord.RoomsCount = bhkDataRight.roomsCount;
+          existingRenterRecord.KitchenCount = bhkDataRight.kitchenCount;
+          existingRenterRecord.BathroomCount = bhkDataRight.bathroomCount;
+          existingRenterRecord.ToiletCount = bhkDataRight.toiletCount;
+          existingRenterRecord.PropertyAddress = propAddrRight;
+          existingRenterRecord.PropertyLocationAddress = propAddrRight;
           existingRenterRecord.UpdatedAt = new Date().toISOString();
           activeFlatRenterObj = existingRenterRecord;
         } else {
@@ -34524,7 +34849,13 @@ function formatMonthLabel(rawVal) {
             PropertyName: payload.propertyName,
             FlatName: payload.flatName,
             FlatLocation: flatLocVal,
-            FlatNumber: flatNumVal,
+            BHKDetails: bhkDataRight.bhkDetails,
+            RoomsCount: bhkDataRight.roomsCount,
+            KitchenCount: bhkDataRight.kitchenCount,
+            BathroomCount: bhkDataRight.bathroomCount,
+            ToiletCount: bhkDataRight.toiletCount,
+            PropertyAddress: propAddrRight,
+            PropertyLocationAddress: propAddrRight,
             RenterName: payload.renterName,
             IdentityDocNumber: payload.identityDocNumber,
             MobileNumber: payload.mobileNumber,
@@ -34610,10 +34941,13 @@ function formatMonthLabel(rawVal) {
         selectedFlat.PropertyName,
         payload.upiName,
         payload.upiId,
-        payload.contractMobile
+        payload.contractMobile,
+        false,
+        payload.propertyAddress
       );
 
       syncProfileRatesToLiveCalculator();
+      updateFlatModalHeaderTitle(selectedFlat, activeFlatRenterObj);
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
@@ -34684,8 +35018,121 @@ function formatMonthLabel(rawVal) {
       syncProfileReactivateButtonVisibility();
       const locResetEl = document.getElementById("renterFlatLocationInput");
       if (locResetEl) locResetEl.value = String(selectedFlat?.FlatLocation ?? selectedFlat?.Location ?? "").trim();
-      const numResetEl = document.getElementById("renterFlatNumberInput");
-      if (numResetEl) numResetEl.value = String(selectedFlat?.FlatNumber ?? "").trim();
+      populateProfileBhkDetailsInputs(selectedFlat, null);
+    }
+
+    function formatBhkDetailsString(rooms, kitchen, bathroom, toilet) {
+      const r = Math.max(0, parseInt(rooms, 10) || 0);
+      const k = Math.max(0, parseInt(kitchen, 10) || 0);
+      const b = Math.max(0, parseInt(bathroom, 10) || 0);
+      const t = Math.max(0, parseInt(toilet, 10) || 0);
+      if (r === 0 && k === 0 && b === 0 && t === 0) return "";
+      const roomWord = r === 1 ? "Room" : "Rooms";
+      const kitchenWord = k === 1 ? "Kitchen" : "Kitchens";
+      const bathWord = b === 1 ? "Bathroom" : "Bathrooms";
+      const toiletWord = t === 1 ? "Toilet" : "Toilets";
+      return `${r} BHK (${r} ${roomWord}, ${k} ${kitchenWord}, ${b} ${bathWord}, ${t} ${toiletWord})`;
+    }
+
+    function parseBhkCountsFromString(str) {
+      const text = String(str || "").trim();
+      if (!text) return { rooms: "", kitchen: "", bathroom: "", toilet: "" };
+      const rMatch = text.match(/(\d+)\s*rooms?/i) || text.match(/(\d+)\s*bhk/i);
+      const kMatch = text.match(/(\d+)\s*kitchens?/i);
+      const bMatch = text.match(/(\d+)\s*bathrooms?/i);
+      const tMatch = text.match(/(\d+)\s*(?:toilet|latrine)s?/i);
+      return {
+        rooms: rMatch ? parseInt(rMatch[1], 10) : "",
+        kitchen: kMatch ? parseInt(kMatch[1], 10) : "",
+        bathroom: bMatch ? parseInt(bMatch[1], 10) : "",
+        toilet: tMatch ? parseInt(tMatch[1], 10) : ""
+      };
+    }
+
+    function syncBhkDetailsSummaryFromCounts() {
+      const rVal = document.getElementById("renterBhkRoomsInput")?.value ?? "";
+      const kVal = document.getElementById("renterBhkKitchenInput")?.value ?? "";
+      const bVal = document.getElementById("renterBhkBathroomInput")?.value ?? "";
+      const tVal = document.getElementById("renterBhkToiletInput")?.value ?? "";
+      const summaryEl = document.getElementById("renterBhkDetailsInput");
+      if (!summaryEl) return;
+      const anyEntered = [rVal, kVal, bVal, tVal].some(v => String(v).trim() !== "");
+      if (!anyEntered) {
+        summaryEl.value = "";
+        return;
+      }
+      summaryEl.value = formatBhkDetailsString(rVal, kVal, bVal, tVal);
+    }
+
+    function parseBhkCountsFromSummaryInput(summaryStr) {
+      const parsed = parseBhkCountsFromString(summaryStr);
+      const rEl = document.getElementById("renterBhkRoomsInput");
+      const kEl = document.getElementById("renterBhkKitchenInput");
+      const bEl = document.getElementById("renterBhkBathroomInput");
+      const tEl = document.getElementById("renterBhkToiletInput");
+      if (rEl && parsed.rooms !== "") rEl.value = parsed.rooms;
+      if (kEl && parsed.kitchen !== "") kEl.value = parsed.kitchen;
+      if (bEl && parsed.bathroom !== "") bEl.value = parsed.bathroom;
+      if (tEl && parsed.toilet !== "") tEl.value = parsed.toilet;
+    }
+
+    function populateProfileBhkDetailsInputs(flatObj, renterObj) {
+      const rawBhk = String(flatObj?.BHKDetails ?? renterObj?.BHKDetails ?? "").trim();
+      const parsed = parseBhkCountsFromString(rawBhk);
+      const resolveCount = (flatVal, renterVal, parsedVal) => {
+        if (flatVal !== undefined && flatVal !== null && String(flatVal).trim() !== "") return flatVal;
+        if (renterVal !== undefined && renterVal !== null && String(renterVal).trim() !== "") return renterVal;
+        return parsedVal !== "" ? parsedVal : "";
+      };
+      const rCount = resolveCount(flatObj?.RoomsCount, renterObj?.RoomsCount, parsed.rooms);
+      const kCount = resolveCount(flatObj?.KitchenCount, renterObj?.KitchenCount, parsed.kitchen);
+      const bCount = resolveCount(flatObj?.BathroomCount, renterObj?.BathroomCount, parsed.bathroom);
+      const tCount = resolveCount(flatObj?.ToiletCount, renterObj?.ToiletCount, parsed.toilet);
+
+      const rEl = document.getElementById("renterBhkRoomsInput");
+      const kEl = document.getElementById("renterBhkKitchenInput");
+      const bEl = document.getElementById("renterBhkBathroomInput");
+      const tEl = document.getElementById("renterBhkToiletInput");
+      const summaryEl = document.getElementById("renterBhkDetailsInput");
+
+      if (rEl) rEl.value = rCount;
+      if (kEl) kEl.value = kCount;
+      if (bEl) bEl.value = bCount;
+      if (tEl) tEl.value = tCount;
+      if (summaryEl) {
+        if (rawBhk) {
+          summaryEl.value = rawBhk;
+        } else if ([rCount, kCount, bCount, tCount].some(v => String(v).trim() !== "")) {
+          summaryEl.value = formatBhkDetailsString(rCount, kCount, bCount, tCount);
+        } else {
+          summaryEl.value = "";
+        }
+      }
+    }
+
+    function collectProfileBhkDetails() {
+      const rEl = document.getElementById("renterBhkRoomsInput");
+      const kEl = document.getElementById("renterBhkKitchenInput");
+      const bEl = document.getElementById("renterBhkBathroomInput");
+      const tEl = document.getElementById("renterBhkToiletInput");
+      const summaryEl = document.getElementById("renterBhkDetailsInput");
+
+      const rawSummary = String(summaryEl?.value || "").trim();
+      const roomsCount = (rEl && String(rEl.value).trim() !== "") ? Math.max(0, parseInt(rEl.value, 10) || 0) : "";
+      const kitchenCount = (kEl && String(kEl.value).trim() !== "") ? Math.max(0, parseInt(kEl.value, 10) || 0) : "";
+      const bathroomCount = (bEl && String(bEl.value).trim() !== "") ? Math.max(0, parseInt(bEl.value, 10) || 0) : "";
+      const toiletCount = (tEl && String(tEl.value).trim() !== "") ? Math.max(0, parseInt(tEl.value, 10) || 0) : "";
+
+      const formatted = [roomsCount, kitchenCount, bathroomCount, toiletCount].some(v => v !== "")
+        ? formatBhkDetailsString(roomsCount || 0, kitchenCount || 0, bathroomCount || 0, toiletCount || 0)
+        : "";
+      return {
+        bhkDetails: rawSummary || formatted,
+        roomsCount,
+        kitchenCount,
+        bathroomCount,
+        toiletCount
+      };
     }
 
     async function saveProfileFlatLocationAndNumber() {
@@ -34695,14 +35142,22 @@ function formatMonthLabel(rawVal) {
       }
       rebindSelectedFlatAndRenterReferences();
       const flatLocation = String(document.getElementById("renterFlatLocationInput")?.value || "").trim();
-      const flatNumber = String(document.getElementById("renterFlatNumberInput")?.value || "").trim();
+      const bhkData = collectProfileBhkDetails();
 
       selectedFlat.FlatLocation = flatLocation;
-      selectedFlat.FlatNumber = flatNumber;
+      selectedFlat.BHKDetails = bhkData.bhkDetails;
+      selectedFlat.RoomsCount = bhkData.roomsCount;
+      selectedFlat.KitchenCount = bhkData.kitchenCount;
+      selectedFlat.BathroomCount = bhkData.bathroomCount;
+      selectedFlat.ToiletCount = bhkData.toiletCount;
       (DB.flats || []).forEach(f => {
         if (isSamePropAndFlat(f.PropertyName, f.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) {
           f.FlatLocation = flatLocation;
-          f.FlatNumber = flatNumber;
+          f.BHKDetails = bhkData.bhkDetails;
+          f.RoomsCount = bhkData.roomsCount;
+          f.KitchenCount = bhkData.kitchenCount;
+          f.BathroomCount = bhkData.bathroomCount;
+          f.ToiletCount = bhkData.toiletCount;
         }
       });
 
@@ -34713,18 +35168,22 @@ function formatMonthLabel(rawVal) {
           String(r.Status || "").trim().toLowerCase() === "active";
         if (matchesId || matchesActiveFlat) {
           r.FlatLocation = flatLocation;
-          r.FlatNumber = flatNumber;
+          r.BHKDetails = bhkData.bhkDetails;
+          r.RoomsCount = bhkData.roomsCount;
+          r.KitchenCount = bhkData.kitchenCount;
+          r.BathroomCount = bhkData.bathroomCount;
+          r.ToiletCount = bhkData.toiletCount;
           r.UpdatedAt = new Date().toISOString();
           if (!activeFlatRenterObj || matchesId) activeFlatRenterObj = r;
         }
       });
 
       if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("UPDATE_FLAT_LOCATION_NUMBER", `${selectedFlat.PropertyName} - Flat ${selectedFlat.FlatName}`, `Location: ${flatLocation || "--"}, Number: ${flatNumber || "--"}`);
+        recordAdminAuditLog("UPDATE_FLAT_LOCATION_BHK", `${selectedFlat.PropertyName} - Flat ${selectedFlat.FlatName}`, `Location: ${flatLocation || "--"}, BHK: ${bhkData.bhkDetails || "--"}`);
       }
       saveDbSnapshotToCache();
       renderAllDashboardUI();
-      triggerSideToast("Flat Location & Number Saved", "Flat Location and Flat Number saved to the database.", true);
+      triggerSideToast("Flat Location & BHK Details Saved", "Flat Location and BHK / Room Details saved to the database.", true);
 
       await sendFirebaseAction({
         action: "updateFlatLocationDetails",
@@ -34732,7 +35191,11 @@ function formatMonthLabel(rawVal) {
         flatName: selectedFlat.FlatName,
         renterId: targetRenterId,
         flatLocation,
-        flatNumber
+        bhkDetails: bhkData.bhkDetails,
+        roomsCount: bhkData.roomsCount,
+        kitchenCount: bhkData.kitchenCount,
+        bathroomCount: bhkData.bathroomCount,
+        toiletCount: bhkData.toiletCount
       });
     }
 
