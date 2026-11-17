@@ -7101,12 +7101,6 @@
         <div id="fpCredentialsStepBox">
           <div class="form-group" style="margin-bottom:12px;">
             <div class="login-input-shell">
-              <i class="fa-solid fa-id-card login-field-icon"></i>
-              <input type="text" id="fpAadhaarInput" class="form-control" maxlength="14" inputmode="numeric" placeholder="XXXX-XXXX-XXXX" autocomplete="off" oninput="this.value = formatAadhaarWithHyphens(this.value)">
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:12px;">
-            <div class="login-input-shell">
               <i class="fa-solid fa-envelope login-field-icon"></i>
               <input type="email" id="fpEmailInput" class="form-control" placeholder="Enter your registered email ID" autocomplete="off">
             </div>
@@ -19743,8 +19737,8 @@ function formatMonthLabel(rawVal) {
       if (credBox) credBox.style.display = "block";
       if (otpBox) otpBox.style.display = "none";
       setInlineForgotPasswordStatus("", "info");
-      const aadhIn = document.getElementById("fpAadhaarInput");
-      if (aadhIn && typeof aadhIn.focus === "function") aadhIn.focus();
+      const emailIn = document.getElementById("fpEmailInput");
+      if (emailIn && typeof emailIn.focus === "function") emailIn.focus();
     }
 
     function hideInlineForgotPasswordPanel() {
@@ -19752,10 +19746,8 @@ function formatMonthLabel(rawVal) {
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
       const credBox = document.getElementById("fpCredentialsStepBox");
       const otpBox = document.getElementById("fpOtpStepBox");
-      const aadhIn = document.getElementById("fpAadhaarInput");
       const emailIn = document.getElementById("fpEmailInput");
       const otpIn = document.getElementById("fpOtpInput");
-      if (aadhIn) aadhIn.value = "";
       if (emailIn) emailIn.value = "";
       if (otpIn) otpIn.value = "";
       if (credBox) credBox.style.display = "block";
@@ -19766,19 +19758,13 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitInlineForgotPasswordSendOtp() {
-      const aadhIn = document.getElementById("fpAadhaarInput");
       const emailIn = document.getElementById("fpEmailInput");
       const otpBox = document.getElementById("fpOtpStepBox");
       const otpHint = document.getElementById("fpOtpSentHint");
       const btn = document.getElementById("btnFpSendOtp");
 
-      const cleanAadh = String(aadhIn?.value || "").replace(/\D/g, "").slice(0, 12);
       const cleanEmail = String(emailIn?.value || "").trim().toLowerCase();
 
-      if (cleanAadhaarLengthInvalid(cleanAadh)) {
-        setInlineForgotPasswordStatus("Please enter a valid 12-digit Aadhaar Number.", "error");
-        return triggerSideToast("Invalid Aadhaar", "Please enter a valid 12-digit Aadhaar Number.", false);
-      }
       if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
         setInlineForgotPasswordStatus("Please enter a valid registered Email ID.", "error");
         return triggerSideToast("Invalid Email", "Please enter a valid registered Email ID.", false);
@@ -19788,16 +19774,15 @@ function formatMonthLabel(rawVal) {
         btn.disabled = true;
         btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending OTP...</span>`;
       }
-      setInlineForgotPasswordStatus("Verifying Aadhaar Number and Email ID...", "info");
+      setInlineForgotPasswordStatus("Verifying registered Email ID...", "info");
 
       try {
         const res = await sendFirebaseAction({
           action: "sendForgotPasswordOtp",
-          aadhaar: cleanAadh,
           email: cleanEmail
         });
         if (!res || res.status !== "success") {
-          const errMsg = res?.message || "Aadhaar Number and Email ID did not match our records.";
+          const errMsg = res?.message || "Email ID did not match our records.";
           setInlineForgotPasswordStatus(errMsg, "error");
           triggerSideToast("Verification Failed", errMsg, false);
           return;
@@ -19806,7 +19791,7 @@ function formatMonthLabel(rawVal) {
         if (otpHint) {
           otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
         }
-        setInlineForgotPasswordStatus(` OTP sent to ${cleanEmail}. Please check your Gmail/inbox and enter it below.`, "success");
+        setInlineForgotPasswordStatus(`OTP sent to ${cleanEmail}. Please check your Gmail/inbox and enter it below.`, "success");
         triggerSideToast("OTP Sent", `4-digit OTP sent to ${cleanEmail}.`, true);
         const otpIn = document.getElementById("fpOtpInput");
         if (otpIn && typeof otpIn.focus === "function") otpIn.focus();
@@ -19827,17 +19812,15 @@ function formatMonthLabel(rawVal) {
     }
 
     async function submitInlineForgotPasswordVerifyOtp() {
-      const aadhIn = document.getElementById("fpAadhaarInput");
       const emailIn = document.getElementById("fpEmailInput");
       const otpIn = document.getElementById("fpOtpInput");
       const btn = document.getElementById("btnFpVerifyOtp");
 
-      const cleanAadh = String(aadhIn?.value || "").replace(/\D/g, "").slice(0, 12);
       const cleanEmail = String(emailIn?.value || "").trim().toLowerCase();
       const enteredOtp = String(otpIn?.value || "").replace(/\D/g, "").slice(0, 4);
 
-      if (cleanAadh.length !== 12 || !cleanEmail) {
-        setInlineForgotPasswordStatus("Please enter both Aadhaar Number and Email ID first.", "error");
+      if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+        setInlineForgotPasswordStatus("Please enter your registered Email ID first.", "error");
         return;
       }
       if (enteredOtp.length !== 4) {
@@ -19853,7 +19836,6 @@ function formatMonthLabel(rawVal) {
       try {
         const res = await sendFirebaseAction({
           action: "verifyForgotPasswordOtp",
-          aadhaar: cleanAadh,
           email: cleanEmail,
           otp: enteredOtp
         });
@@ -19864,7 +19846,6 @@ function formatMonthLabel(rawVal) {
           return;
         }
         if (otpIn) otpIn.value = "";
-        if (aadhIn) aadhIn.value = "";
         if (emailIn) emailIn.value = "";
         const credBox = document.getElementById("fpCredentialsStepBox");
         const otpBox = document.getElementById("fpOtpStepBox");
