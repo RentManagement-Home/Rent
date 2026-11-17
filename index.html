@@ -799,6 +799,14 @@
       -webkit-backdrop-filter: blur(4px) !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
       box-shadow: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 12px 16px;
+      padding: 10px 20px;
+      width: 100%;
+      box-sizing: border-box;
     }
     body.theme-white section#dashboardScreen > header.top-nav {
       background: rgba(255, 255, 255, 0.30) !important;
@@ -845,28 +853,94 @@
       border: 1px solid var(--glass-border);
     }
 
-    /* Requirement 8: High-Prominence Search Bar & Highlighted Search Icon Badge */
+    /* Requirement 8: Click-to-Expand Search Icon -> Large Search Box */
     .nav-center {
       position: relative;
-      flex: 1 1 190px;
-      max-width: 340px;
-      min-width: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 44px;
+      width: 44px;
+      min-width: 44px;
+      max-width: 44px;
+      height: 44px;
       z-index: 950;
+      transition: flex-basis 0.28s cubic-bezier(0.16, 1, 0.3, 1), width 0.28s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.28s ease;
+    }
+    #searchContainer:not(.search-expanded) {
+      cursor: pointer;
+    }
+    #searchContainer:not(.search-expanded) #btnAdminGlobalSearch {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      transform: none !important;
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 14px !important;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.28) 0%, rgba(6, 182, 212, 0.22) 100%) !important;
+      border: 1.5px solid rgba(99, 102, 241, 0.65) !important;
+      box-shadow: 0 4px 16px rgba(79, 70, 229, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    #searchContainer:not(.search-expanded) #btnAdminGlobalSearch:hover {
+      transform: translateY(-1px) scale(1.04) !important;
+      border-color: #38bdf8 !important;
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.38) !important;
+    }
+    body.theme-white #searchContainer:not(.search-expanded) #btnAdminGlobalSearch {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(224, 231, 255, 0.9) 100%) !important;
+      border-color: rgba(79, 70, 229, 0.45) !important;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.16) !important;
+    }
+    #searchContainer:not(.search-expanded) #globalSearch {
+      width: 0 !important;
+      min-width: 0 !important;
+      height: 44px !important;
+      padding: 0 !important;
+      border-width: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      box-shadow: none !important;
+      overflow: hidden;
+    }
+    #searchContainer:not(.search-expanded) #btnClearSearch {
+      display: none !important;
+    }
+    #searchContainer.search-expanded {
+      flex: 1 1 360px !important;
+      width: min(520px, 46vw) !important;
+      min-width: 280px !important;
+      max-width: 560px !important;
+      height: 48px !important;
+      justify-content: flex-start;
+    }
+    #searchContainer.search-expanded #btnAdminGlobalSearch {
+      position: absolute !important;
+      left: 7px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 34px !important;
+      height: 34px !important;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      border-radius: 50% !important;
     }
     .search-input {
       width: 100%;
-      height: 44px;
+      height: 48px;
       border-radius: 999px;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.88) 100%);
-      border: 2px solid rgba(99, 102, 241, 0.72);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(30, 41, 59, 0.92) 100%);
+      border: 2px solid rgba(99, 102, 241, 0.78);
       color: var(--text-main);
-      padding: 0 38px 0 48px;
+      padding: 0 42px 0 48px;
       outline: none;
-      font-size: 0.9rem;
+      font-size: 0.94rem;
       font-weight: 700;
       letter-spacing: 0.15px;
-      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+      box-shadow: 0 10px 28px rgba(79, 70, 229, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      transition: width 0.26s ease, opacity 0.2s ease, border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
     }
     .search-input::placeholder {
       color: #cbd5e1;
@@ -967,16 +1041,19 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 12px;
+      flex-wrap: nowrap;
       flex: 0 1 auto;
+      min-width: 0;
     }
 
     .nav-actions-group {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 8px;
       flex-shrink: 0;
+      flex-wrap: nowrap;
     }
 
     .pnl-tracker {
@@ -2560,62 +2637,87 @@
         overflow-x: hidden !important;
         max-width: 100vw !important;
       }
-      header.top-nav {
-        padding: 10px 10px !important;
-        gap: 8px !important;
+      section#dashboardScreen > header.top-nav {
+        padding: 10px 14px !important;
+        gap: 10px 12px !important;
         display: flex !important;
         flex-wrap: wrap !important;
         align-items: center !important;
+        justify-content: space-between !important;
         height: auto !important;
       }
-      .nav-left {
-        order: 1;
-        width: 100% !important;
-        justify-content: space-between !important;
-        flex-wrap: wrap !important;
+      section#dashboardScreen > header.top-nav .nav-left {
+        order: 1 !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
         min-width: 0;
       }
-      .nav-left h2 {
-        font-size: 0.98rem !important;
-        white-space: normal !important;
-        word-break: break-word !important;
-        line-height: 1.25 !important;
+      section#dashboardScreen > header.top-nav .nav-left h2 {
+        font-size: 1.05rem !important;
+        white-space: nowrap !important;
+        line-height: 1.2 !important;
       }
-      .nav-center {
-        order: 2;
+      section#dashboardScreen > header.top-nav .nav-right {
+        display: contents !important;
+      }
+      section#dashboardScreen > header.top-nav .nav-center {
+        order: 2 !important;
+        flex: 0 0 39px !important;
+        width: 39px !important;
+        min-width: 39px !important;
+        max-width: 39px !important;
+        height: 39px !important;
+        margin-top: 0 !important;
+      }
+      section#dashboardScreen > header.top-nav #searchContainer:not(.search-expanded) #btnAdminGlobalSearch {
+        width: 39px !important;
+        height: 39px !important;
+        border-radius: 12px !important;
+      }
+      section#dashboardScreen > header.top-nav #searchContainer.search-expanded {
+        order: 3 !important;
+        flex: 1 0 100% !important;
         width: 100% !important;
         min-width: 100% !important;
         max-width: 100% !important;
-        margin-top: 2px;
+        height: 48px !important;
       }
-      .search-results-dropdown {
+      section#dashboardScreen > header.top-nav .nav-actions-group {
+        order: 4 !important;
+        flex: 1 0 100% !important;
         width: 100% !important;
-        max-width: calc(100vw - 20px) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 7px !important;
+        flex-wrap: wrap !important;
+        overflow: visible !important;
+        padding: 2px 0 0 0 !important;
+      }
+      section#dashboardScreen > header.top-nav .search-results-dropdown {
+        width: 100% !important;
+        max-width: calc(100vw - 24px) !important;
         left: 0 !important;
       }
-      .nav-right {
-        order: 3;
-        width: 100% !important;
-        flex: 1 1 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 8px !important;
-      }
-      .pnl-tracker,
-      .admin-header-pnl-tracker {
-        order: 1;
-        width: 100% !important;
+      section#dashboardScreen > header.top-nav .pnl-tracker,
+      section#dashboardScreen > header.top-nav .admin-header-pnl-tracker {
+        order: 4 !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
+        min-width: 0 !important;
         max-width: 100% !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 4px !important;
-        padding: 8px 12px !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 4px 6px !important;
         font-size: 0.78rem !important;
         box-sizing: border-box !important;
         margin: 0 !important;
       }
-      .pnl-item {
+      section#dashboardScreen > header.top-nav .pnl-item {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -2624,42 +2726,25 @@
         font-size: 0.78rem !important;
         width: auto !important;
       }
-      .nav-actions-group {
-        order: 2;
-        width: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        gap: 8px !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding: 4px 2px 6px 2px !important;
-        scrollbar-width: none !important;
-      }
-      .nav-actions-group::-webkit-scrollbar {
-        display: none;
-      }
       .dropdown-anchor {
         position: relative;
         flex: 0 0 auto;
         display: flex;
         justify-content: center;
       }
-      .plus-btn-highlight,
-      .nav-btn,
-      .nav-actions-group .nav-btn,
-      .nav-actions-group .notification-icon-btn {
-        min-width: 42px !important;
-        width: 42px !important;
-        max-width: 42px !important;
-        height: 42px !important;
-        min-height: 42px !important;
-        border-radius: 13px !important;
+      section#dashboardScreen > header.top-nav .plus-btn-highlight,
+      section#dashboardScreen > header.top-nav .nav-btn,
+      section#dashboardScreen > header.top-nav .nav-actions-group .nav-btn,
+      section#dashboardScreen > header.top-nav .nav-actions-group .notification-icon-btn {
+        min-width: 39px !important;
+        width: 39px !important;
+        max-width: 39px !important;
+        height: 39px !important;
+        min-height: 39px !important;
+        border-radius: 12px !important;
         padding: 0 !important;
-        font-size: 1rem !important;
-        flex: 0 0 42px !important;
+        font-size: 0.96rem !important;
+        flex: 0 0 39px !important;
       }
       .action-menu,
       .action-menu.home-portfolio-menu,
@@ -2795,33 +2880,93 @@
       }
     }
 
+    @media (max-width: 640px) {
+      section#dashboardScreen > header.top-nav {
+        padding: 10px 12px !important;
+        gap: 8px 10px !important;
+      }
+      section#dashboardScreen > header.top-nav .nav-left {
+        order: 1 !important;
+        flex: 0 0 auto !important;
+      }
+      section#dashboardScreen > header.top-nav .nav-left h2 {
+        font-size: 0.98rem !important;
+      }
+      section#dashboardScreen > header.top-nav .pnl-tracker,
+      section#dashboardScreen > header.top-nav .admin-header-pnl-tracker {
+        order: 3 !important;
+        flex: 1 1 auto !important;
+        justify-content: flex-end !important;
+        padding: 2px 2px !important;
+      }
+      section#dashboardScreen > header.top-nav .admin-pnl-values-row {
+        justify-content: flex-end !important;
+        flex-wrap: wrap !important;
+        gap: 5px 8px !important;
+      }
+      section#dashboardScreen > header.top-nav .admin-pnl-values-row .pnl-item {
+        font-size: 0.74rem !important;
+        gap: 4px !important;
+      }
+      section#dashboardScreen > header.top-nav .admin-pnl-inline-label {
+        font-size: 0.68rem !important;
+      }
+      section#dashboardScreen > header.top-nav .nav-center {
+        order: 2 !important;
+        flex: 0 0 38px !important;
+        width: 38px !important;
+        min-width: 38px !important;
+        max-width: 38px !important;
+        height: 38px !important;
+      }
+      section#dashboardScreen > header.top-nav #searchContainer:not(.search-expanded) #btnAdminGlobalSearch {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 11px !important;
+      }
+      section#dashboardScreen > header.top-nav #searchContainer.search-expanded {
+        order: 4 !important;
+        flex: 1 0 100% !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        height: 46px !important;
+      }
+      section#dashboardScreen > header.top-nav #searchContainer.search-expanded .search-input {
+        height: 46px !important;
+        font-size: 0.9rem !important;
+      }
+      section#dashboardScreen > header.top-nav .nav-actions-group {
+        order: 5 !important;
+        flex: 1 0 100% !important;
+        width: 100% !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 7px !important;
+        padding-top: 2px !important;
+      }
+      section#dashboardScreen > header.top-nav .plus-btn-highlight,
+      section#dashboardScreen > header.top-nav .nav-btn,
+      section#dashboardScreen > header.top-nav .nav-actions-group .nav-btn,
+      section#dashboardScreen > header.top-nav .nav-actions-group .notification-icon-btn {
+        min-width: 38px !important;
+        width: 38px !important;
+        max-width: 38px !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        border-radius: 11px !important;
+        flex: 0 0 38px !important;
+      }
+      section#dashboardScreen > header.top-nav .action-menu,
+      section#dashboardScreen > header.top-nav .action-menu.home-portfolio-menu,
+      section#dashboardScreen > header.top-nav #actionMenu.action-menu {
+        top: 152px !important;
+      }
+    }
+
     @media (max-width: 480px) {
       .profile-action-switch {
         grid-template-columns: 1fr 1fr !important;
-      }
-      .pnl-tracker {
-        flex-direction: row !important;
-        justify-content: space-around !important;
-        align-items: center !important;
-        flex-wrap: wrap !important;
-        padding: 7px 8px !important;
-        font-size: 0.74rem !important;
-      }
-      .pnl-item {
-        justify-content: center !important;
-        width: auto !important;
-      }
-      .plus-btn-highlight,
-      .nav-btn,
-      .nav-actions-group .nav-btn,
-      .nav-actions-group .notification-icon-btn {
-        min-width: 40px !important;
-        width: 40px !important;
-        max-width: 40px !important;
-        height: 40px !important;
-        min-height: 40px !important;
-        border-radius: 12px !important;
-        flex: 0 0 40px !important;
       }
     }
 
@@ -3957,21 +4102,64 @@
     flex-direction: column;
     align-items: stretch;
     gap: 3px;
-    padding: 6px 12px;
+    padding: 4px 6px;
     border-radius: 13px;
     background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     border: 1.5px solid transparent !important;
     box-shadow: none !important;
-    min-width: 245px;
-    max-width: 340px;
-    flex-shrink: 1;
+    min-width: 0;
+    max-width: none;
+    flex: 0 0 auto;
   }
   body.theme-white .admin-dashboard-pnl-section.admin-header-pnl-tracker {
     background: transparent !important;
     border-color: transparent !important;
     box-shadow: none !important;
+  }
+  @media (min-width: 769px) and (max-width: 1080px) {
+    section#dashboardScreen > header.top-nav {
+      padding: 10px 16px !important;
+      gap: 10px 14px !important;
+      flex-wrap: wrap !important;
+    }
+    section#dashboardScreen > header.top-nav .nav-right {
+      display: contents !important;
+    }
+    section#dashboardScreen > header.top-nav .nav-left {
+      order: 1 !important;
+      flex: 0 0 auto !important;
+    }
+    section#dashboardScreen > header.top-nav .nav-center {
+      order: 2 !important;
+      flex: 0 0 42px !important;
+      width: 42px !important;
+      min-width: 42px !important;
+      max-width: 42px !important;
+      height: 42px !important;
+    }
+    section#dashboardScreen > header.top-nav #searchContainer:not(.search-expanded) #btnAdminGlobalSearch {
+      width: 42px !important;
+      height: 42px !important;
+    }
+    section#dashboardScreen > header.top-nav #searchContainer.search-expanded {
+      order: 5 !important;
+      flex: 1 0 100% !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+      height: 48px !important;
+    }
+    section#dashboardScreen > header.top-nav .admin-header-pnl-tracker {
+      order: 3 !important;
+      flex: 0 0 auto !important;
+    }
+    section#dashboardScreen > header.top-nav .nav-actions-group {
+      order: 4 !important;
+      flex: 1 1 auto !important;
+      justify-content: flex-end !important;
+    }
   }
   .admin-pnl-header-row {
     display: flex;
@@ -4983,14 +5171,6 @@
   }
 
   @media (max-width: 768px) {
-    header.top-nav {
-      padding: 8px 10px !important;
-      gap: 8px 6px !important;
-      flex-wrap: wrap !important;
-    }
-    .nav-actions-group {
-      gap: 4px !important;
-    }
     .modal-window {
       width: 95% !important;
       max-width: 95vw !important;
@@ -7517,12 +7697,12 @@
         <div class="pulse-dot" title="Live Continuous Connection with Google Sheets"></div>
       </div>
 
-      <div class="nav-center" id="searchContainer" style="position:relative;">
-        <button type="button" id="btnAdminGlobalSearch" class="search-btn-trigger" onclick="handleGlobalSearch(document.getElementById('globalSearch')?.value); document.getElementById('globalSearch')?.focus();" title="Search Admin Portal" aria-label="Search" style="position:absolute; left:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--primary); cursor:pointer; z-index:5; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%;">
+      <div class="nav-center" id="searchContainer" style="position:relative;" onclick="expandHeaderSearchBox(event)">
+        <button type="button" id="btnAdminGlobalSearch" class="search-btn-trigger" onclick="event.stopPropagation(); expandHeaderSearchBox(event)" title="Search properties, flats, active or left tenants" aria-label="Search" style="background:none; border:none; color:var(--primary); cursor:pointer; z-index:5; display:inline-flex; align-items:center; justify-content:center;">
           <i class="fa-solid fa-magnifying-glass search-icon" style="position:static; transform:none; pointer-events:none;"></i>
         </button>
-        <input type="text" id="globalSearch" class="search-input" style="padding-left:42px; padding-right:34px;" placeholder="Search properties, flats, active or left tenants..." oninput="handleGlobalSearch(this.value); toggleSearchClearBtn(this.value);" onfocus="if(this.value.trim()) handleGlobalSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleGlobalSearch(this.value);}">
-        <button type="button" id="btnClearSearch" onclick="clearGlobalSearch()" title="Clear search" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem; padding:4px;">
+        <input type="text" id="globalSearch" class="search-input" placeholder="Search properties, flats, active or left tenants..." oninput="handleGlobalSearch(this.value); toggleSearchClearBtn(this.value);" onfocus="expandHeaderSearchBox(); if(this.value.trim()) handleGlobalSearch(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleGlobalSearch(this.value);} else if(event.key==='Escape'){collapseHeaderSearchBox(true);}">
+        <button type="button" id="btnClearSearch" onclick="event.stopPropagation(); clearGlobalSearch()" title="Clear search" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.95rem; padding:4px; z-index:6;">
           <i class="fa-solid fa-circle-xmark"></i>
         </button>
         <div id="globalSearchResultsBox" class="search-results-dropdown"></div>
@@ -26911,6 +27091,38 @@ function formatMonthLabel(rawVal) {
     }
 
         
+    function expandHeaderSearchBox() {
+      const container = document.getElementById("searchContainer");
+      const input = document.getElementById("globalSearch");
+      if (container && !container.classList.contains("search-expanded")) {
+        container.classList.add("search-expanded");
+      }
+      if (input) {
+        setTimeout(() => {
+          input.focus();
+          if (input.value && input.value.trim()) {
+            handleGlobalSearch(input.value);
+          }
+        }, 15);
+      }
+    }
+
+    function collapseHeaderSearchBox(forceClear = false) {
+      const container = document.getElementById("searchContainer");
+      const input = document.getElementById("globalSearch");
+      const dropdown = document.getElementById("globalSearchResultsBox");
+      if (dropdown) dropdown.classList.remove("active");
+      if (forceClear && input) {
+        input.value = "";
+        toggleSearchClearBtn("");
+        handleGlobalSearch("");
+      }
+      if (!input || !input.value.trim()) {
+        if (input) input.blur();
+        if (container) container.classList.remove("search-expanded");
+      }
+    }
+
     // Search Clear Helper (Requirement 9)
     function toggleSearchClearBtn(val) {
       const btn = document.getElementById("btnClearSearch");
@@ -26919,7 +27131,10 @@ function formatMonthLabel(rawVal) {
 
     function clearGlobalSearch() {
       const input = document.getElementById("globalSearch");
-      if (input) input.value = "";
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
       toggleSearchClearBtn("");
       const dropdown = document.getElementById("globalSearchResultsBox");
       if (dropdown) {
@@ -35598,6 +35813,10 @@ function formatMonthLabel(rawVal) {
       }
       if (!e.target.closest("#searchContainer")) {
         document.getElementById("globalSearchResultsBox")?.classList.remove("active");
+        const input = document.getElementById("globalSearch");
+        if (!input || !input.value.trim()) {
+          document.getElementById("searchContainer")?.classList.remove("search-expanded");
+        }
       }
     });
 
