@@ -1462,7 +1462,7 @@
     }
 
     .flat-card-merged {
-      background: rgba(17, 24, 39, 0.80);
+      background: rgba(17, 24, 39, 0.50);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border: 1.5px solid var(--glass-border);
@@ -1482,7 +1482,7 @@
       contain: layout style;
     }
     body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) {
-      background: rgba(255, 255, 255, 0.80);
+      background: rgba(255, 255, 255, 0.50);
       border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
       box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
@@ -1493,7 +1493,7 @@
     }
 
     .flat-card-merged.flat-card-paid {
-      background: linear-gradient(135deg, rgba(6, 95, 70, 0.80) 0%, rgba(16, 185, 129, 0.80) 100%) !important;
+      background: linear-gradient(135deg, rgba(6, 95, 70, 0.50) 0%, rgba(16, 185, 129, 0.50) 100%) !important;
       border: 2px solid #34d399 !important;
       box-shadow: 0 14px 32px rgba(16, 185, 129, 0.24) !important;
       color: #ffffff !important;
@@ -1506,7 +1506,7 @@
     }
 
     .flat-card-merged.flat-card-due {
-      background: linear-gradient(135deg, rgba(153, 27, 27, 0.80) 0%, rgba(239, 68, 68, 0.80) 100%) !important;
+      background: linear-gradient(135deg, rgba(153, 27, 27, 0.50) 0%, rgba(239, 68, 68, 0.50) 100%) !important;
       border: 2px solid #f87171 !important;
       box-shadow: 0 14px 32px rgba(239, 68, 68, 0.24) !important;
       color: #ffffff !important;
@@ -1581,7 +1581,7 @@
       font-weight: 800;
     }
     body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) .payment-banner {
-      background: rgba(241, 245, 249, 0.80);
+      background: rgba(241, 245, 249, 0.50);
       border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
     }
@@ -1876,17 +1876,38 @@
       color: #ffffff;
     }
 
-    /* Requirement 3: Colourful & Visually Appealing "Flat" Section Background (Replaces Plain White Screen) */
-    .modal-flat-details {
-      max-width: 980px;
-      background: linear-gradient(135deg, #1e1b4b 0%, #311042 35%, #0f172a 72%, #064e3b 100%) !important;
-      border: 2px solid rgba(129, 140, 248, 0.48) !important;
-      box-shadow: 0 24px 60px rgba(79, 70, 229, 0.35), 0 0 0 1px rgba(236, 72, 153, 0.22) !important;
+    /* Requirement 3: Colourful & Visually Appealing "Flat" Section Background Full-Screen */
+    #flatDetailsModal.modal-overlay {
+      padding: 0 !important;
+      margin: 0 !important;
+      z-index: 2500 !important;
+      align-items: stretch !important;
+      justify-content: stretch !important;
     }
-    body.theme-white .modal-flat-details {
+    .modal-flat-details,
+    #flatDetailsModal .modal-flat-details,
+    #flatDetailsModal #sharedFlatDetailsWorkspace {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      padding: 18px 22px 32px 22px !important;
+      box-sizing: border-box !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      background: linear-gradient(135deg, #1e1b4b 0%, #311042 35%, #0f172a 72%, #064e3b 100%) !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    body.theme-white .modal-flat-details,
+    body.theme-white #flatDetailsModal .modal-flat-details,
+    body.theme-white #flatDetailsModal #sharedFlatDetailsWorkspace {
       background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 28%, #fce7f3 58%, #dbeafe 82%, #d1fae5 100%) !important;
-      border: 2px solid #818cf8 !important;
-      box-shadow: 0 22px 55px rgba(79, 70, 229, 0.25) !important;
+      border: none !important;
+      box-shadow: none !important;
       color: #0f172a !important;
     }
     body.theme-white .modal-flat-details .calc-grid-card,
@@ -3668,16 +3689,77 @@
   body.admin-flat-hub-open #dashboardScreen #homeKhetSectionContainer {
     display: none !important;
   }
+  body.admin-flat-hub-open {
+    overflow: hidden !important;
+  }
+  body.admin-flat-hub-open #adminFlatDetailsHubSection {
+    position: fixed !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 2500 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    background: linear-gradient(135deg, #1e1b4b 0%, #311042 35%, #0f172a 72%, #064e3b 100%) !important;
+    box-sizing: border-box !important;
+  }
+  body.theme-white.admin-flat-hub-open #adminFlatDetailsHubSection {
+    background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 28%, #fce7f3 58%, #dbeafe 82%, #d1fae5 100%) !important;
+  }
+  body.admin-flat-hub-open #adminFlatDetailsHubSection .admin-ops-hub-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  body.admin-flat-hub-open #adminFlatDetailsHubSection .admin-ops-hub-topbar {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    padding: 12px 20px !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 30 !important;
+    backdrop-filter: blur(14px) !important;
+  }
+  body.admin-flat-hub-open #adminFlatDetailsWorkspaceHost {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
   #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace {
     max-width: 100% !important;
     width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
     max-height: none !important;
     overflow: visible !important;
     margin: 0 !important;
-    border-radius: 20px !important;
-    padding: 20px 22px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 16px 22px 42px 22px !important;
     transform: none !important;
     animation: none !important;
+    box-sizing: border-box !important;
   }
   #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace > .modal-close-btn {
     display: none !important;
@@ -5957,6 +6039,22 @@
       overflow-x: hidden !important;
       max-width: calc(100vw - 14px) !important;
     }
+    #flatDetailsModal.modal-overlay {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    #flatDetailsModal .modal-window,
+    #flatDetailsModal .modal-flat-details,
+    #flatDetailsModal #sharedFlatDetailsWorkspace {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      padding: 14px 12px 28px 12px !important;
+    }
     .calc-grid-card,
     .matrix-col,
     .exec-field-card,
@@ -5979,6 +6077,17 @@
     }
     .admin-ops-hub-section {
       padding: 10px 10px 28px 10px !important;
+    }
+    body.admin-flat-hub-open #adminFlatDetailsHubSection {
+      padding: 0 !important;
+      margin: 0 !important;
+      width: 100vw !important;
+      max-width: 100vw !important;
+    }
+    #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace {
+      width: 100% !important;
+      max-width: 100vw !important;
+      padding: 12px 12px 36px 12px !important;
     }
     .admin-ops-hub-topbar {
       padding: 10px 12px !important;
@@ -6195,7 +6304,7 @@
   <!-- ==========================================================================
        MONTHLY BILL RECEIPT POPUP MODAL (OPENED FROM HISTORY "RECEIPT" BUTTON)
        ========================================================================== -->
-  <div id="receiptViewModal" class="modal-overlay" onclick="if(event.target===this) closeModal('receiptViewModal')">
+  <div id="receiptViewModal" class="modal-overlay" style="z-index: 4900;" onclick="if(event.target===this) closeModal('receiptViewModal')">
     <div class="modal-window receipt-card" id="printableReceiptArea">
       <button class="modal-close-btn no-print" onclick="closeModal('receiptViewModal')"><i class="fa-solid fa-xmark"></i></button>
       <div class="receipt-header">
@@ -13924,6 +14033,7 @@
         oldRenterRecord.Status = "Inactive";
         oldRenterRecord.EndDate = shiftDate;
         oldRenterRecord.ShiftedTo = `${destProp} - Flat ${destFlat}`;
+        stampUnassignedFlatBillsToDepartingRenter(oldProp, oldFlat, oldRenterRecord);
         saveLocalFlatUtilityAndDateMeta(oldProp, oldFlat, oldRenterRecord.RenterID, {
           JoinDate: oldRenterRecord.JoinDate || "",
           EndDate: shiftDate
@@ -13934,6 +14044,7 @@
         if (isSamePropAndFlat(r.PropertyName, r.FlatName, destProp, destFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
           r.Status = "Inactive";
           if (!r.EndDate) r.EndDate = shiftDate;
+          stampUnassignedFlatBillsToDepartingRenter(destProp, destFlat, r);
           if (typeof autoBlockRenterUserAccountOnMoveOut === "function") {
             autoBlockRenterUserAccountOnMoveOut(r.IdentityDocNumber, r.PropertyName, r.FlatName, r.RenterName);
           }
@@ -15403,13 +15514,17 @@ function formatMonthLabel(rawVal) {
       const elecTot = parseFloat(billObj.ElecTotal) || 0;
       const pngTot = parseFloat(billObj.PNGTotal) || 0;
       const waterTot = parseFloat(billObj.WaterTotal) || 0;
-      const addAmt = parseFloat(billObj.AdditionalAmount) || 0;
+      const addAmt = parseFloat(billObj.AdditionalAmount ?? billObj.ExtraAmount) || 0;
       const componentSum = baseRent + elecTot + pngTot + waterTot + addAmt;
 
-      const billTotal = parseFloat(billObj.TotalBilled !== undefined ? billObj.TotalBilled : billObj.TotalAmount) || 0;
-      const standaloneCharge = billTotal > 0 ? billTotal : componentSum;
+      const rawNetPayable = typeof getBillRawNetPayable === "function"
+        ? getBillRawNetPayable(billObj)
+        : ((parseFloat(billObj.TotalBilled !== undefined ? billObj.TotalBilled : billObj.TotalAmount) || 0) > 0
+            ? (parseFloat(billObj.TotalBilled !== undefined ? billObj.TotalBilled : billObj.TotalAmount) || 0)
+            : (componentSum + (parseFloat(billObj.PrevCarryBalance ?? billObj.PrevPending) || 0)));
+      const standaloneCharge = Math.max(0, rawNetPayable);
       const paidAmount = parseFloat(billObj.PaidAmount) || 0;
-      const diff = paidAmount - standaloneCharge;
+      const diff = paidAmount - rawNetPayable;
 
       let advanceAmt = 0;
       let dueAmt = 0;
@@ -17606,30 +17721,13 @@ function formatMonthLabel(rawVal) {
         ) || 0;
 
         if (latestBill) {
-          const rawYM = normalizeMonthYear(latestBill.MonthYear || latestBill.BillDate) || currentCalendarYM;
-          latestReceiptMonthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(rawYM) : rawYM;
+          const latestMetrics = computeCurrentMonthStandaloneAdvanceAndDue(latestBill);
+          latestReceiptMonthLabel = latestMetrics.monthLabel;
           latestBaseRent = parseFloat(latestBill.BaseRent) || baseRentConfigured;
-
-          const bRent = parseFloat(latestBill.BaseRent) || 0;
-          const bElec = parseFloat(latestBill.ElecTotal) || 0;
-          const bPng = parseFloat(latestBill.PNGTotal) || 0;
-          const bWater = parseFloat(latestBill.WaterTotal) || 0;
-          const bAdd = parseFloat(latestBill.AdditionalAmount) || 0;
-          const compSum = bRent + bElec + bPng + bWater + bAdd;
-
-          const bTotal = parseFloat(latestBill.TotalBilled !== undefined ? latestBill.TotalBilled : latestBill.TotalAmount) || 0;
-          latestTotalCharge = bTotal > 0 ? Math.round(bTotal) : Math.round(compSum);
-
-          latestPaidAmount = Math.round(parseFloat(latestBill.PaidAmount) || 0);
-
-          const diff = latestPaidAmount - latestTotalCharge;
-          if (diff > 0) {
-            latestAdvanceAmt = Math.round(diff);
-            latestDueAmt = 0;
-          } else if (diff < 0) {
-            latestAdvanceAmt = 0;
-            latestDueAmt = Math.round(Math.abs(diff));
-          }
+          latestTotalCharge = latestMetrics.standaloneCharge;
+          latestPaidAmount = latestMetrics.paidAmount;
+          latestAdvanceAmt = latestMetrics.advanceAmt;
+          latestDueAmt = latestMetrics.dueAmt;
         } else {
           latestReceiptMonthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(currentCalendarYM) : currentCalendarYM;
           latestBaseRent = baseRentConfigured;
@@ -21265,20 +21363,42 @@ function formatMonthLabel(rawVal) {
       const targetRenterName = String(renterObj.RenterName || "").trim().toLowerCase();
       if (!targetRenterId && !targetRenterName) return [];
 
+      const rJoinDate = toInputDateValue(renterObj.JoinDate || "");
+      const rEndDate = toInputDateValue(renterObj.EndDate || "");
+      const rJoinMonth = rJoinDate ? rJoinDate.slice(0, 7) : "";
+      const rEndMonth = rEndDate ? rEndDate.slice(0, 7) : "";
+      const rIsInactive = String(renterObj.Status || "").trim().toLowerCase() === "inactive";
+
       return DB.bills.filter(b => {
         const billRenterId = String(b.RenterID || "").trim();
 
-        // Requirement 3 & 5: Match strictly by RenterID when available so a new tenant NEVER inherits
-        // any previous tenant's unpaid dues or advance balance, while returning reactivated tenants keep their own history.
+        // Match strictly by RenterID when available so a new tenant NEVER inherits
+        // any departed tenant's unpaid dues or advance balance, while each stay keeps its own ledger.
         if (billRenterId && targetRenterId) {
           return billRenterId === targetRenterId;
         }
-        // If the bill is stamped with a different RenterID, it belongs to a previous tenant — never attach to a new tenant
+        // If the bill is stamped with a different RenterID, it belongs to another tenant — never attach
         if (billRenterId && !targetRenterId) {
           return false;
         }
+        if (!billRenterId && targetRenterId && !targetRenterName) {
+          return false;
+        }
         if (!isSamePropAndFlat(b.PropertyName, b.FlatName, propertyName, flatName)) return false;
-        return String(b.TenantName || "").trim().toLowerCase() === targetRenterName;
+        if (String(b.TenantName || "").trim().toLowerCase() !== targetRenterName) return false;
+
+        // Guard legacy bills lacking RenterID by stay date/month bounds so prior vacated stays never bleed into a new tenant
+        const billDateVal = toInputDateValue(b.BillDate || b.PaymentDate || "");
+        const billMonthVal = normalizeMonthYear(b.MonthYear || billDateVal);
+        if (rJoinDate) {
+          if (billDateVal && billDateVal < rJoinDate) return false;
+          if (!billDateVal && billMonthVal && rJoinMonth && billMonthVal < rJoinMonth) return false;
+        }
+        if (rIsInactive && rEndDate) {
+          if (billDateVal && billDateVal > rEndDate) return false;
+          if (!billDateVal && billMonthVal && rEndMonth && billMonthVal > rEndMonth) return false;
+        }
+        return true;
       });
     }
 
@@ -21405,53 +21525,182 @@ function formatMonthLabel(rawVal) {
       };
     }
 
+    function sortBillsChronologically(billsArr) {
+      return [...(billsArr || [])].sort((a, b) => {
+        const mA = normalizeMonthYear(a?.MonthYear || a?.BillDate || "");
+        const mB = normalizeMonthYear(b?.MonthYear || b?.BillDate || "");
+        if (mA !== mB) return mA.localeCompare(mB);
+        const dA = toInputDateValue(a?.BillDate || a?.PaymentDate || "") || "";
+        const dB = toInputDateValue(b?.BillDate || b?.PaymentDate || "") || "";
+        if (dA !== dB) return dA.localeCompare(dB);
+        return String(a?.BillID || "").localeCompare(String(b?.BillID || ""));
+      });
+    }
+
+    function getBillStandaloneMonthlyCharge(b) {
+      if (!b || typeof b !== "object") return 0;
+      const baseRent = parseFloat(b.BaseRent) || 0;
+      const elecUnits = Math.max(0, (parseFloat(b.ElecCurr) || 0) - (parseFloat(b.ElecPrev) || 0));
+      const elecTotal = (b.ElecTotal !== undefined && b.ElecTotal !== "")
+        ? (parseFloat(b.ElecTotal) || 0)
+        : (elecUnits * (parseFloat(b.ElecRate) || 0));
+      const pngUnits = Math.max(0, (parseFloat(b.PNGCurr) || 0) - (parseFloat(b.PNGPrev) || 0));
+      const pngTotal = (b.PNGTotal !== undefined && b.PNGTotal !== "")
+        ? (parseFloat(b.PNGTotal) || 0)
+        : (pngUnits * (parseFloat(b.PNGRate) || 0));
+      const waterUnits = Math.max(0, (parseFloat(b.WaterCurr) || 0) - (parseFloat(b.WaterPrev) || 0));
+      const waterTotal = (b.WaterTotal !== undefined && b.WaterTotal !== "")
+        ? (parseFloat(b.WaterTotal) || 0)
+        : (waterUnits * (parseFloat(b.WaterRate) || 0));
+      const addAmt = parseFloat(b.AdditionalAmount ?? b.ExtraAmount) || 0;
+      const componentSum = Math.round((baseRent + elecTotal + pngTotal + waterTotal + addAmt) * 100) / 100;
+
+      const totalBilled = parseFloat(b.TotalBilled !== undefined ? b.TotalBilled : b.TotalAmount) || 0;
+      const prevCarryIncluded = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
+      const hasExplicitComponents =
+        b.BaseRent !== undefined || b.ElecTotal !== undefined ||
+        b.PNGTotal !== undefined || b.WaterTotal !== undefined ||
+        b.AdditionalAmount !== undefined;
+
+      // Critical fix: When prior advance exceeds current month's charge, TotalBilled is clamped at 0,
+      // so (TotalBilled - PrevCarryBalance) would falsely erase remaining advance! Use componentSum directly.
+      if (totalBilled <= 0 && (componentSum + prevCarryIncluded) <= 0) {
+        return componentSum;
+      }
+      if (!hasExplicitComponents || (componentSum === 0 && totalBilled > 0)) {
+        return Math.max(0, Math.round((totalBilled - prevCarryIncluded) * 100) / 100);
+      }
+      if (totalBilled > 0 && Math.abs((componentSum + prevCarryIncluded) - totalBilled) >= 0.01) {
+        return Math.max(0, Math.round((totalBilled - prevCarryIncluded) * 100) / 100);
+      }
+      return componentSum;
+    }
+
+    function getBillRawNetPayable(b) {
+      if (!b || typeof b !== "object") return 0;
+      const standalone = getBillStandaloneMonthlyCharge(b);
+      const prevCarry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
+      const rawGrand = Math.round((standalone + prevCarry) * 100) / 100;
+      const totalBilled = parseFloat(b.TotalBilled !== undefined ? b.TotalBilled : b.TotalAmount) || 0;
+      if (totalBilled > 0 && Math.abs(rawGrand - totalBilled) >= 0.01) {
+        return Math.round(totalBilled * 100) / 100;
+      }
+      return rawGrand;
+    }
+
+    function recalculateSequentialCarryForRenterBills(propertyName, flatName, renterObj) {
+      if (!renterObj) return [];
+      const sortedBills = sortBillsChronologically(getBillsForSpecificRenter(propertyName, flatName, renterObj));
+      if (sortedBills.length === 0) return [];
+
+      let runningNet = 0;
+      const updatedBills = [];
+      sortedBills.forEach((b, idx) => {
+        const standalone = getBillStandaloneMonthlyCharge(b);
+        const carryForMonth = idx === 0
+          ? (Math.round((parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0) * 100) / 100)
+          : (Math.round(runningNet * 100) / 100);
+        const rawGrand = Math.round((standalone + carryForMonth) * 100) / 100;
+        const clampedTotal = Math.max(0, rawGrand);
+        const paid = parseFloat(b.PaidAmount) || 0;
+        const diffPay = Math.round((paid - rawGrand) * 100) / 100;
+        const nextStatus = diffPay < 0 ? "Due" : (diffPay > 0 ? "Overpaid (Advance)" : "Fully Paid");
+
+        if (idx > 0 && (
+          Math.abs((parseFloat(b.PrevCarryBalance) || 0) - carryForMonth) >= 0.01 ||
+          Math.abs((parseFloat(b.TotalBilled) || 0) - clampedTotal) >= 0.01 ||
+          String(b.Status || "") !== nextStatus
+        )) {
+          b.PrevCarryBalance = carryForMonth;
+          b.PrevPending = carryForMonth;
+          b.TotalBilled = clampedTotal;
+          b.Status = nextStatus;
+          updatedBills.push(b);
+        }
+        runningNet = Math.round((rawGrand - paid) * 100) / 100;
+      });
+      return updatedBills;
+    }
+
+    function stampUnassignedFlatBillsToDepartingRenter(propertyName, flatName, renterObj) {
+      if (!renterObj) return;
+      const vacatedId = String(renterObj.RenterID || "").trim();
+      if (!vacatedId) return;
+      const vacatedName = String(renterObj.RenterName || "").trim().toLowerCase();
+      const vJoin = toInputDateValue(renterObj.JoinDate || "");
+      const vEnd = toInputDateValue(renterObj.EndDate || "");
+
+      (DB.bills || []).forEach(b => {
+        if (!isSamePropAndFlat(b.PropertyName, b.FlatName, propertyName, flatName)) return;
+        const bRId = String(b.RenterID || "").trim();
+        if (bRId) return;
+        const bTName = String(b.TenantName || "").trim().toLowerCase();
+        const bDate = toInputDateValue(b.BillDate || b.PaymentDate || "");
+        const bMonth = normalizeMonthYear(b.MonthYear || bDate);
+        const withinDates =
+          (!vJoin || !bDate || bDate >= vJoin) &&
+          (!vEnd || !bDate || bDate <= vEnd) &&
+          (!vJoin || bDate || !bMonth || bMonth >= vJoin.slice(0, 7)) &&
+          (!vEnd || bDate || !bMonth || bMonth <= vEnd.slice(0, 7));
+
+        if ((bTName && vacatedName && bTName === vacatedName) || (!bTName && withinDates) || (withinDates && vJoin)) {
+          b.RenterID = vacatedId;
+          if (!b.TenantName && renterObj.RenterName) b.TenantName = renterObj.RenterName;
+        }
+      });
+    }
+
     function calculateNetBalanceForRenterBeforeMonth(propertyName, flatName, renterObj, targetMonthYear) {
       // Strictly sum ONLY months strictly prior to targetMonthYear (< cleanTargetMonth) so same-month due/advance never appears in that month
       if (!renterObj) return 0;
       const cleanTargetMonth = normalizeMonthYear(targetMonthYear);
       if (!cleanTargetMonth) return 0;
-      const renterBills = getBillsForSpecificRenter(propertyName, flatName, renterObj);
-      const priorBills = renterBills
-        .filter(b => normalizeMonthYear(b.MonthYear) < cleanTargetMonth)
-        .sort((a, b) => normalizeMonthYear(a.MonthYear).localeCompare(normalizeMonthYear(b.MonthYear)));
+      const renterBills = sortBillsChronologically(getBillsForSpecificRenter(propertyName, flatName, renterObj));
+      const firstStayBillId = renterBills[0] ? String(renterBills[0].BillID || "") : "";
+      const priorBills = renterBills.filter(b => normalizeMonthYear(b.MonthYear) < cleanTargetMonth);
 
       if (priorBills.length === 0) return 0;
 
-      let cumulativeStandaloneCharges = 0;
+      let cumulativeCharges = 0;
       let cumulativePaid = 0;
 
-      priorBills.forEach(b => {
-        const totalBilled = parseFloat(b.TotalBilled) || 0;
-        const prevCarryIncluded = parseFloat(b.PrevCarryBalance) || 0;
-        const standaloneMonthCharge = totalBilled - prevCarryIncluded;
+      priorBills.forEach((b, idx) => {
+        const isVeryFirstBillOfStay = firstStayBillId ? (String(b.BillID || "") === firstStayBillId) : (idx === 0);
+        const openingCarry = isVeryFirstBillOfStay ? (parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0) : 0;
+        const standaloneMonthCharge = getBillStandaloneMonthlyCharge(b);
         const paid = parseFloat(b.PaidAmount) || 0;
 
-        cumulativeStandaloneCharges += standaloneMonthCharge;
+        cumulativeCharges += (standaloneMonthCharge + openingCarry);
         cumulativePaid += paid;
       });
 
-      return cumulativeStandaloneCharges - cumulativePaid;
+      return Math.round((cumulativeCharges - cumulativePaid) * 100) / 100;
     }
 
     function calculateCurrentNetBalanceForRenter(propertyName, flatName, renterObj) {
       if (!renterObj) return { totalStandaloneBilled: 0, totalPaid: 0, netBalance: 0, billCount: 0 };
-      const renterBills = getBillsForSpecificRenter(propertyName, flatName, renterObj);
+      const renterBills = sortBillsChronologically(getBillsForSpecificRenter(propertyName, flatName, renterObj));
       if (renterBills.length === 0) return { totalStandaloneBilled: 0, totalPaid: 0, netBalance: 0, billCount: 0 };
 
       let totalStandaloneBilled = 0;
       let totalPaid = 0;
+      let openingCarry = 0;
 
-      renterBills.forEach(b => {
-        const totalBilled = parseFloat(b.TotalBilled) || 0;
-        const prevCarryIncluded = parseFloat(b.PrevCarryBalance) || 0;
-        totalStandaloneBilled += (totalBilled - prevCarryIncluded);
+      renterBills.forEach((b, idx) => {
+        if (idx === 0) {
+          openingCarry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
+        }
+        totalStandaloneBilled += getBillStandaloneMonthlyCharge(b);
         totalPaid += (parseFloat(b.PaidAmount) || 0);
       });
+
+      totalStandaloneBilled = Math.round(totalStandaloneBilled * 100) / 100;
+      totalPaid = Math.round(totalPaid * 100) / 100;
 
       return {
         totalStandaloneBilled,
         totalPaid,
-        netBalance: totalStandaloneBilled - totalPaid,
+        netBalance: Math.round(((totalStandaloneBilled + openingCarry) - totalPaid) * 100) / 100,
         billCount: renterBills.length
       };
     }
@@ -21489,7 +21738,7 @@ function formatMonthLabel(rawVal) {
         );
 
         activeFlatRenters.forEach(renter => {
-          const renterBills = getBillsForSpecificRenter(flat.PropertyName, flat.FlatName, renter).filter(b => {
+          const renterBills = sortBillsChronologically(getBillsForSpecificRenter(flat.PropertyName, flat.FlatName, renter)).filter(b => {
             const key = String(b.BillID || `${b.PropertyName}_${b.FlatName}_${b.MonthYear}_${b.TenantName}`);
             if (countedBillIds.has(key)) return false;
             countedBillIds.add(key);
@@ -21500,11 +21749,10 @@ function formatMonthLabel(rawVal) {
             let stayStandaloneBilled = 0;
             let stayPaid = 0;
             renterBills.forEach((b, idx) => {
-              const billed = parseFloat(b.TotalBilled) || 0;
-              const carry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
+              const openingCarry = idx === 0 ? (parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0) : 0;
+              const standalone = getBillStandaloneMonthlyCharge(b);
               const paid = parseFloat(b.PaidAmount) || 0;
-              const standalone = idx === 0 ? billed : (billed - carry);
-              stayStandaloneBilled += standalone;
+              stayStandaloneBilled += (standalone + openingCarry);
               stayPaid += paid;
             });
             totalProfit += stayPaid;
@@ -23052,10 +23300,20 @@ function formatMonthLabel(rawVal) {
       bill.Status = document.getElementById("eeStatus").value;
       bill.Notes = document.getElementById("eeNotes").value;
 
+      const billOwnerRenter = (typeof findRenterForBill === "function" ? findRenterForBill(bill) : null) ||
+        (DB.renters || []).find(r => bill.RenterID && String(r.RenterID || "") === String(bill.RenterID || ""));
+      if (billOwnerRenter && typeof recalculateSequentialCarryForRenterBills === "function") {
+        recalculateSequentialCarryForRenterBills(bill.PropertyName, bill.FlatName, billOwnerRenter);
+      }
+
       saveDbSnapshotToCache();
       closeModal("editEverythingBillModal");
       renderEditEverythingBillsList();
       renderAllDashboardUI();
+      if (selectedFlat && isSamePropAndFlat(selectedFlat.PropertyName, selectedFlat.FlatName, bill.PropertyName, bill.FlatName)) {
+        populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
+        handleBillingMonthChange();
+      }
       triggerSideToast("Bill Updated", "Bill changes saved to Google Sheet!", true);
 
       await sendFirebaseAction({
@@ -23105,8 +23363,20 @@ function formatMonthLabel(rawVal) {
         async () => {
           const target = (DB.bills || []).find(b => String(b.BillID || "").trim() === String(billId).trim());
           DB.bills = (DB.bills || []).filter(b => String(b.BillID || "").trim() !== String(billId).trim());
+          if (target) {
+            const targetRenter = (typeof findRenterForBill === "function" ? findRenterForBill(target) : null) ||
+              (DB.renters || []).find(r => target.RenterID && String(r.RenterID || "") === String(target.RenterID || ""));
+            if (targetRenter && typeof recalculateSequentialCarryForRenterBills === "function") {
+              recalculateSequentialCarryForRenterBills(target.PropertyName, target.FlatName, targetRenter);
+            }
+          }
+          saveDbSnapshotToCache();
           renderEditEverythingBillsList();
           renderAllDashboardUI();
+          if (selectedFlat && target && isSamePropAndFlat(selectedFlat.PropertyName, selectedFlat.FlatName, target.PropertyName, target.FlatName)) {
+            populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
+            handleBillingMonthChange();
+          }
           triggerSideToast("Bill Deleted", "Bill entry permanently deleted from system.", "warning");
 
           await sendFirebaseAction({
@@ -23570,7 +23840,7 @@ function formatMonthLabel(rawVal) {
               ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="promptDemoteAdminToRegularUser('${safeUName}')" title="Change role from Admin to Regular User (Viewer)">
                    <i class="fa-solid fa-user-shield"></i> Make Regular User
                  </button>`
-              : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-green); border-color:rgba(16,185,129,0.4);" onclick="changeRegisteredUserRole('${safeUName}', 'Admin', '', '')" title="Promote User to Admin">
+              : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-green); border-color:rgba(16,185,129,0.4);" onclick="promptPromoteUserToAdmin('${safeUName}')" title="Promote User to Admin">
                    <i class="fa-solid fa-arrow-up-right-dots"></i> Promote to Admin
                  </button>`;
 
@@ -23633,6 +23903,18 @@ function formatMonthLabel(rawVal) {
           </div>
         `;
       }).join("");
+    }
+
+    function promptPromoteUserToAdmin(targetUsername) {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") return;
+      openCenteredConfirmModal(
+        "Promote to Admin",
+        "Do you want to make this user an admin?",
+        () => {
+          changeRegisteredUserRole(targetUsername, "Admin", "", "");
+        },
+        { yesText: "Yes", noText: "No", iconClass: "fa-solid fa-user-shield" }
+      );
     }
 
     function promptDemoteAdminToRegularUser(targetUsername) {
@@ -25237,10 +25519,26 @@ function formatMonthLabel(rawVal) {
       const allFlatBills = (DB.bills || []).filter(b =>
         isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)
       );
-      const existingBill = allFlatBills.find(b =>
-        normalizeMonthYear(b.MonthYear) === cleanMonth &&
-        (!activeFlatRenterObj || !b.RenterID || String(b.RenterID) === String(activeFlatRenterObj.RenterID))
-      ) || allFlatBills.find(b => normalizeMonthYear(b.MonthYear) === cleanMonth) || null;
+      const allFlatBillsForMonth = allFlatBills.filter(b => normalizeMonthYear(b.MonthYear) === cleanMonth);
+      const defaultPeriodDate = cleanMonth === currentCalMonth ? getLocalTodayIsoDate() : `${cleanMonth}-01`;
+      const periodResForMonth = resolveRenterForFlatPeriod(
+        selectedFlat.PropertyName,
+        selectedFlat.FlatName,
+        defaultPeriodDate,
+        cleanMonth,
+        true
+      );
+      const existingBill = (currentEditingBillId && allFlatBillsForMonth.find(b => String(b.BillID || "") === currentEditingBillId))
+        || allFlatBillsForMonth.find(b => {
+            if (periodResForMonth.mode === "VACANT") return !b.RenterID && !b.TenantName && !b.TenantAadhaar;
+            if (!periodResForMonth.renter) return false;
+            const bRId = String(b.RenterID || "").trim();
+            const rRId = String(periodResForMonth.renter.RenterID || "").trim();
+            if (bRId && rRId) return bRId === rRId;
+            return String(b.TenantName || "").trim().toLowerCase() === String(periodResForMonth.renter.RenterName || "").trim().toLowerCase();
+          })
+        || (!periodResForMonth.renter && periodResForMonth.mode !== "VACANT" ? allFlatBillsForMonth[0] : null)
+        || null;
       const hasSubsequentBill = allFlatBills.some(b => normalizeMonthYear(b.MonthYear) > cleanMonth);
       if (existingBill) {
         if (cleanMonth < currentCalMonth || hasSubsequentBill || existingBill.ReceiptGenerated || existingBill.CalculationDone) {
@@ -25304,10 +25602,17 @@ function formatMonthLabel(rawVal) {
       const priorAdvanceCredit = netCarryFromPriorMonths < 0 ? Math.abs(netCarryFromPriorMonths) : 0;
 
       const priorBillsSorted = (allFlatBills || [])
-        .filter(b => normalizeMonthYear(b.MonthYear) < chosenMonth)
+        .filter(b => {
+          if (normalizeMonthYear(b.MonthYear) >= chosenMonth) return false;
+          if (!activeFlatRenterObj) return true;
+          const bRId = String(b.RenterID || "").trim();
+          const aRId = String(activeFlatRenterObj.RenterID || "").trim();
+          if (bRId && aRId) return bRId === aRId;
+          return true;
+        })
         .sort((a, b) => normalizeMonthYear(b.MonthYear).localeCompare(normalizeMonthYear(a.MonthYear)));
-      const priorPendingBill = priorBillsSorted.find(b => ((parseFloat(b.TotalBilled) || 0) - (parseFloat(b.PaidAmount) || 0)) > 0) || priorBillsSorted[0] || null;
-      const priorAdvanceBill = priorBillsSorted.find(b => ((parseFloat(b.PaidAmount) || 0) - (parseFloat(b.TotalBilled) || 0)) > 0) || priorBillsSorted[0] || null;
+      const priorPendingBill = priorBillsSorted.find(b => ((typeof getBillRawNetPayable === "function" ? getBillRawNetPayable(b) : (parseFloat(b.TotalBilled) || 0)) - (parseFloat(b.PaidAmount) || 0)) > 0) || priorBillsSorted[0] || null;
+      const priorAdvanceBill = priorBillsSorted.find(b => ((parseFloat(b.PaidAmount) || 0) - (typeof getBillRawNetPayable === "function" ? getBillRawNetPayable(b) : (parseFloat(b.TotalBilled) || 0))) > 0) || priorBillsSorted[0] || null;
 
       if (priorPendingDue > 0) {
         const srcLabel = priorPendingBill ? formatMonthLabel(normalizeMonthYear(priorPendingBill.MonthYear)) : "Prior Month(s)";
@@ -25626,12 +25931,14 @@ function formatMonthLabel(rawVal) {
       const existingBill = (currentEditingBillId && allFlatBillsForMonth.find(b => String(b.BillID || "") === currentEditingBillId))
         || allFlatBillsForMonth.find(b => {
             if (periodResForMonth.mode === "VACANT") return !b.RenterID && !b.TenantName && !b.TenantAadhaar;
-            return periodResForMonth.renter && (
-              String(b.RenterID || "") === String(periodResForMonth.renter.RenterID || "") ||
-              String(b.TenantName || "").trim().toLowerCase() === String(periodResForMonth.renter.RenterName || "").trim().toLowerCase()
-            );
+            if (!periodResForMonth.renter) return false;
+            const bRId = String(b.RenterID || "").trim();
+            const rRId = String(periodResForMonth.renter.RenterID || "").trim();
+            if (bRId && rRId) return bRId === rRId;
+            if (bRId && rRId && bRId !== rRId) return false;
+            return String(b.TenantName || "").trim().toLowerCase() === String(periodResForMonth.renter.RenterName || "").trim().toLowerCase();
           })
-        || allFlatBillsForMonth[0]
+        || (!periodResForMonth.renter && periodResForMonth.mode !== "VACANT" ? allFlatBillsForMonth[0] : null)
         || null;
 
       const hasSubsequentBill = allFlatBills.some(b => normalizeMonthYear(b.MonthYear) > chosenMonth);
@@ -26290,34 +26597,41 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Already Empty", "No photo is currently uploaded in this slot.", false);
       }
 
-      updateLeftRenterImageSlotUI(docType, "");
-      if (isIdentityBack) targetRenter.IdentityBackImageURL = "";
-      else if (isIdentityFront) targetRenter.IdentityImageURL = "";
-      else targetRenter.ProfileImageURL = "";
+      openCenteredConfirmModal(
+        "Delete Photo",
+        "Do you want to delete this photo?",
+        async () => {
+          updateLeftRenterImageSlotUI(docType, "");
+          if (isIdentityBack) targetRenter.IdentityBackImageURL = "";
+          else if (isIdentityFront) targetRenter.IdentityImageURL = "";
+          else targetRenter.ProfileImageURL = "";
 
-      syncRenterIdentityAcrossAllStays(targetRenter, isIdentityBack
-        ? { IdentityBackImageURL: "", forceClearIdentityBackImage: true }
-        : (isIdentityFront ? { IdentityImageURL: "", forceClearIdentityImage: true } : { ProfileImageURL: "", forceClearProfileImage: true })
+          syncRenterIdentityAcrossAllStays(targetRenter, isIdentityBack
+            ? { IdentityBackImageURL: "", forceClearIdentityBackImage: true }
+            : (isIdentityFront ? { IdentityImageURL: "", forceClearIdentityImage: true } : { ProfileImageURL: "", forceClearProfileImage: true })
+          );
+
+          saveDbSnapshotToCache();
+          renderAllDashboardUI();
+          populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
+
+          triggerSideToast("Photo Deleted", `Removed ${docLabel} photo from ${targetRenter.RenterName}'s profile.`, true);
+
+          await sendFirebaseAction({
+            action: "deleteRenterDocument",
+            propertyName: targetRenter.PropertyName || selectedFlat.PropertyName,
+            flatName: targetRenter.FlatName || selectedFlat.FlatName,
+            renterId: targetRenter.RenterID,
+            identityDocNumber: targetRenter.IdentityDocNumber || "",
+            docType: docType,
+            currentImageUrl: currentUrl,
+            clearIdentityImage: isIdentityFront,
+            clearIdentityBackImage: isIdentityBack,
+            clearProfileImage: !isIdentityFront && !isIdentityBack
+          });
+        },
+        { yesText: "Yes", noText: "No", iconClass: "fa-solid fa-trash-can" }
       );
-
-      saveDbSnapshotToCache();
-      renderAllDashboardUI();
-      populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
-
-      triggerSideToast("Photo Deleted", `Removed ${docLabel} photo from ${targetRenter.RenterName}'s profile.`, true);
-
-      await sendFirebaseAction({
-        action: "deleteRenterDocument",
-        propertyName: targetRenter.PropertyName || selectedFlat.PropertyName,
-        flatName: targetRenter.FlatName || selectedFlat.FlatName,
-        renterId: targetRenter.RenterID,
-        identityDocNumber: targetRenter.IdentityDocNumber || "",
-        docType: docType,
-        currentImageUrl: currentUrl,
-        clearIdentityImage: isIdentityFront,
-        clearIdentityBackImage: isIdentityBack,
-        clearProfileImage: !isIdentityFront && !isIdentityBack
-      });
     }
 
     function downloadLeftRenterDocument(docType) {
@@ -27638,9 +27952,12 @@ function formatMonthLabel(rawVal) {
         host.appendChild(ws);
       }
       document.body.classList.add("admin-flat-hub-open", "flat-details-open");
-      if (hub) hub.style.display = "block";
+      if (hub) {
+        hub.style.display = "block";
+        hub.scrollTop = 0;
+      }
       if (typeof syncFloatingCornerButtonsByRole === "function") syncFloatingCornerButtonsByRole();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
 
     function triggerRenterAppDownload(platform) {
@@ -28187,10 +28504,12 @@ function formatMonthLabel(rawVal) {
       const netAddAmt = addToggle === "+" ? addAmt : -addAmt;
 
       const prevCarryBalance = parseFloat(document.getElementById("calcPrevCarryBalance").value) || 0;
+      const baseRentNum = parseFloat(document.getElementById("calcRent").value) || 0;
       const totalBilled = parseFloat(document.getElementById("calcGrandTotal").innerText.replace("₹ ","")) || 0;
       const paidAmount = parseFloat(document.getElementById("calcPaidNow").value) || 0;
 
-      const diffPayment = Math.round((paidAmount - totalBilled) * 100) / 100;
+      const rawGrandForStatus = Math.round((baseRentNum + (elecUnits * elecRate) + (pngUnits * pngRate) + (waterUnits * waterRate) + netAddAmt + prevCarryBalance) * 100) / 100;
+      const diffPayment = Math.round((paidAmount - rawGrandForStatus) * 100) / 100;
       let billStatus = "Fully Paid";
       if (diffPayment < 0) billStatus = "Due";
       else if (diffPayment > 0) billStatus = "Overpaid (Advance)";
@@ -28278,6 +28597,10 @@ function formatMonthLabel(rawVal) {
       } else {
         DB.bills.push(newBillObj);
         triggerSideToast("Bill Recorded", `Monthly bill for ${formatMonthLabel(chosenMonth)} saved to top of History!`, true);
+      }
+
+      if (periodRenter && typeof recalculateSequentialCarryForRenterBills === "function") {
+        recalculateSequentialCarryForRenterBills(newBillObj.PropertyName, newBillObj.FlatName, periodRenter);
       }
 
       if (typeof recordAdminAuditLog === "function") {
@@ -28500,9 +28823,11 @@ function formatMonthLabel(rawVal) {
     // 2. More money paid -> "Overpaid (Advance)"
     // 3. Payment complete -> "Fully Paid"
     function getBillHistoryStatusInfo(bill) {
-      const totalBilled = parseFloat(bill?.TotalBilled) || 0;
+      const rawNet = typeof getBillRawNetPayable === "function"
+        ? getBillRawNetPayable(bill)
+        : (parseFloat(bill?.TotalBilled) || 0);
       const paidAmount = parseFloat(bill?.PaidAmount) || 0;
-      const diff = Math.round((paidAmount - totalBilled) * 100) / 100;
+      const diff = Math.round((paidAmount - rawNet) * 100) / 100;
       if (diff < 0) {
         return { text: "Due", badgeClass: "badge-unpaid", diff: Math.abs(diff) };
       }
@@ -29467,10 +29792,11 @@ function formatMonthLabel(rawVal) {
       const selectAllToggle = document.getElementById("recSelectAllToggle");
       if (selectAllToggle) selectAllToggle.checked = allChecked;
 
-      const selectedTotal = Math.max(0, Math.round(selectedChargesSum * 100) / 100);
+      const rawSelectedSum = Math.round(selectedChargesSum * 100) / 100;
+      const selectedTotal = Math.max(0, rawSelectedSum);
       const paidAmt = parseFloat(currentOpenedReceiptBill.PaidAmount) || 0;
-      const rawDiff = Math.round((paidAmt - selectedTotal) * 100) / 100;
-      const netClosing = Math.max(0, Math.round((selectedTotal - paidAmt) * 100) / 100);
+      const rawDiff = Math.round((paidAmt - rawSelectedSum) * 100) / 100;
+      const netClosing = Math.max(0, Math.round((rawSelectedSum - paidAmt) * 100) / 100);
 
       const totalDisplay = document.getElementById("recDynamicTotalDisplay");
       if (totalDisplay) {
@@ -30336,12 +30662,11 @@ function formatMonthLabel(rawVal) {
           const isAct = String(item.r.Status || "").trim().toLowerCase() === "active";
           if (!isAct) {
             pastCount++;
-            const rBills = getBillsForSpecificRenter(prop, flat, item.r);
+            const rBills = sortBillsChronologically(getBillsForSpecificRenter(prop, flat, item.r));
             let sBilled = 0, sPaid = 0;
-            rBills.forEach(b => {
-              const billed = parseFloat(b.TotalBilled) || 0;
-              const carry = parseFloat(b.PrevCarryBalance) || 0;
-              sBilled += (billed - carry);
+            rBills.forEach((b, bIdx) => {
+              const openingCarry = bIdx === 0 ? (parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0) : 0;
+              sBilled += (getBillStandaloneMonthlyCharge(b) + openingCarry);
               sPaid += parseFloat(b.PaidAmount) || 0;
             });
             const bal = sBilled - sPaid;
@@ -30488,11 +30813,11 @@ function formatMonthLabel(rawVal) {
           return true;
         });
 
-        let totalStandaloneBilled = 0, totalPaid = 0, totalRent = 0, totalUtility = 0;
-        bills.forEach(b => {
-          const billed = parseFloat(b.TotalBilled) || 0;
-          const carry = parseFloat(b.PrevCarryBalance) || 0;
-          const standalone = billed - carry;
+        let totalStandaloneBilled = 0, totalPaid = 0, totalRent = 0, totalUtility = 0, firstBillOpeningCarry = 0;
+        const chronologicalBills = sortBillsChronologically(bills);
+        chronologicalBills.forEach((b, bIdx) => {
+          if (bIdx === 0) firstBillOpeningCarry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
+          const standalone = getBillStandaloneMonthlyCharge(b);
           const rent = parseFloat(b.BaseRent) || 0;
           totalStandaloneBilled += standalone;
           totalPaid += parseFloat(b.PaidAmount) || 0;
@@ -30500,7 +30825,7 @@ function formatMonthLabel(rawVal) {
           totalUtility += Math.max(0, standalone - rent);
         });
 
-        const netBal = totalStandaloneBilled - totalPaid;
+        const netBal = Math.round(((totalStandaloneBilled + firstBillOpeningCarry) - totalPaid) * 100) / 100;
         let balText = "Settled (₹0)";
         let balColor = "var(--accent-green)";
         if (netBal > 0) {
@@ -30747,12 +31072,11 @@ function formatMonthLabel(rawVal) {
         ? normalizeGoogleDriveImageUrl(targetRenter.IdentityBackImageURL)
         : EMPTY_IDENTITY_PLACEHOLDER;
 
-      const bills = getBillsForSpecificRenter(prop, flat, targetRenter);
-      let totalStandaloneBilled = 0, totalPaid = 0, totalRent = 0, totalUtility = 0;
-      bills.forEach(b => {
-        const billed = parseFloat(b.TotalBilled) || 0;
-        const carry = parseFloat(b.PrevCarryBalance) || 0;
-        const standalone = billed - carry;
+      const bills = sortBillsChronologically(getBillsForSpecificRenter(prop, flat, targetRenter));
+      let totalStandaloneBilled = 0, totalPaid = 0, totalRent = 0, totalUtility = 0, openingCarry = 0;
+      bills.forEach((b, bIdx) => {
+        if (bIdx === 0) openingCarry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
+        const standalone = getBillStandaloneMonthlyCharge(b);
         const rent = parseFloat(b.BaseRent) || 0;
         totalStandaloneBilled += standalone;
         totalPaid += parseFloat(b.PaidAmount) || 0;
@@ -30760,7 +31084,7 @@ function formatMonthLabel(rawVal) {
         totalUtility += Math.max(0, standalone - rent);
       });
 
-      const netBal = totalStandaloneBilled - totalPaid;
+      const netBal = Math.round(((totalStandaloneBilled + openingCarry) - totalPaid) * 100) / 100;
       let balText = "Settled (₹0)";
       let balColor = "var(--accent-green)";
       if (netBal > 0) {
@@ -33934,16 +34258,7 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.ContractMobile = payload.contractMobile;
           existingRenterRecord.UpdatedAt = new Date().toISOString();
 
-          const vacatedNameClean = String(existingRenterRecord.RenterName || "").trim().toLowerCase();
-          DB.bills.forEach(b => {
-            if (isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName)) {
-              const bRId = String(b.RenterID || "").trim();
-              const bTName = String(b.TenantName || "").trim().toLowerCase();
-              if (!bRId && (!vacatedNameClean || bTName === vacatedNameClean)) {
-                b.RenterID = vacatedId;
-              }
-            }
-          });
+          stampUnassignedFlatBillsToDepartingRenter(selectedFlat.PropertyName, selectedFlat.FlatName, existingRenterRecord);
         }
 
         syncRenterIdentityAcrossAllStays(
@@ -33981,8 +34296,10 @@ function formatMonthLabel(rawVal) {
         } else {
           activeFlatRenterObj = null;
           clearRenterRightForm();
+          const carryElReset = document.getElementById("calcPrevCarryBalance");
+          if (carryElReset) carryElReset.value = "";
           handleBillingMonthChange();
-          triggerSideToast("Renter Vacated & Account Blocked", "Renter marked Left/Inactive and their login account has been automatically moved to Blocked status.", true);
+          triggerSideToast("Renter Vacated & Account Blocked", "Renter marked Left/Inactive and carry-forward balance has been reset to ₹0 for the next tenant.", true);
         }
       } else {
         if (existingRenterRecord) {
@@ -34710,11 +35027,14 @@ function formatMonthLabel(rawVal) {
         const inheritedUpiId = propObj?.UPIID || flatObj?.UPIID || consolidatedRec?.UPIID || "";
         const inheritedContract = propObj?.ContractNumber || flatObj?.ContractMobile || consolidatedRec?.ContractMobile || "";
 
-        // If another renter is currently Active in this target flat, mark them Inactive so history is preserved
+        // If another renter is currently Active in this target flat, mark them Inactive so history is preserved & balance is isolated at ₹0 for next tenant
         (DB.renters || []).forEach(r => {
           if (isSamePropAndFlat(r.PropertyName, r.FlatName, targetProp, targetFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
             r.Status = "Inactive";
             if (!r.EndDate) r.EndDate = new Date().toISOString().split("T")[0];
+            if (typeof stampUnassignedFlatBillsToDepartingRenter === "function") {
+              stampUnassignedFlatBillsToDepartingRenter(targetProp, targetFlat, r);
+            }
             if (typeof autoBlockRenterUserAccountOnMoveOut === "function") {
               autoBlockRenterUserAccountOnMoveOut(r.IdentityDocNumber, r.PropertyName, r.FlatName, r.RenterName);
             }
@@ -35690,53 +36010,60 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Already Empty", "No image is currently uploaded in this slot.", false);
       }
 
-      // Immediately clear the slot in UI and reset file input so a new photo can be uploaded
-      updateRenterImageSlotUI(docType, "");
+      openCenteredConfirmModal(
+        "Delete Photo",
+        "Do you want to delete this photo?",
+        async () => {
+          // Clear the slot in UI and reset file input so a new photo can be uploaded
+          updateRenterImageSlotUI(docType, "");
 
-      if (activeFlatRenterObj) {
-        if (isIdentityBack) activeFlatRenterObj.IdentityBackImageURL = "";
-        else if (isIdentityFront) activeFlatRenterObj.IdentityImageURL = "";
-        else activeFlatRenterObj.ProfileImageURL = "";
-      }
-      let matchedRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName));
-      matchedRenters.forEach(r => {
-        if (!activeFlatRenterObj?.RenterID || String(r.RenterID) === String(activeFlatRenterObj.RenterID)) {
-          if (isIdentityBack) r.IdentityBackImageURL = "";
-          else if (isIdentityFront) r.IdentityImageURL = "";
-          else r.ProfileImageURL = "";
-        }
-      });
+          if (activeFlatRenterObj) {
+            if (isIdentityBack) activeFlatRenterObj.IdentityBackImageURL = "";
+            else if (isIdentityFront) activeFlatRenterObj.IdentityImageURL = "";
+            else activeFlatRenterObj.ProfileImageURL = "";
+          }
+          let matchedRenters = (DB.renters || []).filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName));
+          matchedRenters.forEach(r => {
+            if (!activeFlatRenterObj?.RenterID || String(r.RenterID) === String(activeFlatRenterObj.RenterID)) {
+              if (isIdentityBack) r.IdentityBackImageURL = "";
+              else if (isIdentityFront) r.IdentityImageURL = "";
+              else r.ProfileImageURL = "";
+            }
+          });
 
-      const currentAadhaarVal = document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || "";
-      syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentityBack
-        ? { IdentityBackImageURL: "", forceClearIdentityBackImage: true }
-        : (isIdentityFront
-            ? { IdentityImageURL: "", forceClearIdentityImage: true }
-            : { ProfileImageURL: "", forceClearProfileImage: true })
+          const currentAadhaarVal = document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || "";
+          syncRenterIdentityAcrossAllStays(currentAadhaarVal, isIdentityBack
+            ? { IdentityBackImageURL: "", forceClearIdentityBackImage: true }
+            : (isIdentityFront
+                ? { IdentityImageURL: "", forceClearIdentityImage: true }
+                : { ProfileImageURL: "", forceClearProfileImage: true })
+          );
+
+          saveDbSnapshotToCache();
+          renderAllDashboardUI();
+          populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
+
+          triggerSideToast(
+            "Removed from Cloud Drive",
+            `${docLabel} deleted and slot reset for a new upload!`,
+            true
+          );
+
+          await sendFirebaseAction({
+            action: "deleteRenterDocument",
+            propertyName: selectedFlat.PropertyName,
+            flatName: selectedFlat.FlatName,
+            renterId: activeFlatRenterObj?.RenterID || "",
+            identityDocNumber: currentAadhaarVal,
+            docType: docType,
+            currentImageUrl: currentUrl,
+            clearIdentityImage: isIdentityFront,
+            clearIdentityBackImage: isIdentityBack,
+            clearProfileImage: !isIdentityFront && !isIdentityBack
+          });
+        },
+        { yesText: "Yes", noText: "No", iconClass: "fa-solid fa-trash-can" }
       );
-
-      saveDbSnapshotToCache();
-      renderAllDashboardUI();
-      populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
-
-      triggerSideToast(
-        "Removed from Cloud Drive",
-        `${docLabel} deleted and slot reset for a new upload!`,
-        true
-      );
-
-      await sendFirebaseAction({
-        action: "deleteRenterDocument",
-        propertyName: selectedFlat.PropertyName,
-        flatName: selectedFlat.FlatName,
-        renterId: activeFlatRenterObj?.RenterID || "",
-        identityDocNumber: currentAadhaarVal,
-        docType: docType,
-        currentImageUrl: currentUrl,
-        clearIdentityImage: isIdentityFront,
-        clearIdentityBackImage: isIdentityBack,
-        clearProfileImage: !isIdentityFront && !isIdentityBack
-      });
     }
 
     async function sendFirebaseAction(data) {
@@ -37508,8 +37835,11 @@ function formatMonthLabel(rawVal) {
         targetBill.PaidAmount = (parseFloat(targetBill.PaidAmount) || 0) + (parseFloat(proof.amount) || 0);
         targetBill.PaymentMode = proof.mode || targetBill.PaymentMode || "UPI";
         targetBill.PaymentDate = new Date().toISOString().split("T")[0];
-        const totalB = parseFloat(targetBill.TotalBilled) || 0;
-        targetBill.Status = targetBill.PaidAmount >= totalB ? "Fully Paid" : "Partial Paid";
+        const rawNetPayable = typeof getBillRawNetPayable === "function"
+          ? getBillRawNetPayable(targetBill)
+          : (parseFloat(targetBill.TotalBilled) || 0);
+        const diffUtr = Math.round(((parseFloat(targetBill.PaidAmount) || 0) - rawNetPayable) * 100) / 100;
+        targetBill.Status = diffUtr > 0 ? "Overpaid (Advance)" : (diffUtr === 0 ? "Fully Paid" : "Partial Paid");
         if (!Array.isArray(targetBill.SplitPayments)) targetBill.SplitPayments = [];
         targetBill.SplitPayments.push({
           date: targetBill.PaymentDate,
@@ -37517,6 +37847,11 @@ function formatMonthLabel(rawVal) {
           mode: proof.mode || "UPI",
           utr: proof.utr
         });
+        const proofRenterObj = (typeof findRenterForBill === "function" ? findRenterForBill(targetBill) : null) ||
+          (DB.renters || []).find(r => targetBill.RenterID && String(r.RenterID || "") === String(targetBill.RenterID || ""));
+        if (proofRenterObj && typeof recalculateSequentialCarryForRenterBills === "function") {
+          recalculateSequentialCarryForRenterBills(targetBill.PropertyName, targetBill.FlatName, proofRenterObj);
+        }
         saveDbSnapshotToCache();
         renderAllDashboardUI();
         if (selectedFlat && isSamePropAndFlat(selectedFlat.PropertyName, selectedFlat.FlatName, targetBill.PropertyName, targetBill.FlatName)) {
