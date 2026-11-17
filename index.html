@@ -2170,6 +2170,60 @@
       box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
     }
 
+    /* Flat Workspace Navigation Bar: Manual Left-to-Right Horizontal Scroll */
+    #flatModalNavBar {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      gap: 8px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      touch-action: pan-x !important;
+      overscroll-behavior-x: contain;
+      scroll-behavior: smooth;
+      cursor: grab;
+      user-select: none;
+      padding: 6px 8px 8px 8px !important;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(129, 140, 248, 0.65) rgba(15, 23, 42, 0.22);
+    }
+    #flatModalNavBar.is-dragging {
+      cursor: grabbing;
+      scroll-behavior: auto;
+    }
+    #flatModalNavBar::-webkit-scrollbar {
+      height: 6px;
+    }
+    #flatModalNavBar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.20);
+      border-radius: 999px;
+    }
+    #flatModalNavBar::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #6366f1, #ec4899);
+      border-radius: 999px;
+    }
+    body.theme-white #flatModalNavBar {
+      scrollbar-color: rgba(79, 70, 229, 0.55) rgba(15, 23, 42, 0.08);
+    }
+    body.theme-white #flatModalNavBar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.08);
+    }
+    #flatModalNavBar .flat-nav-item {
+      flex: 0 0 auto !important;
+      min-width: max(150px, 24%) !important;
+      white-space: nowrap !important;
+      padding: 10px 16px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 6px;
+    }
+
     .tab-content {
       display: none;
     }
@@ -2661,8 +2715,7 @@
         word-break: break-word !important;
         font-size: 0.95rem !important;
       }
-      .flat-nav-bar,
-      #flatModalNavBar {
+      .flat-nav-bar:not(#flatModalNavBar) {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 8px !important;
       }
@@ -2743,7 +2796,6 @@
     }
 
     @media (max-width: 480px) {
-      #flatModalNavBar,
       .profile-action-switch {
         grid-template-columns: 1fr 1fr !important;
       }
@@ -6437,7 +6489,6 @@
       justify-content: flex-start !important;
       width: 100% !important;
     }
-    #flatModalNavBar,
     .module-tabs-bar,
     .kharch-tabs-bar {
       display: flex !important;
@@ -6446,11 +6497,6 @@
       -webkit-overflow-scrolling: touch !important;
       gap: 8px !important;
       padding-bottom: 6px !important;
-    }
-    #flatModalNavBar .flat-nav-item {
-      flex: 0 0 auto !important;
-      min-width: 112px !important;
-      white-space: nowrap !important;
     }
     #renterDashboardPaymentCircleCard,
     #renterDashboardLatestReceiptSideCard {
@@ -9989,7 +10035,7 @@
       <!-- Flat Header Tag -->
 
       <!-- Navigation Bar -->
-      <nav class="flat-nav-bar" id="flatModalNavBar" style="grid-template-columns: repeat(5, 1fr);">
+      <nav class="flat-nav-bar" id="flatModalNavBar">
         <div class="flat-nav-item non-renter-tab active" onclick="switchFlatTab(event, 'tabCalc')">1. Calculation</div>
         <div class="flat-nav-item" id="flatNavTabHistory" onclick="switchFlatTab(event, 'tabHistory')">2. History</div>
         <div class="flat-nav-item" id="flatNavTabProfile" onclick="switchFlatTab(event, 'tabProfile')">3. Profile</div>
@@ -28760,8 +28806,8 @@ function formatMonthLabel(rawVal) {
         const tabContents = modal.querySelectorAll(".tab-content");
         if (navItems[0]) navItems[0].style.display = "";
         if (navBar) {
-          navBar.style.display = "";
-          navBar.style.gridTemplateColumns = window.innerWidth <= 768 ? "repeat(2, 1fr)" : "repeat(5, 1fr)";
+          navBar.style.display = "flex";
+          if (typeof initFlatModalNavBarHorizontalScroll === "function") initFlatModalNavBarHorizontalScroll(navBar);
         }
         navItems.forEach((el, idx) => el.classList.toggle("active", idx === 0));
         tabContents.forEach((el, idx) => el.classList.toggle("active", idx === 0));
@@ -28789,9 +28835,8 @@ function formatMonthLabel(rawVal) {
         }
         const defaultTabIdx = canBill ? 0 : 1;
         if (navBar) {
-          navBar.style.display = "";
-          const visibleCount = canBill ? 5 : 4;
-          navBar.style.gridTemplateColumns = window.innerWidth <= 768 ? "repeat(2, 1fr)" : `repeat(${visibleCount}, 1fr)`;
+          navBar.style.display = "flex";
+          if (typeof initFlatModalNavBarHorizontalScroll === "function") initFlatModalNavBarHorizontalScroll(navBar);
         }
         navItems.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
         tabContents.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
@@ -28840,11 +28885,71 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    function initFlatModalNavBarHorizontalScroll(navEl) {
+      const navBar = navEl || document.getElementById("flatModalNavBar");
+      if (!navBar || navBar.dataset.hScrollBound === "1") return;
+      navBar.dataset.hScrollBound = "1";
+
+      let isDown = false;
+      let startX = 0;
+      let startScrollLeft = 0;
+      let didDrag = false;
+
+      navBar.addEventListener("mousedown", (e) => {
+        if (e.button !== 0) return;
+        isDown = true;
+        didDrag = false;
+        startX = e.pageX - navBar.offsetLeft;
+        startScrollLeft = navBar.scrollLeft;
+        navBar.classList.add("is-dragging");
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!isDown) return;
+        isDown = false;
+        navBar.classList.remove("is-dragging");
+        if (didDrag) {
+          setTimeout(() => { didDrag = false; }, 60);
+        }
+      });
+
+      navBar.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        const x = e.pageX - navBar.offsetLeft;
+        const delta = x - startX;
+        if (Math.abs(delta) > 5) {
+          didDrag = true;
+          e.preventDefault();
+          navBar.scrollLeft = startScrollLeft - delta;
+        }
+      });
+
+      navBar.addEventListener("click", (e) => {
+        if (didDrag) {
+          e.preventDefault();
+          e.stopPropagation();
+          didDrag = false;
+        }
+      }, true);
+
+      navBar.addEventListener("wheel", (e) => {
+        if (navBar.scrollWidth > navBar.clientWidth && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          navBar.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    }
+
     function switchFlatTab(evt, tabId) {
       const modal = getFlatDetailsWorkspaceRoot();
       modal.querySelectorAll(".flat-nav-item").forEach(item => item.classList.remove("active"));
       modal.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
-      evt.currentTarget.classList.add("active");
+      if (evt?.currentTarget) {
+        evt.currentTarget.classList.add("active");
+        if (typeof evt.currentTarget.scrollIntoView === "function") {
+          evt.currentTarget.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+      }
       document.getElementById(tabId).classList.add("active");
       if (tabId === "tabRenterHistory" && selectedFlat) {
         populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName);
