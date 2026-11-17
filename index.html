@@ -1591,7 +1591,7 @@
       box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
       contain: layout style;
     }
-    body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) {
+    body.theme-white .flat-card-merged:not(.flat-card-empty):not(.flat-card-no-receipt):not(.flat-card-paid):not(.flat-card-due):not(.flat-card-overpaid) {
       background: rgba(255, 255, 255, 0.50);
       border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
@@ -1602,6 +1602,65 @@
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
     }
 
+    /* 1. White: New / Empty Flat Box (No Active Renter) */
+    .flat-card-merged.flat-card-empty {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(241, 245, 249, 0.84) 100%) !important;
+      border: 2px solid rgba(255, 255, 255, 0.98) !important;
+      box-shadow: 0 14px 32px rgba(255, 255, 255, 0.16), 0 8px 20px rgba(15, 23, 42, 0.14) !important;
+      color: #0f172a !important;
+    }
+    .flat-card-merged.flat-card-empty .flat-name,
+    .flat-card-merged.flat-card-empty .renter-name,
+    .flat-card-merged.flat-card-empty .payment-banner {
+      color: #0f172a !important;
+    }
+    .flat-card-merged.flat-card-empty .flat-bottom-row {
+      color: #334155 !important;
+      border-top-color: rgba(15, 23, 42, 0.14) !important;
+    }
+    .flat-card-merged.flat-card-empty .payment-banner {
+      background: rgba(226, 232, 240, 0.65) !important;
+      border-color: rgba(148, 163, 184, 0.45) !important;
+    }
+    .flat-card-merged.flat-card-empty .rent-status {
+      background: rgba(15, 23, 42, 0.08) !important;
+      color: #0f172a !important;
+      border-color: rgba(15, 23, 42, 0.18) !important;
+    }
+    .flat-card-merged.flat-card-empty .renter-avatar {
+      border-color: rgba(15, 23, 42, 0.24);
+    }
+
+    /* 2. Yellow: Renter Added, No Receipt Generated / Uploaded Yet */
+    .flat-card-merged.flat-card-no-receipt {
+      background: linear-gradient(135deg, rgba(254, 240, 138, 0.88) 0%, rgba(250, 204, 21, 0.80) 100%) !important;
+      border: 2px solid #fde047 !important;
+      box-shadow: 0 14px 32px rgba(250, 204, 21, 0.26) !important;
+      color: #0f172a !important;
+    }
+    .flat-card-merged.flat-card-no-receipt .flat-name,
+    .flat-card-merged.flat-card-no-receipt .renter-name,
+    .flat-card-merged.flat-card-no-receipt .payment-banner {
+      color: #0f172a !important;
+    }
+    .flat-card-merged.flat-card-no-receipt .flat-bottom-row {
+      color: #1e293b !important;
+      border-top-color: rgba(113, 63, 18, 0.22) !important;
+    }
+    .flat-card-merged.flat-card-no-receipt .payment-banner {
+      background: rgba(255, 255, 255, 0.46) !important;
+      border-color: rgba(161, 98, 7, 0.30) !important;
+    }
+    .flat-card-merged.flat-card-no-receipt .rent-status {
+      background: rgba(113, 63, 18, 0.14) !important;
+      color: #422006 !important;
+      border-color: rgba(113, 63, 18, 0.28) !important;
+    }
+    .flat-card-merged.flat-card-no-receipt .renter-avatar {
+      border-color: rgba(113, 63, 18, 0.32);
+    }
+
+    /* 4. Green: Paid in Full (Zero Balance Remaining) */
     .flat-card-merged.flat-card-paid {
       background: linear-gradient(135deg, rgba(6, 95, 70, 0.50) 0%, rgba(16, 185, 129, 0.50) 100%) !important;
       border: 2px solid #34d399 !important;
@@ -1615,6 +1674,7 @@
       color: #ffffff !important;
     }
 
+    /* 3. Red: Bill Due (Pending Balance Remaining) */
     .flat-card-merged.flat-card-due {
       background: linear-gradient(135deg, rgba(153, 27, 27, 0.50) 0%, rgba(239, 68, 68, 0.50) 100%) !important;
       border: 2px solid #f87171 !important;
@@ -1626,6 +1686,29 @@
     .flat-card-merged.flat-card-due .flat-bottom-row,
     .flat-card-merged.flat-card-due .payment-banner {
       color: #ffffff !important;
+    }
+
+    /* 5. Golden: Overpaid (Paid Amount > Total Bill Amount) */
+    .flat-card-merged.flat-card-overpaid {
+      background: linear-gradient(135deg, rgba(161, 98, 7, 0.78) 0%, rgba(217, 119, 6, 0.72) 52%, rgba(245, 158, 11, 0.66) 100%) !important;
+      border: 2px solid #fcd34d !important;
+      box-shadow: 0 14px 32px rgba(245, 158, 11, 0.32) !important;
+      color: #ffffff !important;
+    }
+    .flat-card-merged.flat-card-overpaid .flat-name,
+    .flat-card-merged.flat-card-overpaid .renter-name,
+    .flat-card-merged.flat-card-overpaid .flat-bottom-row,
+    .flat-card-merged.flat-card-overpaid .payment-banner {
+      color: #ffffff !important;
+    }
+    .flat-card-merged.flat-card-overpaid .payment-banner {
+      background: rgba(120, 53, 15, 0.34) !important;
+      border-color: rgba(253, 230, 138, 0.44) !important;
+    }
+    .flat-card-merged.flat-card-overpaid .rent-status {
+      background: rgba(120, 53, 15, 0.34) !important;
+      color: #fef3c7 !important;
+      border-color: rgba(253, 230, 138, 0.42) !important;
     }
 
     .flat-top-row {
@@ -1690,7 +1773,7 @@
       font-size: 0.84rem;
       font-weight: 800;
     }
-    body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) .payment-banner {
+    body.theme-white .flat-card-merged:not(.flat-card-empty):not(.flat-card-no-receipt):not(.flat-card-paid):not(.flat-card-due):not(.flat-card-overpaid) .payment-banner {
       background: rgba(241, 245, 249, 0.50);
       border-color: rgba(15, 23, 42, 0.18);
       color: #0f172a;
@@ -1707,7 +1790,7 @@
       font-size: 0.76rem;
       color: var(--text-muted);
     }
-    body.theme-white .flat-card-merged:not(.flat-card-paid):not(.flat-card-due) .flat-bottom-row {
+    body.theme-white .flat-card-merged:not(.flat-card-empty):not(.flat-card-no-receipt):not(.flat-card-paid):not(.flat-card-due):not(.flat-card-overpaid) .flat-bottom-row {
       border-top-color: rgba(15, 23, 42, 0.12);
       color: #334155;
     }
@@ -1753,9 +1836,19 @@
       animation: overdueDuePillPulse 1.85s ease-in-out infinite;
     }
     .flat-status-pill.pill-vacant {
-      background: rgba(148, 163, 184, 0.22);
-      color: #e2e8f0;
-      border-color: rgba(203, 213, 225, 0.35);
+      background: rgba(15, 23, 42, 0.10);
+      color: #1e293b;
+      border-color: rgba(15, 23, 42, 0.22);
+    }
+    .flat-status-pill.pill-no-receipt {
+      background: rgba(113, 63, 18, 0.16);
+      color: #422006;
+      border-color: rgba(113, 63, 18, 0.35);
+    }
+    .flat-status-pill.pill-overpaid {
+      background: rgba(254, 243, 199, 0.24);
+      color: #fef3c7;
+      border-color: rgba(253, 224, 71, 0.65);
     }
     @keyframes overdueDuePillPulse {
       0%, 100% {
@@ -3798,19 +3891,19 @@
     gap: 3px;
     padding: 6px 12px;
     border-radius: 13px;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.78) 0%, rgba(30, 41, 59, 0.72) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1.5px solid rgba(99, 102, 241, 0.38);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1.5px solid transparent !important;
+    box-shadow: none !important;
     min-width: 245px;
     max-width: 340px;
     flex-shrink: 1;
   }
   body.theme-white .admin-dashboard-pnl-section.admin-header-pnl-tracker {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(241, 245, 249, 0.92) 100%);
-    border-color: rgba(79, 70, 229, 0.3);
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
   }
   .admin-pnl-header-row {
     display: flex;
@@ -22212,6 +22305,124 @@ function formatMonthLabel(rawVal) {
       renderAllDashboardUI();
     }
 
+    function isValidFlatReceiptBill(b) {
+      if (!b || typeof b !== "object") return false;
+      if (b.ReceiptGenerated === false || String(b.ReceiptGenerated).trim().toLowerCase() === "false") return false;
+      const paid = parseFloat(b.PaidAmount) || 0;
+      const totalBilled = parseFloat(b.TotalBilled !== undefined ? b.TotalBilled : b.TotalAmount) || 0;
+      const baseRent = parseFloat(b.BaseRent) || 0;
+      const pending = parseFloat(b.PendingAmount) || 0;
+      return Boolean(
+        b.ReceiptGenerated === true ||
+        String(b.ReceiptGenerated).trim().toLowerCase() === "true" ||
+        b.CalculationDone === true ||
+        String(b.CalculationDone).trim().toLowerCase() === "true" ||
+        paid > 0 ||
+        totalBilled > 0 ||
+        baseRent > 0 ||
+        pending > 0
+      );
+    }
+
+    function resolveFlatBoxVisualState(flat, renter) {
+      if (!renter) {
+        return {
+          state: "white",
+          statusClass: "flat-card-empty",
+          pillHTML: `<span class="flat-status-pill pill-vacant"><i class="fa-regular fa-square"></i> Vacant</span>`,
+          bannerHTML: `
+            <div class="payment-banner">
+              <span><i class="fa-solid fa-circle-info"></i> Status:</span>
+              <span>Vacant / No Active Renter</span>
+            </div>
+          `,
+          netBal: 0,
+          receiptCount: 0
+        };
+      }
+
+      const rawBills = typeof getBillsForSpecificRenter === "function"
+        ? sortBillsChronologically(getBillsForSpecificRenter(flat.PropertyName, flat.FlatName, renter))
+        : [];
+      const receiptBills = rawBills.filter(isValidFlatReceiptBill);
+
+      if (receiptBills.length === 0) {
+        const baseRent = parseFloat(flat.RentAmount || renter.RentAmount || 0);
+        return {
+          state: "yellow",
+          statusClass: "flat-card-no-receipt",
+          pillHTML: `<span class="flat-status-pill pill-no-receipt"><i class="fa-solid fa-file-circle-question"></i> No Receipt</span>`,
+          bannerHTML: `
+            <div class="payment-banner">
+              <span><i class="fa-solid fa-clock"></i> Receipt Pending:</span>
+              <span>${baseRent > 0 ? `₹${baseRent.toLocaleString('en-IN')} Rent (No Receipt)` : 'No Receipt Generated Yet'}</span>
+            </div>
+          `,
+          netBal: 0,
+          receiptCount: 0
+        };
+      }
+
+      let totalStandaloneBilled = 0;
+      let totalPaid = 0;
+      let openingCarry = 0;
+      receiptBills.forEach((b, idx) => {
+        if (idx === 0) {
+          openingCarry = parseFloat(b.PrevCarryBalance ?? b.PrevPending) || 0;
+        }
+        totalStandaloneBilled += getBillStandaloneMonthlyCharge(b);
+        totalPaid += (parseFloat(b.PaidAmount) || 0);
+      });
+      const netBal = Math.round(((totalStandaloneBilled + openingCarry) - totalPaid) * 100) / 100;
+
+      if (netBal > 0.01) {
+        return {
+          state: "red",
+          statusClass: "flat-card-due",
+          pillHTML: `<span class="flat-status-pill pill-due overdue"><i class="fa-solid fa-triangle-exclamation"></i> Due</span>`,
+          bannerHTML: `
+            <div class="payment-banner">
+              <span><i class="fa-solid fa-triangle-exclamation"></i> Needs to Pay:</span>
+              <span>₹${netBal.toLocaleString('en-IN')} Pending</span>
+            </div>
+          `,
+          netBal,
+          receiptCount: receiptBills.length
+        };
+      }
+
+      if (netBal < -0.01) {
+        const advAmt = Math.abs(netBal);
+        return {
+          state: "golden",
+          statusClass: "flat-card-overpaid",
+          pillHTML: `<span class="flat-status-pill pill-overpaid"><i class="fa-solid fa-crown"></i> Overpaid</span>`,
+          bannerHTML: `
+            <div class="payment-banner">
+              <span><i class="fa-solid fa-coins"></i> Overpaid (Advance):</span>
+              <span>+₹${advAmt.toLocaleString('en-IN')} Credit</span>
+            </div>
+          `,
+          netBal,
+          receiptCount: receiptBills.length
+        };
+      }
+
+      return {
+        state: "green",
+        statusClass: "flat-card-paid",
+        pillHTML: `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`,
+        bannerHTML: `
+          <div class="payment-banner">
+            <span><i class="fa-solid fa-circle-check"></i> Payment Status:</span>
+            <span>Fully Paid (₹0 Due)</span>
+          </div>
+        `,
+        netBal: 0,
+        receiptCount: receiptBills.length
+      };
+    }
+
     // 4. Render Flat Cards Strictly Filtered by Selected Property Only (Requirement 7: Directly show only the flats beneath the property without any summary banner row)
     function renderFlatsGrid(propertyName) {
       if (String(activeRole || "").trim().toLowerCase() === "renter") {
@@ -22250,53 +22461,10 @@ function formatMonthLabel(rawVal) {
           String(r.Status).trim().toLowerCase() === "active"
         );
 
-        const summary = calculateCurrentNetBalanceForRenter(flat.PropertyName, flat.FlatName, renter);
-        const netBal = summary.netBalance;
-
-        let statusClass = "";
-        let paymentBannerHTML = "";
-        let statusPillHTML = "";
-
-        if (!renter) {
-          statusPillHTML = `<span class="flat-status-pill pill-vacant">Vacant</span>`;
-          paymentBannerHTML = `
-            <div class="payment-banner">
-              <span><i class="fa-solid fa-circle-info"></i> Status:</span>
-              <span>Vacant / No Active Renter</span>
-            </div>
-          `;
-        } else if (netBal > 0) {
-          statusClass = "flat-card-due";
-          statusPillHTML = `<span class="flat-status-pill pill-due overdue"><i class="fa-solid fa-triangle-exclamation"></i> Due</span>`;
-          paymentBannerHTML = `
-            <div class="payment-banner">
-              <span><i class="fa-solid fa-triangle-exclamation"></i> Needs to Pay:</span>
-              <span>₹${netBal.toLocaleString('en-IN')} Pending</span>
-            </div>
-          `;
-        } else if (summary.billCount > 0 && netBal <= 0) {
-          statusClass = "flat-card-paid";
-          statusPillHTML = `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
-          const advLabel = netBal < 0 ? `Fully Paid (Adv: ₹${Math.abs(netBal).toLocaleString('en-IN')})` : `Fully Paid (₹0 Due)`;
-          paymentBannerHTML = `
-            <div class="payment-banner">
-              <span><i class="fa-solid fa-circle-check"></i> Payment Status:</span>
-              <span>${advLabel}</span>
-            </div>
-          `;
-        } else {
-          const baseRent = parseFloat(flat.RentAmount || renter.RentAmount || 0);
-          statusClass = baseRent > 0 ? "flat-card-due" : "flat-card-paid";
-          statusPillHTML = baseRent > 0
-            ? `<span class="flat-status-pill pill-due"><i class="fa-solid fa-clock"></i> Due</span>`
-            : `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
-          paymentBannerHTML = `
-            <div class="payment-banner">
-              <span><i class="fa-solid fa-clock"></i> Needs to Pay:</span>
-              <span>₹${baseRent.toLocaleString('en-IN')} (Unbilled Rent)</span>
-            </div>
-          `;
-        }
+        const visualState = resolveFlatBoxVisualState(flat, renter);
+        const statusClass = visualState.statusClass;
+        const paymentBannerHTML = visualState.bannerHTML;
+        const statusPillHTML = visualState.pillHTML;
 
         const isCurrentFlatActive = selectedFlat && isSamePropAndFlat(selectedFlat.PropertyName, selectedFlat.FlatName, flat.PropertyName, flat.FlatName);
         const card = document.createElement("div");
@@ -22474,31 +22642,10 @@ function formatMonthLabel(rawVal) {
           (String(r.RenterName || "").toLowerCase().includes(q) || String(r.MobileNumber || "").toLowerCase().includes(q))
         );
 
-        const summary = calculateCurrentNetBalanceForRenter(flat.PropertyName, flat.FlatName, renter);
-        const netBal = summary.netBalance;
-
-        let statusClass = "";
-        let paymentBannerHTML = "";
-        let statusPillHTML = "";
-        if (!renter) {
-          statusPillHTML = `<span class="flat-status-pill pill-vacant">Vacant</span>`;
-          paymentBannerHTML = `<div class="payment-banner"><span>Status:</span><span>Vacant</span></div>`;
-        } else if (netBal > 0) {
-          statusClass = "flat-card-due";
-          statusPillHTML = `<span class="flat-status-pill pill-due overdue"><i class="fa-solid fa-triangle-exclamation"></i> Due</span>`;
-          paymentBannerHTML = `<div class="payment-banner"><span>Needs to Pay:</span><span>₹${netBal.toLocaleString('en-IN')} Pending</span></div>`;
-        } else if (summary.billCount > 0 && netBal <= 0) {
-          statusClass = "flat-card-paid";
-          statusPillHTML = `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
-          paymentBannerHTML = `<div class="payment-banner"><span>Status:</span><span>Fully Paid</span></div>`;
-        } else {
-          const baseRent = parseFloat(flat.RentAmount || renter.RentAmount || 0);
-          statusClass = baseRent > 0 ? "flat-card-due" : "flat-card-paid";
-          statusPillHTML = baseRent > 0
-            ? `<span class="flat-status-pill pill-due"><i class="fa-solid fa-clock"></i> Due</span>`
-            : `<span class="flat-status-pill pill-paid"><i class="fa-solid fa-circle-check"></i> Paid</span>`;
-          paymentBannerHTML = `<div class="payment-banner"><span>Needs to Pay:</span><span>₹${baseRent.toLocaleString('en-IN')}</span></div>`;
-        }
+        const visualState = resolveFlatBoxVisualState(flat, renter);
+        const statusClass = visualState.statusClass;
+        const paymentBannerHTML = visualState.bannerHTML;
+        const statusPillHTML = visualState.pillHTML;
 
         const dispElec = resolveExactRateValue(flat.ElecRate, renter?.ElecFixedRate);
         const dispPng = resolveExactRateValue(flat.PNGRate, renter?.PNGFixedRate);
