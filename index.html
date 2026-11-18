@@ -6087,6 +6087,53 @@
     color: #0f172a !important;
     border-color: #94a3b8 !important;
   }
+  .renter-payment-timing-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .btn-rent-timing-opt {
+    padding: 10px 10px;
+    border-radius: 10px;
+    border: 1.5px solid var(--glass-border);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  .btn-rent-timing-opt:hover:not(:disabled) {
+    border-color: rgba(56, 189, 248, 0.55);
+    transform: translateY(-1px);
+  }
+  .btn-rent-timing-opt.active[data-timing="Advance"] {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: #ffffff !important;
+    border-color: #34d399 !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+  }
+  .btn-rent-timing-opt.active[data-timing="Rent in Arrears"] {
+    background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+    color: #ffffff !important;
+    border-color: #818cf8 !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.34);
+  }
+  .btn-rent-timing-opt:disabled {
+    cursor: default;
+    opacity: 0.9;
+  }
+  body.theme-white .btn-rent-timing-opt:not(.active) {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #94a3b8 !important;
+  }
 
   /* ==========================================================================
      REQUIREMENTS 6, 7 & 8: MODULAR PRIVATE LIVE CHAT WIDGET
@@ -6146,8 +6193,13 @@
     cursor: default !important;
   }
   body.role-renter #tabProfile .admin-only,
-  body.role-renter #tabProfile button:not(.zoomable-photo-badge) {
+  body.role-renter #tabProfile button:not(.zoomable-photo-badge):not(.btn-rent-timing-opt) {
     display: none !important;
+  }
+  body.role-renter #tabProfile .btn-rent-timing-opt {
+    pointer-events: none !important;
+    opacity: 0.9 !important;
+    cursor: default !important;
   }
   body.theme-white .modular-floating-widget {
     background: rgba(255, 255, 255, 0.98);
@@ -10729,6 +10781,32 @@
             <div class="form-group"><label>Mobile Number (+91 &amp; 10 Digits)</label><input type="tel" id="renterMobile" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)"></div>
             <div class="form-group"><label>Alternative Mobile Number (+91 &amp; 10 Digits)</label><input type="tel" id="renterAltMobile" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)"></div>
             <div class="form-group"><label>Address</label><input type="text" id="renterAddress" class="form-control"></div>
+            <div class="form-group" id="renterPaymentTimingGroup">
+              <label>Rent Payment Mode (Advance / Arrears)</label>
+              <input type="hidden" id="renterPaymentTiming" value="">
+              <div class="renter-payment-timing-group" role="group" aria-label="Rent Payment Mode">
+                <button
+                  type="button"
+                  class="btn-rent-timing-opt"
+                  id="btnRentTimingAdvance"
+                  data-timing="Advance"
+                  aria-pressed="false"
+                  onclick="selectRenterPaymentTiming('Advance')"
+                >
+                  <i class="fa-solid fa-forward-fast"></i> Advance
+                </button>
+                <button
+                  type="button"
+                  class="btn-rent-timing-opt"
+                  id="btnRentTimingArrears"
+                  data-timing="Rent in Arrears"
+                  aria-pressed="false"
+                  onclick="selectRenterPaymentTiming('Rent in Arrears')"
+                >
+                  <i class="fa-solid fa-clock-rotate-left"></i> Rent in Arrears
+                </button>
+              </div>
+            </div>
             <div class="form-group">
               <label style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
                 <span>Total Family Member</span>
@@ -13797,6 +13875,9 @@
           merged.AltMobileNumber = sanitizeContactPhoneDisplay(r.AltMobileNumber);
         }
         if (!merged.Address && r.Address) merged.Address = r.Address;
+        if (!merged.RentPaymentTiming && (r.RentPaymentTiming || r.PaymentTiming)) {
+          merged.RentPaymentTiming = normalizeRentPaymentTiming(r.RentPaymentTiming || r.PaymentTiming);
+        }
         if ((!merged.TotalFamilyMembers || Number(merged.TotalFamilyMembers) <= 1) && Number(r.TotalFamilyMembers) > 1) {
           merged.TotalFamilyMembers = r.TotalFamilyMembers;
         }
@@ -14417,6 +14498,7 @@
         MobileNumber: merged.MobileNumber || "",
         AltMobileNumber: merged.AltMobileNumber || "",
         Address: merged.Address || "",
+        RentPaymentTiming: normalizeRentPaymentTiming(merged.RentPaymentTiming || merged.PaymentTiming || ""),
         TotalFamilyMembers: merged.TotalFamilyMembers || 1,
         FamilyMembersList: Array.isArray(merged.FamilyMembersList) ? JSON.parse(JSON.stringify(merged.FamilyMembersList)) : [],
         Status: "Active",
@@ -14500,6 +14582,7 @@
         mobileNumber: newActiveRenterRecord.MobileNumber,
         altMobileNumber: newActiveRenterRecord.AltMobileNumber,
         address: newActiveRenterRecord.Address,
+        rentPaymentTiming: newActiveRenterRecord.RentPaymentTiming || "",
         familyMembers: newActiveRenterRecord.TotalFamilyMembers || 1,
         familyMembersList: newActiveRenterRecord.FamilyMembersList || [],
         renterStatus: "Active",
@@ -14613,6 +14696,7 @@
         MobileNumber: sanitizeContactPhoneDisplay(document.getElementById("renterMobile")?.value || activeFlatRenterObj?.MobileNumber || ""),
         AltMobileNumber: sanitizeContactPhoneDisplay(document.getElementById("renterAltMobile")?.value || activeFlatRenterObj?.AltMobileNumber || ""),
         Address: (document.getElementById("renterAddress")?.value || activeFlatRenterObj?.Address || "").trim(),
+        RentPaymentTiming: getRenterPaymentTimingUI() || normalizeRentPaymentTiming(activeFlatRenterObj?.RentPaymentTiming || activeFlatRenterObj?.PaymentTiming || ""),
         TotalFamilyMembers: document.getElementById("renterFamily")?.value || activeFlatRenterObj?.TotalFamilyMembers || 1,
         FamilyMembersList: domFamilyMembers.length > 0 ? domFamilyMembers : (activeFlatRenterObj?.FamilyMembersList || []),
         ProfileImageURL: !isPlaceholderImageUrl(document.getElementById("profilePicturePreview")?.src)
@@ -14667,6 +14751,7 @@
         MobileNumber: merged.MobileNumber || "",
         AltMobileNumber: merged.AltMobileNumber || "",
         Address: merged.Address || "",
+        RentPaymentTiming: normalizeRentPaymentTiming(merged.RentPaymentTiming || merged.PaymentTiming || ""),
         TotalFamilyMembers: merged.TotalFamilyMembers || 1,
         FamilyMembersList: Array.isArray(merged.FamilyMembersList) ? JSON.parse(JSON.stringify(merged.FamilyMembersList)) : [],
         ProfileImageURL: merged.ProfileImageURL || "",
@@ -14752,6 +14837,7 @@
           mobileNumber: oldRenterRecord.MobileNumber || "",
           altMobileNumber: oldRenterRecord.AltMobileNumber || "",
           address: oldRenterRecord.Address || "",
+          rentPaymentTiming: oldRenterRecord.RentPaymentTiming || "",
           familyMembers: oldRenterRecord.TotalFamilyMembers || 1,
           familyMembersList: oldRenterRecord.FamilyMembersList || [],
           renterStatus: "Inactive",
@@ -14775,6 +14861,7 @@
         mobileNumber: shiftedRenterRecord.MobileNumber || "",
         altMobileNumber: shiftedRenterRecord.AltMobileNumber || "",
         address: shiftedRenterRecord.Address || "",
+        rentPaymentTiming: shiftedRenterRecord.RentPaymentTiming || "",
         familyMembers: shiftedRenterRecord.TotalFamilyMembers || 1,
         familyMembersList: shiftedRenterRecord.FamilyMembersList || [],
         renterStatus: "Active",
@@ -19917,6 +20004,7 @@ function formatMonthLabel(rawVal) {
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Renter ID</span><strong id="renterInlineProfileRenterId" style="font-size:0.92rem; color:#38bdf8; letter-spacing:0.03em;">${escapeHtml(String(primaryRenter.RenterID || consolidatedProfile.RenterID || "N/A"))}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Permanent Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(consolidatedProfile.Address || primaryRenter.Address || "N/A")}</strong></div>
+                ${(primaryRenter.RentPaymentTiming || consolidatedProfile.RentPaymentTiming) ? `<div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Rent Payment Mode</span><strong style="font-size:0.86rem; color:#34d399;">${escapeHtml(primaryRenter.RentPaymentTiming || consolidatedProfile.RentPaymentTiming)}</strong></div>` : ""}
               </div>
 
               <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
@@ -22578,6 +22666,8 @@ function formatMonthLabel(rawVal) {
               <span>Vacant / No Active Renter</span>
             </div>
           `,
+          bottomRowHTML: `<span><i class="fa-regular fa-calendar"></i> Latest Receipt:</span><span><strong>No Receipt</strong></span>`,
+          latestReceiptMonthLabel: "",
           netBal: 0,
           receiptCount: 0
         };
@@ -22600,10 +22690,19 @@ function formatMonthLabel(rawVal) {
               <span>${baseRent > 0 ? `₹${baseRent.toLocaleString('en-IN')} Rent (No Receipt)` : 'No Receipt Generated Yet'}</span>
             </div>
           `,
+          bottomRowHTML: `<span><i class="fa-regular fa-calendar"></i> Latest Receipt:</span><span><strong>No Receipt Yet</strong></span>`,
+          latestReceiptMonthLabel: "",
           netBal: 0,
           receiptCount: 0
         };
       }
+
+      const latestReceiptBill = receiptBills[receiptBills.length - 1];
+      const latestRawMonth = latestReceiptBill ? (latestReceiptBill.MonthYear || latestReceiptBill.BillDate || latestReceiptBill.PaymentDate || "") : "";
+      const latestReceiptMonthLabel = (latestRawMonth && typeof formatMonthLabel === "function")
+        ? formatMonthLabel(latestRawMonth)
+        : (latestRawMonth || "--");
+      const receiptMonthBottomHTML = `<span><i class="fa-regular fa-calendar-check"></i> Latest Receipt:</span><span><strong>${latestReceiptMonthLabel || "--"}</strong></span>`;
 
       let totalStandaloneBilled = 0;
       let totalPaid = 0;
@@ -22628,6 +22727,8 @@ function formatMonthLabel(rawVal) {
               <span>₹${netBal.toLocaleString('en-IN')} Pending</span>
             </div>
           `,
+          bottomRowHTML: receiptMonthBottomHTML,
+          latestReceiptMonthLabel,
           netBal,
           receiptCount: receiptBills.length
         };
@@ -22645,6 +22746,8 @@ function formatMonthLabel(rawVal) {
               <span>+₹${advAmt.toLocaleString('en-IN')} Credit</span>
             </div>
           `,
+          bottomRowHTML: receiptMonthBottomHTML,
+          latestReceiptMonthLabel,
           netBal,
           receiptCount: receiptBills.length
         };
@@ -22660,6 +22763,8 @@ function formatMonthLabel(rawVal) {
             <span>Fully Paid (₹0 Due)</span>
           </div>
         `,
+        bottomRowHTML: receiptMonthBottomHTML,
+        latestReceiptMonthLabel,
         netBal: 0,
         receiptCount: receiptBills.length
       };
@@ -22717,10 +22822,6 @@ function formatMonthLabel(rawVal) {
           openFlatDetailsModal(flat, renter);
         };
 
-        const dispElec = resolveExactRateValue(flat.ElecRate, renter?.ElecFixedRate);
-        const dispPng = resolveExactRateValue(flat.PNGRate, renter?.PNGFixedRate);
-        const dispWater = resolveExactRateValue(flat.WaterRate, renter?.WaterFixedRate);
-
         card.innerHTML = `
           <div>
             <div class="flat-top-row">
@@ -22739,9 +22840,7 @@ function formatMonthLabel(rawVal) {
             ${paymentBannerHTML}
           </div>
           <div class="flat-bottom-row">
-            <span><i class="fa-solid fa-bolt"></i> Elec: ₹${dispElec !== "" ? dispElec : 0}/U</span>
-            <span><i class="fa-solid fa-fire"></i> PNG: ₹${dispPng !== "" ? dispPng : 0}</span>
-            <span><i class="fa-solid fa-faucet-drip"></i> Water: ₹${dispWater !== "" ? dispWater : 0}</span>
+            ${visualState.bottomRowHTML}
           </div>
         `;
         container.appendChild(card);
@@ -22889,10 +22988,6 @@ function formatMonthLabel(rawVal) {
         const paymentBannerHTML = visualState.bannerHTML;
         const statusPillHTML = visualState.pillHTML;
 
-        const dispElec = resolveExactRateValue(flat.ElecRate, renter?.ElecFixedRate);
-        const dispPng = resolveExactRateValue(flat.PNGRate, renter?.PNGFixedRate);
-        const dispWater = resolveExactRateValue(flat.WaterRate, renter?.WaterFixedRate);
-
         let leftRenterQuickBar = "";
         if (matchedLeftRenter) {
           const leftIdx = DB.renters.indexOf(matchedLeftRenter);
@@ -22935,9 +23030,7 @@ function formatMonthLabel(rawVal) {
             ${leftRenterQuickBar}
           </div>
           <div class="flat-bottom-row">
-            <span><i class="fa-solid fa-bolt"></i> Elec: ₹${dispElec !== "" ? dispElec : 0}/U</span>
-            <span><i class="fa-solid fa-fire"></i> PNG: ₹${dispPng !== "" ? dispPng : 0}</span>
-            <span><i class="fa-solid fa-faucet-drip"></i> Water: ₹${dispWater !== "" ? dispWater : 0}</span>
+            ${visualState.bottomRowHTML}
           </div>
         `;
         container.appendChild(card);
@@ -27653,6 +27746,7 @@ function formatMonthLabel(rawVal) {
         mobileNumber: targetRenter.MobileNumber,
         altMobileNumber: targetRenter.AltMobileNumber,
         address: targetRenter.Address,
+        rentPaymentTiming: targetRenter.RentPaymentTiming || "",
         familyMembers: targetRenter.TotalFamilyMembers,
         familyMembersList: targetRenter.FamilyMembersList || [],
         renterStatus: preservedStatus,
@@ -28741,6 +28835,7 @@ function formatMonthLabel(rawVal) {
       document.getElementById("renterMobile").value = sanitizeContactPhoneDisplay(targetRenter.MobileNumber) || "";
       document.getElementById("renterAltMobile").value = sanitizeContactPhoneDisplay(targetRenter.AltMobileNumber) || "";
       document.getElementById("renterAddress").value = targetRenter.Address || "";
+      setRenterPaymentTimingUI(targetRenter.RentPaymentTiming || targetRenter.PaymentTiming || "");
       document.getElementById("renterFamily").value = targetRenter.TotalFamilyMembers || 1;
       if (typeof renderRenterFamilyMembersRows === "function") {
         renderRenterFamilyMembersRows(targetRenter.FamilyMembersList || []);
@@ -28947,6 +29042,7 @@ function formatMonthLabel(rawVal) {
           if (!renter.MobileNumber && consolidated.MobileNumber) renter.MobileNumber = consolidated.MobileNumber;
           if (!renter.AltMobileNumber && consolidated.AltMobileNumber) renter.AltMobileNumber = consolidated.AltMobileNumber;
           if (!renter.Address && consolidated.Address) renter.Address = consolidated.Address;
+          if (!renter.RentPaymentTiming && consolidated.RentPaymentTiming) renter.RentPaymentTiming = consolidated.RentPaymentTiming;
           if (!renter.TotalFamilyMembers && consolidated.TotalFamilyMembers) renter.TotalFamilyMembers = consolidated.TotalFamilyMembers;
           if ((!Array.isArray(renter.FamilyMembersList) || renter.FamilyMembersList.length === 0) && Array.isArray(consolidated.FamilyMembersList)) {
             renter.FamilyMembersList = consolidated.FamilyMembersList;
@@ -28962,6 +29058,7 @@ function formatMonthLabel(rawVal) {
         document.getElementById("renterMobile").value = sanitizeContactPhoneDisplay(renter.MobileNumber) || "";
         document.getElementById("renterAltMobile").value = sanitizeContactPhoneDisplay(renter.AltMobileNumber) || "";
         document.getElementById("renterAddress").value = renter.Address || "";
+        setRenterPaymentTimingUI(renter.RentPaymentTiming || renter.PaymentTiming || "");
         document.getElementById("renterFamily").value = renter.TotalFamilyMembers || 1;
         if (typeof renderRenterFamilyMembersRows === "function") {
           renderRenterFamilyMembersRows(renter.FamilyMembersList || []);
@@ -29015,6 +29112,10 @@ function formatMonthLabel(rawVal) {
             inp.setAttribute("disabled", "disabled");
           }
         });
+        modal.querySelectorAll("#tabProfile .btn-rent-timing-opt").forEach(btn => {
+          btn.style.removeProperty("display");
+          btn.setAttribute("disabled", "disabled");
+        });
       } else if (activeRole === "Viewer") {
         // Strict Read-Only Mode for Viewer across Calculation, History, Profile, Renter History & Graph
         const navItems = modal.querySelectorAll(".flat-nav-item");
@@ -29034,8 +29135,12 @@ function formatMonthLabel(rawVal) {
             inp.setAttribute("disabled", "disabled");
           }
         });
-        modal.querySelectorAll(".admin-only, #tabCalc button:not([onclick*='previewCurrentMeterProof']):not([onclick*='toggleMasterMeterReconDrawer']):not([onclick*='toggleLateFeeCalcDrawer']), #tabProfile button:not([onclick*='downloadRenterDocumentPhoto'])").forEach(el => {
+        modal.querySelectorAll(".admin-only, #tabCalc button:not([onclick*='previewCurrentMeterProof']):not([onclick*='toggleMasterMeterReconDrawer']):not([onclick*='toggleLateFeeCalcDrawer']), #tabProfile button:not([onclick*='downloadRenterDocumentPhoto']):not(.btn-rent-timing-opt)").forEach(el => {
           el.style.display = "none";
+        });
+        modal.querySelectorAll("#tabProfile .btn-rent-timing-opt").forEach(btn => {
+          btn.style.removeProperty("display");
+          btn.setAttribute("disabled", "disabled");
         });
       } else {
         const canBill = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
@@ -29071,6 +29176,11 @@ function formatMonthLabel(rawVal) {
               inp.setAttribute("disabled", "disabled");
             }
           }
+        });
+        modal.querySelectorAll("#tabProfile .btn-rent-timing-opt").forEach(btn => {
+          btn.style.removeProperty("display");
+          if (canEditProf) btn.removeAttribute("disabled");
+          else btn.setAttribute("disabled", "disabled");
         });
         modal.querySelectorAll("#tabProfile .admin-only").forEach(el => {
           if (canEditProf) {
@@ -32018,6 +32128,7 @@ function formatMonthLabel(rawVal) {
         MobileNumber: consolidatedRenter.MobileNumber || targetRenter.MobileNumber,
         AltMobileNumber: consolidatedRenter.AltMobileNumber || targetRenter.AltMobileNumber,
         Address: consolidatedRenter.Address || targetRenter.Address,
+        RentPaymentTiming: targetRenter.RentPaymentTiming || consolidatedRenter.RentPaymentTiming || "",
         TotalFamilyMembers: consolidatedRenter.TotalFamilyMembers || targetRenter.TotalFamilyMembers,
         FamilyMembersList: Array.isArray(consolidatedRenter.FamilyMembersList) && consolidatedRenter.FamilyMembersList.length > 0
           ? consolidatedRenter.FamilyMembersList
@@ -32153,6 +32264,7 @@ function formatMonthLabel(rawVal) {
             <div><span style="color:var(--text-muted);">Alt. Mobile Number:</span> <strong>${targetRenter.AltMobileNumber || '--'}</strong></div>
             <div><span style="color:var(--text-muted);">Aadhaar / ID No:</span> <strong>${targetRenter.IdentityDocNumber || '--'}</strong></div>
             <div><span style="color:var(--text-muted);">Permanent Address:</span> <strong>${targetRenter.Address || '--'}</strong></div>
+            <div><span style="color:var(--text-muted);">Rent Payment Mode:</span> <strong>${targetRenter.RentPaymentTiming || '--'}</strong></div>
             <div><span style="color:var(--text-muted);">Total Family Members:</span> <strong>${targetRenter.TotalFamilyMembers || '1'}</strong></div>
             <div><span style="color:var(--text-muted);">Join Date:</span> <strong>${formatDateOnly(targetRenter.JoinDate)}</strong></div>
             <div><span style="color:var(--text-muted);">End / Left Date:</span> <strong>${isAct ? 'Active (Present)' : formatDateOnly(targetRenter.EndDate)}</strong></div>
@@ -34884,6 +34996,9 @@ function formatMonthLabel(rawVal) {
       if (mobEl && mergedRenter.MobileNumber) mobEl.value = sanitizeContactPhoneDisplay(mergedRenter.MobileNumber);
       if (altMobEl && mergedRenter.AltMobileNumber) altMobEl.value = sanitizeContactPhoneDisplay(mergedRenter.AltMobileNumber);
       if (addrEl && mergedRenter.Address) addrEl.value = mergedRenter.Address;
+      if (!getRenterPaymentTimingUI() && (mergedRenter.RentPaymentTiming || mergedRenter.PaymentTiming)) {
+        setRenterPaymentTimingUI(mergedRenter.RentPaymentTiming || mergedRenter.PaymentTiming);
+      }
       if (famEl && mergedRenter.TotalFamilyMembers) famEl.value = mergedRenter.TotalFamilyMembers;
       if (statusEl) statusEl.value = "Active";
       if (joinEl && !joinEl.value) joinEl.value = new Date().toISOString().split("T")[0];
@@ -35168,12 +35283,14 @@ function formatMonthLabel(rawVal) {
       const wasAlreadyInactive = activeFlatRenterObj && String(activeFlatRenterObj.Status || "").trim().toLowerCase() === "inactive";
 
       // Requirement 10: If a Left / Inactive renter is switched to Active, open the Property & Flat destination popup while preserving old flat history
+      const rentPaymentTimingVal = getRenterPaymentTimingUI();
       if (wasAlreadyInactive && statusVal === "Active" && activeFlatRenterObj) {
         activeFlatRenterObj.RenterName = rName;
         activeFlatRenterObj.IdentityDocNumber = cleanAadhaar;
         activeFlatRenterObj.MobileNumber = cleanMobile;
         activeFlatRenterObj.AltMobileNumber = cleanAltMobile;
         activeFlatRenterObj.Address = document.getElementById("renterAddress").value.trim();
+        activeFlatRenterObj.RentPaymentTiming = rentPaymentTimingVal;
         activeFlatRenterObj.TotalFamilyMembers = document.getElementById("renterFamily").value || 1;
         activeFlatRenterObj.FamilyMembersList = collectedFamilyMembers;
         document.getElementById("renterStatus").value = "Inactive";
@@ -35263,6 +35380,7 @@ function formatMonthLabel(rawVal) {
         mobileNumber: cleanMobile,
         altMobileNumber: cleanAltMobile,
         address: document.getElementById("renterAddress").value.trim(),
+        rentPaymentTiming: rentPaymentTimingVal,
         familyMembers: document.getElementById("renterFamily").value || 1,
         familyMembersList: collectedFamilyMembers,
         renterStatus: statusVal,
@@ -35325,6 +35443,7 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.MobileNumber = payload.mobileNumber;
           existingRenterRecord.AltMobileNumber = payload.altMobileNumber;
           existingRenterRecord.Address = payload.address;
+          existingRenterRecord.RentPaymentTiming = payload.rentPaymentTiming;
           existingRenterRecord.TotalFamilyMembers = payload.familyMembers;
           existingRenterRecord.FamilyMembersList = payload.familyMembersList;
           existingRenterRecord.JoinDate = payload.joinDate;
@@ -35408,6 +35527,7 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.MobileNumber = payload.mobileNumber;
           existingRenterRecord.AltMobileNumber = payload.altMobileNumber;
           existingRenterRecord.Address = payload.address;
+          existingRenterRecord.RentPaymentTiming = payload.rentPaymentTiming;
           existingRenterRecord.TotalFamilyMembers = payload.familyMembers;
           existingRenterRecord.FamilyMembersList = payload.familyMembersList;
           existingRenterRecord.JoinDate = payload.joinDate;
@@ -35454,6 +35574,7 @@ function formatMonthLabel(rawVal) {
             MobileNumber: payload.mobileNumber,
             AltMobileNumber: payload.altMobileNumber,
             Address: payload.address,
+            RentPaymentTiming: payload.rentPaymentTiming,
             TotalFamilyMembers: payload.familyMembers,
             FamilyMembersList: payload.familyMembersList,
             JoinDate: payload.joinDate,
@@ -35594,6 +35715,7 @@ function formatMonthLabel(rawVal) {
       document.getElementById("renterMobile").value = "+91";
       document.getElementById("renterAltMobile").value = "";
       document.getElementById("renterAddress").value = "";
+      setRenterPaymentTimingUI("");
       document.getElementById("renterFamily").value = "1";
       renderRenterFamilyMembersRows([]);
       document.getElementById("renterStatus").value = "Active";
@@ -35612,6 +35734,41 @@ function formatMonthLabel(rawVal) {
       const locResetEl = document.getElementById("renterFlatLocationInput");
       if (locResetEl) locResetEl.value = String(selectedFlat?.FlatLocation ?? selectedFlat?.Location ?? "").trim();
       populateProfileBhkDetailsInputs(selectedFlat, null);
+    }
+
+    function normalizeRentPaymentTiming(rawVal) {
+      const cleaned = String(rawVal || "").trim().toLowerCase();
+      if (cleaned === "advance") return "Advance";
+      if (cleaned === "rent in arrears" || cleaned === "arrears") return "Rent in Arrears";
+      return "";
+    }
+
+    function setRenterPaymentTimingUI(rawVal) {
+      const normalized = normalizeRentPaymentTiming(rawVal);
+      const hiddenEl = document.getElementById("renterPaymentTiming");
+      if (hiddenEl) hiddenEl.value = normalized;
+      const btnAdv = document.getElementById("btnRentTimingAdvance");
+      const btnArr = document.getElementById("btnRentTimingArrears");
+      if (btnAdv) {
+        const isAdv = normalized === "Advance";
+        btnAdv.classList.toggle("active", isAdv);
+        btnAdv.setAttribute("aria-pressed", isAdv ? "true" : "false");
+      }
+      if (btnArr) {
+        const isArr = normalized === "Rent in Arrears";
+        btnArr.classList.toggle("active", isArr);
+        btnArr.setAttribute("aria-pressed", isArr ? "true" : "false");
+      }
+    }
+
+    function getRenterPaymentTimingUI() {
+      return normalizeRentPaymentTiming(document.getElementById("renterPaymentTiming")?.value || "");
+    }
+
+    function selectRenterPaymentTiming(val) {
+      const canEditProf = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("renterProfile"));
+      if (!canEditProf) return;
+      setRenterPaymentTimingUI(val);
     }
 
     function formatBhkDetailsString(rooms, kitchen, bathroom, toilet) {
@@ -36381,6 +36538,7 @@ function formatMonthLabel(rawVal) {
           MobileNumber: consolidatedRec?.MobileNumber ? formatIndianMobilePlus91(consolidatedRec.MobileNumber) : "",
           AltMobileNumber: altMob,
           Address: addr,
+          RentPaymentTiming: normalizeRentPaymentTiming(consolidatedRec?.RentPaymentTiming || consolidatedRec?.PaymentTiming || ""),
           TotalFamilyMembers: famCount,
           EndDate: "",
           TenureType: isReturningMatch ? "RETURNING" : "NEW"
@@ -36464,6 +36622,7 @@ function formatMonthLabel(rawVal) {
           altMobileNumber: altMob,
           altMobile: altMob,
           address: addr,
+          rentPaymentTiming: newRenterObj.RentPaymentTiming || "",
           familyMembers: famCount,
           forceCreateNewRow: true
         });
@@ -37139,6 +37298,7 @@ function formatMonthLabel(rawVal) {
           MobileNumber: document.getElementById("renterMobile")?.value.trim() || "",
           AltMobileNumber: document.getElementById("renterAltMobile")?.value.trim() || "",
           Address: document.getElementById("renterAddress")?.value.trim() || "",
+          RentPaymentTiming: getRenterPaymentTimingUI(),
           TotalFamilyMembers: document.getElementById("renterFamily")?.value || 1,
           EndDate: ""
         };
