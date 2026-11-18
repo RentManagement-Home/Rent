@@ -6778,6 +6778,243 @@
     }
   }
 
+  /* All Property Boxes (#propertiesList > .prop-card): Cohesive Stylish Glassmorphic Design & 25% Transparency (0.75 Opacity) */
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card {
+    background: linear-gradient(135deg, rgba(67, 56, 202, 0.75) 0%, rgba(15, 23, 42, 0.75) 52%, rgba(14, 116, 144, 0.75) 100%) !important;
+    backdrop-filter: blur(12px) saturate(175%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(175%) !important;
+    padding: 15px 18px;
+    border: 1.5px solid rgba(165, 180, 252, 0.65) !important;
+    border-top: 3.5px solid #38bdf8 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 14px 32px rgba(79, 70, 229, 0.30), 0 4px 14px rgba(6, 182, 212, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.30), inset 0 -1px 0 rgba(56, 189, 248, 0.22) !important;
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: linear-gradient(125deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 40%, rgba(56, 189, 248, 0.12) 100%);
+    pointer-events: none;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card::after {
+    content: "";
+    position: absolute;
+    top: -26px;
+    right: -22px;
+    width: 88px;
+    height: 88px;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.34) 0%, rgba(129, 140, 248, 0.12) 48%, transparent 72%);
+    pointer-events: none;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card > * {
+    position: relative;
+    z-index: 1;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:hover {
+    transform: translateY(-3px) scale(1.015);
+    border-color: #7dd3fc !important;
+    box-shadow: 0 18px 36px rgba(79, 70, 229, 0.40), 0 6px 20px rgba(56, 189, 248, 0.26), inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-icon {
+    width: 46px !important;
+    height: 46px !important;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.75) 0%, rgba(14, 165, 233, 0.75) 100%) !important;
+    border: 1px solid rgba(186, 230, 253, 0.56) !important;
+    color: #ffffff !important;
+    border-radius: 14px !important;
+    font-size: 1.12rem !important;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.36), inset 0 1px 1px rgba(255, 255, 255, 0.42) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info h4 {
+    font-size: 0.98rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.015em;
+    margin-bottom: 4px;
+    text-shadow: 0 1px 6px rgba(2, 6, 23, 0.45);
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info span {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.71rem !important;
+    font-weight: 700 !important;
+    color: #e0f2fe !important;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(165, 180, 252, 0.34);
+    backdrop-filter: blur(6px);
+  }
+
+  /* 2nd, 6th, ... Property Boxes: Emerald-Teal Accent at 25% Transparency (0.75 Opacity) */
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+2) {
+    background: linear-gradient(135deg, rgba(6, 95, 70, 0.75) 0%, rgba(15, 23, 42, 0.75) 52%, rgba(14, 116, 144, 0.75) 100%) !important;
+    border-color: rgba(52, 211, 153, 0.65) !important;
+    border-top-color: #10b981 !important;
+    box-shadow: 0 14px 32px rgba(16, 185, 129, 0.28), 0 4px 14px rgba(6, 182, 212, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.28) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+2)::after {
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.34) 0%, rgba(6, 182, 212, 0.12) 48%, transparent 72%);
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+2):hover {
+    border-color: #6ee7b7 !important;
+    box-shadow: 0 18px 36px rgba(16, 185, 129, 0.38), 0 6px 20px rgba(6, 182, 212, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.38) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+2) .prop-icon {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.75) 0%, rgba(6, 182, 212, 0.75) 100%) !important;
+    border-color: rgba(167, 243, 208, 0.56) !important;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.34), inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+  }
+
+  /* 3rd, 7th, ... Property Boxes: Amber-Gold Accent at 25% Transparency (0.75 Opacity) */
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+3) {
+    background: linear-gradient(135deg, rgba(146, 64, 14, 0.75) 0%, rgba(15, 23, 42, 0.75) 54%, rgba(180, 83, 9, 0.75) 100%) !important;
+    border-color: rgba(251, 191, 36, 0.65) !important;
+    border-top-color: #f59e0b !important;
+    box-shadow: 0 14px 32px rgba(245, 158, 11, 0.26), 0 4px 14px rgba(217, 119, 6, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.28) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+3)::after {
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.34) 0%, rgba(245, 158, 11, 0.12) 48%, transparent 72%);
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+3):hover {
+    border-color: #fde68a !important;
+    box-shadow: 0 18px 36px rgba(245, 158, 11, 0.38), 0 6px 20px rgba(251, 191, 36, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.38) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+3) .prop-icon {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.75) 0%, rgba(234, 88, 12, 0.75) 100%) !important;
+    border-color: rgba(253, 230, 138, 0.56) !important;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.34), inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+  }
+
+  /* 4th, 8th, ... Property Boxes: Rose-Violet Accent at 25% Transparency (0.75 Opacity) */
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+4) {
+    background: linear-gradient(135deg, rgba(157, 23, 77, 0.75) 0%, rgba(15, 23, 42, 0.75) 54%, rgba(109, 40, 217, 0.75) 100%) !important;
+    border-color: rgba(244, 114, 182, 0.65) !important;
+    border-top-color: #ec4899 !important;
+    box-shadow: 0 14px 32px rgba(236, 72, 153, 0.28), 0 4px 14px rgba(139, 92, 246, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.28) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+4)::after {
+    background: radial-gradient(circle, rgba(244, 114, 182, 0.34) 0%, rgba(168, 85, 247, 0.12) 48%, transparent 72%);
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+4):hover {
+    border-color: #f9a8d4 !important;
+    box-shadow: 0 18px 36px rgba(236, 72, 153, 0.38), 0 6px 20px rgba(168, 85, 247, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.38) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+4) .prop-icon {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.75) 0%, rgba(139, 92, 246, 0.75) 100%) !important;
+    border-color: rgba(251, 207, 232, 0.56) !important;
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.34), inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+  }
+
+  /* Selected / Active Property Box (Maintains 25% Transparency = 0.75 Opacity) */
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card.active {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.75) 0%, rgba(15, 23, 42, 0.75) 50%, rgba(2, 132, 199, 0.75) 100%) !important;
+    border-color: #38bdf8 !important;
+    border-top: 3.5px solid #7dd3fc !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.34), 0 16px 34px rgba(79, 70, 229, 0.46), inset 0 1px 1px rgba(255, 255, 255, 0.42) !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card.active .prop-icon {
+    background: linear-gradient(135deg, rgba(129, 140, 248, 0.85) 0%, rgba(56, 189, 248, 0.85) 100%) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.72) !important;
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.52) !important;
+  }
+
+  /* Light Theme Support for All Property Boxes (25% Transparent = 0.75 Opacity) */
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(238, 242, 255, 0.75) 52%, rgba(207, 250, 254, 0.75) 100%) !important;
+    border: 1.5px solid rgba(99, 102, 241, 0.52) !important;
+    border-top: 3.5px solid #0284c7 !important;
+    box-shadow: 0 14px 28px rgba(79, 70, 229, 0.16), 0 4px 12px rgba(14, 165, 233, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card::before {
+    background: linear-gradient(125deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.10) 44%, rgba(56, 189, 248, 0.10) 100%);
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card::after {
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.24) 0%, rgba(99, 102, 241, 0.10) 48%, transparent 72%);
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:hover {
+    border-color: #0284c7 !important;
+    box-shadow: 0 18px 32px rgba(79, 70, 229, 0.24), 0 6px 16px rgba(14, 165, 233, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.98) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-icon {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.75) 0%, rgba(2, 132, 199, 0.75) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.65) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 14px rgba(79, 70, 229, 0.24) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info h4 {
+    text-shadow: none;
+    color: #0f172a !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info span {
+    color: #3730a3 !important;
+    background: rgba(79, 70, 229, 0.10);
+    border-color: rgba(79, 70, 229, 0.26);
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+2) {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(236, 253, 245, 0.75) 52%, rgba(207, 250, 254, 0.75) 100%) !important;
+    border-color: rgba(16, 185, 129, 0.52) !important;
+    border-top-color: #059669 !important;
+    box-shadow: 0 14px 28px rgba(16, 185, 129, 0.16), 0 4px 12px rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+2) .prop-icon {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.75) 0%, rgba(8, 145, 178, 0.75) 100%) !important;
+    box-shadow: 0 6px 14px rgba(16, 185, 129, 0.24) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+2) .prop-info span {
+    color: #065f46 !important;
+    background: rgba(16, 185, 129, 0.10);
+    border-color: rgba(16, 185, 129, 0.26);
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+3) {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 251, 235, 0.75) 52%, rgba(254, 243, 199, 0.75) 100%) !important;
+    border-color: rgba(245, 158, 11, 0.52) !important;
+    border-top-color: #d97706 !important;
+    box-shadow: 0 14px 28px rgba(245, 158, 11, 0.16), 0 4px 12px rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+3) .prop-icon {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.75) 0%, rgba(234, 88, 12, 0.75) 100%) !important;
+    box-shadow: 0 6px 14px rgba(245, 158, 11, 0.24) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+3) .prop-info span {
+    color: #92400e !important;
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.30);
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+4) {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(253, 242, 248, 0.75) 52%, rgba(243, 232, 255, 0.75) 100%) !important;
+    border-color: rgba(236, 72, 153, 0.52) !important;
+    border-top-color: #db2777 !important;
+    box-shadow: 0 14px 28px rgba(236, 72, 153, 0.16), 0 4px 12px rgba(15, 23, 42, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+4) .prop-icon {
+    background: linear-gradient(135deg, rgba(219, 39, 119, 0.75) 0%, rgba(124, 58, 237, 0.75) 100%) !important;
+    box-shadow: 0 6px 14px rgba(236, 72, 153, 0.24) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card:nth-child(4n+4) .prop-info span {
+    color: #9d174d !important;
+    background: rgba(236, 72, 153, 0.10);
+    border-color: rgba(236, 72, 153, 0.26);
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card.active {
+    background: linear-gradient(135deg, rgba(224, 231, 255, 0.75) 0%, rgba(186, 230, 253, 0.75) 100%) !important;
+    border-color: #4f46e5 !important;
+    border-top: 3.5px solid #4338ca !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.22), 0 14px 28px rgba(79, 70, 229, 0.26) !important;
+  }
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card.active .prop-icon {
+    background: linear-gradient(135deg, rgba(67, 56, 202, 0.85) 0%, rgba(2, 132, 199, 0.85) 100%) !important;
+    color: #ffffff !important;
+  }
+
 </style>
 </head>
 <body class="theme-black">
@@ -7970,7 +8207,6 @@
                     </div>
                     <div style="min-width:0; flex:1;">
                       <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">Android APK</div>
-                      <div id="adminAndroidApkPreviewText" style="font-size:0.72rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Not configured yet</div>
                     </div>
                   </div>
                   <div style="display:flex; align-items:center; gap:8px;">
@@ -8003,7 +8239,6 @@
                     </div>
                     <div style="min-width:0; flex:1;">
                       <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">iOS App</div>
-                      <div id="adminIosAppPreviewText" style="font-size:0.72rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Not configured yet</div>
                     </div>
                   </div>
                   <div style="display:flex; align-items:center; gap:8px;">
@@ -16856,13 +17091,9 @@ function formatMonthLabel(rawVal) {
       const links = getStoredAppDownloadLinks();
       const androidIn = document.getElementById("adminAndroidApkUrlInput");
       const iosIn = document.getElementById("adminIosAppUrlInput");
-      const androidPreview = document.getElementById("adminAndroidApkPreviewText");
-      const iosPreview = document.getElementById("adminIosAppPreviewText");
       const noteEl = document.getElementById("adminAppLinksSavedNote");
       if (androidIn && document.activeElement !== androidIn) androidIn.value = links.androidApkUrl;
       if (iosIn && document.activeElement !== iosIn) iosIn.value = links.iosAppUrl;
-      if (androidPreview) androidPreview.innerText = links.androidApkUrl || "No Android APK link saved yet";
-      if (iosPreview) iosPreview.innerText = links.iosAppUrl || "No iOS App link saved yet";
       if (noteEl) {
         noteEl.innerText = (links.androidApkUrl || links.iosAppUrl)
           ? "Click Download to test/install or click the Pencil icon to edit URLs."
