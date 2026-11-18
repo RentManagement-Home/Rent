@@ -4801,6 +4801,8 @@
   .renter-modern-portal #renterInstantUpiPaymentCard,
   .renter-modern-portal #renterPaymentPhotoAndUtrCard,
   .renter-modern-portal #renterInlineProfileCard,
+  .renter-modern-portal #renterProfileLocationBhkCard,
+  .renter-modern-portal #renterProfileChecklistCard,
   .renter-modern-portal #renterDownloadAppCard,
   .renter-modern-portal .renter-download-app-box,
   .renter-modern-portal .renter-download-app-icon,
@@ -4848,6 +4850,8 @@
   body.theme-white .renter-modern-portal #renterInstantUpiPaymentCard,
   body.theme-white .renter-modern-portal #renterPaymentPhotoAndUtrCard,
   body.theme-white .renter-modern-portal #renterInlineProfileCard,
+  body.theme-white .renter-modern-portal #renterProfileLocationBhkCard,
+  body.theme-white .renter-modern-portal #renterProfileChecklistCard,
   body.theme-white .renter-modern-portal #renterDownloadAppCard,
   body.theme-white .renter-modern-portal .renter-download-app-box,
   body.theme-white .renter-modern-portal .renter-download-app-icon,
@@ -6200,6 +6204,13 @@
     pointer-events: none !important;
     opacity: 0.9 !important;
     cursor: default !important;
+  }
+  body.role-renter #tabProfile #profPropertyAddress,
+  body.role-renter #tabProfile #flatLocationNumberCard,
+  body.role-renter #tabProfile #invExtraNotes {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   body.theme-white .modular-floating-widget {
     background: rgba(255, 255, 255, 0.98);
@@ -19967,6 +19978,47 @@ function formatMonthLabel(rawVal) {
           window.__pendingProfileEmailOtp.awaitingVerify === true
         );
 
+        const renterResolvedContact = typeof resolveFlatUpiAndContact === "function"
+          ? resolveFlatUpiAndContact(targetProp, assignedFlatObj, primaryRenter)
+          : {};
+        const renterPropAddress = String(
+          renterResolvedContact.propertyAddress ||
+          assignedFlatObj?.PropertyAddress ||
+          assignedFlatObj?.PropertyLocationAddress ||
+          primaryRenter?.PropertyAddress ||
+          primaryRenter?.PropertyLocationAddress ||
+          ""
+        ).trim();
+        const rawBhkSummary = String(
+          assignedFlatObj?.BHKDetails ??
+          primaryRenter?.BHKDetails ??
+          consolidatedProfile?.BHKDetails ??
+          ""
+        ).trim();
+        const parsedBhk = typeof parseBhkCountsFromString === "function"
+          ? parseBhkCountsFromString(rawBhkSummary)
+          : { rooms: "", kitchen: "", bathroom: "", toilet: "" };
+        const pickBhkCount = (flatVal, renterVal, consVal, parsedVal) => {
+          if (flatVal !== undefined && flatVal !== null && String(flatVal).trim() !== "") return flatVal;
+          if (renterVal !== undefined && renterVal !== null && String(renterVal).trim() !== "") return renterVal;
+          if (consVal !== undefined && consVal !== null && String(consVal).trim() !== "") return consVal;
+          return parsedVal !== "" ? parsedVal : "--";
+        };
+        const bhkRooms = pickBhkCount(assignedFlatObj?.RoomsCount, primaryRenter?.RoomsCount, consolidatedProfile?.RoomsCount, parsedBhk.rooms);
+        const bhkKitchen = pickBhkCount(assignedFlatObj?.KitchenCount, primaryRenter?.KitchenCount, consolidatedProfile?.KitchenCount, parsedBhk.kitchen);
+        const bhkBathroom = pickBhkCount(assignedFlatObj?.BathroomCount, primaryRenter?.BathroomCount, consolidatedProfile?.BathroomCount, parsedBhk.bathroom);
+        const bhkToilet = pickBhkCount(assignedFlatObj?.ToiletCount, primaryRenter?.ToiletCount, consolidatedProfile?.ToiletCount, parsedBhk.toilet);
+        const bhkSummaryDisplay = rawBhkSummary || (
+          [bhkRooms, bhkKitchen, bhkBathroom, bhkToilet].some(v => v !== "--") && typeof formatBhkDetailsString === "function"
+            ? formatBhkDetailsString(
+                bhkRooms === "--" ? 0 : bhkRooms,
+                bhkKitchen === "--" ? 0 : bhkKitchen,
+                bhkBathroom === "--" ? 0 : bhkBathroom,
+                bhkToilet === "--" ? 0 : bhkToilet
+              )
+            : ""
+        );
+
         const flatChecklistStorageKey = (typeof getFlatChecklistStorageKey === "function" && targetProp && targetFlat)
           ? getFlatChecklistStorageKey(targetProp, targetFlat)
           : "";
@@ -20010,6 +20062,7 @@ function formatMonthLabel(rawVal) {
               <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
                 <div style="font-size:0.78rem; font-weight:800; color:#38bdf8; text-transform:uppercase; letter-spacing:0.05em;">Tenancy &amp; Utility Schedule</div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Property &amp; Flat</span><strong style="font-size:0.9rem; color:var(--text-main);">${escapeHtml(targetProp)} • Flat ${escapeHtml(targetFlat)}</strong></div>
+                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Property Location Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(renterPropAddress || "Not Set")}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Monthly Base Rent</span><strong style="font-size:0.9rem; color:#34d399;">₹${baseRentConfigured.toLocaleString("en-IN")}/mo</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Utility Rates (Fixed Profile)</span><strong style="font-size:0.85rem; color:var(--text-main);">Elec: ₹${profElecRate !== "" ? profElecRate : "--"}/U • PNG: ₹${profPngRate !== "" ? profPngRate : "--"}/U • Water: ₹${profWaterRate !== "" ? profWaterRate : "--"}/U</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Joining Date ${profEndDate ? "/ End Date" : ""}</span><strong style="font-size:0.88rem; color:var(--text-main);">${profJoinDate ? formatDateOnly(profJoinDate) : "N/A"}${profEndDate ? ` → ${formatDateOnly(profEndDate)}` : ""}</strong></div>
@@ -20054,6 +20107,19 @@ function formatMonthLabel(rawVal) {
               </div>
             </div>
 
+            <!-- BHK / Room Details Summary (Read-Only View for Renter) -->
+            <div id="renterProfileLocationBhkCard" style="padding:16px; border-radius:16px; background:transparent; border:1.5px solid rgba(56,189,248,0.38); margin-bottom:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
+                <span style="font-size:0.84rem; font-weight:800; color:#38bdf8;">
+                  <i class="fa-solid fa-building"></i> BHK / Room Details
+                </span>
+              </div>
+              <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                <span style="font-size:0.68rem; color:var(--text-muted); display:block;">BHK / Room Details</span>
+                <strong style="font-size:0.84rem; color:var(--text-main);">${escapeHtml(bhkSummaryDisplay || "Not Set")}</strong>
+              </div>
+            </div>
+
             <!-- Move-In / Move-Out Inventory & Appliance Checklist (Read-Only View for Renter) -->
             <div id="renterProfileChecklistCard" style="padding:16px; border-radius:16px; background:transparent; border:1.5px solid rgba(56,189,248,0.45);">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
@@ -20087,12 +20153,10 @@ function formatMonthLabel(rawVal) {
                   <strong style="font-size:0.84rem; color:var(--text-main);">${escapeHtml(clPaint)}</strong>
                 </div>
               </div>
-              ${clNotes ? `
-                <div style="margin-top:10px; padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
-                  <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Move-In / Move-Out Remarks</span>
-                  <strong style="font-size:0.8rem; color:var(--text-main);">${escapeHtml(clNotes)}</strong>
-                </div>
-              ` : ""}
+              <div style="margin-top:10px; padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
+                <span style="font-size:0.68rem; color:var(--text-muted); display:block;">Move-In / Move-Out Remarks &amp; Extra Notes</span>
+                <strong style="font-size:0.8rem; color:var(--text-main);">${escapeHtml(clNotes || "No additional remarks")}</strong>
+              </div>
             </div>
           </div>
         `;
