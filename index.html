@@ -6,7 +6,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home </title>
+  <title> KirayaHub </title>
   <meta name="description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
   <meta property="og:title" content="Home Management Portal" />
   <meta property="og:description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
@@ -7277,6 +7277,40 @@
     color: #78350f !important;
   }
 
+  /* Focused Login Brand Heading (section#loginScreen > div > div > h1): Stylish Colorful KirayaHub Typography */
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1) {
+    position: relative;
+    display: inline-block;
+    font-size: 2.2rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.03em !important;
+    line-height: 1.15 !important;
+    margin: 2px auto 0 auto !important;
+    background: linear-gradient(120deg, #38bdf8 0%, #818cf8 26%, #e879f9 52%, #fbbf24 78%, #34d399 100%) !important;
+    background-size: 200% auto !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    text-shadow: none !important;
+    filter: drop-shadow(0 3px 12px rgba(56, 189, 248, 0.35)) drop-shadow(0 2px 6px rgba(2, 6, 23, 0.78)) !important;
+    animation: kirayaBrandShimmer 6s ease-in-out infinite !important;
+  }
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)::after {
+    content: "";
+    display: block;
+    width: 72%;
+    height: 3.5px;
+    margin: 7px auto 0 auto;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #38bdf8 0%, #818cf8 34%, #f43f5e 68%, #fbbf24 100%);
+    box-shadow: 0 2px 10px rgba(168, 85, 247, 0.55);
+  }
+  @keyframes kirayaBrandShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
 </style>
 </head>
 <body class="theme-black">
@@ -8164,7 +8198,7 @@
           <i class="fa-solid fa-house-chimney house-main-icon"></i>
           <i class="fa-solid fa-heart heart-badge-icon"></i>
         </div>
-        <h1>Home</h1>
+        <h1>KirayaHub</h1>
         <p></p>
       </div>
 
