@@ -5465,8 +5465,11 @@
     color: #475569;
   }
 
-  /* Horizontal Options Rail */
+  /* Horizontal Options Rail with Manual Left/Right Scroll Buttons */
   #settingsModal .settings-horizontal-options-box {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
     background: rgba(15, 23, 42, 0.62) !important;
     border: 1px solid rgba(148, 163, 184, 0.2) !important;
     border-radius: 18px !important;
@@ -5479,7 +5482,54 @@
     border: 1px solid rgba(148, 163, 184, 0.34) !important;
     box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.05) !important;
   }
+  #settingsModal .settings-nav-scroll-btn {
+    flex: 0 0 auto !important;
+    width: 36px !important;
+    height: 54px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(129, 140, 248, 0.45) !important;
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.92)) !important;
+    color: #e0e7ff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.92rem !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease !important;
+    user-select: none;
+  }
+  #settingsModal .settings-nav-scroll-btn:hover {
+    background: linear-gradient(135deg, #0ea5e9 0%, #4f46e5 100%) !important;
+    border-color: rgba(125, 211, 252, 0.85) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) scale(1.04) !important;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.44), 0 0 14px rgba(56, 189, 248, 0.32) !important;
+  }
+  #settingsModal .settings-nav-scroll-btn:active {
+    transform: scale(0.95) !important;
+  }
+  #settingsModal .settings-nav-scroll-btn.is-edge {
+    opacity: 0.38 !important;
+  }
+  #settingsModal .settings-nav-scroll-btn.is-edge:hover {
+    opacity: 0.65 !important;
+  }
+  body.theme-white #settingsModal .settings-nav-scroll-btn {
+    background: linear-gradient(145deg, #ffffff, #f1f5f9) !important;
+    border-color: rgba(99, 102, 241, 0.36) !important;
+    color: #4f46e5 !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+  body.theme-white #settingsModal .settings-nav-scroll-btn:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%) !important;
+    border-color: #4f46e5 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 18px rgba(79, 70, 229, 0.28) !important;
+  }
   #settingsModal .settings-nav-grid {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: stretch !important;
@@ -5488,19 +5538,7 @@
     padding: 3px 2px 5px 2px !important;
     overflow-x: auto !important;
     flex-wrap: nowrap !important;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(129, 140, 248, 0.45) transparent;
-    scroll-behavior: smooth;
-  }
-  #settingsModal .settings-nav-grid::-webkit-scrollbar {
-    height: 5px;
-  }
-  #settingsModal .settings-nav-grid::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  #settingsModal .settings-nav-grid::-webkit-scrollbar-thumb {
-    background: rgba(129, 140, 248, 0.4);
-    border-radius: 999px;
+    scroll-behavior: smooth !important;
   }
 
   /* Individual Option Cards with Per-Module Accent Identity */
@@ -5508,8 +5546,8 @@
     --nav-accent: #6366f1;
     --nav-accent-rgb: 99, 102, 241;
     --nav-icon-grad: linear-gradient(135deg, #4f46e5, #6366f1);
-    flex: 1 0 128px !important;
-    min-width: 128px !important;
+    flex: 0 0 148px !important;
+    min-width: 148px !important;
     min-height: 82px !important;
     background: linear-gradient(155deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.74)) !important;
     border: 1px solid rgba(148, 163, 184, 0.22) !important;
@@ -6695,8 +6733,15 @@
     }
     #settingsModal .settings-horizontal-options-box {
       padding: 7px !important;
+      gap: 6px !important;
       border-radius: 15px !important;
       margin-bottom: 14px !important;
+    }
+    #settingsModal .settings-nav-scroll-btn {
+      width: 30px !important;
+      height: 46px !important;
+      border-radius: 10px !important;
+      font-size: 0.82rem !important;
     }
     #settingsModal .settings-nav-grid {
       display: flex !important;
@@ -6708,7 +6753,6 @@
       -webkit-overflow-scrolling: touch !important;
       scroll-snap-type: x proximity;
       padding: 3px 2px 7px 2px !important;
-      scrollbar-width: thin;
     }
     #settingsModal .settings-nav-card {
       flex: 0 0 auto !important;
@@ -7525,6 +7569,85 @@
     50% { background-position: 100% 50%; }
   }
 
+  /* Focused KirayaHub Login Logo Emblem (section#loginScreen > div > div > div.login-brand-icon-wrap) */
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
+    position: relative !important;
+    width: 90px !important;
+    height: 90px !important;
+    margin: 0 auto 14px auto !important;
+    padding: 0 !important;
+    border-radius: 26px !important;
+    background:
+      radial-gradient(circle at 22% 18%, rgba(56, 189, 248, 0.28) 0%, transparent 52%),
+      radial-gradient(circle at 82% 84%, rgba(232, 121, 249, 0.24) 0%, transparent 54%),
+      linear-gradient(145deg, rgba(15, 23, 42, 0.86) 0%, rgba(30, 27, 75, 0.84) 55%, rgba(15, 23, 42, 0.9) 100%) !important;
+    backdrop-filter: blur(18px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+    border: 1.5px solid rgba(129, 140, 248, 0.55) !important;
+    box-shadow:
+      0 14px 36px rgba(2, 6, 23, 0.62),
+      0 0 28px rgba(99, 102, 241, 0.34),
+      0 0 18px rgba(56, 189, 248, 0.22),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.34),
+      inset 0 -1px 2px rgba(232, 121, 249, 0.22) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.28s ease !important;
+  }
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1.75px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 32%, #e879f9 64%, #fbbf24 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1)::after {
+    content: "";
+    position: absolute;
+    top: -45%;
+    left: -75%;
+    width: 60%;
+    height: 190%;
+    background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.26) 50%, transparent 80%);
+    transform: rotate(22deg);
+    pointer-events: none;
+    animation: kirayaLogoSheen 5.5s ease-in-out infinite;
+  }
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1):hover {
+    transform: translateY(-3px) scale(1.045) !important;
+    border-color: rgba(56, 189, 248, 0.85) !important;
+    box-shadow:
+      0 18px 42px rgba(2, 6, 23, 0.68),
+      0 0 36px rgba(129, 140, 248, 0.52),
+      0 0 24px rgba(251, 191, 36, 0.28),
+      inset 0 1px 2px rgba(255, 255, 255, 0.45) !important;
+  }
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) svg.kirayahub-logo-svg {
+    width: 66px;
+    height: 66px;
+    display: block;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 4px 10px rgba(2, 6, 23, 0.6));
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1):hover svg.kirayahub-logo-svg {
+    transform: scale(1.05);
+  }
+  @keyframes kirayaLogoSheen {
+    0%, 70% { left: -75%; opacity: 0; }
+    80% { opacity: 1; }
+    100% { left: 135%; opacity: 0; }
+  }
+
   /* Focused Reminder Notification Button & Icon (#btnAdminResidentOpsHub > i): Violet-Indigo-Cyan Stylish Design */
   section#dashboardScreen > header.top-nav .nav-actions-group > button#btnAdminResidentOpsHub {
     background: linear-gradient(135deg, rgba(139, 92, 246, 0.34) 0%, rgba(99, 102, 241, 0.26) 52%, rgba(56, 189, 248, 0.24) 100%) !important;
@@ -7633,6 +7756,254 @@
     color: #ffffff !important;
     transform: rotate(90deg) scale(1.14);
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.88)) !important;
+  }
+
+  /* Focused Admin Resident Operations Hub Carousel & Manual Scroll Controls (#adminResidentOpsHubSection ONLY) */
+  #adminResidentOpsHubSection .admin-ops-hub-carousel-rail {
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    padding: 9px !important;
+    margin-bottom: 14px !important;
+    border-radius: 20px !important;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.64), rgba(17, 24, 39, 0.56)) !important;
+    backdrop-filter: blur(18px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
+    border: 1px solid rgba(148, 163, 184, 0.24) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 28px rgba(2, 6, 23, 0.28) !important;
+  }
+  body.theme-white #adminResidentOpsHubSection .admin-ops-hub-carousel-rail {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(241, 245, 249, 0.74)) !important;
+    border: 1px solid rgba(148, 163, 184, 0.36) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 22px rgba(15, 23, 42, 0.07) !important;
+  }
+  #adminResidentOpsHubSection .admin-ops-scroll-btn {
+    flex: 0 0 auto !important;
+    width: 36px !important;
+    height: 52px !important;
+    border-radius: 13px !important;
+    border: 1px solid rgba(129, 140, 248, 0.45) !important;
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9)) !important;
+    color: #e0e7ff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.92rem !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease !important;
+    user-select: none;
+  }
+  #adminResidentOpsHubSection .admin-ops-scroll-btn:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #0ea5e9 100%) !important;
+    border-color: rgba(125, 211, 252, 0.85) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) scale(1.05) !important;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.42), 0 0 14px rgba(56, 189, 248, 0.28) !important;
+  }
+  #adminResidentOpsHubSection .admin-ops-scroll-btn:active {
+    transform: scale(0.95) !important;
+  }
+  #adminResidentOpsHubSection .admin-ops-scroll-btn.is-edge {
+    opacity: 0.36 !important;
+  }
+  #adminResidentOpsHubSection .admin-ops-scroll-btn.is-edge:hover {
+    opacity: 0.65 !important;
+  }
+  body.theme-white #adminResidentOpsHubSection .admin-ops-scroll-btn {
+    background: linear-gradient(145deg, #ffffff, #f1f5f9) !important;
+    border-color: rgba(99, 102, 241, 0.35) !important;
+    color: #4f46e5 !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+  body.theme-white #adminResidentOpsHubSection .admin-ops-scroll-btn:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #0284c7 100%) !important;
+    border-color: #4f46e5 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 18px rgba(79, 70, 229, 0.28) !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-behavior: smooth !important;
+    scroll-snap-type: x proximity !important;
+    padding: 4px 2px !important;
+    margin: 0 !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card {
+    --ops-accent: #6366f1;
+    --ops-accent-rgb: 99, 102, 241;
+    --ops-icon-grad: linear-gradient(135deg, #4f46e5, #6366f1);
+    position: relative !important;
+    flex: 0 0 auto !important;
+    min-width: 196px !important;
+    min-height: 58px !important;
+    padding: 10px 15px !important;
+    border-radius: 15px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    background: linear-gradient(150deg, rgba(30, 41, 59, 0.76), rgba(15, 23, 42, 0.72)) !important;
+    border: 1px solid rgba(148, 163, 184, 0.24) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+    color: #e2e8f0 !important;
+    font-size: 0.84rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.24) !important;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card::after {
+    content: "";
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: 0;
+    height: 3px;
+    border-radius: 999px 999px 0 0;
+    background: var(--ops-accent);
+    opacity: 0;
+    transform: scaleX(0.45);
+    transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  body.theme-white #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card {
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.84)) !important;
+    border: 1px solid rgba(148, 163, 184, 0.32) !important;
+    color: #1e293b !important;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05) !important;
+  }
+
+  /* Per-Option Accent Identity (Order: Notifications -> Screenshot Verification -> UTR Verification -> Maintenance Tickets -> Contact Info -> Apps) */
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .ops-tab-notifications {
+    --ops-accent: #f59e0b;
+    --ops-accent-rgb: 245, 158, 11;
+    --ops-icon-grad: linear-gradient(135deg, #d97706, #fbbf24);
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .ops-tab-screenshot {
+    --ops-accent: #10b981;
+    --ops-accent-rgb: 16, 185, 129;
+    --ops-icon-grad: linear-gradient(135deg, #059669, #34d399);
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .ops-tab-utr {
+    --ops-accent: #0ea5e9;
+    --ops-accent-rgb: 14, 165, 233;
+    --ops-icon-grad: linear-gradient(135deg, #0284c7, #38bdf8);
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .ops-tab-tickets {
+    --ops-accent: #f43f5e;
+    --ops-accent-rgb: 244, 63, 94;
+    --ops-icon-grad: linear-gradient(135deg, #e11d48, #fb7185);
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .ops-tab-contact {
+    --ops-accent: #8b5cf6;
+    --ops-accent-rgb: 139, 92, 246;
+    --ops-icon-grad: linear-gradient(135deg, #7c3aed, #a78bfa);
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .ops-tab-apps {
+    --ops-accent: #6366f1;
+    --ops-accent-rgb: 99, 102, 241;
+    --ops-icon-grad: linear-gradient(135deg, #4f46e5, #22d3ee);
+  }
+
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: rgba(var(--ops-accent-rgb), 0.72) !important;
+    background: linear-gradient(150deg, rgba(var(--ops-accent-rgb), 0.18), rgba(30, 41, 59, 0.84)) !important;
+    box-shadow: 0 10px 24px rgba(2, 6, 23, 0.34), 0 0 18px rgba(var(--ops-accent-rgb), 0.2) !important;
+    color: #ffffff !important;
+  }
+  body.theme-white #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card:hover {
+    background: linear-gradient(150deg, rgba(var(--ops-accent-rgb), 0.12), rgba(255, 255, 255, 0.96)) !important;
+    border-color: rgba(var(--ops-accent-rgb), 0.72) !important;
+    box-shadow: 0 8px 20px rgba(var(--ops-accent-rgb), 0.15) !important;
+    color: #0f172a !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card.active {
+    background: linear-gradient(140deg, rgba(var(--ops-accent-rgb), 0.3) 0%, rgba(15, 23, 42, 0.88) 100%) !important;
+    border-color: rgba(var(--ops-accent-rgb), 0.92) !important;
+    box-shadow: 0 0 0 2px rgba(var(--ops-accent-rgb), 0.26), 0 12px 26px rgba(var(--ops-accent-rgb), 0.28) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    transform: translateY(-2px) !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card.active::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  body.theme-white #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card.active {
+    background: linear-gradient(140deg, rgba(var(--ops-accent-rgb), 0.18) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+    border-color: rgba(var(--ops-accent-rgb), 0.88) !important;
+    box-shadow: 0 0 0 2px rgba(var(--ops-accent-rgb), 0.2), 0 10px 22px rgba(var(--ops-accent-rgb), 0.16) !important;
+    color: #0f172a !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-card-icon {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 12px !important;
+    background: var(--ops-icon-grad) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    color: #ffffff !important;
+    font-size: 0.96rem !important;
+    box-shadow: 0 6px 14px rgba(var(--ops-accent-rgb), 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card:hover .admin-ops-card-icon,
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card.active .admin-ops-card-icon {
+    background: var(--ops-icon-grad) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+    color: #ffffff !important;
+    transform: scale(1.07);
+    box-shadow: 0 8px 18px rgba(var(--ops-accent-rgb), 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
+  }
+  #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-card-badge {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.68rem !important;
+    font-weight: 800 !important;
+    padding: 2px 7px !important;
+    border-radius: 999px !important;
+    background: rgba(244, 63, 94, 0.22) !important;
+    color: #fda4af !important;
+    border: 1px solid rgba(244, 63, 94, 0.48) !important;
+  }
+  body.theme-white #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-card-badge {
+    background: rgba(225, 29, 72, 0.12) !important;
+    color: #be123c !important;
+    border-color: rgba(225, 29, 72, 0.35) !important;
+  }
+  @media (max-width: 768px) {
+    #adminResidentOpsHubSection .admin-ops-hub-carousel-rail {
+      padding: 7px !important;
+      gap: 6px !important;
+      border-radius: 16px !important;
+    }
+    #adminResidentOpsHubSection .admin-ops-scroll-btn {
+      width: 30px !important;
+      height: 46px !important;
+      border-radius: 10px !important;
+      font-size: 0.82rem !important;
+    }
+    #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-carousel-card {
+      min-width: 164px !important;
+      min-height: 50px !important;
+      padding: 8px 12px !important;
+      gap: 9px !important;
+      font-size: 0.78rem !important;
+    }
+    #adminResidentOpsHubSection #adminOpsHubCarouselTrack .admin-ops-card-icon {
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 10px !important;
+      font-size: 0.86rem !important;
+    }
   }
 
   /* Global Scrollbar Concealment (All Browsers) — Preserves Smooth Scrolling */
@@ -8553,9 +8924,53 @@
   <section id="loginScreen" class="screen active">
     <div class="glass-card login-container">
       <div class="login-brand">
-        <div class="login-brand-icon-wrap" title="Home & Heart">
-          <i class="fa-solid fa-house-chimney house-main-icon"></i>
-          <i class="fa-solid fa-heart heart-badge-icon"></i>
+        <div class="login-brand-icon-wrap" title="KirayaHub">
+          <svg class="kirayahub-logo-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KirayaHub Logo">
+            <defs>
+              <linearGradient id="khRoofGrad" x1="10" y1="10" x2="70" y2="54" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#38BDF8" />
+                <stop offset="48%" stop-color="#818CF8" />
+                <stop offset="100%" stop-color="#E879F9" />
+              </linearGradient>
+              <linearGradient id="khMonogramGrad" x1="20" y1="26" x2="60" y2="66" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFFFFF" />
+                <stop offset="55%" stop-color="#E0F2FE" />
+                <stop offset="100%" stop-color="#C7D2FE" />
+              </linearGradient>
+              <linearGradient id="khGoldGrad" x1="40" y1="8" x2="66" y2="66" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FDE68A" />
+                <stop offset="55%" stop-color="#FBBF24" />
+                <stop offset="100%" stop-color="#F59E0B" />
+              </linearGradient>
+              <linearGradient id="khTealGrad" x1="18" y1="44" x2="62" y2="70" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#34D399" />
+                <stop offset="100%" stop-color="#38BDF8" />
+              </linearGradient>
+            </defs>
+
+            <!-- Subtle Orbital Hub Ring -->
+            <circle cx="40" cy="43" r="30" stroke="url(#khRoofGrad)" stroke-opacity="0.28" stroke-width="1.5" stroke-dasharray="5 4" />
+
+            <!-- Architectural Roofline & Modern House Frame -->
+            <path d="M12 37.5L40 13.5L68 37.5" stroke="url(#khRoofGrad)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M20 35.5V61.5C20 64.5 22.5 67 25.5 67H54.5C57.5 67 60 64.5 60 61.5V35.5" stroke="url(#khRoofGrad)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.92" />
+
+            <!-- Roof Apex Crown Diamond -->
+            <path d="M40 7L44.2 12.2L40 17.4L35.8 12.2L40 7Z" fill="url(#khGoldGrad)" />
+
+            <!-- Stylized "K" Hub Monogram Inside House -->
+            <path d="M30 33.5V58.5" stroke="url(#khMonogramGrad)" stroke-width="5.2" stroke-linecap="round" />
+            <path d="M49.5 34.5L32.5 46.5L51 58.5" stroke="url(#khMonogramGrad)" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round" />
+
+            <!-- Connected Hub Nodes (Kiraya + Hub Network) -->
+            <circle cx="30" cy="46.5" r="4.1" fill="url(#khGoldGrad)" stroke="#0F172A" stroke-width="1.4" />
+            <circle cx="50.5" cy="34.5" r="3.4" fill="url(#khTealGrad)" stroke="#0F172A" stroke-width="1.2" />
+            <circle cx="51" cy="58.5" r="3.4" fill="url(#khRoofGrad)" stroke="#0F172A" stroke-width="1.2" />
+
+            <!-- Golden Rupee / Rent Spark Accent Badge (Top-Right) -->
+            <circle cx="62" cy="21" r="8.5" fill="#0F172A" stroke="url(#khGoldGrad)" stroke-width="2" />
+            <path d="M58.8 17.8H65.2M58.8 20.5H64.5M59.4 17.8C62.2 17.8 63.4 19 63.4 20.6C63.4 22.2 61.9 23.1 59.3 23.1L64.1 25.8" stroke="url(#khGoldGrad)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         </div>
         <h1>KirayaHub</h1>
         <p></p>
@@ -8778,40 +9193,49 @@
           </button>
         </div>
 
-        <!-- Horizontally Scrollable Left-to-Right Carousel -->
-        <div class="admin-ops-hub-carousel" id="adminOpsHubCarouselTrack" role="tablist" aria-label="Admin Operations Options">
-          <button type="button" class="admin-ops-carousel-card active" data-ops-tab="screenshot" onclick="switchAdminOpsHubTab('screenshot')">
-            <span class="admin-ops-card-icon"><i class="fa-solid fa-images"></i></span>
-            <span class="admin-ops-card-label">Screenshot Verification</span>
+        <!-- Horizontally Scrollable Left-to-Right Carousel with Manual Scroll Controls (Ordered: Notifications, Screenshot Verification, UTR Verification, Maintenance Tickets, Contact Info, Apps) -->
+        <div class="admin-ops-hub-carousel-rail" id="adminOpsHubCarouselRail">
+          <button type="button" id="btnAdminOpsScrollLeft" class="admin-ops-scroll-btn is-edge" onclick="scrollAdminOpsHubCarousel(-1)" aria-label="Scroll Operations Options Left" title="Scroll Left">
+            <i class="fa-solid fa-chevron-left"></i>
           </button>
-          <button type="button" class="admin-ops-carousel-card" data-ops-tab="utr" onclick="switchAdminOpsHubTab('utr')">
-            <span class="admin-ops-card-icon"><i class="fa-solid fa-receipt"></i></span>
-            <span class="admin-ops-card-label">UTR Verification</span>
-            <span id="adminOpsCarouselUtrBadge" class="admin-ops-card-badge" style="display:none;">0</span>
-          </button>
-          <button type="button" class="admin-ops-carousel-card" data-ops-tab="notifications" onclick="switchAdminOpsHubTab('notifications')">
-            <span class="admin-ops-card-icon"><i class="fa-solid fa-bell"></i></span>
-            <span class="admin-ops-card-label">Notifications</span>
-            <span id="adminOpsCarouselNotifBadge" class="admin-ops-card-badge" style="display:none;">0</span>
-          </button>
-          <button type="button" class="admin-ops-carousel-card" data-ops-tab="contact" onclick="switchAdminOpsHubTab('contact')">
-            <span class="admin-ops-card-icon"><i class="fa-solid fa-address-book"></i></span>
-            <span class="admin-ops-card-label">Contact Info</span>
-          </button>
-          <button type="button" class="admin-ops-carousel-card" data-ops-tab="tickets" onclick="switchAdminOpsHubTab('tickets')">
-            <span class="admin-ops-card-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span>
-            <span class="admin-ops-card-label">Maintenance Tickets</span>
-            <span id="adminOpsCarouselTicketsBadge" class="admin-ops-card-badge" style="display:none;">0</span>
-          </button>
-          <button type="button" class="admin-ops-carousel-card" data-ops-tab="applinks" onclick="switchAdminOpsHubTab('applinks')">
-            <span class="admin-ops-card-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
-            <span class="admin-ops-card-label">App Links</span>
+          <div class="admin-ops-hub-carousel" id="adminOpsHubCarouselTrack" role="tablist" aria-label="Admin Operations Options" onscroll="updateAdminOpsScrollButtons()">
+            <button type="button" class="admin-ops-carousel-card ops-tab-notifications active" data-ops-tab="notifications" onclick="switchAdminOpsHubTab('notifications')">
+              <span class="admin-ops-card-icon"><i class="fa-solid fa-bell"></i></span>
+              <span class="admin-ops-card-label">Notifications</span>
+              <span id="adminOpsCarouselNotifBadge" class="admin-ops-card-badge" style="display:none;">0</span>
+            </button>
+            <button type="button" class="admin-ops-carousel-card ops-tab-screenshot" data-ops-tab="screenshot" onclick="switchAdminOpsHubTab('screenshot')">
+              <span class="admin-ops-card-icon"><i class="fa-solid fa-images"></i></span>
+              <span class="admin-ops-card-label">Screenshot Verification</span>
+            </button>
+            <button type="button" class="admin-ops-carousel-card ops-tab-utr" data-ops-tab="utr" onclick="switchAdminOpsHubTab('utr')">
+              <span class="admin-ops-card-icon"><i class="fa-solid fa-receipt"></i></span>
+              <span class="admin-ops-card-label">UTR Verification</span>
+              <span id="adminOpsCarouselUtrBadge" class="admin-ops-card-badge" style="display:none;">0</span>
+            </button>
+            <button type="button" class="admin-ops-carousel-card ops-tab-tickets" data-ops-tab="tickets" onclick="switchAdminOpsHubTab('tickets')">
+              <span class="admin-ops-card-icon"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+              <span class="admin-ops-card-label">Maintenance Tickets</span>
+              <span id="adminOpsCarouselTicketsBadge" class="admin-ops-card-badge" style="display:none;">0</span>
+            </button>
+            <button type="button" class="admin-ops-carousel-card ops-tab-contact" data-ops-tab="contact" onclick="switchAdminOpsHubTab('contact')">
+              <span class="admin-ops-card-icon"><i class="fa-solid fa-address-book"></i></span>
+              <span class="admin-ops-card-label">Contact Info</span>
+            </button>
+            <button type="button" class="admin-ops-carousel-card ops-tab-apps" data-ops-tab="applinks" onclick="switchAdminOpsHubTab('applinks')">
+              <span class="admin-ops-card-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
+              <span class="admin-ops-card-label">Apps</span>
+            </button>
+          </div>
+          <button type="button" id="btnAdminOpsScrollRight" class="admin-ops-scroll-btn" onclick="scrollAdminOpsHubCarousel(1)" aria-label="Scroll Operations Options Right" title="Scroll Right">
+            <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
 
         <!-- Active Option Workspace Body -->
         <div class="admin-ops-hub-body" id="adminOpsHubBody">
-          <div id="adminOpsHubPanelSlot_screenshot" class="admin-ops-hub-slot" style="display:block;"></div>
+          <div id="adminOpsHubPanelSlot_notifications" class="admin-ops-hub-slot" style="display:block;"></div>
+          <div id="adminOpsHubPanelSlot_screenshot" class="admin-ops-hub-slot" style="display:none;"></div>
           <div id="adminOpsHubPanelSlot_utr" class="admin-ops-hub-slot" style="display:none;">
             <div class="stat-pill" style="text-align:left; padding:18px; border-radius:16px; border:1.5px solid rgba(56,189,248,0.38);">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
@@ -8833,9 +9257,8 @@
               <div id="adminPaymentProofQueueList" style="display:flex; flex-direction:column; gap:10px; max-height:520px; overflow-y:auto;"></div>
             </div>
           </div>
-          <div id="adminOpsHubPanelSlot_notifications" class="admin-ops-hub-slot" style="display:none;"></div>
-          <div id="adminOpsHubPanelSlot_contact" class="admin-ops-hub-slot" style="display:none;"></div>
           <div id="adminOpsHubPanelSlot_tickets" class="admin-ops-hub-slot" style="display:none;"></div>
+          <div id="adminOpsHubPanelSlot_contact" class="admin-ops-hub-slot" style="display:none;"></div>
           <div id="adminOpsHubPanelSlot_applinks" class="admin-ops-hub-slot" style="display:none;">
             <div class="stat-pill" style="text-align:left; padding:18px; border-radius:16px; border:1.5px solid rgba(16,185,129,0.38);">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
@@ -9995,7 +10418,10 @@
 
       <!-- Horizontal Left-to-Right Options Rail (Ordered: Create User ID, Register User, Background Photo, Last Login, Audit Trail Log, Edit Everything, Delete Center) -->
       <div class="settings-horizontal-options-box">
-        <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid">
+        <button type="button" id="btnSettingsNavScrollLeft" class="settings-nav-scroll-btn is-edge" onclick="scrollSettingsNavGrid(-1)" aria-label="Scroll Settings Options Left" title="Scroll Left">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid" onscroll="updateSettingsNavScrollButtons()">
           <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create active" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
             <div class="s-nav-icon"><i class="fa-solid fa-user-plus"></i></div>
             <div class="s-nav-title">Create User ID</div>
@@ -10029,6 +10455,9 @@
             <div class="s-nav-title">Notifications</div>
           </div>
         </div>
+        <button type="button" id="btnSettingsNavScrollRight" class="settings-nav-scroll-btn" onclick="scrollSettingsNavGrid(1)" aria-label="Scroll Settings Options Right" title="Scroll Right">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
       </div>
 
       <!-- Settings Tab: Screenshot Verification (Split into Live Photo & History Photo) -->
@@ -17501,10 +17930,37 @@ function formatMonthLabel(rawVal) {
       document.body.classList.add("admin-ops-hub-open");
       if (hubSection) hubSection.style.display = "block";
 
-      const targetTab = initialTab || window.activeAdminOpsHubTab || "screenshot";
+      const targetTab = initialTab || window.activeAdminOpsHubTab || "notifications";
       switchAdminOpsHubTab(targetTab);
       syncAdminOpsHubBadges();
+      if (typeof updateAdminOpsScrollButtons === "function") {
+        requestAnimationFrame(updateAdminOpsScrollButtons);
+      }
     }
+
+    function scrollAdminOpsHubCarousel(direction) {
+      const track = document.getElementById("adminOpsHubCarouselTrack");
+      if (!track) return;
+      const step = Math.max(240, Math.round(track.clientWidth * 0.48));
+      track.scrollBy({
+        left: (direction < 0 ? -1 : 1) * step,
+        behavior: "smooth"
+      });
+      setTimeout(updateAdminOpsScrollButtons, 260);
+    }
+
+    function updateAdminOpsScrollButtons() {
+      const track = document.getElementById("adminOpsHubCarouselTrack");
+      const btnLeft = document.getElementById("btnAdminOpsScrollLeft");
+      const btnRight = document.getElementById("btnAdminOpsScrollRight");
+      if (!track || !btnLeft || !btnRight) return;
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      const atStart = track.scrollLeft <= 2;
+      const atEnd = maxScroll <= 2 || track.scrollLeft >= maxScroll - 2;
+      btnLeft.classList.toggle("is-edge", atStart);
+      btnRight.classList.toggle("is-edge", atEnd);
+    }
+    window.addEventListener("resize", updateAdminOpsScrollButtons);
 
     function closeAdminResidentOpsHub(silent = false) {
       restoreSharedAdminWorkspacesToSettings();
@@ -17614,8 +18070,8 @@ function formatMonthLabel(rawVal) {
     }
 
     function switchAdminOpsHubTab(tabKey) {
-      const allowedTabs = ["screenshot", "utr", "notifications", "contact", "tickets", "applinks"];
-      const activeKey = allowedTabs.includes(tabKey) ? tabKey : "screenshot";
+      const allowedTabs = ["notifications", "screenshot", "utr", "tickets", "contact", "applinks"];
+      const activeKey = allowedTabs.includes(tabKey) ? tabKey : "notifications";
       window.activeAdminOpsHubTab = activeKey;
 
       document.querySelectorAll("#adminOpsHubCarouselTrack .admin-ops-carousel-card").forEach(btn => {
@@ -25896,7 +26352,34 @@ function formatMonthLabel(rawVal) {
         switchOtherSubOption("users");
       }
       openModal("settingsModal");
+      if (typeof updateSettingsNavScrollButtons === "function") {
+        requestAnimationFrame(updateSettingsNavScrollButtons);
+      }
     }
+
+    function scrollSettingsNavGrid(direction) {
+      const grid = document.getElementById("settingsHorizontalNavGrid");
+      if (!grid) return;
+      const step = Math.max(220, Math.round(grid.clientWidth * 0.45));
+      grid.scrollBy({
+        left: (direction < 0 ? -1 : 1) * step,
+        behavior: "smooth"
+      });
+      setTimeout(updateSettingsNavScrollButtons, 260);
+    }
+
+    function updateSettingsNavScrollButtons() {
+      const grid = document.getElementById("settingsHorizontalNavGrid");
+      const btnLeft = document.getElementById("btnSettingsNavScrollLeft");
+      const btnRight = document.getElementById("btnSettingsNavScrollRight");
+      if (!grid || !btnLeft || !btnRight) return;
+      const maxScroll = Math.max(0, grid.scrollWidth - grid.clientWidth);
+      const atStart = grid.scrollLeft <= 2;
+      const atEnd = maxScroll <= 2 || grid.scrollLeft >= maxScroll - 2;
+      btnLeft.classList.toggle("is-edge", atStart);
+      btnRight.classList.toggle("is-edge", atEnd);
+    }
+    window.addEventListener("resize", updateSettingsNavScrollButtons);
 
     function getAadhaar3MonthPhotoHistoryByCategory(rawAadh, propName, flatName, renterId, linkedUsername, monthlyPhotosMap) {
       const cleanAadh = normalizeAadhaar12(rawAadh || "");
