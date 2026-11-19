@@ -2093,7 +2093,7 @@
        RECEIPT VIEW MODAL (OPENED FROM HISTORY "RECEIPT" ACTION BUTTON)
        ========================================================================== */
     #receiptViewModal {
-      z-index: 4500;
+      z-index: 20050 !important;
     }
     .receipt-card {
       max-width: 480px;
@@ -7759,23 +7759,29 @@
   }
 
   /* Focused Admin Resident Operations Hub Carousel & Manual Scroll Controls (#adminResidentOpsHubSection ONLY) */
-  #adminResidentOpsHubSection .admin-ops-hub-carousel-rail {
+  #adminResidentOpsHubSection .admin-ops-hub-carousel-rail,
+  #adminResidentOpsHubSection #adminOpsHubCarouselRail {
     display: flex !important;
     align-items: center !important;
     gap: 9px !important;
     padding: 9px !important;
     margin-bottom: 14px !important;
     border-radius: 20px !important;
-    background: linear-gradient(145deg, rgba(15, 23, 42, 0.64), rgba(17, 24, 39, 0.56)) !important;
-    backdrop-filter: blur(18px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(150%) !important;
-    border: 1px solid rgba(148, 163, 184, 0.24) !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 28px rgba(2, 6, 23, 0.28) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
   }
-  body.theme-white #adminResidentOpsHubSection .admin-ops-hub-carousel-rail {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(241, 245, 249, 0.74)) !important;
-    border: 1px solid rgba(148, 163, 184, 0.36) !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 22px rgba(15, 23, 42, 0.07) !important;
+  body.theme-white #adminResidentOpsHubSection .admin-ops-hub-carousel-rail,
+  body.theme-white #adminResidentOpsHubSection #adminOpsHubCarouselRail {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid transparent !important;
+    box-shadow: none !important;
   }
   #adminResidentOpsHubSection .admin-ops-scroll-btn {
     flex: 0 0 auto !important;
@@ -7831,8 +7837,7 @@
     gap: 10px !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    scroll-behavior: smooth !important;
-    scroll-snap-type: x proximity !important;
+    scroll-behavior: auto !important;
     padding: 4px 2px !important;
     margin: 0 !important;
   }
@@ -8004,6 +8009,180 @@
       border-radius: 10px !important;
       font-size: 0.86rem !important;
     }
+  }
+
+  /* Focused Portfolio Hub Full-Width Zero-Clipping Layout (#adminPortfolioHubSection > .admin-ops-hub-shell > #adminPortfolioHubBody) */
+  #adminPortfolioHubSection {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 10px 14px 32px 14px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  #adminPortfolioHubSection > .admin-ops-hub-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #adminPortfolioHubSection .admin-ops-hub-topbar,
+  #adminPortfolioHubSection #adminPortfolioHubCarouselTrack {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 18px 20px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody .admin-ops-hub-slot,
+  #adminPortfolioHubSection #adminPortfolioHubBody #sharedKharchWorkspace,
+  #adminPortfolioHubSection #adminPortfolioHubBody #sharedKhetWorkspace,
+  #adminPortfolioHubSection #adminPortfolioHubBody #sharedFdWorkspace {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody .manual-horiz-scroll-container,
+  #adminPortfolioHubSection #adminPortfolioHubBody .manual-horiz-scroll-container > div,
+  #adminPortfolioHubSection #adminPortfolioHubBody #fdCashflowProjectionContainer,
+  #adminPortfolioHubSection #adminPortfolioHubBody #kharchRoiAndTaxReportContainer {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody .kharch-top-tabs-nav,
+  #adminPortfolioHubSection #adminPortfolioHubBody .module-top-tabs-nav {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody .kharch-nav-tab,
+  #adminPortfolioHubSection #adminPortfolioHubBody .module-nav-tab {
+    flex: 1 1 200px !important;
+    min-width: 180px !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody *,
+  #adminPortfolioHubSection #adminPortfolioHubBody *::before,
+  #adminPortfolioHubSection #adminPortfolioHubBody *::after {
+    box-sizing: border-box;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody .form-control,
+  #adminPortfolioHubSection #adminPortfolioHubBody select,
+  #adminPortfolioHubSection #adminPortfolioHubBody input,
+  #adminPortfolioHubSection #adminPortfolioHubBody textarea {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody #kharchPropertyRoiTableContainer,
+  #adminPortfolioHubSection #adminPortfolioHubBody #kharchFyTaxSummaryGrid,
+  #adminPortfolioHubSection #adminPortfolioHubBody #fdPropertyBreakdownBadges,
+  #adminPortfolioHubSection #adminPortfolioHubBody .kharch-scroller-track-wrapper {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  @media (max-width: 768px) {
+    #adminPortfolioHubSection {
+      padding: 8px 8px 24px 8px !important;
+    }
+    #adminPortfolioHubSection #adminPortfolioHubBody {
+      padding: 12px 10px !important;
+      border-radius: 16px !important;
+    }
+    #adminPortfolioHubSection #adminPortfolioHubBody .kharch-nav-tab,
+    #adminPortfolioHubSection #adminPortfolioHubBody .module-nav-tab {
+      flex: 0 0 auto !important;
+      min-width: 150px !important;
+    }
+  }
+
+  /* Member (Manager) & Viewer Official App Download Header Button & Modal */
+  section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(14, 165, 233, 0.26) 100%) !important;
+    border: 1.5px solid rgba(52, 211, 153, 0.65) !important;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.38) !important;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease !important;
+  }
+  section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp:hover {
+    background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%) !important;
+    border-color: rgba(167, 243, 208, 0.92) !important;
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.48), 0 0 16px rgba(56, 189, 248, 0.34) !important;
+  }
+  section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp > i {
+    color: #6ee7b7 !important;
+    transition: transform 0.2s ease, color 0.2s ease !important;
+  }
+  section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp:hover > i {
+    color: #ffffff !important;
+    transform: translateY(1px) scale(1.08);
+  }
+  body.theme-white section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp {
+    background: linear-gradient(135deg, rgba(236, 253, 245, 0.94), rgba(224, 242, 254, 0.92)) !important;
+    border-color: rgba(16, 185, 129, 0.58) !important;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+  }
+  body.theme-white section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp > i {
+    color: #059669 !important;
+  }
+  body.theme-white section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp:hover {
+    background: linear-gradient(135deg, #059669 0%, #0284c7 100%) !important;
+    border-color: #047857 !important;
+  }
+  body.theme-white section#dashboardScreen > header.top-nav .nav-actions-group > button#btnDashboardDownloadApp:hover > i {
+    color: #ffffff !important;
+  }
+  #appDownloadModal .modal-window {
+    max-width: 620px;
+    width: 95%;
+    border-radius: 22px;
+    padding: 24px 22px;
+    background: linear-gradient(155deg, rgba(15, 23, 42, 0.88), rgba(17, 24, 39, 0.92));
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1.5px solid rgba(56, 189, 248, 0.36);
+    box-shadow: 0 28px 70px rgba(2, 6, 23, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+  body.theme-white #appDownloadModal .modal-window {
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.96));
+    border-color: rgba(14, 165, 233, 0.35);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  }
+  #appDownloadModal .app-dl-status-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  body.theme-white #appDownloadModal .app-dl-status-pill {
+    color: #475569;
+  }
+
+  /* Focused Element: 100% Transparent (#renterAadhaarLinkedReceiptsCard) */
+  section#dashboardScreen > main#flatsList #renterAadhaarLinkedReceiptsCard,
+  body.theme-white section#dashboardScreen > main#flatsList #renterAadhaarLinkedReceiptsCard {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   /* Global Scrollbar Concealment (All Browsers) — Preserves Smooth Scrolling */
@@ -8179,11 +8358,23 @@
   </div>
 
   <!-- ==========================================================================
-       MONTHLY BILL RECEIPT POPUP MODAL (OPENED FROM HISTORY "RECEIPT" BUTTON)
+       COMPLETE TENANT PROFILE POP-UP WINDOW (OPENED VIA "VIEW PROFILE" OR CLICKING ANY SEARCH PROFILE)
        ========================================================================== -->
-  <div id="receiptViewModal" class="modal-overlay" style="z-index: 4900;" onclick="if(event.target===this) closeModal('receiptViewModal')">
-    <div class="modal-window receipt-card" id="printableReceiptArea">
-      <button class="modal-close-btn no-print" onclick="closeModal('receiptViewModal')"><i class="fa-solid fa-xmark"></i></button>
+  <div id="tenantFullProfileModal" class="modal-overlay" style="z-index: 10050;">
+    <div class="modal-window" style="max-width: 780px;">
+      <button class="modal-close-btn" onclick="closeModal('tenantFullProfileModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div id="tenantFullProfileModalContent">
+        <!-- Populated dynamically when any profile or "View Profile" is clicked -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MONTHLY BILL RECEIPT POPUP MODAL (PLACED OUTSIDE & ABOVE PROFILE MODAL STACKING CONTEXT)
+       ========================================================================== -->
+  <div id="receiptViewModal" class="modal-overlay" style="z-index: 20050;" onclick="if(event.target===this){ event.stopPropagation(); closeModal('receiptViewModal'); }">
+    <div class="modal-window receipt-card" id="printableReceiptArea" onclick="event.stopPropagation()">
+      <button class="modal-close-btn no-print" onclick="event.stopPropagation(); closeModal('receiptViewModal')"><i class="fa-solid fa-xmark"></i></button>
       <div class="receipt-header">
         <i class="fa-solid fa-file-invoice-dollar" style="font-size:1.8rem; color:var(--primary); margin-bottom:6px;"></i>
         <h3 id="recPropAndFlat">Property - Flat</h3>
@@ -8195,7 +8386,7 @@
       </div>
 
       <div id="receiptActionButtonsRow" class="no-print" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:10px; margin-top:14px;">
-        <button type="button" class="btn-confirm-cancel" onclick="closeModal('receiptViewModal')">Close</button>
+        <button type="button" class="btn-confirm-cancel" onclick="event.stopPropagation(); closeModal('receiptViewModal')">Close</button>
         <button type="button" class="btn-primary" style="background:linear-gradient(135deg, #0284c7, #2563eb);" onclick="downloadCurrentReceiptImage()">
           <i class="fa-solid fa-download"></i> Download Image
         </button>
@@ -8207,13 +8398,49 @@
   </div>
 
   <!-- ==========================================================================
-       COMPLETE TENANT PROFILE POP-UP WINDOW (OPENED VIA "VIEW PROFILE" OR CLICKING ANY SEARCH PROFILE)
+       OFFICIAL APP DOWNLOAD MODAL (FOR MEMBERS / MANAGERS & VIEWERS)
        ========================================================================== -->
-  <div id="tenantFullProfileModal" class="modal-overlay" style="z-index: 10050;">
-    <div class="modal-window" style="max-width: 780px;">
-      <button class="modal-close-btn" onclick="closeModal('tenantFullProfileModal')"><i class="fa-solid fa-xmark"></i></button>
-      <div id="tenantFullProfileModalContent">
-        <!-- Populated dynamically when any profile or "View Profile" is clicked -->
+  <div id="appDownloadModal" class="modal-overlay" style="z-index: 12000;" onclick="if(event.target===this) closeModal('appDownloadModal')">
+    <div class="modal-window" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="closeModal('appDownloadModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; padding-bottom:13px; border-bottom:1px solid var(--glass-border); padding-right:38px;">
+        <div style="width:42px; height:42px; border-radius:13px; background:linear-gradient(135deg, #10b981, #0ea5e9); color:#ffffff; display:flex; align-items:center; justify-content:center; font-size:1.15rem; box-shadow:0 8px 20px rgba(16,185,129,0.34); flex-shrink:0;">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+        </div>
+        <div>
+          <h3 style="margin:0; font-size:1.14rem; font-weight:900; color:var(--text-main);">Download Official App</h3>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Install KirayaHub on Android or iOS for quick access</div>
+        </div>
+      </div>
+
+      <div class="renter-download-grid">
+        <div class="renter-download-app-box" id="sharedDownloadAndroidBox" role="button" tabindex="0" onclick="triggerRenterAppDownload('android')">
+          <div class="renter-download-app-icon" style="color:#4ade80; border-color:rgba(74,222,128,0.45);">
+            <i class="fa-brands fa-android"></i>
+          </div>
+          <div>
+            <div style="font-size:1rem; font-weight:900; color:var(--text-main);">Android APK</div>
+            <div id="sharedDownloadAndroidStatus" class="app-dl-status-pill">Direct Android package</div>
+          </div>
+          <button type="button" class="btn-primary" style="width:100%; padding:10px 14px; font-size:0.82rem; background:linear-gradient(135deg,#10b981,#059669);" onclick="event.stopPropagation(); triggerRenterAppDownload('android')">
+            <i class="fa-brands fa-android"></i>
+            <span>Download Android APK</span>
+          </button>
+        </div>
+
+        <div class="renter-download-app-box" id="sharedDownloadIosBox" role="button" tabindex="0" onclick="triggerRenterAppDownload('ios')">
+          <div class="renter-download-app-icon" style="color:#38bdf8; border-color:rgba(56,189,248,0.45);">
+            <i class="fa-brands fa-apple"></i>
+          </div>
+          <div>
+            <div style="font-size:1rem; font-weight:900; color:var(--text-main);">iOS App</div>
+            <div id="sharedDownloadIosStatus" class="app-dl-status-pill">Direct iOS app link</div>
+          </div>
+          <button type="button" class="btn-primary" style="width:100%; padding:10px 14px; font-size:0.82rem; background:linear-gradient(135deg,#38bdf8,#2563eb);" onclick="event.stopPropagation(); triggerRenterAppDownload('ios')">
+            <i class="fa-brands fa-apple"></i>
+            <span>Download iOS App</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -9157,6 +9384,10 @@
           <button type="button" class="nav-btn profile-icon-box-btn" onclick="openProfileModal()" title="My Profile" aria-label="My Profile">
             <i class="fa-solid fa-user-shield"></i>
           </button>
+          <!-- 5A. Official App Download Button (Visible for Members/Managers & Viewers) -->
+          <button type="button" id="btnDashboardDownloadApp" class="nav-btn download-app-icon-box-btn" onclick="openAppDownloadModal()" title="Download Official App (Android &amp; iOS)" aria-label="Download App" style="display:none;">
+            <i class="fa-solid fa-download"></i>
+          </button>
           <!-- 5B. Notification Bell Icon -->
           <button type="button" id="btnDashboardNotification" class="notification-icon-btn" onclick="openNotificationsModal()" title="Admin Notifications & Announcements" aria-label="Notifications">
             <i class="fa-solid fa-bell"></i>
@@ -9183,8 +9414,7 @@
               <i class="fa-solid fa-user"></i>
             </div>
             <div style="min-width:0;">
-              <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#34d399;">Home Dashboard • Resident Operations</div>
-              <h3 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">Verification, Notifications, Contact &amp; Tickets</h3>
+              <h3 style="margin:0; font-size:1.05rem; font-weight:900; color:var(--text-main);">Verification, Notifications, Contact &amp; Tickets</h3>
             </div>
           </div>
           <button type="button" id="btnCloseAdminOpsHub" class="admin-ops-hub-close-btn" onclick="closeAdminResidentOpsHub()" title="Close &amp; Return to Properties">
@@ -10269,6 +10499,16 @@
               <i class="fa-solid fa-palette" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
               Theme (<span id="otherProfileTheme">DARK</span>)
             </button>
+            <button
+              type="button"
+              id="btnProfileDownloadApp"
+              class="btn-switch-option"
+              style="display:none; grid-column: 1 / -1; border-radius:12px; padding:10px 12px; font-size:0.8rem; font-weight:800; border:1px solid rgba(16,185,129,0.45); background:linear-gradient(135deg, rgba(16,185,129,0.16), rgba(14,165,233,0.16)); color:#34d399; align-items:center; justify-content:center; gap:8px;"
+              onclick="openAppDownloadModal()"
+            >
+              <i class="fa-solid fa-mobile-screen-button"></i>
+              <span>Download Official App (Android / iOS)</span>
+            </button>
           </div>
         </div>
 
@@ -10476,9 +10716,6 @@
               <h4 class="ssv-title" id="ssvModeTitleText">
                 <i class="fa-solid fa-images"></i> Live Photo Verification (Active Renters)
               </h4>
-              <p class="ssv-subtitle" id="ssvModeSubtitleText">
-                Only <strong>Active Renters</strong> are shown. Select a month and send a request so renters can capture &amp; upload live camera photos. Click <strong>Close</strong> anytime to stop uploads for that month.
-              </p>
             </div>
             <div class="ssv-controls">
               <input type="month" id="screenshotVerifyMonthInput" class="form-control" style="width:155px; padding:6px 10px; font-size:0.75rem; font-weight:700;" onchange="renderAdminScreenshotVerificationGrid()" />
@@ -17962,6 +18199,36 @@ function formatMonthLabel(rawVal) {
     }
     window.addEventListener("resize", updateAdminOpsScrollButtons);
 
+    function bindAdminOpsCarouselWheelScroll() {
+      const rail = document.getElementById("adminOpsHubCarouselRail");
+      const track = document.getElementById("adminOpsHubCarouselTrack");
+      if (!rail || !track || rail.dataset.wheelScrollBound === "1") return;
+      rail.dataset.wheelScrollBound = "1";
+      rail.addEventListener("wheel", (e) => {
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        if (maxScroll <= 1) return;
+        let dx = e.deltaX || 0;
+        let dy = e.deltaY || 0;
+        if (e.deltaMode === 1) {
+          dx *= 32;
+          dy *= 32;
+        } else if (e.deltaMode === 2) {
+          dx *= track.clientWidth;
+          dy *= track.clientWidth;
+        }
+        const delta = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
+        if (!delta) return;
+        e.preventDefault();
+        track.scrollLeft += delta;
+        updateAdminOpsScrollButtons();
+      }, { passive: false });
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bindAdminOpsCarouselWheelScroll);
+    } else {
+      bindAdminOpsCarouselWheelScroll();
+    }
+
     function closeAdminResidentOpsHub(silent = false) {
       restoreSharedAdminWorkspacesToSettings();
       document.body.classList.remove("admin-ops-hub-open");
@@ -18066,6 +18333,9 @@ function formatMonthLabel(rawVal) {
       } else if (activeKey === "fd") {
         mountPortfolioWorkspaceInto("sharedFdWorkspace", activeSlot);
         if (typeof initFdInlineWorkspace === "function") initFdInlineWorkspace();
+      }
+      if (typeof window.scrollTo === "function") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
@@ -20872,13 +21142,6 @@ function formatMonthLabel(rawVal) {
         // Build Isolated Receipt Section (All Receipts Belonging to This Renter — Available Monthly Receipt removed)
         const allMyReceiptsFullListHtml = `
           <div class="renter-payment-card" id="renterAadhaarLinkedReceiptsCard">
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
-              <div>
-                <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#38bdf8;">
-                  <i class="fa-solid fa-file-invoice" style="margin-right:5px;"></i> All My Receipts (${totalAadhaarReceipts})
-                </div>
-              </div>
-            </div>
             ${myBills.length > 0 ? `
               <div style="display:flex; flex-direction:column; gap:10px;">
                 ${myBills.map((bItem, idx) => {
@@ -20900,7 +21163,6 @@ function formatMonthLabel(rawVal) {
                         </div>
                         <div>
                           <div style="font-size:0.86rem; font-weight:800; color:var(--text-main);">#${idx + 1} • ${mMetrics.monthLabel} Official Receipt</div>
-                          <div style="font-size:0.72rem; color:var(--text-muted);">Flat ${bItem.SnapshotFlatName || bItem.FlatName || targetFlat} (${bItem.SnapshotPropertyName || bItem.PropertyName || targetProp}) • Total: ₹${mMetrics.standaloneCharge.toLocaleString("en-IN")} • Paid: ₹${mMetrics.paidAmount.toLocaleString("en-IN")}</div>
                         </div>
                       </div>
                       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -22133,6 +22395,16 @@ function formatMonthLabel(rawVal) {
       // Requirement 4: Remove Notification button from Admin/Manager dashboard (moved inside Settings as 1st option)
       if (btnNotif) {
         btnNotif.style.setProperty("display", (activeRole === "Renter" || activeRole === "Viewer") ? "inline-flex" : "none", "important");
+      }
+      // Allow Members (Managers) and Viewers to download the official app directly from the dashboard header & profile modal
+      const canUseHeaderAppDownload = (activeRole === "Manager" || activeRole === "Viewer");
+      const btnDashAppDl = document.getElementById("btnDashboardDownloadApp");
+      if (btnDashAppDl) {
+        btnDashAppDl.style.setProperty("display", canUseHeaderAppDownload ? "inline-flex" : "none", "important");
+      }
+      const btnProfAppDl = document.getElementById("btnProfileDownloadApp");
+      if (btnProfAppDl) {
+        btnProfAppDl.style.setProperty("display", (canUseHeaderAppDownload || activeRole === "Renter") ? "inline-flex" : "none", "important");
       }
 
       // Requirement 2 & 3: Enforce Home Portfolio trigger & granular Manager permissions on all top dashboard controls
@@ -24946,7 +25218,7 @@ function formatMonthLabel(rawVal) {
       if (res && res.status === "success") {
         msgBox.innerText = "Name, Mobile No. & Email updated successfully!";
         msgBox.className = "bottom-status-msg success";
-        triggerSideToast("Profile Updated", "Profile saved to Google Sheets!", true);
+        triggerSideToast("Profile Updated", "Your Profile has been Successfully Updated.", true);
         syncDataLive(true);
       } else {
         msgBox.innerText = (res && res.message) || "Could not update Name & Mobile No.";
@@ -30320,6 +30592,21 @@ function formatMonthLabel(rawVal) {
         `Starting ${isAndroid ? "Android APK" : "iOS App"} download...`,
         true
       );
+    }
+
+    function openAppDownloadModal() {
+      const links = typeof getStoredAppDownloadLinks === "function"
+        ? getStoredAppDownloadLinks()
+        : { androidApkUrl: "", iosAppUrl: "" };
+      const androidStatus = document.getElementById("sharedDownloadAndroidStatus");
+      const iosStatus = document.getElementById("sharedDownloadIosStatus");
+      if (androidStatus) {
+        androidStatus.innerText = links.androidApkUrl ? "Ready to download" : "Link not configured by Admin yet";
+      }
+      if (iosStatus) {
+        iosStatus.innerText = links.iosAppUrl ? "Ready to download" : "Link not configured by Admin yet";
+      }
+      openModal("appDownloadModal");
     }
 
     function updateFlatModalHeaderTitle(flat, renterObj) {
@@ -37375,6 +37662,9 @@ function formatMonthLabel(rawVal) {
         }
       }
       if (el) {
+        if (el.id === "receiptViewModal") {
+          el.style.zIndex = "20050";
+        }
         el.classList.add("active");
         document.getElementById("actionMenu")?.classList.remove("show");
         document.body.classList.add("modal-open-hide-chat");
