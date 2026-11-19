@@ -421,6 +421,53 @@
       margin-bottom: 7px !important;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24) !important;
     }
+    #loginScreen #forgotPasswordInlinePanel #fpOtpStepBox .fp-otp-boxes-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 4px 0 2px;
+    }
+    #loginScreen #forgotPasswordInlinePanel #fpOtpStepBox .fp-otp-digit-box {
+      width: 52px;
+      height: 54px;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+      font-size: 1.45rem;
+      font-weight: 900;
+      line-height: 1;
+      color: #0f172a;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+      caret-color: #059669;
+      outline: none;
+      transition: transform 0.16s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+    #loginScreen #forgotPasswordInlinePanel #fpOtpStepBox .fp-otp-digit-box.is-filled {
+      border-color: rgba(16, 185, 129, 0.78);
+      background: rgba(255, 255, 255, 0.97);
+    }
+    #loginScreen #forgotPasswordInlinePanel #fpOtpStepBox .fp-otp-digit-box:focus {
+      border-color: #10b981;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.34), 0 6px 18px rgba(0, 0, 0, 0.24);
+      transform: translateY(-1px);
+    }
+    @media (max-width: 380px) {
+      #loginScreen #forgotPasswordInlinePanel #fpOtpStepBox .fp-otp-boxes-row {
+        gap: 9px;
+      }
+      #loginScreen #forgotPasswordInlinePanel #fpOtpStepBox .fp-otp-digit-box {
+        width: 46px;
+        height: 48px;
+        font-size: 1.3rem;
+      }
+    }
     #loginScreen .login-input-shell {
       position: relative;
       display: flex;
@@ -8025,6 +8072,142 @@
     box-shadow: none !important;
   }
 
+  /* Focused 70% Transparency (30% Opacity) for Android APK & iOS App Cards inside #adminOpsHubPanelSlot_applinks ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) {
+    background: rgba(15, 23, 42, 0.30) !important;
+    background-color: rgba(15, 23, 42, 0.30) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) {
+    background: rgba(255, 255, 255, 0.30) !important;
+    background-color: rgba(255, 255, 255, 0.30) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  /* Focused 50% Transparency (50% Opacity) for #adminOpsHubPanelSlot_utr inner card ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type {
+    background: rgba(15, 23, 42, 0.50) !important;
+    background-color: rgba(15, 23, 42, 0.50) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type {
+    background: rgba(255, 255, 255, 0.50) !important;
+    background-color: rgba(255, 255, 255, 0.50) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  /* Focused 30% Transparency (70% Opacity) for Notification Compose & Bulk Broadcast Cards inside #adminOpsHubPanelSlot_notifications ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard:focus-within,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2),
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2):focus-within {
+    background: rgba(15, 23, 42, 0.70) !important;
+    background-color: rgba(15, 23, 42, 0.70) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard,
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard:focus-within,
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2),
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2):focus-within {
+    background: rgba(255, 255, 255, 0.70) !important;
+    background-color: rgba(255, 255, 255, 0.70) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  /* Focused 20% Transparency (80% Opacity) for #sharedMaintenanceTicketsWorkspace inside #adminOpsHubPanelSlot_tickets ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_tickets > div#sharedMaintenanceTicketsWorkspace {
+    background: rgba(15, 23, 42, 0.80) !important;
+    background-color: rgba(15, 23, 42, 0.80) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 18px !important;
+    border-radius: 16px !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.32) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_tickets > div#sharedMaintenanceTicketsWorkspace {
+    background: rgba(255, 255, 255, 0.80) !important;
+    background-color: rgba(255, 255, 255, 0.80) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 18px !important;
+    border-radius: 16px !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  }
+
+  /* Focused 4-Digit Square OTP Input Boxes inside #profileModal #profileEmailOtpVerifyBox ONLY */
+  div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-boxes-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-digit-box {
+    width: 44px;
+    height: 46px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 900;
+    line-height: 1;
+    border-radius: 10px;
+    border: 1.5px solid rgba(56, 189, 248, 0.48);
+    background: var(--bg-input);
+    color: var(--text-main);
+    caret-color: #38bdf8;
+    outline: none;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+    transition: transform 0.16s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+  div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-digit-box.is-filled {
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.14);
+  }
+  div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-digit-box:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.28), 0 4px 12px rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
+  }
+  body.theme-white div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-digit-box {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: rgba(37, 99, 235, 0.36);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+  }
+  body.theme-white div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-digit-box.is-filled {
+    border-color: #2563eb;
+    background: rgba(59, 130, 246, 0.08);
+  }
+  body.theme-white div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-digit-box:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
+  }
+  @media (max-width: 420px) {
+    div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-boxes-row {
+      gap: 6px;
+    }
+    div#profileModal #drawerChangeName #profileEmailOtpVerifyBox .profile-otp-digit-box {
+      width: 40px;
+      height: 42px;
+      font-size: 1.12rem;
+    }
+  }
+
   /* Focused Stylish Colored Header Icons: Live Chat, Plus Add & Profile ONLY */
   /* 1. Live Chat Icon (#btnRenterNavLiveChat) — Electric Cyan to Azure */
   section#dashboardScreen > header .nav-actions-group > button#btnRenterNavLiveChat {
@@ -9482,24 +9665,6 @@
           </div>
         </div>
 
-        <!-- Feature F2: Recurring Monthly Expense Templates Bar -->
-        <div class="admin-only" style="margin-bottom:14px; background:rgba(16,185,129,0.06); border:1.5px solid rgba(16,185,129,0.35); border-radius:14px; padding:12px 14px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-            <span style="font-size:0.75rem; font-weight:800; color:#10b981; text-transform:uppercase; letter-spacing:0.4px;">
-              <i class="fa-solid fa-bolt-lightning"></i> 1-Click Recurring Monthly Expense Templates
-            </span>
-            <span style="font-size:0.68rem; color:var(--text-muted);">Click any template to pre-fill form below</span>
-          </div>
-          <div style="display:flex; flex-wrap:wrap; gap:8px;">
-            <button type="button" class="btn-ledger-action" style="padding:5px 11px; font-size:0.72rem;" onclick="applyRecurringKharchTemplate('Sweeper / Cleaning Staff', 'Maintenance & Repair', 1500)"><i class="fa-solid fa-broom" style="color:#10b981;"></i> Sweeper (₹1,500)</button>
-            <button type="button" class="btn-ledger-action" style="padding:5px 11px; font-size:0.72rem;" onclick="applyRecurringKharchTemplate('Security Guard Salary', 'Maintenance & Repair', 8000)"><i class="fa-solid fa-user-shield" style="color:#38bdf8;"></i> Security Guard (₹8,000)</button>
-            <button type="button" class="btn-ledger-action" style="padding:5px 11px; font-size:0.72rem;" onclick="applyRecurringKharchTemplate('Water Tanker / Motor Bill', 'Electricity / Water / Bill', 1200)"><i class="fa-solid fa-truck-droplet" style="color:#0ea5e9;"></i> Water Tanker (₹1,200)</button>
-            <button type="button" class="btn-ledger-action" style="padding:5px 11px; font-size:0.72rem;" onclick="applyRecurringKharchTemplate('Common Area Electricity Bill', 'Electricity / Water / Bill', 1800)"><i class="fa-solid fa-lightbulb" style="color:#f59e0b;"></i> Common Elec (₹1,800)</button>
-            <button type="button" class="btn-ledger-action" style="padding:5px 11px; font-size:0.72rem;" onclick="applyRecurringKharchTemplate('Wi-Fi & CCTV Maintenance', 'Electricity / Water / Bill', 999)"><i class="fa-solid fa-wifi" style="color:#a855f7;"></i> Wi-Fi &amp; CCTV (₹999)</button>
-            <button type="button" class="btn-ledger-action" style="padding:5px 11px; font-size:0.72rem;" onclick="applyRecurringKharchTemplate('Plumbing & Sanitary Repair', 'Maintenance & Repair', 850)"><i class="fa-solid fa-wrench" style="color:#ec4899;"></i> Plumbing (₹850)</button>
-          </div>
-        </div>
-
         <!-- Step 4: Expense Entry Form Below -->
         <div class="calc-grid-card admin-only" style="margin-bottom: 14px; border-left: 4px solid #f59e0b; background:var(--bg-input);">
           <div class="calc-grid-title" style="margin-bottom:10px;">
@@ -9727,10 +9892,13 @@
           <div id="fpOtpSentHint" style="font-size:0.75rem; color:#e0f2fe; font-weight:700; margin-bottom:8px; text-shadow:0 1px 4px rgba(0,0,0,0.85);">
             <i class="fa-solid fa-envelope-circle-check"></i> Enter OTP sent to your Email ID.
           </div>
-          <div class="form-group" style="margin-bottom:10px;">
-            <div class="login-input-shell">
-              <i class="fa-solid fa-shield-halved login-field-icon"></i>
-              <input type="text" id="fpOtpInput" class="form-control" maxlength="4" inputmode="numeric" placeholder="Enter 4-digit OTP" autocomplete="off" style="letter-spacing:6px; font-weight:900; text-align:center;" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 4)">
+          <div class="form-group" style="margin-bottom:12px;">
+            <div id="fpOtpBoxesGroup" class="fp-otp-boxes-row" role="group" aria-label="4-digit OTP input">
+              <input type="text" class="fp-otp-digit-box" data-otp-index="0" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="OTP Digit 1">
+              <input type="text" class="fp-otp-digit-box" data-otp-index="1" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP Digit 2">
+              <input type="text" class="fp-otp-digit-box" data-otp-index="2" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP Digit 3">
+              <input type="text" class="fp-otp-digit-box" data-otp-index="3" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP Digit 4">
+              <input type="hidden" id="fpOtpInput" name="otp" value="">
             </div>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -9960,7 +10128,7 @@
             <div class="stat-pill" style="text-align:left; padding:18px; border-radius:16px; border:1.5px solid rgba(16,185,129,0.38);">
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
                 <!-- Android APK Download & Pencil Edit Card -->
-                <div style="padding:16px; border-radius:14px; border:1.5px solid rgba(16,185,129,0.35); background:rgba(15,23,42,0.28); display:flex; flex-direction:column; gap:12px;">
+                <div style="padding:16px; border-radius:14px; border:1.5px solid rgba(16,185,129,0.35); background:rgba(15,23,42,0.30); display:flex; flex-direction:column; gap:12px;">
                   <div style="display:flex; align-items:center; gap:12px;">
                     <div style="width:46px; height:46px; border-radius:12px; border:1px solid rgba(74,222,128,0.45); display:flex; align-items:center; justify-content:center; font-size:1.6rem; color:#4ade80; flex-shrink:0;">
                       <i class="fa-brands fa-android"></i>
@@ -9992,7 +10160,7 @@
                 </div>
 
                 <!-- iOS App Download & Pencil Edit Card -->
-                <div style="padding:16px; border-radius:14px; border:1.5px solid rgba(56,189,248,0.35); background:rgba(15,23,42,0.28); display:flex; flex-direction:column; gap:12px;">
+                <div style="padding:16px; border-radius:14px; border:1.5px solid rgba(56,189,248,0.35); background:rgba(15,23,42,0.30); display:flex; flex-direction:column; gap:12px;">
                   <div style="display:flex; align-items:center; gap:12px;">
                     <div style="width:46px; height:46px; border-radius:12px; border:1px solid rgba(56,189,248,0.45); display:flex; align-items:center; justify-content:center; font-size:1.65rem; color:#38bdf8; flex-shrink:0;">
                       <i class="fa-brands fa-apple"></i>
@@ -11076,7 +11244,13 @@
               Enter the 4-digit OTP sent to your Email ID to save your profile.
             </div>
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-              <input type="text" id="profileEmailOtpInput" class="form-control" maxlength="4" inputmode="numeric" placeholder="4-digit OTP" style="flex:1; min-width:120px; text-align:center; font-size:1rem; font-weight:900; letter-spacing:6px;" oninput="this.value = this.value.replace(/\D/g, '').slice(0, 4)">
+              <div id="profileEmailOtpBoxesGroup" class="profile-otp-boxes-row" role="group" aria-label="4-digit Email OTP input">
+                <input type="text" class="profile-otp-digit-box" data-otp-index="0" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Email OTP Digit 1">
+                <input type="text" class="profile-otp-digit-box" data-otp-index="1" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Email OTP Digit 2">
+                <input type="text" class="profile-otp-digit-box" data-otp-index="2" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Email OTP Digit 3">
+                <input type="text" class="profile-otp-digit-box" data-otp-index="3" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Email OTP Digit 4">
+                <input type="hidden" id="profileEmailOtpInput" name="profileEmailOtp" value="">
+              </div>
               <button type="button" id="btnVerifyProfileEmailOtp" class="btn-primary" style="width:auto; padding:9px 14px; font-size:0.8rem; background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); font-weight:800;" onclick="verifyAndSaveProfileWithEmailOtp('modal')">
                 <i class="fa-solid fa-circle-check"></i> Verify OTP &amp; Save
               </button>
@@ -11677,9 +11851,6 @@
               <span style="font-weight:800; font-size:0.88rem; color:#38bdf8;">
                 <i class="fa-solid fa-screwdriver-wrench"></i> Renter Maintenance Complaints &amp; Service Tickets
               </span>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Track Plumbing, Electrical, Carpentry &amp; Water tickets submitted by renters and update status live.
-              </div>
             </div>
           </div>
           <div id="adminMaintenanceTicketsList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
@@ -22518,15 +22689,140 @@ function formatMonthLabel(rawVal) {
       if (emailIn && typeof emailIn.focus === "function") emailIn.focus();
     }
 
+    function getFpOtpDigitBoxes() {
+      return Array.from(document.querySelectorAll("#fpOtpBoxesGroup .fp-otp-digit-box"));
+    }
+
+    function syncFpOtpHiddenInput() {
+      const boxes = getFpOtpDigitBoxes();
+      const hiddenEl = document.getElementById("fpOtpInput");
+      let combined = "";
+      boxes.forEach((box) => {
+        const cleanDigit = String(box.value || "").replace(/\D/g, "").slice(0, 1);
+        if (box.value !== cleanDigit) box.value = cleanDigit;
+        box.classList.toggle("is-filled", cleanDigit.length === 1);
+        combined += cleanDigit;
+      });
+      if (hiddenEl) hiddenEl.value = combined;
+      return combined;
+    }
+
+    function clearFpOtpBoxes() {
+      const boxes = getFpOtpDigitBoxes();
+      boxes.forEach((box) => {
+        box.value = "";
+        box.classList.remove("is-filled");
+      });
+      const hiddenEl = document.getElementById("fpOtpInput");
+      if (hiddenEl) hiddenEl.value = "";
+    }
+
+    function focusFirstFpOtpBox() {
+      const boxes = getFpOtpDigitBoxes();
+      if (boxes.length > 0 && typeof boxes[0].focus === "function") {
+        boxes[0].focus();
+      }
+    }
+
+    function initForgotPasswordOtpBoxes() {
+      const group = document.getElementById("fpOtpBoxesGroup");
+      if (!group || group.dataset.otpBound === "true") return;
+      group.dataset.otpBound = "true";
+      const boxes = getFpOtpDigitBoxes();
+
+      const fillDigitsFrom = (startIndex, rawText) => {
+        const digits = String(rawText || "").replace(/\D/g, "").slice(0, boxes.length);
+        if (!digits) {
+          syncFpOtpHiddenInput();
+          return;
+        }
+        let targetIdx = startIndex;
+        for (let i = 0; i < digits.length && targetIdx < boxes.length; i++, targetIdx++) {
+          boxes[targetIdx].value = digits[i];
+        }
+        syncFpOtpHiddenInput();
+        const nextFocusIdx = Math.min(targetIdx, boxes.length - 1);
+        if (boxes[nextFocusIdx]) boxes[nextFocusIdx].focus();
+      };
+
+      boxes.forEach((box, idx) => {
+        box.addEventListener("focus", () => {
+          if (typeof box.select === "function") box.select();
+        });
+
+        box.addEventListener("input", (e) => {
+          const digits = String(box.value || "").replace(/\D/g, "");
+          if (!digits) {
+            box.value = "";
+            syncFpOtpHiddenInput();
+            return;
+          }
+          if (digits.length > 1) {
+            // Handles fast typing or OS SMS OTP autofill
+            fillDigitsFrom(digits.length >= boxes.length ? 0 : idx, digits);
+            return;
+          }
+          box.value = digits;
+          syncFpOtpHiddenInput();
+          if (idx < boxes.length - 1) {
+            boxes[idx + 1].focus();
+          }
+        });
+
+        box.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace") {
+            e.preventDefault();
+            if (box.value) {
+              box.value = "";
+              syncFpOtpHiddenInput();
+              if (idx > 0) boxes[idx - 1].focus();
+            } else if (idx > 0) {
+              boxes[idx - 1].value = "";
+              syncFpOtpHiddenInput();
+              boxes[idx - 1].focus();
+            }
+          } else if (e.key === "ArrowLeft" && idx > 0) {
+            e.preventDefault();
+            boxes[idx - 1].focus();
+          } else if (e.key === "ArrowRight" && idx < boxes.length - 1) {
+            e.preventDefault();
+            boxes[idx + 1].focus();
+          } else if (e.key === "Enter") {
+            if (syncFpOtpHiddenInput().length === boxes.length) {
+              e.preventDefault();
+              submitInlineForgotPasswordVerifyOtp();
+            }
+          } else if (
+            e.key.length === 1 &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            !e.altKey &&
+            !/^\d$/.test(e.key)
+          ) {
+            e.preventDefault();
+          }
+        });
+
+        box.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const pasted = (e.clipboardData || window.clipboardData)?.getData("text") || "";
+          const digits = pasted.replace(/\D/g, "").slice(0, boxes.length);
+          if (!digits) return;
+          fillDigitsFrom(0, digits);
+        });
+      });
+    }
+
+    initForgotPasswordOtpBoxes();
+
     function hideInlineForgotPasswordPanel() {
       const loginFormEl = document.getElementById("loginForm");
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
       const credBox = document.getElementById("fpCredentialsStepBox");
       const otpBox = document.getElementById("fpOtpStepBox");
       const emailIn = document.getElementById("fpEmailInput");
-      const otpIn = document.getElementById("fpOtpInput");
       if (emailIn) emailIn.value = "";
-      if (otpIn) otpIn.value = "";
+      clearFpOtpBoxes();
       if (credBox) credBox.style.display = "block";
       if (otpBox) otpBox.style.display = "none";
       setInlineForgotPasswordStatus("", "info");
@@ -22570,8 +22866,9 @@ function formatMonthLabel(rawVal) {
         }
         setInlineForgotPasswordStatus(`OTP sent to ${cleanEmail}. Please check your Gmail/inbox and enter it below.`, "success");
         triggerSideToast("OTP Sent", `4-digit OTP sent to ${cleanEmail}.`, true);
-        const otpIn = document.getElementById("fpOtpInput");
-        if (otpIn && typeof otpIn.focus === "function") otpIn.focus();
+        initForgotPasswordOtpBoxes();
+        clearFpOtpBoxes();
+        focusFirstFpOtpBox();
       } catch (err) {
         const msg = err?.message || "Could not verify details or send OTP right now.";
         setInlineForgotPasswordStatus(msg, "error");
@@ -22590,11 +22887,10 @@ function formatMonthLabel(rawVal) {
 
     async function submitInlineForgotPasswordVerifyOtp() {
       const emailIn = document.getElementById("fpEmailInput");
-      const otpIn = document.getElementById("fpOtpInput");
       const btn = document.getElementById("btnFpVerifyOtp");
 
       const cleanEmail = String(emailIn?.value || "").trim().toLowerCase();
-      const enteredOtp = String(otpIn?.value || "").replace(/\D/g, "").slice(0, 4);
+      const enteredOtp = syncFpOtpHiddenInput();
 
       if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
         setInlineForgotPasswordStatus("Please enter your registered Email ID first.", "error");
@@ -22622,7 +22918,7 @@ function formatMonthLabel(rawVal) {
           triggerSideToast("OTP Failed", errMsg, false);
           return;
         }
-        if (otpIn) otpIn.value = "";
+        clearFpOtpBoxes();
         if (emailIn) emailIn.value = "";
         const credBox = document.getElementById("fpCredentialsStepBox");
         const otpBox = document.getElementById("fpOtpStepBox");
@@ -25339,15 +25635,139 @@ function formatMonthLabel(rawVal) {
 
     window.__pendingProfileEmailOtp = null;
 
+    function getProfileEmailOtpDigitBoxes() {
+      return Array.from(document.querySelectorAll("#profileEmailOtpBoxesGroup .profile-otp-digit-box"));
+    }
+
+    function syncProfileEmailOtpHiddenInput() {
+      const boxes = getProfileEmailOtpDigitBoxes();
+      const hiddenEl = document.getElementById("profileEmailOtpInput");
+      let combined = "";
+      boxes.forEach((box) => {
+        const cleanDigit = String(box.value || "").replace(/\D/g, "").slice(0, 1);
+        if (box.value !== cleanDigit) box.value = cleanDigit;
+        box.classList.toggle("is-filled", cleanDigit.length === 1);
+        combined += cleanDigit;
+      });
+      if (hiddenEl) hiddenEl.value = combined;
+      return combined;
+    }
+
+    function clearProfileEmailOtpBoxes() {
+      const boxes = getProfileEmailOtpDigitBoxes();
+      boxes.forEach((box) => {
+        box.value = "";
+        box.classList.remove("is-filled");
+      });
+      const hiddenEl = document.getElementById("profileEmailOtpInput");
+      if (hiddenEl) hiddenEl.value = "";
+    }
+
+    function focusFirstProfileEmailOtpBox() {
+      const boxes = getProfileEmailOtpDigitBoxes();
+      if (boxes.length > 0 && typeof boxes[0].focus === "function") {
+        boxes[0].focus();
+      }
+    }
+
+    function initProfileEmailOtpBoxes() {
+      const group = document.getElementById("profileEmailOtpBoxesGroup");
+      if (!group || group.dataset.otpBound === "true") return;
+      group.dataset.otpBound = "true";
+      const boxes = getProfileEmailOtpDigitBoxes();
+
+      const fillDigitsFrom = (startIndex, rawText) => {
+        const digits = String(rawText || "").replace(/\D/g, "").slice(0, boxes.length);
+        if (!digits) {
+          syncProfileEmailOtpHiddenInput();
+          return;
+        }
+        let targetIdx = startIndex;
+        for (let i = 0; i < digits.length && targetIdx < boxes.length; i++, targetIdx++) {
+          boxes[targetIdx].value = digits[i];
+        }
+        syncProfileEmailOtpHiddenInput();
+        const nextFocusIdx = Math.min(targetIdx, boxes.length - 1);
+        if (boxes[nextFocusIdx]) boxes[nextFocusIdx].focus();
+      };
+
+      boxes.forEach((box, idx) => {
+        box.addEventListener("focus", () => {
+          if (typeof box.select === "function") box.select();
+        });
+
+        box.addEventListener("input", () => {
+          const digits = String(box.value || "").replace(/\D/g, "");
+          if (!digits) {
+            box.value = "";
+            syncProfileEmailOtpHiddenInput();
+            return;
+          }
+          if (digits.length > 1) {
+            fillDigitsFrom(digits.length >= boxes.length ? 0 : idx, digits);
+            return;
+          }
+          box.value = digits;
+          syncProfileEmailOtpHiddenInput();
+          if (idx < boxes.length - 1) {
+            boxes[idx + 1].focus();
+          }
+        });
+
+        box.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace") {
+            e.preventDefault();
+            if (box.value) {
+              box.value = "";
+              syncProfileEmailOtpHiddenInput();
+              if (idx > 0) boxes[idx - 1].focus();
+            } else if (idx > 0) {
+              boxes[idx - 1].value = "";
+              syncProfileEmailOtpHiddenInput();
+              boxes[idx - 1].focus();
+            }
+          } else if (e.key === "ArrowLeft" && idx > 0) {
+            e.preventDefault();
+            boxes[idx - 1].focus();
+          } else if (e.key === "ArrowRight" && idx < boxes.length - 1) {
+            e.preventDefault();
+            boxes[idx + 1].focus();
+          } else if (e.key === "Enter") {
+            if (syncProfileEmailOtpHiddenInput().length === boxes.length) {
+              e.preventDefault();
+              verifyAndSaveProfileWithEmailOtp("modal");
+            }
+          } else if (
+            e.key.length === 1 &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            !e.altKey &&
+            !/^\d$/.test(e.key)
+          ) {
+            e.preventDefault();
+          }
+        });
+
+        box.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const pasted = (e.clipboardData || window.clipboardData)?.getData("text") || "";
+          const digits = pasted.replace(/\D/g, "").slice(0, boxes.length);
+          if (!digits) return;
+          fillDigitsFrom(0, digits);
+        });
+      });
+    }
+
+    initProfileEmailOtpBoxes();
+
     function resetPendingProfileEmailOtpState(source) {
       if (!source || (window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === source)) {
         window.__pendingProfileEmailOtp = null;
       }
       if (!source || source === "modal") {
         const otpBox = document.getElementById("profileEmailOtpVerifyBox");
-        const otpIn = document.getElementById("profileEmailOtpInput");
         if (otpBox) otpBox.style.display = "none";
-        if (otpIn) otpIn.value = "";
+        clearProfileEmailOtpBoxes();
       }
       if (!source || source === "inline") {
         const inlineBox = document.getElementById("renterInlineEmailOtpBox");
@@ -25398,9 +25818,15 @@ function formatMonthLabel(rawVal) {
           if (ui.otpInfo) {
             ui.otpInfo.innerHTML = `A 4-digit OTP was sent to <strong>${escapeHtml(cleanEmail)}</strong>. Enter it below to verify &amp; save your profile.`;
           }
-          if (ui.otpInput) {
-            ui.otpInput.value = "";
-            setTimeout(() => ui.otpInput.focus(), 60);
+          if (source === "inline") {
+            if (ui.otpInput) {
+              ui.otpInput.value = "";
+              setTimeout(() => ui.otpInput.focus(), 60);
+            }
+          } else {
+            initProfileEmailOtpBoxes();
+            clearProfileEmailOtpBoxes();
+            setTimeout(() => focusFirstProfileEmailOtpBox(), 60);
           }
           if (ui.msgBox) {
             ui.msgBox.innerText = `4-digit OTP sent to ${cleanEmail}. Enter the OTP above to save your profile.`;
@@ -25438,9 +25864,15 @@ function formatMonthLabel(rawVal) {
       if (!pending || !pending.awaitingVerify || !pending.email) {
         return triggerSideToast("OTP Required", "Click Save first to send a 4-digit OTP to your Email ID.", false);
       }
-      const enteredOtp = String(ui.otpInput?.value || "").replace(/\D/g, "").trim();
+      const enteredOtp = source === "inline"
+        ? String(ui.otpInput?.value || "").replace(/\D/g, "").trim()
+        : syncProfileEmailOtpHiddenInput();
       if (!/^\d{4}$/.test(enteredOtp)) {
-        if (ui.otpInput) ui.otpInput.focus();
+        if (source === "inline") {
+          if (ui.otpInput) ui.otpInput.focus();
+        } else {
+          focusFirstProfileEmailOtpBox();
+        }
         if (ui.msgBox) {
           ui.msgBox.innerText = "Please enter the valid 4-digit OTP sent to your Email ID.";
           ui.msgBox.className = "bottom-status-msg error";
