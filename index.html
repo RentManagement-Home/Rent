@@ -5361,194 +5361,386 @@
     border-color: #10b981 !important;
   }
 
-  /* Admin Settings Interface: 25% Transparent (0.75 opacity) */
+  /* Admin Settings Interface: Stylish Glassmorphic Command Center (25% Transparent / 0.75 Opacity) */
   #settingsModal .modal-window {
-    background: linear-gradient(160deg, rgba(15, 23, 42, 0.75) 0%, rgba(17, 24, 39, 0.75) 100%) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
+    background: linear-gradient(155deg, rgba(15, 23, 42, 0.75) 0%, rgba(17, 24, 39, 0.75) 55%, rgba(15, 23, 42, 0.78) 100%) !important;
+    backdrop-filter: blur(20px) saturate(155%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(155%) !important;
     color: #f8fafc !important;
-    border: 2px solid rgba(99, 102, 241, 0.45) !important;
+    border: 1px solid rgba(148, 163, 184, 0.24) !important;
     border-radius: 24px !important;
-    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55), 0 0 40px rgba(79, 70, 229, 0.18) !important;
-    padding: 22px !important;
+    box-shadow: 0 30px 80px rgba(2, 6, 23, 0.62), 0 0 0 1px rgba(99, 102, 241, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+    padding: 22px 24px 24px !important;
   }
   body.theme-white #settingsModal .modal-window {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.75) 0%, rgba(248, 250, 252, 0.75) 100%) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.75) 0%, rgba(248, 250, 252, 0.75) 100%) !important;
+    backdrop-filter: blur(20px) saturate(165%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(165%) !important;
     color: #0f172a !important;
-    border: 2px solid #a5b4fc !important;
-    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.18), 0 0 0 4px rgba(99, 102, 241, 0.08) !important;
+    border: 1px solid rgba(148, 163, 184, 0.38) !important;
+    box-shadow: 0 28px 68px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(99, 102, 241, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
   }
   #settingsModal .modal-close-btn {
-    top: 8px !important;
-    right: 8px !important;
+    top: 14px !important;
+    right: 16px !important;
     width: 38px !important;
     height: 38px !important;
+    border-radius: 12px !important;
     z-index: 85 !important;
-    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    background: linear-gradient(135deg, #f43f5e, #e11d48) !important;
     color: #ffffff !important;
-    border: 2px solid rgba(255, 255, 255, 0.85) !important;
-    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.5) !important;
-    font-size: 1.05rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    font-size: 1rem !important;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease, background 0.18s ease !important;
   }
   #settingsModal .modal-close-btn:hover {
-    transform: scale(1.08) !important;
-    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    transform: translateY(-1px) scale(1.06) rotate(90deg) !important;
+    background: linear-gradient(135deg, #e11d48, #be123c) !important;
+    box-shadow: 0 10px 24px rgba(225, 29, 72, 0.55) !important;
   }
   body.theme-white #profileModal .profile-sub-drawer {
     background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%) !important;
     color: #0f172a !important;
     box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08) !important;
   }
+
+  /* Settings Header */
   #settingsModal .settings-top-left-header {
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
-    gap: 10px !important;
-    margin-bottom: 12px !important;
-    padding: 4px 44px 10px 2px !important;
-    border-bottom: 1px solid var(--glass-border) !important;
+    gap: 13px !important;
+    margin-bottom: 16px !important;
+    padding: 2px 52px 14px 2px !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2) !important;
+  }
+  body.theme-white #settingsModal .settings-top-left-header {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.1) !important;
   }
   #settingsModal .settings-top-left-header .settings-header-icon {
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 10px !important;
-    background: linear-gradient(135deg, #6366f1, #a855f7) !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 13px !important;
+    background: linear-gradient(135deg, #0ea5e9 0%, #4f46e5 58%, #7c3aed 100%) !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     color: #ffffff !important;
-    font-size: 1.05rem !important;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35) !important;
+    font-size: 1.15rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
     flex-shrink: 0 !important;
+    transition: transform 0.22s ease !important;
+  }
+  #settingsModal .settings-top-left-header:hover .settings-header-icon i {
+    transform: rotate(60deg);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  #settingsModal .settings-header-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
   }
   #settingsModal .settings-top-left-header .settings-header-title {
     margin: 0 !important;
-    font-size: 1.2rem !important;
+    font-size: 1.24rem !important;
     font-weight: 900 !important;
-    color: var(--text-main) !important;
-    letter-spacing: -0.2px !important;
+    color: #f8fafc !important;
+    letter-spacing: -0.3px !important;
+    line-height: 1.15 !important;
   }
+  body.theme-white #settingsModal .settings-top-left-header .settings-header-title {
+    color: #0f172a !important;
+  }
+  #settingsModal .settings-header-subtitle {
+    margin: 0;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: #94a3b8;
+    letter-spacing: 0.1px;
+  }
+  body.theme-white #settingsModal .settings-header-subtitle {
+    color: #475569;
+  }
+
+  /* Horizontal Options Rail */
   #settingsModal .settings-horizontal-options-box {
-    background: rgba(15, 23, 42, 0.75) !important;
-    border: 1.5px solid rgba(129, 140, 248, 0.4) !important;
-    border-radius: 16px !important;
-    padding: 10px !important;
-    margin-bottom: 16px !important;
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.22) !important;
+    background: rgba(15, 23, 42, 0.62) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 18px !important;
+    padding: 9px !important;
+    margin-bottom: 18px !important;
+    box-shadow: inset 0 1px 2px rgba(2, 6, 23, 0.35), 0 8px 24px rgba(2, 6, 23, 0.22) !important;
   }
   body.theme-white #settingsModal .settings-horizontal-options-box {
-    background: rgba(248, 250, 252, 0.75) !important;
-    border: 1.5px solid #cbd5e1 !important;
-    box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+    background: rgba(241, 245, 249, 0.76) !important;
+    border: 1px solid rgba(148, 163, 184, 0.34) !important;
+    box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.05) !important;
   }
   #settingsModal .settings-nav-grid {
     display: flex !important;
     flex-direction: row !important;
     align-items: stretch !important;
-    gap: 10px !important;
+    gap: 9px !important;
     margin: 0 !important;
-    padding: 2px !important;
+    padding: 3px 2px 5px 2px !important;
     overflow-x: auto !important;
     flex-wrap: nowrap !important;
     scrollbar-width: thin;
+    scrollbar-color: rgba(129, 140, 248, 0.45) transparent;
+    scroll-behavior: smooth;
   }
+  #settingsModal .settings-nav-grid::-webkit-scrollbar {
+    height: 5px;
+  }
+  #settingsModal .settings-nav-grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #settingsModal .settings-nav-grid::-webkit-scrollbar-thumb {
+    background: rgba(129, 140, 248, 0.4);
+    border-radius: 999px;
+  }
+
+  /* Individual Option Cards with Per-Module Accent Identity */
   #settingsModal .settings-nav-card {
-    flex: 1 0 140px !important;
-    min-width: 140px !important;
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.75)) !important;
-    border: 1.5px solid rgba(148, 163, 184, 0.28) !important;
+    --nav-accent: #6366f1;
+    --nav-accent-rgb: 99, 102, 241;
+    --nav-icon-grad: linear-gradient(135deg, #4f46e5, #6366f1);
+    flex: 1 0 128px !important;
+    min-width: 128px !important;
+    min-height: 82px !important;
+    background: linear-gradient(155deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.74)) !important;
+    border: 1px solid rgba(148, 163, 184, 0.22) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 14px !important;
-    padding: 12px 10px !important;
-    transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    padding: 12px 11px 11px !important;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease !important;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22) !important;
+    box-shadow: 0 4px 12px rgba(2, 6, 23, 0.24) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
+    gap: 7px !important;
     text-align: center !important;
     cursor: pointer !important;
+    user-select: none;
+  }
+  #settingsModal .settings-nav-card::after {
+    content: "";
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    bottom: 0;
+    height: 3px;
+    border-radius: 999px 999px 0 0;
+    background: var(--nav-accent);
+    opacity: 0;
+    transform: scaleX(0.5);
+    transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
   }
   body.theme-white #settingsModal .settings-nav-card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.75), rgba(241, 245, 249, 0.75)) !important;
-    border: 1.5px solid #cbd5e1 !important;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06) !important;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.88), rgba(248, 250, 252, 0.82)) !important;
+    border: 1px solid rgba(148, 163, 184, 0.32) !important;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05) !important;
   }
-  #settingsModal .settings-nav-card:hover {
-    transform: translateY(-2px) !important;
-    border-color: #818cf8 !important;
-  }
-  #settingsModal .settings-nav-card.nav-notify {
-    border-top: 3.5px solid #f59e0b !important;
-  }
+
+  /* Module Accent Variables (Order: Create User ID -> Register User -> Background Photo -> Last Login -> Audit Trail Log -> Edit Everything -> Delete Center -> Sheet Setup -> Notifications) */
   #settingsModal .settings-nav-card.nav-create {
-    border-top: 3.5px solid #10b981 !important;
+    --nav-accent: #10b981;
+    --nav-accent-rgb: 16, 185, 129;
+    --nav-icon-grad: linear-gradient(135deg, #059669, #10b981);
+  }
+  #settingsModal .settings-nav-card.nav-users {
+    --nav-accent: #0ea5e9;
+    --nav-accent-rgb: 14, 165, 233;
+    --nav-icon-grad: linear-gradient(135deg, #0284c7, #38bdf8);
+  }
+  #settingsModal .settings-nav-card.nav-bg {
+    --nav-accent: #ec4899;
+    --nav-accent-rgb: 236, 72, 153;
+    --nav-icon-grad: linear-gradient(135deg, #db2777, #f472b6);
+  }
+  #settingsModal .settings-nav-card.nav-history {
+    --nav-accent: #14b8a6;
+    --nav-accent-rgb: 20, 184, 166;
+    --nav-icon-grad: linear-gradient(135deg, #0d9488, #2dd4bf);
+  }
+  #settingsModal .settings-nav-card.nav-audit {
+    --nav-accent: #f59e0b;
+    --nav-accent-rgb: 245, 158, 11;
+    --nav-icon-grad: linear-gradient(135deg, #d97706, #fbbf24);
+  }
+  #settingsModal .settings-nav-card.nav-edit {
+    --nav-accent: #8b5cf6;
+    --nav-accent-rgb: 139, 92, 246;
+    --nav-icon-grad: linear-gradient(135deg, #7c3aed, #a78bfa);
   }
   #settingsModal .settings-nav-card.nav-delete {
-    border-top: 3.5px solid #f43f5e !important;
+    --nav-accent: #f43f5e;
+    --nav-accent-rgb: 244, 63, 94;
+    --nav-icon-grad: linear-gradient(135deg, #e11d48, #fb7185);
   }
+  #settingsModal .settings-nav-card.nav-sheet {
+    --nav-accent: #6366f1;
+    --nav-accent-rgb: 99, 102, 241;
+    --nav-icon-grad: linear-gradient(135deg, #4f46e5, #818cf8);
+  }
+  #settingsModal .settings-nav-card.nav-notify {
+    --nav-accent: #f59e0b;
+    --nav-accent-rgb: 245, 158, 11;
+    --nav-icon-grad: linear-gradient(135deg, #d97706, #f59e0b);
+  }
+
+  #settingsModal .settings-nav-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: rgba(var(--nav-accent-rgb), 0.65) !important;
+    background: linear-gradient(155deg, rgba(var(--nav-accent-rgb), 0.16), rgba(30, 41, 59, 0.84)) !important;
+    box-shadow: 0 10px 22px rgba(2, 6, 23, 0.34), 0 0 18px rgba(var(--nav-accent-rgb), 0.18) !important;
+  }
+  body.theme-white #settingsModal .settings-nav-card:hover {
+    background: linear-gradient(155deg, rgba(var(--nav-accent-rgb), 0.11), rgba(255, 255, 255, 0.96)) !important;
+    border-color: rgba(var(--nav-accent-rgb), 0.65) !important;
+    box-shadow: 0 8px 20px rgba(var(--nav-accent-rgb), 0.14) !important;
+  }
+  #settingsModal .settings-nav-card:hover .s-nav-icon {
+    transform: scale(1.07);
+  }
+
   #settingsModal .settings-nav-card.active {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.32) 0%, rgba(14, 165, 233, 0.2) 100%) !important;
-    border-color: #6366f1 !important;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.32), 0 10px 24px rgba(79, 70, 241, 0.25) !important;
+    background: linear-gradient(145deg, rgba(var(--nav-accent-rgb), 0.28) 0%, rgba(15, 23, 42, 0.88) 100%) !important;
+    border-color: rgba(var(--nav-accent-rgb), 0.9) !important;
+    box-shadow: 0 0 0 2px rgba(var(--nav-accent-rgb), 0.28), 0 12px 26px rgba(var(--nav-accent-rgb), 0.26) !important;
     transform: translateY(-2px) !important;
   }
-  body.theme-white #settingsModal .settings-nav-card.active {
-    background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%) !important;
-    border-color: #4f46e5 !important;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.22), 0 8px 20px rgba(79, 70, 229, 0.16) !important;
+  #settingsModal .settings-nav-card.active::after {
+    opacity: 1;
+    transform: scaleX(1);
   }
-  #settingsModal .s-nav-icon {
-    width: 34px !important;
-    height: 34px !important;
-    border-radius: 10px !important;
+  body.theme-white #settingsModal .settings-nav-card.active {
+    background: linear-gradient(145deg, rgba(var(--nav-accent-rgb), 0.16) 0%, rgba(255, 255, 255, 0.98) 100%) !important;
+    border-color: rgba(var(--nav-accent-rgb), 0.85) !important;
+    box-shadow: 0 0 0 2px rgba(var(--nav-accent-rgb), 0.2), 0 10px 22px rgba(var(--nav-accent-rgb), 0.16) !important;
+  }
+
+  #settingsModal .settings-nav-card .s-nav-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 11px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     font-size: 0.98rem !important;
-    margin-bottom: 6px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  }
-  #settingsModal .nav-notify .s-nav-icon {
-    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    margin: 0 !important;
+    background: var(--nav-icon-grad) !important;
     color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.24) !important;
+    box-shadow: 0 6px 14px rgba(var(--nav-accent-rgb), 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease !important;
   }
-  #settingsModal .nav-create .s-nav-icon {
-    background: linear-gradient(135deg, #059669, #10b981) !important;
+  #settingsModal .settings-nav-card.active .s-nav-icon {
+    background: var(--nav-icon-grad) !important;
     color: #ffffff !important;
+    box-shadow: 0 8px 18px rgba(var(--nav-accent-rgb), 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.36) !important;
   }
-  #settingsModal .nav-delete .s-nav-icon {
-    background: linear-gradient(135deg, #e11d48, #f43f5e) !important;
-    color: #ffffff !important;
+  #settingsModal .settings-nav-card .s-nav-title {
+    color: #e2e8f0 !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 0.01em !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
   }
-  #settingsModal .s-nav-title {
+  #settingsModal .settings-nav-card.active .s-nav-title {
     color: #ffffff !important;
     font-weight: 800 !important;
-    font-size: 0.82rem !important;
-    white-space: nowrap !important;
   }
-  body.theme-white #settingsModal .s-nav-title {
+  body.theme-white #settingsModal .settings-nav-card .s-nav-title {
+    color: #1e293b !important;
+  }
+  body.theme-white #settingsModal .settings-nav-card.active .s-nav-title {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+  }
+
+  /* Stylish Internal Settings Content Workspace Panels */
+  #settingsModal .tab-content.active,
+  #settingsModal [id^="otherPanel"] {
+    background: rgba(15, 23, 42, 0.52);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    animation: settingsPanelFadeIn 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  body.theme-white #settingsModal .tab-content.active,
+  body.theme-white #settingsModal [id^="otherPanel"] {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  }
+  @keyframes settingsPanelFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  #settingsModal .form-group label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+  }
+  body.theme-white #settingsModal .form-group label {
+    color: #334155;
+  }
+  #settingsModal .form-control {
+    border-radius: 11px !important;
+    border: 1px solid rgba(148, 163, 184, 0.28) !important;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease !important;
+  }
+  #settingsModal .form-control:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22) !important;
+  }
+  body.theme-white #settingsModal .form-control {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-color: rgba(148, 163, 184, 0.42) !important;
     color: #0f172a !important;
   }
+  #settingsModal table,
+  #settingsModal .history-table,
+  #settingsModal .audit-log-time {
+    font-variant-numeric: tabular-nums;
+  }
+
   #settingsModal .other-tool-card {
     background: linear-gradient(145deg, rgba(17, 24, 39, 0.75), rgba(30, 41, 59, 0.75)) !important;
     color: #f8fafc !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
     border-radius: 16px !important;
     padding: 14px !important;
-    transition: all 0.22s ease !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22) !important;
   }
   #settingsModal .other-tool-card:hover {
-    transform: translateY(-3px) !important;
-    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.28) !important;
+    transform: translateY(-2px) !important;
+    border-color: rgba(99, 102, 241, 0.48) !important;
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.24) !important;
   }
   body.theme-white #settingsModal .other-tool-card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.75), rgba(248, 250, 252, 0.75)) !important;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(248, 250, 252, 0.82)) !important;
     color: #0f172a !important;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.07) !important;
+    border: 1px solid rgba(148, 163, 184, 0.3) !important;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06) !important;
   }
   body.theme-white #settingsModal #createRenterAadhaarBox,
   body.theme-white #settingsModal #viewerScopeSelectionBox {
@@ -6491,11 +6683,20 @@
      ============================================================================ */
   @media (max-width: 768px) {
     #settingsModal .modal-window {
-      padding: 14px 10px !important;
+      padding: 14px 12px 16px !important;
       border-radius: 18px !important;
     }
+    #settingsModal .settings-top-left-header {
+      padding: 2px 46px 12px 2px !important;
+      margin-bottom: 12px !important;
+    }
+    #settingsModal .settings-header-subtitle {
+      font-size: 0.7rem;
+    }
     #settingsModal .settings-horizontal-options-box {
-      padding: 8px !important;
+      padding: 7px !important;
+      border-radius: 15px !important;
+      margin-bottom: 14px !important;
     }
     #settingsModal .settings-nav-grid {
       display: flex !important;
@@ -6505,20 +6706,33 @@
       overflow-x: auto !important;
       overflow-y: hidden !important;
       -webkit-overflow-scrolling: touch !important;
-      padding: 4px 2px 8px 2px !important;
+      scroll-snap-type: x proximity;
+      padding: 3px 2px 7px 2px !important;
       scrollbar-width: thin;
     }
     #settingsModal .settings-nav-card {
       flex: 0 0 auto !important;
-      min-width: 122px !important;
+      min-width: 116px !important;
+      min-height: 74px !important;
       width: auto !important;
       padding: 10px 10px !important;
       box-sizing: border-box !important;
+      scroll-snap-align: start;
     }
-    #settingsModal .s-nav-title {
+    #settingsModal .settings-nav-card .s-nav-icon {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 0.9rem !important;
+    }
+    #settingsModal .settings-nav-card .s-nav-title {
       white-space: nowrap !important;
-      font-size: 0.75rem !important;
+      font-size: 0.74rem !important;
       line-height: 1.2 !important;
+    }
+    #settingsModal .tab-content.active,
+    #settingsModal [id^="otherPanel"] {
+      padding: 13px !important;
+      border-radius: 14px !important;
     }
     .renter-download-grid {
       grid-template-columns: 1fr !important;
@@ -7419,6 +7633,41 @@
     color: #ffffff !important;
     transform: rotate(90deg) scale(1.14);
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.88)) !important;
+  }
+
+  /* Global Scrollbar Concealment (All Browsers) — Preserves Smooth Scrolling */
+  html,
+  body,
+  *,
+  *::before,
+  *::after,
+  #flatModalNavBar,
+  #notificationsModal .exec-modal-body,
+  #notificationsListContainer,
+  #noticeTargetPropertiesDrawer,
+  .renter-quick-scroll-track,
+  .admin-ops-hub-carousel,
+  #settingsModal .settings-nav-grid {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar,
+  #flatModalNavBar::-webkit-scrollbar,
+  #notificationsModal .exec-modal-body::-webkit-scrollbar,
+  #notificationsListContainer::-webkit-scrollbar,
+  #noticeTargetPropertiesDrawer::-webkit-scrollbar,
+  .renter-quick-scroll-track::-webkit-scrollbar,
+  .admin-ops-hub-carousel::-webkit-scrollbar,
+  #settingsModal .settings-nav-grid::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
   }
 
 </style>
@@ -9733,52 +9982,51 @@
     <div class="modal-window" style="max-width: 1080px; width: 96%;">
       <button class="modal-close-btn" onclick="closeModal('settingsModal')"><i class="fa-solid fa-xmark"></i></button>
 
-      <!-- Requirement 2: Top-Left Settings Icon with "Settings" Text Next to It -->
+      <!-- Top-Left Settings Header -->
       <div class="settings-top-left-header">
         <div class="settings-header-icon">
           <i class="fa-solid fa-gear"></i>
         </div>
-        <h3 class="settings-header-title">Settings</h3>
+        <div class="settings-header-text-group">
+          <h3 class="settings-header-title">Settings</h3>
+          <p class="settings-header-subtitle">Admin Control Center &bull; Users, Security &amp; Workspace</p>
+        </div>
       </div>
 
-      <!-- Horizontal Left-to-Right Options Box (Notifications, Create User ID, Delete Center + All 7 Modules One by One to the Right Side) -->
+      <!-- Horizontal Left-to-Right Options Rail (Ordered: Create User ID, Register User, Background Photo, Last Login, Audit Trail Log, Edit Everything, Delete Center) -->
       <div class="settings-horizontal-options-box">
         <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid">
-          <div id="settingsTabBtnNotifications" class="flat-nav-item settings-nav-card nav-notify" style="display:none;" onclick="switchSettingsSubTab(event, 'setSubNotifications')">
-            <div class="s-nav-icon"><i class="fa-solid fa-bell"></i></div>
-            <div class="s-nav-title">Notifications</div>
-          </div>
           <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create active" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
             <div class="s-nav-icon"><i class="fa-solid fa-user-plus"></i></div>
             <div class="s-nav-title">Create User ID</div>
+          </div>
+          <div id="btnOtherOptUsers" class="flat-nav-item settings-nav-card nav-users" onclick="switchOtherSubOption('users')">
+            <div class="s-nav-icon"><i class="fa-solid fa-users-gear"></i></div>
+            <div class="s-nav-title">Register User</div>
+          </div>
+          <div id="btnOtherOptChangeBg" class="flat-nav-item settings-nav-card nav-bg admin-only" onclick="switchOtherSubOption('changeBg')">
+            <div class="s-nav-icon"><i class="fa-solid fa-image"></i></div>
+            <div class="s-nav-title">Background Photo</div>
+          </div>
+          <div id="btnOtherOptLoginHistory" class="flat-nav-item settings-nav-card nav-history admin-only" onclick="switchOtherSubOption('history')">
+            <div class="s-nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <div class="s-nav-title">Last Login</div>
+          </div>
+          <div id="btnOtherOptAuditLog" class="flat-nav-item settings-nav-card nav-audit admin-only" onclick="switchOtherSubOption('auditLog')">
+            <div class="s-nav-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="s-nav-title">Audit Trail Log</div>
+          </div>
+          <div id="btnOtherOptEditEverything" class="flat-nav-item settings-nav-card nav-edit admin-only" onclick="switchOtherSubOption('editEverything')">
+            <div class="s-nav-icon"><i class="fa-solid fa-pen-ruler"></i></div>
+            <div class="s-nav-title">Edit Everything</div>
           </div>
           <div id="settingsTabBtnDeleteCenter" class="flat-nav-item settings-nav-card nav-delete" onclick="switchSettingsSubTab(event, 'setSubDeleteManage')">
             <div class="s-nav-icon"><i class="fa-solid fa-trash-can"></i></div>
             <div class="s-nav-title">Delete Center</div>
           </div>
-          <div id="btnOtherOptUsers" class="flat-nav-item settings-nav-card" style="border-color: rgba(56, 189, 248, 0.45);" onclick="switchOtherSubOption('users')">
-            <div class="s-nav-icon" style="background: rgba(56, 189, 248, 0.18); color: #38bdf8;"><i class="fa-solid fa-users-gear"></i></div>
-            <div class="s-nav-title">Registered Users</div>
-          </div>
-          <div id="btnOtherOptLoginHistory" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(16, 185, 129, 0.45);" onclick="switchOtherSubOption('history')">
-            <div class="s-nav-icon" style="background: rgba(16, 185, 129, 0.18); color: #34d399;"><i class="fa-solid fa-clock-rotate-left"></i></div>
-            <div class="s-nav-title">Last Logins</div>
-          </div>
-          <div id="btnOtherOptChangeBg" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(236, 72, 153, 0.45);" onclick="switchOtherSubOption('changeBg')">
-            <div class="s-nav-icon" style="background: rgba(236, 72, 153, 0.18); color: #f472b6;"><i class="fa-solid fa-image"></i></div>
-            <div class="s-nav-title">Background Photo</div>
-          </div>
-          <div id="btnOtherOptEditEverything" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(168, 85, 247, 0.45);" onclick="switchOtherSubOption('editEverything')">
-            <div class="s-nav-icon" style="background: rgba(168, 85, 247, 0.18); color: #c084fc;"><i class="fa-solid fa-pen-ruler"></i></div>
-            <div class="s-nav-title">Edit Everything</div>
-          </div>
-          <div id="btnOtherOptAuditLog" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(244, 63, 94, 0.45);" onclick="switchOtherSubOption('auditLog')">
-            <div class="s-nav-icon" style="background: rgba(244, 63, 94, 0.18); color: #fb7185;"><i class="fa-solid fa-shield-cat"></i></div>
-            <div class="s-nav-title">Audit Trail Log</div>
-          </div>
-          <div id="btnOtherOptSheetSetup" class="flat-nav-item settings-nav-card admin-only" style="border-color: rgba(16, 185, 129, 0.55);" onclick="switchOtherSubOption('sheetSetup')">
-            <div class="s-nav-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;"><i class="fa-solid fa-table-columns"></i></div>
-            <div class="s-nav-title">Sheet Auto-Create &amp; Code.gs</div>
+          <div id="settingsTabBtnNotifications" class="flat-nav-item settings-nav-card nav-notify" style="display:none;" onclick="switchSettingsSubTab(event, 'setSubNotifications')">
+            <div class="s-nav-icon"><i class="fa-solid fa-bell"></i></div>
+            <div class="s-nav-title">Notifications</div>
           </div>
         </div>
       </div>
@@ -10337,51 +10585,6 @@
             </div>
           </div>
           <div id="adminAuditTrailList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:6px; font-size:0.76rem;"></div>
-        </div>
-
-        <!-- Option 8 Panel (Bug 1 Fix): Auto-Create Separate Google Sheets, Columns & Rows + Copy Updated Code.gs -->
-        <div id="otherPanelSheetSetup" class="stat-pill admin-only" style="text-align: left; display: none;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
-            <div>
-              <span style="font-weight:800; font-size:0.92rem; color:#34d399; display:flex; align-items:center; gap:7px;">
-                <i class="fa-solid fa-table-columns"></i> Google Sheet Auto-Create Separate Sheets, Columns &amp; Rows
-              </span>
-              <div style="font-size:0.73rem; color:var(--text-muted); margin-top:3px;">
-                Automatically creates and repairs all 15 separate sheet tabs, separate Row 1 column headers, and separate data rows in your Google Sheet.
-              </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-              <button type="button" class="btn-primary" style="width:auto; padding:8px 14px; font-size:0.76rem; background:linear-gradient(135deg, #059669, #10b981);" onclick="triggerAutoCreateAllSheetsAndColumnsNow()">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Create &amp; Sync All Separate Sheets/Columns Now
-              </button>
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:8px; margin-bottom:12px; font-size:0.72rem;">
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">1. Properties</strong><br><span style="color:var(--text-muted);">7 separate columns (Name, UPI, Mobile, Dates)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">2. Flats</strong><br><span style="color:var(--text-muted);">36 separate columns (Rent, Meters, Rates, Checklist)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">3. Renters</strong><br><span style="color:var(--text-muted);">43 separate columns (KYC, Aadhaar, Family, Stays)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">4. Bills</strong><br><span style="color:var(--text-muted);">40 separate columns (Elec, PNG, Water, Split, Dues)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">5. FDRecords</strong><br><span style="color:var(--text-muted);">16 separate columns (Bank, Principal, Rate, Maturity)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">6. KhetRecords</strong><br><span style="color:var(--text-muted);">34 separate columns (Khata, Keshra, Decimal, Batai)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">7. KharchRecords</strong><br><span style="color:var(--text-muted);">10 separate columns (Title, Category, Amount, Date)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">8. Users</strong><br><span style="color:var(--text-muted);">30 separate columns (Role, Aadhaar, Perms, Lockout)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">9. LoginHistory</strong><br><span style="color:var(--text-muted);">8 separate columns (User, Role, Time, Device, Token)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">10. MaintenanceTickets</strong><br><span style="color:var(--text-muted);">11 separate columns (TicketID, Flat, Category, Status)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">11. PaymentProofs</strong><br><span style="color:var(--text-muted);">16 separate columns (ProofID, BillID, UTR, Amount)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">12. BroadcastNotices</strong><br><span style="color:var(--text-muted);">10 separate columns (NoticeID, Title, Scope, Sender)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">13. PrivateChats</strong><br><span style="color:var(--text-muted);">10 separate columns (MessageID, Channel, Sender, Text)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">14. AuditLogs</strong><br><span style="color:var(--text-muted);">8 separate columns (AuditID, Time, Actor, Action)</span></div>
-            <div style="padding:8px 10px; border-radius:8px; background:var(--bg-input); border:1px solid var(--glass-border);"><strong style="color:#34d399;">15. GlobalConfig</strong><br><span style="color:var(--text-muted);">3 separate columns (ConfigKey, ConfigValueJSON, UpdatedAt)</span></div>
-          </div>
-
-          <div class="form-group" style="margin-bottom:0;">
-            <label style="font-size:0.74rem; color:#38bdf8; display:flex; justify-content:space-between; align-items:center;">
-              <span><i class="fa-solid fa-code"></i> Updated Google Apps Script Code (<code>Code.gs</code>) — Paste into Google Sheets &gt; Extensions &gt; Apps Script</span>
-              <span id="gasCodeCopyStatusBadge" style="color:#34d399; font-weight:800;">Ready</span>
-            </label>
-            <textarea id="fixedGasCodeViewerTextarea" class="form-control" rows="8" readonly style="font-family:monospace; font-size:0.72rem; line-height:1.4; white-space:pre; overflow-x:auto;" placeholder="Loading updated Code.gs..."></textarea>
-          </div>
         </div>
     </div>
   </div>
