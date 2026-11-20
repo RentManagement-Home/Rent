@@ -9098,13 +9098,19 @@
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Focused Element: 100% Transparent (.renter-hero-banner, #renterInlineMaintenanceCard, #renterMonthlyDrivePhotoUploadsCard, #renterDashboardPaymentCircleCard, #renterDashboardLatestReceiptSideCard & #renterDownloadAppCard) */
+  /* Focused Element: 100% Transparent (.renter-hero-banner, #renterInlineMaintenanceCard, #renterMonthlyDrivePhotoUploadsCard, #renterInstantUpiPaymentCard, #renterPaymentPhotoAndUtrCard, #renterInlineProfileCard, #renterDashboardPaymentCircleCard, #renterDashboardLatestReceiptSideCard & #renterDownloadAppCard) */
   section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard,
@@ -9243,6 +9249,144 @@
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Focused Element: Stylish Blue Verified Seal Icon inside #renterHeroAadhaarCardBox */
+  #renterHeroAadhaarCardBox .renter-aadhaar-verified-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 21px;
+    height: 21px;
+    flex-shrink: 0;
+    font-style: normal;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.72)) drop-shadow(0 2px 4px rgba(37, 99, 235, 0.55));
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), filter 0.22s ease;
+  }
+  #renterHeroAadhaarCardBox .renter-aadhaar-verified-icon:hover {
+    transform: scale(1.14) rotate(6deg);
+    filter: drop-shadow(0 0 9px rgba(56, 189, 248, 0.92)) drop-shadow(0 3px 6px rgba(37, 99, 235, 0.72));
+  }
+  #renterHeroAadhaarCardBox .renter-aadhaar-verified-icon svg {
+    width: 21px;
+    height: 21px;
+    display: block;
+  }
+
+  /* Focused Elements: 25% Transparent (0.75 Opacity) inside Renter Payment Cards */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(1) > span:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(2),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div#renterInlinePayPhotoPendingBox,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(3) > label:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4) {
+    background: rgba(15, 23, 42, 0.75) !important;
+    background-color: rgba(15, 23, 42, 0.75) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(1) > span:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(2),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div#renterInlinePayPhotoPendingBox,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(3) > label:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4) {
+    background: rgba(255, 255, 255, 0.75) !important;
+    background-color: rgba(255, 255, 255, 0.75) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Focused Elements: 30% Transparent (0.70 Opacity) inside #renterInlineProfileCard & #renterPaymentPhotoAndUtrCard */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard .renter-profile-subcard-30,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileLocationBhkCard,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileChecklistCard,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > span:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) {
+    background: rgba(15, 23, 42, 0.70) !important;
+    background-color: rgba(15, 23, 42, 0.70) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard .renter-profile-subcard-30,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileLocationBhkCard,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileChecklistCard,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > span:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) {
+    background: rgba(255, 255, 255, 0.70) !important;
+    background-color: rgba(255, 255, 255, 0.70) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Focused Element: Clear, High-Contrast Text on UPI Launch Button inside #renterInstantUpiPaymentCard */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(3) > button:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(3) > button:nth-of-type(1) {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    color: #ffffff !important;
+    text-shadow: none !important;
+  }
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(3) > button:nth-of-type(1) > span:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(3) > button:nth-of-type(1) > span:nth-of-type(1) {
+    color: #ffffff !important;
+    font-size: 0.94rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.015em !important;
+    line-height: 1.3 !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 2px rgba(2, 44, 34, 0.45) !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+
+  /* Focused Elements: Clear, High-Contrast Text on Submit UTR Button & Payment Card Headings */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4) > button#btnSubmitRenterInlineUtrProof > span:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4) > button#btnSubmitRenterInlineUtrProof > span:nth-of-type(1) {
+    color: #ffffff !important;
+    font-size: 0.92rem !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.015em !important;
+    line-height: 1.3 !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.5) !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h4:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(1) > div:nth-of-type(1) > h3:nth-of-type(1) {
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.92), 0 0 10px rgba(0, 0, 0, 0.65) !important;
+    letter-spacing: 0.01em !important;
+    opacity: 1 !important;
+    -webkit-font-smoothing: antialiased !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > h4:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(1) > div:nth-of-type(1) > h3:nth-of-type(1) {
+    color: #0f172a !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.98), 0 0 8px rgba(255, 255, 255, 0.9) !important;
   }
 
   /* Admin-Only Photo Downloads: Hide all photo download buttons & block image save callouts for Renters */
@@ -10757,14 +10901,6 @@
           <span class="renter-quick-box-icon" style="background:rgba(99,102,241,0.18); color:#818cf8;"><i class="fa-solid fa-house"></i></span>
           <span class="renter-quick-box-label">Dashboard</span>
         </button>
-        <button type="button" class="renter-quick-box" data-renter-nav="receipt" onclick="navigateRenterQuickNav('receipt')">
-          <span class="renter-quick-box-icon" style="background:rgba(56,189,248,0.18); color:#38bdf8;"><i class="fa-solid fa-file-invoice"></i></span>
-          <span class="renter-quick-box-label">Receipt</span>
-        </button>
-        <button type="button" class="renter-quick-box" data-renter-nav="maintenance" onclick="navigateRenterQuickNav('maintenance')">
-          <span class="renter-quick-box-icon" style="background:rgba(245,158,11,0.18); color:#fbbf24;"><i class="fa-solid fa-screwdriver-wrench"></i></span>
-          <span class="renter-quick-box-label">Maintenance</span>
-        </button>
         <button type="button" class="renter-quick-box" data-renter-nav="upload_photo" onclick="navigateRenterQuickNav('upload_photo')">
           <span class="renter-quick-box-icon" style="background:rgba(16,185,129,0.18); color:#34d399;"><i class="fa-solid fa-camera"></i></span>
           <span class="renter-quick-box-label">Upload Photo</span>
@@ -10773,9 +10909,17 @@
           <span class="renter-quick-box-icon" style="background:rgba(34,197,94,0.18); color:#4ade80;"><i class="fa-solid fa-qrcode"></i></span>
           <span class="renter-quick-box-label">Payment</span>
         </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="receipt" onclick="navigateRenterQuickNav('receipt')">
+          <span class="renter-quick-box-icon" style="background:rgba(56,189,248,0.18); color:#38bdf8;"><i class="fa-solid fa-file-invoice"></i></span>
+          <span class="renter-quick-box-label">Receipt</span>
+        </button>
         <button type="button" class="renter-quick-box" data-renter-nav="profile" onclick="navigateRenterQuickNav('profile')">
           <span class="renter-quick-box-icon" style="background:rgba(168,85,247,0.18); color:#c084fc;"><i class="fa-solid fa-user-shield"></i></span>
           <span class="renter-quick-box-label">Profile</span>
+        </button>
+        <button type="button" class="renter-quick-box" data-renter-nav="maintenance" onclick="navigateRenterQuickNav('maintenance')">
+          <span class="renter-quick-box-icon" style="background:rgba(245,158,11,0.18); color:#fbbf24;"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+          <span class="renter-quick-box-label">Maintenance</span>
         </button>
         <button type="button" class="renter-quick-box" data-renter-nav="download_app" onclick="navigateRenterQuickNav('download_app')">
           <span class="renter-quick-box-icon" style="background:rgba(56,189,248,0.18); color:#38bdf8;"><i class="fa-solid fa-mobile-screen-button"></i></span>
@@ -10810,17 +10954,11 @@
             Private Live Chat
           </div>
           <div id="modularLiveChatSubtitle" style="font-size:0.65rem; color:rgba(255,255,255,0.9); font-weight:700;">
-            <i class="fa-solid fa-shield-halved"></i> End-to-End Isolated Channel • Drag to Move
+            <i class="fa-solid fa-shield-halved"></i> End-to-End 
           </div>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:5px; flex-shrink:0;">
-        <button type="button" class="widget-ctrl-btn" onclick="switchWidgetScreenSide('modularLiveChatWidget')">
-          <i class="fa-solid fa-arrows-left-right"></i>
-        </button>
-        <button type="button" class="widget-ctrl-btn" onclick="toggleMinimizeFloatingWidget('modularLiveChatWidget')">
-          <i class="fa-solid fa-window-minimize"></i>
-        </button>
         <button type="button" class="widget-ctrl-btn" onclick="closeModularLiveChatWidget()">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -22431,10 +22569,7 @@ function formatMonthLabel(rawVal) {
             <div class="renter-payment-card" id="renterInstantUpiPaymentCard" style="margin:0; background:transparent;">
               <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--glass-border);">
                 <div>
-                  <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:#10b981;">
-                    <i class="fa-solid fa-qrcode"></i> Instant UPI Payment Hub
-                  </div>
-                  <h3 style="margin:3px 0 0 0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
+                  <h3 style="margin:0; font-size:1.18rem; font-weight:900; color:var(--text-main);">
                     Pay Rent &amp; Utilities (${escapeHtml(activePayMonthLabel)})
                   </h3>
                 </div>
@@ -22487,10 +22622,7 @@ function formatMonthLabel(rawVal) {
                     <i class="fa-solid fa-receipt"></i>
                   </div>
                   <div>
-                    <div style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#34d399;">
-                      Payment Completion Photo &amp; UTR Verification
-                    </div>
-                    <h4 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
+                    <h4 style="margin:0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
                       Upload Payment Screenshot &amp; Enter UTR (${activeUploadMonthLabel})
                     </h4>
                   </div>
@@ -22709,14 +22841,15 @@ function formatMonthLabel(rawVal) {
             </div>
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:20px;">
-              <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
+              <div class="renter-profile-subcard-30" style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Renter ID</span><strong id="renterInlineProfileRenterId" style="font-size:0.92rem; color:#38bdf8; letter-spacing:0.03em;">${escapeHtml(String(primaryRenter.RenterID || consolidatedProfile.RenterID || "N/A"))}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Aadhaar Card Number</span><strong style="font-size:0.9rem; color:var(--text-main);">${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "N/A"}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Permanent Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(consolidatedProfile.Address || primaryRenter.Address || "N/A")}</strong></div>
                 ${(primaryRenter.RentPaymentTiming || consolidatedProfile.RentPaymentTiming) ? `<div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Rent Payment Mode</span><strong style="font-size:0.86rem; color:#34d399;">${escapeHtml(primaryRenter.RentPaymentTiming || consolidatedProfile.RentPaymentTiming)}</strong></div>` : ""}
+                <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">BHK / Room Details</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(bhkSummaryDisplay || "Not Set")}</strong></div>
               </div>
 
-              <div style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
+              <div class="renter-profile-subcard-30" style="padding:16px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); display:flex; flex-direction:column; gap:10px;">
                 <div style="font-size:0.78rem; font-weight:800; color:#38bdf8; text-transform:uppercase; letter-spacing:0.05em;">Tenancy &amp; Utility Schedule</div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Property &amp; Flat</span><strong style="font-size:0.9rem; color:var(--text-main);">${escapeHtml(targetProp)} • Flat ${escapeHtml(targetFlat)}</strong></div>
                 <div><span style="font-size:0.7rem; color:var(--text-muted); display:block;">Property Location Address</span><strong style="font-size:0.86rem; color:var(--text-main);">${escapeHtml(renterPropAddress || "Not Set")}</strong></div>
@@ -22742,38 +22875,25 @@ function formatMonthLabel(rawVal) {
             ` : ""}
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:16px; margin-bottom:20px;">
-              <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
+              <div class="renter-profile-subcard-30" style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-user" style="color:#38bdf8;"></i> Renter Photo</div>
                 ${profileImgUrl ? `
                   <img src="${profileImgUrl}" alt="Renter Photo" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${safeProfileImgArg}', '${safeRenterNameArg} — Profile Photo')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
                 ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Profile Photo</div>`}
               </div>
 
-              <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
+              <div class="renter-profile-subcard-30" style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-id-card" style="color:#34d399;"></i> Aadhaar (Front)</div>
                 ${profFrontUrl ? `
                   <img src="${profFrontUrl}" alt="Aadhaar Front" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${escapeJsAttrArg(profFrontUrl)}', '${escapeJsAttrArg(renterNameDisplay + ' — Aadhaar Front')}')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
                 ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Front Photo</div>`}
               </div>
 
-              <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
+              <div class="renter-profile-subcard-30" style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-id-card-clip" style="color:#38bdf8;"></i> Aadhaar (Back)</div>
                 ${profBackUrl ? `
                   <img src="${profBackUrl}" alt="Aadhaar Back" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${escapeJsAttrArg(profBackUrl)}', '${escapeJsAttrArg(renterNameDisplay + ' — Aadhaar Back')}')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
                 ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Back Photo</div>`}
-              </div>
-            </div>
-
-            <!-- BHK / Room Details Summary (Read-Only View for Renter) -->
-            <div id="renterProfileLocationBhkCard" style="padding:16px; border-radius:16px; background:transparent; border:1.5px solid rgba(56,189,248,0.38); margin-bottom:16px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
-                <span style="font-size:0.84rem; font-weight:800; color:#38bdf8;">
-                  <i class="fa-solid fa-building"></i> BHK / Room Details
-                </span>
-              </div>
-              <div style="padding:9px 11px; border-radius:10px; background:transparent; border:1px solid var(--glass-border);">
-                <span style="font-size:0.68rem; color:var(--text-muted); display:block;">BHK / Room Details</span>
-                <strong style="font-size:0.84rem; color:var(--text-main);">${escapeHtml(bhkSummaryDisplay || "Not Set")}</strong>
               </div>
             </div>
 
@@ -22900,7 +23020,7 @@ function formatMonthLabel(rawVal) {
                   </div>
                   <div style="display:inline-flex; align-items:center; gap:6px; font-size:0.86rem; font-weight:900; color:var(--text-main); font-variant-numeric:tabular-nums;">
                     <span>${effectiveAadhaar ? formatAadhaarWithHyphens(effectiveAadhaar) : "Not Linked"}</span>
-                    ${effectiveAadhaar ? `<i class="fa-solid fa-circle-check" style="color:#10b981; font-size:0.95rem;"></i>` : ""}
+                    ${effectiveAadhaar ? `<i class="renter-aadhaar-verified-icon" title="Verified Aadhaar" aria-label="Verified Aadhaar"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="aadhaarBlueSealGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#38bdf8"/><stop offset="50%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><path d="M12 1.6L14.7 3.25L17.85 3.15L19.15 6.02L21.85 7.68L21.32 10.78L22.7 13.6L20.42 15.8L20.1 18.93L17.05 19.72L14.95 22.08L12 20.92L9.05 22.08L6.95 19.72L3.9 18.93L3.58 15.8L1.3 13.6L2.68 10.78L2.15 7.68L4.85 6.02L6.15 3.15L9.3 3.25L12 1.6Z" fill="url(#aadhaarBlueSealGrad)" stroke="rgba(186,230,253,0.78)" stroke-width="1"/><path d="M8.35 12.25L10.85 14.75L15.95 9.45" stroke="#ffffff" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round"/></svg></i>` : ""}
                   </div>
                 </div>
               </div>
@@ -41199,7 +41319,7 @@ function formatMonthLabel(rawVal) {
 
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
             <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Mobile Number</div>
+              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Site Problem Mobile Number</div>
               <div style="font-size:0.92rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-mobile-screen-button" style="color:#a855f7; margin-right:5px;"></i>${escapeHtml(mobilePhone)}</div>
             </div>
             ${cfg.mobile ? `<a href="tel:${String(cfg.mobile).replace(/\s+/g, "")}" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none; background:linear-gradient(135deg, #8b5cf6, #6366f1);"><i class="fa-solid fa-phone"></i> Call</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
@@ -41818,12 +41938,7 @@ function formatMonthLabel(rawVal) {
           `;
         }).join("");
 
-        rosterEl.innerHTML = `
-          <div style="padding:8px 10px; margin-bottom:6px; border-radius:10px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); font-size:0.76rem; font-weight:800; color:#34d399; display:flex; align-items:center; gap:7px;">
-            <i class="fa-solid fa-comments"></i> Who do you want to talk to? Select a person below:
-          </div>
-          ${listHtml}
-        `;
+        rosterEl.innerHTML = listHtml;
       } else {
         let adminsList = getRegisteredAdminAccountsList();
         if (activeChatDirectoryFilter) {
@@ -41882,12 +41997,7 @@ function formatMonthLabel(rawVal) {
           `;
         }).join("");
 
-        rosterEl.innerHTML = `
-          <div style="padding:8px 10px; margin-bottom:6px; border-radius:10px; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.28); font-size:0.76rem; font-weight:800; color:var(--accent-cyan); display:flex; align-items:center; gap:7px;">
-            <i class="fa-solid fa-comments"></i> Who do you want to talk to? Select below:
-          </div>
-          ${listHtml}
-        `;
+        rosterEl.innerHTML = listHtml;
       }
     }
 
