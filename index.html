@@ -11917,7 +11917,7 @@
         </div>
         <div class="form-group">
           <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
-            <label style="margin-bottom:0;">Desired Username (User ID) <span class="req-star">*</span></label>
+            <label style="margin-bottom:0;">Username<span class="req-star">*</span></label>
             <span id="createUsernameAvailabilityBadge" style="display:none; font-size:0.75rem; font-weight:800; padding:2px 9px; border-radius:999px;"></span>
           </div>
           <div style="position:relative; display:flex; align-items:center;">
@@ -11926,7 +11926,7 @@
               id="createUserLoginId"
               class="form-control"
               minlength="3"
-              placeholder="e.g. manager_01 (min 3 characters)"
+              placeholder="e.g. Abhishek"
               style="padding-right:42px;"
                autocomplete="off"
               oninput="checkCreateUsernameAvailabilityLive(this.value)"
@@ -11950,10 +11950,10 @@
         <div class="form-group">
           <label>Assign Role <span class="req-star">*</span></label>
           <select id="createUserRole" class="form-control" onchange="handleCreateUserRoleChange()">
-            <option value="Admin">Admin (Full Access — Can edit, delete, view, or perform any action)</option>
-            <option value="Manager">Manager (Custom Access — Select specific features &amp; data to grant access to)</option>
-            <option value="Viewer">Viewer (Read-Only Access — Can only view data without making changes)</option>
-            <option value="Renter">Renter (Restricted — Access to assigned flat/property only, or full access if granted)</option>
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="Viewer">Viewer</option>
+            <option value="Renter">Renter</option>
           </select>
         </div>
 
