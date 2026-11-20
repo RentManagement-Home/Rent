@@ -3729,6 +3729,12 @@
       border-color: #6366f1 !important;
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.28);
     }
+    .reg-users-role-tab[data-role="Blocked"].active {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff !important;
+      border-color: #ef4444 !important;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.32);
+    }
 
     /* Colorful Matrix & Profile Cards */
     .matrix-col {
@@ -8319,20 +8325,34 @@
     -webkit-backdrop-filter: blur(10px) !important;
   }
 
-  /* Focused 25% Transparency (75% Opacity) for #adminOpsHubPanelSlot_utr inner card ONLY */
-  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type {
+  /* Focused 100% Transparency for #adminOpsHubPanelSlot_utr inner card ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type,
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Focused 25% Transparency (75% Opacity) for #adminPaymentProofQueueList > div:nth-of-type(1) ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div:nth-of-type(1) {
     background: rgba(15, 23, 42, 0.75) !important;
     background-color: rgba(15, 23, 42, 0.75) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
+    border-radius: 12px;
   }
-  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type {
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div:nth-of-type(1) {
     background: rgba(255, 255, 255, 0.75) !important;
     background-color: rgba(255, 255, 255, 0.75) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
+    border-radius: 12px;
   }
 
   /* Focused 30% Transparency (70% Opacity) for Notification Compose & Bulk Broadcast Cards inside #adminOpsHubPanelSlot_notifications ONLY */
@@ -11831,10 +11851,6 @@
             <label>New Username <span class="req-star">*</span></label>
             <input type="text" id="newUsernameInput" class="form-control" minlength="3" placeholder="Enter new unique username (min 3 chars)">
           </div>
-          <div class="form-group">
-            <label>Confirm New Username <span class="req-star">*</span></label>
-            <input type="text" id="confirmNewUsernameInput" class="form-control" minlength="3" placeholder="Confirm new username">
-          </div>
           <button class="btn-primary" style="background:linear-gradient(135deg, #ec4899 0%, #be185d 100%); font-weight:800;" onclick="submitChangeUsernameOnly()">
             <i class="fa-solid fa-check-circle"></i> Save New Username
           </button>
@@ -11905,7 +11921,6 @@
         </div>
         <div class="settings-header-text-group">
           <h3 class="settings-header-title">Settings</h3>
-          <p class="settings-header-subtitle">Admin Control Center &bull; Users, Security &amp; Workspace</p>
         </div>
       </div>
 
@@ -12218,7 +12233,6 @@
           </div>
         </div>
 
-        <div id="createUserSubmitStatusBanner" style="display:none; margin-bottom:12px; padding:10px 14px; border-radius:10px; font-size:0.8rem; font-weight:800; align-items:center; gap:8px;"></div>
         <button type="button" id="btnCreateUserSubmit" class="btn-primary" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="submitCreateNewUser()">
           <i class="fa-solid fa-user-check"></i> Create Account 
         </button>
@@ -12274,6 +12288,7 @@
           <button type="button" class="reg-users-role-tab" data-role="Renter" onclick="setRegisteredUsersRoleTab('Renter')"><i class="fa-solid fa-house-user"></i> Renter</button>
           <button type="button" class="reg-users-role-tab" data-role="Viewer" onclick="setRegisteredUsersRoleTab('Viewer')"><i class="fa-solid fa-eye"></i> Viewer</button>
           <button type="button" class="reg-users-role-tab" data-role="Manager" onclick="setRegisteredUsersRoleTab('Manager')"><i class="fa-solid fa-sliders"></i> Manager</button>
+          <button type="button" class="reg-users-role-tab" data-role="Blocked" onclick="setRegisteredUsersRoleTab('Blocked')"><i class="fa-solid fa-ban"></i> Blocked</button>
         </div>
         <div id="otherUsersList" style="margin-top: 6px; font-size: 0.82rem; max-height: 310px; overflow-y: auto;">
           <!-- Populated dynamically -->
@@ -26071,7 +26086,6 @@ function formatMonthLabel(rawVal) {
       document.getElementById("confirmNewPassInput").value = "";
       document.getElementById("currentUsernameVerifyInput").value = activeUser || "";
       document.getElementById("newUsernameInput").value = "";
-      document.getElementById("confirmNewUsernameInput").value = "";
       resetPendingProfileEmailOtpState("modal");
 
       document.querySelectorAll(".profile-sub-drawer").forEach(d => d.classList.remove("active"));
@@ -26162,13 +26176,12 @@ function formatMonthLabel(rawVal) {
     async function submitChangeUsernameOnly() {
       const currUser = document.getElementById("currentUsernameVerifyInput").value.trim();
       const newUser = document.getElementById("newUsernameInput").value.trim();
-      const confUser = document.getElementById("confirmNewUsernameInput").value.trim();
       const msgBox = document.getElementById("userChangeBottomMsg");
 
       msgBox.className = "bottom-status-msg";
 
-      if (!currUser || !newUser || !confUser) {
-        msgBox.innerText = "Please fill in Current Username, New Username, and Confirm New Username.";
+      if (!currUser || !newUser) {
+        msgBox.innerText = "Please fill in Current Username and New Username.";
         msgBox.className = "bottom-status-msg error";
         triggerSideToast("Missing Fields", "Please fill in all username fields.", false);
         return;
@@ -26185,13 +26198,6 @@ function formatMonthLabel(rawVal) {
         msgBox.innerText = "Current Username entered does not match your active username.";
         msgBox.className = "bottom-status-msg error";
         triggerSideToast("Mismatch", "Current Username entered is incorrect.", false);
-        return;
-      }
-
-      if (newUser !== confUser) {
-        msgBox.innerText = "New Username and Confirm New Username do not match.";
-        msgBox.className = "bottom-status-msg error";
-        triggerSideToast("Mismatch", "New Username and Confirm New Username do not match.", false);
         return;
       }
 
@@ -26238,7 +26244,6 @@ function formatMonthLabel(rawVal) {
         }
         document.getElementById("currentUsernameVerifyInput").value = activeUser;
         document.getElementById("newUsernameInput").value = "";
-        document.getElementById("confirmNewUsernameInput").value = "";
 
         saveDbSnapshotToCache();
         msgBox.innerText = "Username updated successfully!";
@@ -27719,9 +27724,25 @@ function formatMonthLabel(rawVal) {
 
       const searchQuery = String(document.getElementById("registeredUsersSearchInput")?.value || "").trim().toLowerCase();
       const rentersArr = Array.isArray(DB.renters) ? DB.renters : [];
+      let blockedList = [];
+      try {
+        const parsedBlocked = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+        if (Array.isArray(parsedBlocked)) {
+          blockedList = parsedBlocked.map(item => String(item || "").trim().toLowerCase());
+        }
+      } catch (e) {}
 
       const enriched = list.map(u => {
         const roleStr = String(u.Role || "Admin").trim();
+        const uKeyLow = String(u.Username || "").trim().toLowerCase();
+        const lockEntry = (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
+        const isPermLockedByAttempts = Boolean(
+          u.PermanentlyLockedByAttempts === true ||
+          String(u.IsPermanentlyBlocked || "").toLowerCase() === "true" ||
+          Number(u.LockoutStage || 0) >= 4 ||
+          (lockEntry && lockEntry.isPermanentlyBlocked)
+        );
+        const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow) || (isPermLockedByAttempts && String(u.Status || "Blocked").toLowerCase() !== "active");
         let resolvedRenterId = "";
         if (roleStr.toLowerCase() === "renter") {
           const uAadhDigits = normalizeAadhaar12(u.AssignedAadhaar || u.AadhaarNumber || "");
@@ -27738,12 +27759,16 @@ function formatMonthLabel(rawVal) {
           }
           resolvedRenterId = String(matchedRenter?.RenterID || u.RenterID || "").trim();
         }
-        return { u, roleStr, resolvedRenterId };
+        return { u, roleStr, resolvedRenterId, isBlocked };
       });
 
-      const filteredList = enriched.filter(({ u, roleStr, resolvedRenterId }) => {
-        if (activeRoleFilter && roleStr.toLowerCase() !== activeRoleFilter.toLowerCase()) {
-          return false;
+      const filteredList = enriched.filter(({ u, roleStr, resolvedRenterId, isBlocked }) => {
+        if (activeRoleFilter) {
+          if (activeRoleFilter.toLowerCase() === "blocked") {
+            if (!isBlocked) return false;
+          } else if (roleStr.toLowerCase() !== activeRoleFilter.toLowerCase()) {
+            return false;
+          }
         }
         if (searchQuery) {
           const rawAadh = String(u.AssignedAadhaar || u.AadhaarNumber || "").trim();
@@ -27766,11 +27791,14 @@ function formatMonthLabel(rawVal) {
       });
 
       if (filteredList.length === 0) {
-        usersContainer.innerHTML = `<div style="padding:18px 8px; color:var(--text-muted); text-align:center;">No registered users match${activeRoleFilter ? ` role "${activeRoleFilter}"` : ""}${searchQuery ? ` "${escapeHtml(searchQuery)}"` : ""}.</div>`;
+        const filterLabel = activeRoleFilter
+          ? (activeRoleFilter.toLowerCase() === "blocked" ? ` status "Blocked"` : ` role "${activeRoleFilter}"`)
+          : "";
+        usersContainer.innerHTML = `<div style="padding:18px 8px; color:var(--text-muted); text-align:center;">No registered users match${filterLabel}${searchQuery ? ` "${escapeHtml(searchQuery)}"` : ""}.</div>`;
         return;
       }
 
-      usersContainer.innerHTML = filteredList.map(({ u, roleStr, resolvedRenterId }) => {
+      usersContainer.innerHTML = filteredList.map(({ u, roleStr, resolvedRenterId, isBlocked }) => {
         const uName = String(u.Username || "").trim();
         const safeUName = uName.replace(/'/g, "\\'");
         const isTargetAdmin = roleStr.toLowerCase() === "admin";
@@ -27825,17 +27853,6 @@ function formatMonthLabel(rawVal) {
                 <i class="fa-solid fa-trash-can"></i> Delete
               </button>`;
 
-            let blockedList = [];
-            try { blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]"); } catch (e) {}
-            const uKeyLow = uName.toLowerCase();
-            const lockEntry = (DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
-            const isPermLockedByAttempts = Boolean(
-              u.PermanentlyLockedByAttempts === true ||
-              String(u.IsPermanentlyBlocked || "").toLowerCase() === "true" ||
-              Number(u.LockoutStage || 0) >= 4 ||
-              (lockEntry && lockEntry.isPermanentlyBlocked)
-            );
-            const isBlocked = String(u.Status || "").toLowerCase() === "blocked" || blockedList.includes(uKeyLow) || (isPermLockedByAttempts && String(u.Status || "Blocked").toLowerCase() !== "active");
             const isStrictAdmin = String(activeRole || "").trim().toLowerCase() === "admin";
             const blockBtn = isBlocked
               ? (isStrictAdmin
@@ -27866,7 +27883,7 @@ function formatMonthLabel(rawVal) {
                 <div>
                   <strong>${u.FullName || uName}</strong>
                   <span style="color:var(--text-muted); font-size:0.76rem;">(@${uName})</span>
-                  ${String(u.Status || '').toLowerCase() === 'blocked' ? '<span style="font-size:0.68rem; font-weight:800; padding:2px 7px; border-radius:10px; background:rgba(239,68,68,0.22); color:#ef4444; border:1px solid rgba(239,68,68,0.45); margin-left:6px;"><i class="fa-solid fa-ban"></i> BLOCKED</span>' : ''}
+                  ${isBlocked ? '<span style="font-size:0.68rem; font-weight:800; padding:2px 7px; border-radius:10px; background:rgba(239,68,68,0.22); color:#ef4444; border:1px solid rgba(239,68,68,0.45); margin-left:6px;"><i class="fa-solid fa-ban"></i> BLOCKED</span>' : ''}
                   ${isCurrentLoggedUser ? `<span style="font-size:0.66rem; color:var(--accent-green); font-weight:800; margin-left:4px;">(You)</span>` : ''}
                 </div>
                 <div style="font-size:0.73rem; color:var(--text-muted); margin-top:2px;">
