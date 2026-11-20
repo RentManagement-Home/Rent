@@ -531,6 +531,28 @@
       border-color: #4f46e5 !important;
       box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.35), 0 8px 22px rgba(0, 0, 0, 0.22) !important;
     }
+    /* Focused 25% Transparency (75% Opacity) for #loginUsername & #loginPassword ONLY */
+    section#loginScreen form#loginForm .login-input-shell {
+      background: transparent !important;
+      background-color: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+    }
+    section#loginScreen form#loginForm input#loginUsername,
+    section#loginScreen form#loginForm input#loginPassword {
+      background: rgba(255, 255, 255, 0.75) !important;
+      background-color: rgba(255, 255, 255, 0.75) !important;
+      border-color: rgba(255, 255, 255, 0.82) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+    }
+    section#loginScreen form#loginForm input#loginUsername:focus,
+    section#loginScreen form#loginForm input#loginPassword:focus {
+      background: rgba(255, 255, 255, 0.75) !important;
+      background-color: rgba(255, 255, 255, 0.75) !important;
+      border-color: #4f46e5 !important;
+    }
     #loginScreen .eye-toggle-btn {
       color: #334155 !important;
       filter: none !important;
@@ -652,7 +674,7 @@
       border: 1.5px solid rgba(255, 255, 255, 0.48);
       color: #ffffff;
       border-radius: 999px;
-      padding: 8px 18px 8px 10px;
+      padding: 8px 18px;
       font-size: 0.83rem;
       font-weight: 800;
       letter-spacing: 0.02em;
@@ -700,7 +722,9 @@
     }
 
     #btnFpSendOtp {
-      width: 100%;
+      width: auto;
+      min-width: 126px;
+      margin: 0 auto;
       position: relative;
       overflow: hidden;
       background: linear-gradient(135deg, #f43f5e 0%, #8b5cf6 50%, #06b6d4 100%);
@@ -708,22 +732,22 @@
       border: 1.5px solid rgba(255, 255, 255, 0.5);
       color: #ffffff;
       border-radius: 999px;
-      padding: 11px 20px;
-      font-size: 0.94rem;
+      padding: 6px 16px 6px 8px;
+      font-size: 0.8rem;
       font-weight: 800;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.025em;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 7px;
       text-shadow: 0 1px 4px rgba(15, 23, 42, 0.45);
-      box-shadow: 0 10px 26px rgba(244, 63, 94, 0.36), 0 6px 16px rgba(6, 182, 212, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.48);
+      box-shadow: 0 8px 20px rgba(244, 63, 94, 0.34), 0 4px 12px rgba(6, 182, 212, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.48);
       transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, background-position 0.35s ease, filter 0.22s ease;
     }
     #btnFpSendOtp > i {
-      width: 28px;
-      height: 28px;
+      width: 21px;
+      height: 21px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.22);
       border: 1px solid rgba(255, 255, 255, 0.48);
@@ -731,7 +755,7 @@
       align-items: center;
       justify-content: center;
       color: #fde047;
-      font-size: 0.78rem;
+      font-size: 0.66rem;
       box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35);
       transition: transform 0.22s ease;
     }
@@ -750,6 +774,192 @@
     #btnFpSendOtp:disabled {
       opacity: 0.75;
       cursor: wait;
+    }
+
+    section#loginScreen #forgotPasswordInlinePanel > div:nth-of-type(1) > button.fp-back-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 50%;
+      border: none !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      color: #ffffff;
+      cursor: pointer;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    }
+    section#loginScreen #forgotPasswordInlinePanel > div:nth-of-type(1) > button.fp-back-btn .fp-back-icon-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    section#loginScreen #forgotPasswordInlinePanel > div:nth-of-type(1) > button.fp-back-btn .fp-back-icon-badge > i {
+      font-size: 1.55rem;
+      line-height: 1;
+      display: inline-block;
+      background: linear-gradient(135deg, #fde047 0%, #fb7185 36%, #a855f7 68%, #22d3ee 100%);
+      background-size: 200% 200%;
+      background-position: 0% 50%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+      text-shadow: none !important;
+      filter: drop-shadow(0 2px 6px rgba(251, 113, 133, 0.5)) drop-shadow(0 0 10px rgba(34, 211, 238, 0.45));
+      transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), background-position 0.4s ease, filter 0.24s ease;
+    }
+    section#loginScreen #forgotPasswordInlinePanel > div:nth-of-type(1) > button.fp-back-btn:hover {
+      transform: scale(1.06);
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    section#loginScreen #forgotPasswordInlinePanel > div:nth-of-type(1) > button.fp-back-btn:hover .fp-back-icon-badge {
+      transform: translateX(-2px);
+    }
+    section#loginScreen #forgotPasswordInlinePanel > div:nth-of-type(1) > button.fp-back-btn:hover .fp-back-icon-badge > i {
+      background-position: 100% 50%;
+      transform: scale(1.1) rotate(-6deg);
+      filter: drop-shadow(0 3px 10px rgba(168, 85, 247, 0.72)) drop-shadow(0 0 14px rgba(34, 211, 238, 0.68));
+    }
+    section#loginScreen #forgotPasswordInlinePanel > div:nth-of-type(1) > button.fp-back-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* Focused Stylish Design for #btnFpVerifyOtp & #btnFpResendOtp inside #fpOtpStepBox ONLY */
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp {
+      flex: 1;
+      min-width: 165px;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255, 255, 255, 0.54);
+      background: linear-gradient(135deg, #10b981 0%, #06b6d4 52%, #3b82f6 100%);
+      background-size: 185% 185%;
+      background-position: 0% 50%;
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.025em;
+      cursor: pointer;
+      text-shadow: 0 1px 4px rgba(15, 23, 42, 0.45);
+      box-shadow: 0 10px 26px rgba(16, 185, 129, 0.38), 0 5px 16px rgba(6, 182, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.52);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, background-position 0.38s ease, filter 0.22s ease;
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp::before,
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpResendOtp::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 22%, rgba(255, 255, 255, 0.28) 50%, transparent 78%);
+      transform: translateX(-125%);
+      transition: transform 0.52s ease;
+      pointer-events: none;
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp > i {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fef08a;
+      font-size: 0.78rem;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35);
+      transition: transform 0.22s ease;
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      background-position: 100% 50%;
+      filter: brightness(1.06);
+      box-shadow: 0 14px 30px rgba(16, 185, 129, 0.5), 0 6px 20px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.68);
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp:hover:not(:disabled)::before,
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpResendOtp:hover:not(:disabled)::before {
+      transform: translateX(125%);
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp:hover:not(:disabled) > i {
+      transform: scale(1.12);
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp:active:not(:disabled) {
+      transform: translateY(0) scale(0.98);
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpVerifyOtp:disabled {
+      opacity: 0.75;
+      cursor: wait;
+    }
+
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpResendOtp {
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 15px 10px 11px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(196, 181, 253, 0.58);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.74) 0%, rgba(79, 70, 229, 0.62) 55%, rgba(236, 72, 153, 0.48) 100%);
+      background-size: 185% 185%;
+      background-position: 0% 50%;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.025em;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-shadow: 0 1px 4px rgba(15, 23, 42, 0.5);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.4), 0 0 16px rgba(139, 92, 246, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background-position 0.38s ease;
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpResendOtp > i {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.28) 0%, rgba(244, 114, 182, 0.36) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fde047;
+      font-size: 0.72rem;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.35);
+      transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpResendOtp:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.03);
+      background-position: 100% 50%;
+      border-color: rgba(244, 114, 182, 0.88);
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.5), 0 0 22px rgba(236, 72, 153, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.62);
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpResendOtp:hover:not(:disabled) > i {
+      transform: rotate(180deg) scale(1.08);
+    }
+    section#loginScreen #forgotPasswordInlinePanel #fpOtpStepBox button#btnFpResendOtp:active:not(:disabled) {
+      transform: translateY(0) scale(0.97);
     }
 
     /* Profile 4-Option Action Switch */
@@ -9858,8 +10068,7 @@
         </button>
         <div style="margin-top:12px; display:flex; justify-content:center;">
           <button type="button" id="btnShowForgotPasswordInline" onclick="showInlineForgotPasswordPanel()">
-            <span class="fp-btn-icon-badge"><i class="fa-solid fa-key"></i></span>
-            <span>Forgot Password?</span>
+            <span>Forgot Password</span>
             <i class="fa-solid fa-arrow-right fp-btn-arrow"></i>
           </button>
         </div>
@@ -9871,8 +10080,8 @@
           <div>
             <h3 style="margin:2px 0 0 0; font-size:1.05rem; font-weight:900; color:#ffffff; text-shadow:0 2px 8px rgba(0,0,0,0.9);">Forgot Password</h3>
           </div>
-          <button type="button" onclick="hideInlineForgotPasswordPanel()" style="background:rgba(15,23,42,0.55); border:1px solid rgba(255,255,255,0.35); color:#ffffff; border-radius:10px; padding:6px 10px; font-size:0.74rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:5px; backdrop-filter:blur(8px);">
-            <i class="fa-solid fa-arrow-left"></i> Back
+          <button type="button" class="fp-back-btn" onclick="hideInlineForgotPasswordPanel()" aria-label="Back">
+            <span class="fp-back-icon-badge"><i class="fa-solid fa-circle-arrow-left"></i></span>
           </button>
         </div>
 
@@ -9901,17 +10110,15 @@
               <input type="hidden" id="fpOtpInput" name="otp" value="">
             </div>
           </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button type="button" id="btnFpVerifyOtp" onclick="submitInlineForgotPasswordVerifyOtp()" style="flex:1; min-width:160px; padding:11px 14px; border-radius:12px; border:none; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:#ffffff; font-size:0.86rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button type="button" id="btnFpVerifyOtp" onclick="submitInlineForgotPasswordVerifyOtp()">
               <i class="fa-solid fa-circle-check"></i> <span>Verify OTP</span>
             </button>
-            <button type="button" id="btnFpResendOtp" onclick="submitInlineForgotPasswordSendOtp()" style="padding:11px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.35); background:rgba(15,23,42,0.55); color:#ffffff; font-size:0.76rem; font-weight:800; cursor:pointer; backdrop-filter:blur(8px);">
-              Resend
+            <button type="button" id="btnFpResendOtp" onclick="submitInlineForgotPasswordSendOtp()">
+              <i class="fa-solid fa-rotate-right"></i> <span>Resend</span>
             </button>
           </div>
         </div>
-
-        <div id="fpStatusMsg" style="display:none; margin-top:10px; padding:9px 11px; border-radius:10px; font-size:0.76rem; font-weight:700; line-height:1.4;"></div>
       </div>
     </div>
   </section>
@@ -11224,7 +11431,7 @@
             <input type="text" id="changeNameOnlyInput" class="form-control" placeholder="Enter your official full name">
           </div>
           <div class="form-group">
-            <label>Mobile No. <span class="req-star">*</span></label>
+            <label>Mobile No.</label>
             <input type="tel" id="changeMobileOnlyInput" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)">
           </div>
           <div class="form-group" id="changeEmailFieldGroup">
