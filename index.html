@@ -8376,6 +8376,92 @@
     border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
   }
 
+  /* Focused Zero-Clipping Left/Right Layout for #sharedScreenshotVerificationWorkspace inside #adminOpsHubPanelSlot_screenshot ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace *,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace *::before,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace *::after {
+    box-sizing: border-box !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-mode-tabs,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-header,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-controls {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-controls input,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-controls button {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace #adminScreenshotVerificationContainer {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-renter-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow: hidden !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-renter-card > div:first-child,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-renter-card > div:first-child > div {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+    overflow-wrap: anywhere !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-renter-card > div:nth-child(2) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)) !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-slot-tile {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  @media (max-width: 768px) {
+    section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace {
+      padding: 12px 10px !important;
+    }
+    section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-renter-card {
+      padding: 11px 10px !important;
+    }
+    section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_screenshot > div#sharedScreenshotVerificationWorkspace .ssv-renter-card > div:nth-child(2) {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
   /* Focused Stylish & Colorful Close Button inside #profileModal ONLY */
   div#profileModal > div:nth-of-type(1) > button.modal-close-btn {
     top: 14px !important;
@@ -21235,10 +21321,10 @@ function formatMonthLabel(rawVal) {
           };
 
           const buildUpiAppsLauncherHtml = (uId, uName, amtVal, noteText) => {
-            const sUpi = String(uId || "").replace(/'/g, "\\'");
-            const sName = String(uName || "Rent Receiver").replace(/'/g, "\\'");
+            const sUpi = escapeJsAttrArg(uId || "");
+            const sName = escapeJsAttrArg(uName || "Rent Receiver");
             const sAmt = Number(amtVal) || 0;
-            const sNote = String(noteText || "Monthly Rent").replace(/'/g, "\\'");
+            const sNote = escapeJsAttrArg(noteText || "Monthly Rent");
             return `
               <div style="border-top:1px dashed var(--glass-border); padding-top:12px; margin-top:4px;">
                 <button
@@ -21739,13 +21825,13 @@ function formatMonthLabel(rawVal) {
                 const slotObj = resolveRenterMonthlyPhotoSlot(cat.key, cat.colKey);
                 const rawImgUrl = slotObj && slotObj.imageUrl ? String(slotObj.imageUrl) : "";
                 const displayImgUrl = rawImgUrl ? normalizeGoogleDriveImageUrl(rawImgUrl) : "";
-                const safeZoomUrl = displayImgUrl.replace(/'/g, "\\'");
-                const safeTitleArg = `${cat.title} (${activeUploadMonthLabel})`.replace(/'/g, "\\'");
-                const safePropArg = String(targetProp || "").replace(/'/g, "\\'");
-                const safeFlatArg = String(targetFlat || "").replace(/'/g, "\\'");
-                const safeRenterIdArg = String(primaryRenter.RenterID || "").replace(/'/g, "\\'");
-                const safeAadhaarArg = String(effectiveAadhaar || "").replace(/'/g, "\\'");
-                const safeRenterNameArg2 = String(renterNameDisplay || "").replace(/'/g, "\\'");
+                const safeZoomUrl = escapeJsAttrArg(displayImgUrl);
+                const safeTitleArg = escapeJsAttrArg(`${cat.title} (${activeUploadMonthLabel})`);
+                const safePropArg = escapeJsAttrArg(targetProp || "");
+                const safeFlatArg = escapeJsAttrArg(targetFlat || "");
+                const safeRenterIdArg = escapeJsAttrArg(primaryRenter.RenterID || "");
+                const safeAadhaarArg = escapeJsAttrArg(effectiveAadhaar || "");
+                const safeRenterNameArg2 = escapeJsAttrArg(renterNameDisplay || "");
                 const uploadedTimeStr = slotObj && slotObj.uploadedAt
                   ? formatDateOnly(slotObj.uploadedAt)
                   : "";
@@ -21805,7 +21891,7 @@ function formatMonthLabel(rawVal) {
                         <button
                           type="button"
                           id="btnRenterMonthlyUpload_${cat.key}"
-                          onclick="openRenterLiveCameraCapture('${cat.key}', '${cat.title.replace(/'/g, "\\'")}', '${defaultMonthlyUploadMonth}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}', '${safeRenterNameArg2}')"
+                          onclick="openRenterLiveCameraCapture('${escapeJsAttrArg(cat.key)}', '${escapeJsAttrArg(cat.title)}', '${escapeJsAttrArg(defaultMonthlyUploadMonth)}', '${safePropArg}', '${safeFlatArg}', '${safeRenterIdArg}', '${safeAadhaarArg}', '${safeRenterNameArg2}')"
                           style="flex:1; padding:9px 12px; border-radius:10px; background:transparent; border:1.5px solid ${cat.border}; color:var(--text-main); font-size:0.76rem; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:7px;"
                         >
                           <i class="fa-solid fa-camera" style="color:${cat.accent};"></i>
@@ -22274,9 +22360,9 @@ function formatMonthLabel(rawVal) {
         const activePayUpiName = latestQrRenderData ? String(latestQrRenderData.upiName || "N/A").trim() : "N/A";
         const activePayNote = latestQrRenderData ? String(latestQrRenderData.note || "Monthly Rent").trim() : "Monthly Rent";
         const activePayMonthLabel = latestQrRenderData ? String(latestQrRenderData.monthLabel || activeMonthLabel).trim() : activeMonthLabel;
-        const safePayUpiIdArg = activePayUpiId.replace(/'/g, "\\'");
-        const safePayUpiNameArg = activePayUpiName.replace(/'/g, "\\'");
-        const safePayNoteArg = activePayNote.replace(/'/g, "\\'");
+        const safePayUpiIdArg = escapeJsAttrArg(activePayUpiId);
+        const safePayUpiNameArg = escapeJsAttrArg(activePayUpiName);
+        const safePayNoteArg = escapeJsAttrArg(activePayNote);
 
         window.__activeRenterPaymentBillId = latestQrRenderData ? String(latestQrRenderData.billId || "") : "";
         const paymentSlotObj = resolveRenterMonthlyPhotoSlot("completed_payment", "Photo2URL");
@@ -22288,13 +22374,13 @@ function formatMonthLabel(rawVal) {
         const payUploadedDateStr = paymentSlotObj && paymentSlotObj.uploadedAt
           ? formatDateOnly(paymentSlotObj.uploadedAt)
           : "";
-        const safePayPropArg = String(targetProp || "").replace(/'/g, "\\'");
-        const safePayFlatArg = String(targetFlat || "").replace(/'/g, "\\'");
-        const safePayRenterIdArg = String(primaryRenter.RenterID || "").replace(/'/g, "\\'");
-        const safePayAadhaarArg = String(effectiveAadhaar || "").replace(/'/g, "\\'");
-        const safePayRenterNameArg = String(renterNameDisplay || "").replace(/'/g, "\\'");
-        const safePayZoomUrl = displayPayPhotoUrl.replace(/'/g, "\\'");
-        const safePayZoomTitle = `Completed Payment Photo (${activeUploadMonthLabel})`.replace(/'/g, "\\'");
+        const safePayPropArg = escapeJsAttrArg(targetProp || "");
+        const safePayFlatArg = escapeJsAttrArg(targetFlat || "");
+        const safePayRenterIdArg = escapeJsAttrArg(primaryRenter.RenterID || "");
+        const safePayAadhaarArg = escapeJsAttrArg(effectiveAadhaar || "");
+        const safePayRenterNameArg = escapeJsAttrArg(renterNameDisplay || "");
+        const safePayZoomUrl = escapeJsAttrArg(displayPayPhotoUrl);
+        const safePayZoomTitle = escapeJsAttrArg(`Completed Payment Photo (${activeUploadMonthLabel})`);
 
         const mySubmittedUtrProofs = (typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : []).filter(p => {
           if (!p) return false;
@@ -22629,14 +22715,14 @@ function formatMonthLabel(rawVal) {
               <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-id-card" style="color:#34d399;"></i> Aadhaar (Front)</div>
                 ${profFrontUrl ? `
-                  <img src="${profFrontUrl}" alt="Aadhaar Front" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${profFrontUrl.replace(/'/g, "\\'")}', '${safeRenterNameArg} — Aadhaar Front')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
+                  <img src="${profFrontUrl}" alt="Aadhaar Front" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${escapeJsAttrArg(profFrontUrl)}', '${escapeJsAttrArg(renterNameDisplay + ' — Aadhaar Front')}')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
                 ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Front Photo</div>`}
               </div>
 
               <div style="padding:14px; border-radius:14px; background:transparent; border:1px solid var(--glass-border); text-align:center;">
                 <div style="font-size:0.8rem; font-weight:800; color:var(--text-main); margin-bottom:8px;"><i class="fa-solid fa-id-card-clip" style="color:#38bdf8;"></i> Aadhaar (Back)</div>
                 ${profBackUrl ? `
-                  <img src="${profBackUrl}" alt="Aadhaar Back" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${profBackUrl.replace(/'/g, "\\'")}', '${safeRenterNameArg} — Aadhaar Back')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
+                  <img src="${profBackUrl}" alt="Aadhaar Back" onerror="handleDriveImgFallback(this)" onclick="openPhotoZoomModal('${escapeJsAttrArg(profBackUrl)}', '${escapeJsAttrArg(renterNameDisplay + ' — Aadhaar Back')}')" style="width:100%; height:155px; object-fit:cover; border-radius:10px; cursor:zoom-in; border:1px solid var(--glass-border); margin-bottom:8px;" />
                 ` : `<div style="height:155px; border-radius:10px; border:1px dashed var(--glass-border); background:transparent; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.76rem;">No Back Photo</div>`}
               </div>
             </div>
@@ -28262,11 +28348,11 @@ function formatMonthLabel(rawVal) {
           return a.rName.localeCompare(b.rName);
         });
         container.innerHTML = historyCards.map(card => {
-          const safeName = card.rName.replace(/'/g, "\\'");
-          const safeProp = card.propName.replace(/'/g, "\\'");
-          const safeFlat = card.flatName.replace(/'/g, "\\'");
-          const safeRenterId = card.renterId.replace(/'/g, "\\'");
-          const safeAadh = card.rawAadh.replace(/'/g, "\\'");
+          const safeName = escapeJsAttrArg(card.rName);
+          const safeProp = escapeJsAttrArg(card.propName);
+          const safeFlat = escapeJsAttrArg(card.flatName);
+          const safeRenterId = escapeJsAttrArg(card.renterId);
+          const safeAadh = escapeJsAttrArg(card.rawAadh);
           return `
             <div class="ssv-renter-card">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
@@ -28296,10 +28382,10 @@ function formatMonthLabel(rawVal) {
                     ${catGrp.items.length === 0
                       ? `<div style="font-size:0.66rem; color:var(--text-muted); padding:10px 4px; text-align:center;">No saved history</div>`
                       : catGrp.items.map(hItem => {
-                          const safeHistUrl = String(hItem.url || "").replace(/'/g, "\\'");
-                          const safeHistTitle = `${safeName} (${card.formattedAadh}) — ${catGrp.label} (${hItem.monthLabel})`.replace(/'/g, "\\'");
-                          const safeHistMonth = String(hItem.monthYear || selectedMonth).replace(/'/g, "\\'");
-                          const safeCatLabel = catGrp.label.replace(/'/g, "\\'");
+                          const safeHistUrl = escapeJsAttrArg(hItem.url || "");
+                          const safeHistTitle = escapeJsAttrArg(`${card.rName} (${card.formattedAadh}) — ${catGrp.label} (${hItem.monthLabel})`);
+                          const safeHistMonth = escapeJsAttrArg(hItem.monthYear || selectedMonth);
+                          const safeCatLabel = escapeJsAttrArg(catGrp.label);
                           const dlHistName = `${card.rName}_${card.propName}_${card.flatName}_${hItem.monthYear}_${catGrp.key}`.replace(/[^a-zA-Z0-9._-]/g, "_");
                           return `
                             <div style="display:flex; align-items:center; gap:8px; padding:5px; border-radius:8px; background:rgba(15,23,42,0.55); border:1px solid rgba(255,255,255,0.08);">
@@ -28333,11 +28419,11 @@ function formatMonthLabel(rawVal) {
       });
 
       container.innerHTML = cardsData.map(card => {
-        const safeName = card.rName.replace(/'/g, "\\'");
-        const safeProp = card.propName.replace(/'/g, "\\'");
-        const safeFlat = card.flatName.replace(/'/g, "\\'");
-        const safeRenterId = card.renterId.replace(/'/g, "\\'");
-        const safeAadh = card.rawAadh.replace(/'/g, "\\'");
+        const safeName = escapeJsAttrArg(card.rName);
+        const safeProp = escapeJsAttrArg(card.propName);
+        const safeFlat = escapeJsAttrArg(card.flatName);
+        const safeRenterId = escapeJsAttrArg(card.renterId);
+        const safeAadh = escapeJsAttrArg(card.rawAadh);
         const hasAnyOpenForRenter = Boolean(
           card.hasMonthRequest || card.hasBulkAllRequest || card.hasAnySingleSlotRequest || card.hasReRequestedSlot
         );
@@ -28347,13 +28433,13 @@ function formatMonthLabel(rawVal) {
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--glass-border);">
               <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
                 <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">
-                  <i class="fa-solid fa-user-check" style="color:#10b981; margin-right:5px;"></i>${card.rName}
+                  <i class="fa-solid fa-user-check" style="color:#10b981; margin-right:5px;"></i>${escapeHtml(card.rName)}
                 </div>
                 <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">
-                  <i class="fa-solid fa-building"></i> ${card.propName || "--"} — Flat ${card.flatName || "--"}
+                  <i class="fa-solid fa-building"></i> ${escapeHtml(card.propName || "--")} — Flat ${escapeHtml(card.flatName || "--")}
                 </span>
                 <span style="font-size:0.78rem; font-weight:800; padding:4px 10px; border-radius:8px; background:rgba(56,189,248,0.15); color:#0284c7; border:1px solid rgba(56,189,248,0.35);">
-                  <i class="fa-solid fa-id-card"></i> Aadhaar: ${card.formattedAadh}
+                  <i class="fa-solid fa-id-card"></i> Aadhaar: ${escapeHtml(card.formattedAadh)}
                 </span>
               </div>
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -28361,7 +28447,7 @@ function formatMonthLabel(rawVal) {
                   <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#10b981; border-color:rgba(16,185,129,0.45);" onclick="sendAdminMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
                     <i class="fa-solid fa-paper-plane"></i> ${card.hasBulkAllRequest ? "Resend Month Request" : "Request Month"}
                   </button>
-                  <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#ef4444; border-color:rgba(239,68,68,0.45);${hasAnyOpenForRenter ? "" : " opacity:0.45; cursor:not-allowed;"}" ${hasAnyOpenForRenter ? "" : "disabled"} title="${hasAnyOpenForRenter ? `Close active photo request for ${escapeHtml(card.rName)} (${selectedMonthLabel})` : `No open photo request to close for ${escapeHtml(card.rName)}`}" onclick="closeAdminRenterMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
+                  <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#ef4444; border-color:rgba(239,68,68,0.45);${hasAnyOpenForRenter ? "" : " opacity:0.45; cursor:not-allowed;"}" ${hasAnyOpenForRenter ? "" : "disabled"} title="${hasAnyOpenForRenter ? `Close active photo request for ${escapeHtml(card.rName)} (${escapeHtml(selectedMonthLabel)})` : `No open photo request to close for ${escapeHtml(card.rName)}`}" onclick="closeAdminRenterMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
                     <i class="fa-solid fa-lock"></i> Close Request
                   </button>
                 ` : ""}
@@ -28370,9 +28456,9 @@ function formatMonthLabel(rawVal) {
 
             <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px;">
               ${card.photoSlots.map(slot => {
-                const safeUrl = String(slot.url || "").replace(/'/g, "\\'");
-                const safeTitle = `${safeName} (${card.formattedAadh}) — ${slot.label} (${selectedMonthLabel})`.replace(/'/g, "\\'");
-                const safeLabel = slot.label.replace(/'/g, "\\'");
+                const safeUrl = escapeJsAttrArg(slot.url || "");
+                const safeTitle = escapeJsAttrArg(`${card.rName} (${card.formattedAadh}) — ${slot.label} (${selectedMonthLabel})`);
+                const safeLabel = escapeJsAttrArg(slot.label);
                 const downloadFileName = `${card.rName}_${card.propName}_${card.flatName}_${selectedMonth}_${slot.key}`.replace(/[^a-zA-Z0-9._-]/g, "_");
                 const isSlotOpen = card.hasBulkAllRequest || slot.isRequested || slot.isReRequested;
                 return `
@@ -34998,10 +35084,10 @@ function formatMonthLabel(rawVal) {
               `;
             }).join("");
 
-        const safeId = String(item.rId || "").replace(/'/g, "\\'");
-        const safeProp = String(prop || "").replace(/'/g, "\\'");
-        const safeFlat = String(flat || "").replace(/'/g, "\\'");
-        const safeName = String(targetRenter.RenterName || "").replace(/'/g, "\\'");
+        const safeId = escapeJsAttrArg(item.rId || "");
+        const safeProp = escapeJsAttrArg(prop || "");
+        const safeFlat = escapeJsAttrArg(flat || "");
+        const safeName = escapeJsAttrArg(targetRenter.RenterName || "");
 
         const joinMonthYear = formatDateOnly(targetRenter.JoinDate);
         const endMonthYear = isAct ? "Present" : formatDateOnly(targetRenter.EndDate || "Departed");
@@ -35304,27 +35390,27 @@ function formatMonthLabel(rawVal) {
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:12px; margin-bottom:14px;">
             <div class="matrix-col photo-card-profile" style="padding:10px; text-align:center;">
               <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">1. Renter Profile Photo</div>
-              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${profileImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Profile Photo')">
+              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${escapeJsAttrArg(profileImgSrc)}', '${escapeJsAttrArg((targetRenter.RenterName || 'Tenant') + ' — Profile Photo')}')">
                 <img src="${profileImgSrc}" alt="Profile Photo" onerror="handleDriveImgFallback(this)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
               </div>
-              ${isPhotoDownloadAllowedForCurrentUser() && !isPlaceholderImageUrl(profileImgSrc) ? `<button type="button" class="btn-ledger-action admin-only" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('profile', '${profileImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Photo</button>` : ''}
+              ${isPhotoDownloadAllowedForCurrentUser() && !isPlaceholderImageUrl(profileImgSrc) ? `<button type="button" class="btn-ledger-action admin-only" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('profile', '${escapeJsAttrArg(profileImgSrc)}', '${escapeJsAttrArg(targetRenter.RenterName || 'Tenant')}')"><i class="fa-solid fa-download"></i> Download Photo</button>` : ''}
             </div>
             <div class="matrix-col photo-card-aadhaar" style="padding:10px; text-align:center;">
               <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">2. Aadhaar Card (Front Side)</div>
-              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Aadhaar Card (Front Side)')">
+              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${escapeJsAttrArg(identityImgSrc)}', '${escapeJsAttrArg((targetRenter.RenterName || 'Tenant') + ' — Aadhaar Card (Front Side)')}')">
                 <img src="${identityImgSrc}" alt="Aadhaar / ID Document (Front)" onerror="handleDriveImgFallback(this)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
               </div>
-              ${isPhotoDownloadAllowedForCurrentUser() && !isPlaceholderImageUrl(identityImgSrc) ? `<button type="button" class="btn-ledger-action admin-only" style="background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity', '${identityImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Front</button>` : ''}
+              ${isPhotoDownloadAllowedForCurrentUser() && !isPlaceholderImageUrl(identityImgSrc) ? `<button type="button" class="btn-ledger-action admin-only" style="background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity', '${escapeJsAttrArg(identityImgSrc)}', '${escapeJsAttrArg(targetRenter.RenterName || 'Tenant')}')"><i class="fa-solid fa-download"></i> Download Front</button>` : ''}
             </div>
             <div class="matrix-col photo-card-aadhaar" style="padding:10px; text-align:center;">
               <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px;">3. Aadhaar Card (Back Side)</div>
-              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${identityBackImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")} — Aadhaar Card (Back Side)')">
+              <div class="image-frame-container zoomable-photo-frame" style="height:130px; margin-bottom:6px;" onclick="openPhotoZoomModal('${escapeJsAttrArg(identityBackImgSrc)}', '${escapeJsAttrArg((targetRenter.RenterName || 'Tenant') + ' — Aadhaar Card (Back Side)')}')">
                 <img src="${identityBackImgSrc}" alt="Aadhaar / ID Document (Back)" onerror="handleDriveImgFallback(this)">
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom</span>
               </div>
-              ${isPhotoDownloadAllowedForCurrentUser() && !isPlaceholderImageUrl(identityBackImgSrc) ? `<button type="button" class="btn-ledger-action admin-only" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity_back', '${identityBackImgSrc}', '${(targetRenter.RenterName || 'Tenant').replace(/'/g, "\\'")}')"><i class="fa-solid fa-download"></i> Download Back</button>` : ''}
+              ${isPhotoDownloadAllowedForCurrentUser() && !isPlaceholderImageUrl(identityBackImgSrc) ? `<button type="button" class="btn-ledger-action admin-only" style="background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:4px 10px; font-size:0.72rem; font-weight:700;" onclick="downloadRenterDocumentPhoto('identity_back', '${escapeJsAttrArg(identityBackImgSrc)}', '${escapeJsAttrArg(targetRenter.RenterName || 'Tenant')}')"><i class="fa-solid fa-download"></i> Download Back</button>` : ''}
             </div>
           </div>
 
@@ -41653,7 +41739,7 @@ function formatMonthLabel(rawVal) {
           const headerTitle = `${c.displayName} • ${c.roleLabel}`;
 
           return `
-            <div class="chat-roster-item" onclick="openChatWithChannel('${c.channelId}', '${encodeURIComponent(headerTitle)}', '${encodeURIComponent(c.flatLabel)}', '${encodeURIComponent(c.targetAdminUsername || activeUser || "admin")}')">
+            <div class="chat-roster-item" onclick="openChatWithChannel('${escapeJsAttrArg(c.channelId)}', '${escapeJsAttrArg(encodeURIComponent(headerTitle))}', '${escapeJsAttrArg(encodeURIComponent(c.flatLabel))}', '${escapeJsAttrArg(encodeURIComponent(c.targetAdminUsername || activeUser || "admin"))}')">
               <div style="width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg, #059669, #0284c7); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.82rem; flex-shrink:0;">
                 ${initials}
               </div>
@@ -42318,9 +42404,9 @@ function formatMonthLabel(rawVal) {
 
       box.innerHTML = list.map(p => {
         const proofId = String(p.id || p.ProofID || "").trim();
-        const safeProofId = proofId.replace(/'/g, "\\'");
-        const safeScreenshot = String(p.screenshotUrl || p.ScreenshotURL || "").replace(/'/g, "\\'");
-        const safeUtr = String(p.utr || p.UTRNumber || "").replace(/'/g, "\\'");
+        const safeProofId = escapeJsAttrArg(proofId);
+        const safeScreenshot = escapeJsAttrArg(p.screenshotUrl || p.ScreenshotURL || "");
+        const safeUtr = escapeJsAttrArg(p.utr || p.UTRNumber || "");
         const statusText = String(p.status || "Pending");
         const isPending = statusText === "Pending";
         const stColor = statusText === "Approved" ? "#10b981" : (statusText === "Rejected" ? "#ef4444" : "#f59e0b");
@@ -42477,7 +42563,7 @@ function formatMonthLabel(rawVal) {
             <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase;">Quick Select Reason (Optional)</div>
             <div style="display:flex; flex-wrap:wrap; gap:6px;">
               ${quickReasons.map(qr => `
-                <button type="button" class="utr-reject-reason-chip" onclick="selectQuickUtrRejectReason('${qr.replace(/'/g, "\\'")}')">${escapeHtml(qr)}</button>
+                <button type="button" class="utr-reject-reason-chip" onclick="selectQuickUtrRejectReason('${escapeJsAttrArg(qr)}')">${escapeHtml(qr)}</button>
               `).join("")}
             </div>
           </div>
@@ -43367,6 +43453,17 @@ function formatMonthLabel(rawVal) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
+    }
+
+    function escapeJsAttrArg(str) {
+      return String(str == null ? "" : str)
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, "&quot;")
+        .replace(/\r?\n/g, " ")
+        .replace(/\u2028|\u2029/g, " ")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     }
 
     function openCreateTicketModalForAdmin() {
