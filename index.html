@@ -7888,16 +7888,17 @@
       inset 0 1px 2px rgba(255, 255, 255, 0.45) !important;
   }
   section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) svg.kirayahub-logo-svg {
-    width: 66px;
-    height: 66px;
+    width: 72px;
+    height: 72px;
     display: block;
     position: relative;
     z-index: 2;
-    filter: drop-shadow(0 4px 10px rgba(2, 6, 23, 0.6));
-    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    filter: drop-shadow(0 5px 12px rgba(2, 6, 23, 0.65)) drop-shadow(0 0 10px rgba(56, 189, 248, 0.28));
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), filter 0.3s ease;
   }
   section#loginScreen > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1):hover svg.kirayahub-logo-svg {
-    transform: scale(1.05);
+    transform: scale(1.07) translateY(-1px);
+    filter: drop-shadow(0 6px 16px rgba(56, 189, 248, 0.5)) drop-shadow(0 0 14px rgba(251, 191, 36, 0.36));
   }
   @keyframes kirayaLogoSheen {
     0%, 70% { left: -75%; opacity: 0; }
@@ -8356,6 +8357,104 @@
     padding: 18px !important;
     border-radius: 16px !important;
     border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  }
+
+  /* Focused Stylish & Colorful Close Button inside #profileModal ONLY */
+  div#profileModal > div:nth-of-type(1) > button.modal-close-btn {
+    top: 14px !important;
+    right: 14px !important;
+    z-index: 10 !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    overflow: hidden !important;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.72) 0%, rgba(49, 46, 129, 0.62) 55%, rgba(190, 24, 93, 0.45) 100%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.56) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.42), 0 0 14px rgba(244, 63, 94, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.48) !important;
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s ease, border-color 0.24s ease, background 0.24s ease !important;
+  }
+  div#profileModal > div:nth-of-type(1) > button.modal-close-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, transparent 18%, rgba(255, 255, 255, 0.32) 50%, transparent 82%);
+    transform: translateX(-125%);
+    transition: transform 0.48s ease;
+    pointer-events: none;
+  }
+  div#profileModal > div:nth-of-type(1) > button.modal-close-btn > i {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+    display: inline-block !important;
+    background: linear-gradient(135deg, #fde047 0%, #fb7185 45%, #f43f5e 72%, #38bdf8 100%) !important;
+    background-size: 200% 200% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 1px 5px rgba(251, 113, 133, 0.65)) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.24s ease !important;
+  }
+  div#profileModal > div:nth-of-type(1) > button.modal-close-btn:hover {
+    transform: scale(1.1) !important;
+    border-color: rgba(253, 224, 71, 0.9) !important;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.84) 0%, rgba(124, 58, 237, 0.72) 50%, rgba(244, 63, 94, 0.65) 100%) !important;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.52), 0 0 20px rgba(251, 113, 133, 0.52), 0 0 12px rgba(253, 224, 71, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.65) !important;
+  }
+  div#profileModal > div:nth-of-type(1) > button.modal-close-btn:hover::before {
+    transform: translateX(125%);
+  }
+  div#profileModal > div:nth-of-type(1) > button.modal-close-btn:hover > i {
+    transform: rotate(90deg) scale(1.12) !important;
+    filter: drop-shadow(0 2px 8px rgba(253, 224, 71, 0.85)) !important;
+  }
+  div#profileModal > div:nth-of-type(1) > button.modal-close-btn:active {
+    transform: scale(0.93) !important;
+  }
+
+  /* Focused Logout Button inside #profileModal .profile-action-switch ONLY */
+  div#profileModal .profile-action-switch > button#btnProfileModalLogout {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    border: 1.5px solid rgba(244, 63, 94, 0.46);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(244, 63, 94, 0.14) 100%);
+    color: #fb7185;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  div#profileModal .profile-action-switch > button#btnProfileModalLogout:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.28) 0%, rgba(225, 29, 72, 0.26) 100%);
+    border-color: rgba(251, 113, 133, 0.78);
+    color: #fecdd3;
+    box-shadow: 0 6px 18px rgba(244, 63, 94, 0.28);
+  }
+  div#profileModal .profile-action-switch > button#btnProfileModalLogout:active {
+    transform: translateY(0) scale(0.98);
+  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnProfileModalLogout {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.10) 0%, rgba(244, 63, 94, 0.08) 100%);
+    border-color: rgba(225, 29, 72, 0.36);
+    color: #dc2626;
+  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnProfileModalLogout:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(225, 29, 72, 0.16) 100%);
+    border-color: rgba(225, 29, 72, 0.65);
+    color: #b91c1c;
   }
 
   /* Focused 4-Digit Square OTP Input Boxes inside #profileModal #profileEmailOtpVerifyBox ONLY */
@@ -9990,51 +10089,79 @@
     <div class="glass-card login-container">
       <div class="login-brand">
         <div class="login-brand-icon-wrap">
-          <svg class="kirayahub-logo-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KirayaHub Logo">
+          <svg class="kirayahub-logo-svg" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KirayaHub Logo">
             <defs>
-              <linearGradient id="khRoofGrad" x1="10" y1="10" x2="70" y2="54" gradientUnits="userSpaceOnUse">
+              <linearGradient id="khCrestRing" x1="10" y1="8" x2="86" y2="88" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#22D3EE" />
+                <stop offset="45%" stop-color="#818CF8" />
+                <stop offset="78%" stop-color="#E879F9" />
+                <stop offset="100%" stop-color="#FBBF24" />
+              </linearGradient>
+              <linearGradient id="khLeftWing" x1="18" y1="30" x2="50" y2="76" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stop-color="#38BDF8" />
-                <stop offset="48%" stop-color="#818CF8" />
-                <stop offset="100%" stop-color="#E879F9" />
+                <stop offset="55%" stop-color="#6366F1" />
+                <stop offset="100%" stop-color="#312E81" />
               </linearGradient>
-              <linearGradient id="khMonogramGrad" x1="20" y1="26" x2="60" y2="66" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#FFFFFF" />
-                <stop offset="55%" stop-color="#E0F2FE" />
-                <stop offset="100%" stop-color="#C7D2FE" />
+              <linearGradient id="khRightWing" x1="48" y1="22" x2="78" y2="76" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#F472B6" />
+                <stop offset="52%" stop-color="#A855F7" />
+                <stop offset="100%" stop-color="#4F46E5" />
               </linearGradient>
-              <linearGradient id="khGoldGrad" x1="40" y1="8" x2="66" y2="66" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#FDE68A" />
-                <stop offset="55%" stop-color="#FBBF24" />
-                <stop offset="100%" stop-color="#F59E0B" />
+              <linearGradient id="khRoofRibbon" x1="14" y1="42" x2="82" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#67E8F9" />
+                <stop offset="50%" stop-color="#FFFFFF" />
+                <stop offset="100%" stop-color="#FDE047" />
               </linearGradient>
-              <linearGradient id="khTealGrad" x1="18" y1="44" x2="62" y2="70" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#34D399" />
-                <stop offset="100%" stop-color="#38BDF8" />
+              <linearGradient id="khGoldKey" x1="48" y1="46" x2="48" y2="78" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FEF08A" />
+                <stop offset="50%" stop-color="#FBBF24" />
+                <stop offset="100%" stop-color="#F97316" />
               </linearGradient>
+              <linearGradient id="khEmeraldBase" x1="18" y1="76" x2="78" y2="76" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.2" />
+                <stop offset="50%" stop-color="#34D399" />
+                <stop offset="100%" stop-color="#FBBF24" stop-opacity="0.2" />
+              </linearGradient>
+              <radialGradient id="khCenterAura" cx="50%" cy="44%" r="44%">
+                <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.34" />
+                <stop offset="60%" stop-color="#A855F7" stop-opacity="0.14" />
+                <stop offset="100%" stop-color="#0F172A" stop-opacity="0" />
+              </radialGradient>
             </defs>
 
-            <!-- Subtle Orbital Hub Ring -->
-            <circle cx="40" cy="43" r="30" stroke="url(#khRoofGrad)" stroke-opacity="0.28" stroke-width="1.5" stroke-dasharray="5 4" />
+            <!-- Soft Radiant Aura & Hexagonal Geometric Crest Frame -->
+            <circle cx="48" cy="48" r="40" fill="url(#khCenterAura)" />
+            <path d="M48 6L82 24.5V67.5L48 88L14 67.5V24.5L48 6Z" fill="rgba(15, 23, 42, 0.45)" stroke="url(#khCrestRing)" stroke-width="2.4" stroke-linejoin="round" />
+            <path d="M48 11.5L77 27.2V64.8L48 82.5L19 64.8V27.2L48 11.5Z" stroke="rgba(255, 255, 255, 0.16)" stroke-width="1" stroke-linejoin="round" />
 
-            <!-- Architectural Roofline & Modern House Frame -->
-            <path d="M12 37.5L40 13.5L68 37.5" stroke="url(#khRoofGrad)" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M20 35.5V61.5C20 64.5 22.5 67 25.5 67H54.5C57.5 67 60 64.5 60 61.5V35.5" stroke="url(#khRoofGrad)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.92" />
+            <!-- Sculpted 3D Architectural Residence & Modern Tower Silhouette -->
+            <!-- Right Elevated Apartment Wing -->
+            <path d="M48 25L71 39.5V69.5C71 71.4 69.4 73 67.5 73H48V25Z" fill="url(#khRightWing)" fill-opacity="0.92" />
+            <!-- Left Sunlit Residence Facade -->
+            <path d="M25 39.5L48 25V73H28.5C26.6 73 25 71.4 25 69.5V39.5Z" fill="url(#khLeftWing)" fill-opacity="0.95" />
 
-            <!-- Roof Apex Crown Diamond -->
-            <path d="M40 7L44.2 12.2L40 17.4L35.8 12.2L40 7Z" fill="url(#khGoldGrad)" />
+            <!-- Crisp Layered Roofline Ribbon with Specular Edge -->
+            <path d="M18.5 42.5L48 21.5L77.5 42.5" stroke="url(#khRoofRibbon)" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M27 36.2L48 21.5L69 36.2" stroke="#FFFFFF" stroke-opacity="0.65" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
 
-            <!-- Stylized "K" Hub Monogram Inside House -->
-            <path d="M30 33.5V58.5" stroke="url(#khMonogramGrad)" stroke-width="5.2" stroke-linecap="round" />
-            <path d="M49.5 34.5L32.5 46.5L51 58.5" stroke="url(#khMonogramGrad)" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- Glowing Illuminated Apartment Windows (Left & Right Wings) -->
+            <rect x="30.5" y="44" width="6.2" height="6.2" rx="1.6" fill="#FEF08A" />
+            <rect x="30.5" y="53.5" width="6.2" height="6.2" rx="1.6" fill="#BAE6FD" fill-opacity="0.92" />
+            <rect x="59.3" y="44" width="6.2" height="6.2" rx="1.6" fill="#BAE6FD" fill-opacity="0.95" />
+            <rect x="59.3" y="53.5" width="6.2" height="6.2" rx="1.6" fill="#FEF08A" />
 
-            <!-- Connected Hub Nodes (Kiraya + Hub Network) -->
-            <circle cx="30" cy="46.5" r="4.1" fill="url(#khGoldGrad)" stroke="#0F172A" stroke-width="1.4" />
-            <circle cx="50.5" cy="34.5" r="3.4" fill="url(#khTealGrad)" stroke="#0F172A" stroke-width="1.2" />
-            <circle cx="51" cy="58.5" r="3.4" fill="url(#khRoofGrad)" stroke="#0F172A" stroke-width="1.2" />
+            <!-- Luxury Golden Keyway Portal Arch at Heart of Residence -->
+            <path d="M41.5 73V56.5C41.5 52.9 44.4 50 48 50C51.6 50 54.5 52.9 54.5 56.5V73H41.5Z" fill="#0F172A" fill-opacity="0.88" stroke="url(#khGoldKey)" stroke-width="2.1" />
+            <circle cx="48" cy="57.6" r="3.4" fill="url(#khGoldKey)" />
+            <path d="M46.3 60.4L45.4 68.5H50.6L49.7 60.4H46.3Z" fill="url(#khGoldKey)" />
 
-            <!-- Golden Rupee / Rent Spark Accent Badge (Top-Right) -->
-            <circle cx="62" cy="21" r="8.5" fill="#0F172A" stroke="url(#khGoldGrad)" stroke-width="2" />
-            <path d="M58.8 17.8H65.2M58.8 20.5H64.5M59.4 17.8C62.2 17.8 63.4 19 63.4 20.6C63.4 22.2 61.9 23.1 59.3 23.1L64.1 25.8" stroke="url(#khGoldGrad)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- Emerald-Gold Horizon Accent Line -->
+            <path d="M22 75.5H74" stroke="url(#khEmeraldBase)" stroke-width="2.4" stroke-linecap="round" />
+
+            <!-- Crown 4-Point Sparkle Star at Roof Apex & Micro Accent Spark -->
+            <path d="M48 10.5L49.7 15.1L54.3 16.8L49.7 18.5L48 23.1L46.3 18.5L41.7 16.8L46.3 15.1L48 10.5Z" fill="url(#khGoldKey)" />
+            <circle cx="71.5" cy="27.5" r="2.2" fill="#67E8F9" />
+            <circle cx="24.5" cy="27.5" r="1.8" fill="#FDE047" />
           </svg>
         </div>
         <h1>KirayaHub</h1>
@@ -10238,10 +10365,6 @@
           <!-- 6. Settings Box Button -->
           <button type="button" class="nav-btn settings-icon-box-btn" onclick="openSettingsModal()" aria-label="Settings">
             <i class="fa-solid fa-gear"></i>
-          </button>
-          <!-- 7. Logout Box Button -->
-          <button type="button" class="nav-btn logout-icon-box-btn" onclick="handleLogout()" aria-label="Logout">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
           </button>
         </div>
       </div>
@@ -11207,7 +11330,7 @@
   <!-- 1. PROFILE MODAL -->
   <div id="profileModal" class="modal-overlay">
     <div class="modal-window" style="max-width:540px; padding:0; overflow:hidden; border-radius:24px; border:1.5px solid rgba(129, 140, 248, 0.4); box-shadow:0 25px 60px rgba(0,0,0,0.5), 0 0 30px rgba(99,102,241,0.25);">
-      <button class="modal-close-btn" style="top:14px; right:14px; z-index:10; background:rgba(15,23,42,0.6); backdrop-filter:blur(8px);" onclick="closeModal('profileModal')"><i class="fa-solid fa-xmark"></i></button>
+      <button type="button" class="modal-close-btn" onclick="closeModal('profileModal')" aria-label="Close Profile"><i class="fa-solid fa-xmark"></i></button>
       
       <!-- Vibrant Header Hero Banner -->
       <div style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 45%, #ec4899 100%); padding:28px 24px 22px 24px; position:relative; overflow:hidden;">
@@ -11335,6 +11458,15 @@
             >
               <i class="fa-solid fa-mobile-screen-button"></i>
               <span>Download Official App (Android / iOS)</span>
+            </button>
+            <button
+              type="button"
+              id="btnProfileModalLogout"
+              class="btn-switch-option"
+              onclick="closeModal('profileModal'); handleLogout();"
+            >
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span>Logout</span>
             </button>
           </div>
         </div>
