@@ -11077,8 +11077,8 @@
         <div class="form-group">
           <label><i class="fa-solid fa-shield-halved" style="color:#ef4444;"></i> Login Access Status</label>
           <select id="editAssignStatus" class="form-control">
-            <option value="Active">Active (Allowed to Log In)</option>
-            <option value="Blocked">Blocked (Barred from Logging In)</option>
+            <option value="Active">Active</option>
+            <option value="Blocked">Blocked</option>
           </select>
         </div>
       </div>
@@ -11819,7 +11819,7 @@
                   </label>
                   <span class="exec-field-tag tag-required" style="font-size:0.66rem;">Custom Notice</span>
                 </div>
-                <input type="text" id="adminNoticeTitleInput" class="form-control" style="margin-bottom:8px;" placeholder="Notice Title (e.g. Water Tank Cleaning / Rent Due Reminder)">
+                <input type="text" id="adminNoticeTitleInput" class="form-control" style="margin-bottom:8px;" placeholder="Notice Title">
                 <textarea id="adminNoticeBodyInput" class="form-control" rows="3" style="margin-bottom:8px;" placeholder="Type complete announcement message details here..."></textarea>
 
                 <!-- Target Audience Property Selector Button & Drawer -->
@@ -12035,7 +12035,7 @@
 
         <div id="createUserSubmitStatusBanner" style="display:none; margin-bottom:12px; padding:10px 14px; border-radius:10px; font-size:0.8rem; font-weight:800; align-items:center; gap:8px;"></div>
         <button type="button" id="btnCreateUserSubmit" class="btn-primary" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="submitCreateNewUser()">
-          <i class="fa-solid fa-user-check"></i> Create New User ID in Google Sheet
+          <i class="fa-solid fa-user-check"></i> Create Account 
         </button>
       </div>
 
@@ -13567,7 +13567,7 @@
                     <input type="number" id="renterBhkBathroomInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
                   </div>
                   <div>
-                    <label for="renterBhkToiletInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Toilet (Latrine)</label>
+                    <label for="renterBhkToiletInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Toilet</label>
                     <input type="number" id="renterBhkToiletInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
                   </div>
                 </div>
@@ -21347,7 +21347,7 @@ function formatMonthLabel(rawVal) {
                     <i class="fa-solid fa-receipt"></i> Available Monthly Receipt (${billMonthName})
                   </div>
                   <h3 style="margin:0; font-size:1.32rem; font-weight:900; color:var(--text-main); letter-spacing:-0.015em;">
-                    ${billMonthName} Official Receipt
+                    ${billMonthName}
                   </h3>
                   <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                     <span><i class="fa-regular fa-calendar" style="margin-right:4px; color:#818cf8;"></i>Billing Date: ${billDateStr}</span>
@@ -21740,7 +21740,7 @@ function formatMonthLabel(rawVal) {
           {
             key: "electricity_meter",
             colKey: "Photo1URL",
-            title: "Photo 1 • Electricity Meter / Any Photo",
+            title: "Photo 1 • Electricity Meter Photo",
             subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-bolt",
             accent: "#38bdf8",
@@ -21750,7 +21750,7 @@ function formatMonthLabel(rawVal) {
           {
             key: "water_meter_bill",
             colKey: "Photo3URL",
-            title: "Photo 2 • Water Meter / Bill / Any Photo",
+            title: "Photo 2 • Water Meter/Bill Photo",
             subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-faucet-drip",
             accent: "#06b6d4",
@@ -21760,7 +21760,7 @@ function formatMonthLabel(rawVal) {
           {
             key: "png_gas_meter",
             colKey: "Photo4URL",
-            title: "Photo 3 • PNG Gas Meter / Any Photo",
+            title: "Photo 3 • PNG Gas MeterPhoto",
             subtitle: "Capture live camera photo & save to Google Drive",
             icon: "fa-solid fa-fire-flame-simple",
             accent: "#f59e0b",
@@ -22137,7 +22137,7 @@ function formatMonthLabel(rawVal) {
                         Latest Receipt
                       </div>
                       <div style="font-size:0.92rem; font-weight:900; color:var(--text-main); line-height:1.2;">
-                        ${latestBill ? `${latestReceiptMonthLabel} Official Receipt` : "No Receipt Yet"}
+                        ${latestBill ? `${latestReceiptMonthLabel}` : "No Receipt Yet"}
                       </div>
                     </div>
                   </div>
@@ -22226,7 +22226,7 @@ function formatMonthLabel(rawVal) {
                           <i class="fa-solid ${isSettled ? "fa-file-circle-check" : "fa-file-circle-exclamation"}"></i>
                         </div>
                         <div>
-                          <div style="font-size:0.86rem; font-weight:800; color:var(--text-main);">#${idx + 1} • ${mMetrics.monthLabel} Official Receipt</div>
+                          <div style="font-size:0.86rem; font-weight:800; color:var(--text-main);">#${idx + 1} • ${mMetrics.monthLabel}</div>
                         </div>
                       </div>
                       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -38901,7 +38901,7 @@ function formatMonthLabel(rawVal) {
       const rMatch = text.match(/(\d+)\s*rooms?/i) || text.match(/(\d+)\s*bhk/i);
       const kMatch = text.match(/(\d+)\s*kitchens?/i);
       const bMatch = text.match(/(\d+)\s*bathrooms?/i);
-      const tMatch = text.match(/(\d+)\s*(?:toilet|latrine)s?/i);
+      const tMatch = text.match(/(\d+)\s*(?:toilet)s?/i);
       return {
         rooms: rMatch ? parseInt(rMatch[1], 10) : "",
         kitchen: kMatch ? parseInt(kMatch[1], 10) : "",
