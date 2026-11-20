@@ -4073,6 +4073,9 @@
     margin: 0 auto;
     padding: 16px 20px 48px 20px;
   }
+  body.role-renter div#profileModal span#profRoleBadgePill {
+    display: none !important;
+  }
   .renter-modern-portal {
     grid-column: 1 / -1;
     max-width: 1240px;
@@ -9095,7 +9098,13 @@
     -webkit-backdrop-filter: none !important;
   }
 
-  /* Focused Element: 100% Transparent (#renterDashboardPaymentCircleCard, #renterDashboardLatestReceiptSideCard & #renterDownloadAppCard) */
+  /* Focused Element: 100% Transparent (.renter-hero-banner, #renterInlineMaintenanceCard, #renterMonthlyDrivePhotoUploadsCard, #renterDashboardPaymentCircleCard, #renterDashboardLatestReceiptSideCard & #renterDownloadAppCard) */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard,
@@ -9110,6 +9119,130 @@
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+  }
+
+  /* Focused Elements: 30% Transparent (0.70 Opacity) inside Renter Dashboard */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner > .renter-hero-top > div#renterHeroAadhaarCardBox,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(4),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > button#renterDashboardLatestReceiptBtn,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(1) > span:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1) {
+    background: rgba(15, 23, 42, 0.70) !important;
+    background-color: rgba(15, 23, 42, 0.70) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > .renter-hero-banner > .renter-hero-top > div#renterHeroAadhaarCardBox,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(4),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > button#renterDashboardLatestReceiptBtn,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardPaymentCircleCard > div:nth-of-type(1) > span:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDashboardOverviewRow > div#renterDashboardLatestReceiptSideCard > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1) {
+    background: rgba(255, 255, 255, 0.70) !important;
+    background-color: rgba(255, 255, 255, 0.70) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Focused Elements: 50% Transparent (0.50 Opacity) - Selected Receipt Row & Renter Quick Nav Buttons 1-6 */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover,
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(1),
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(2),
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(3),
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4),
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5),
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6) {
+    background: rgba(15, 23, 42, 0.50) !important;
+    background-color: rgba(15, 23, 42, 0.50) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(1).active,
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(2).active,
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(3).active,
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4).active,
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5).active,
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6).active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.50) 0%, rgba(16, 185, 129, 0.50) 100%) !important;
+    background-color: transparent !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover,
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(1),
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(2),
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(3),
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4),
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5),
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6) {
+    background: rgba(255, 255, 255, 0.50) !important;
+    background-color: rgba(255, 255, 255, 0.50) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(1).active,
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(2).active,
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(3).active,
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4).active,
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5).active,
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6).active {
+    background: linear-gradient(135deg, rgba(224, 231, 255, 0.50) 0%, rgba(209, 250, 229, 0.50) 100%) !important;
+    background-color: transparent !important;
+  }
+
+  /* Focused Elements: 35% Transparent (0.65 Opacity) inside #renterInlineMaintenanceCard */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard > div:nth-of-type(2),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(1) {
+    background: rgba(15, 23, 42, 0.65) !important;
+    background-color: rgba(15, 23, 42, 0.65) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard > div:nth-of-type(2),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineMaintenanceCard > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(1) {
+    background: rgba(255, 255, 255, 0.65) !important;
+    background-color: rgba(255, 255, 255, 0.65) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Focused Elements: 20% Transparent (0.80 Opacity) - Monthly Meter Photo Cards & Requested Month Button inside #renterMonthlyDrivePhotoUploadsCard */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard .renter-monthly-photo-slot-card,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard > div:nth-of-type(2) > button:nth-of-type(1) {
+    background: rgba(15, 23, 42, 0.80) !important;
+    background-color: rgba(15, 23, 42, 0.80) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard .renter-monthly-photo-slot-card,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterMonthlyDrivePhotoUploadsCard > div:nth-of-type(2) > button:nth-of-type(1) {
+    background: rgba(255, 255, 255, 0.80) !important;
+    background-color: rgba(255, 255, 255, 0.80) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
   }
 
   /* Admin-Only Photo Downloads: Hide all photo download buttons & block image save callouts for Renters */
@@ -11478,16 +11611,6 @@
             </button>
             <button
               type="button"
-              id="btnProfileDownloadApp"
-              class="btn-switch-option"
-              style="display:none; grid-column: 1 / -1; border-radius:12px; padding:10px 12px; font-size:0.8rem; font-weight:800; border:1px solid rgba(16,185,129,0.45); background:linear-gradient(135deg, rgba(16,185,129,0.16), rgba(14,165,233,0.16)); color:#34d399; align-items:center; justify-content:center; gap:8px;"
-              onclick="openAppDownloadModal()"
-            >
-              <i class="fa-solid fa-mobile-screen-button"></i>
-              <span>Download Official App (Android / iOS)</span>
-            </button>
-            <button
-              type="button"
               id="btnProfileModalLogout"
               class="btn-switch-option"
               onclick="closeModal('profileModal'); handleLogout();"
@@ -11591,7 +11714,7 @@
           </div>
           <div class="form-group">
             <label>Mobile No.</label>
-            <input type="tel" id="changeMobileOnlyInput" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)">
+            <input type="tel" id="changeMobileOnlyInput" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210 (Optional)" oninput="const d = this.value.replace(/^\+?91\s*/, '').replace(/\D/g, ''); this.value = d ? formatIndianMobilePlus91(this.value) : '';">
           </div>
           <div class="form-group" id="changeEmailFieldGroup">
             <label>Email ID <span id="changeEmailReqStar" class="req-star" style="display:none;">*</span></label>
@@ -15126,6 +15249,8 @@
           case "changeNameAndMobile": {
             const rawUser = String(data.loggedUsername || data.username || "").trim();
             const lowerU = rawUser.toLowerCase();
+            const hasNewMobile = data.newMobile !== undefined;
+            const rawNewMobile = hasNewMobile ? String(data.newMobile || "").trim() : "";
             const hasNewEmail = data.newEmail !== undefined || data.email !== undefined;
             const cleanEmail = String(data.newEmail !== undefined ? data.newEmail : (data.email || "")).trim();
             usersList = usersList.map(function(u) {
@@ -15133,7 +15258,7 @@
                 return {
                   ...u,
                   FullName: String(data.newFullName || u.FullName || "").trim(),
-                  MobileNumber: cleanPhoneStr(data.newMobile || u.MobileNumber || ""),
+                  MobileNumber: hasNewMobile ? (rawNewMobile ? cleanPhoneStr(rawNewMobile) : "") : cleanPhoneStr(u.MobileNumber || ""),
                   Email: hasNewEmail ? cleanEmail : (u.Email || ""),
                   UpdatedAt: new Date().toISOString()
                 };
@@ -15354,7 +15479,7 @@
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Maintenance tickets synced to Google Sheet." };
+            return { status: "success", message: "Maintenance tickets." };
           }
 
           case "saveAuditLogs": {
@@ -21765,7 +21890,7 @@ function formatMonthLabel(rawVal) {
                 const canRenterCapture = isSlotReRequested || (isThisCatUnlockedByAdmin && !displayImgUrl);
 
                 return `
-                  <div style="padding:15px; border-radius:15px; background:transparent; border:1.5px solid ${isSlotReRequested ? '#f59e0b' : (isSlotRequested && !displayImgUrl ? '#38bdf8' : (displayImgUrl ? cat.border : "var(--glass-border)"))}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                  <div class="renter-monthly-photo-slot-card" style="padding:15px; border-radius:15px; background:transparent; border:1.5px solid ${isSlotReRequested ? '#f59e0b' : (isSlotRequested && !displayImgUrl ? '#38bdf8' : (displayImgUrl ? cat.border : "var(--glass-border)"))}; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
                     <div>
                       <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
                         <div style="display:flex; align-items:center; gap:9px;">
@@ -21776,9 +21901,6 @@ function formatMonthLabel(rawVal) {
                             <div style="font-size:0.86rem; font-weight:900; color:var(--text-main); line-height:1.2;">${cat.title}</div>
                           </div>
                         </div>
-                        <span style="font-size:0.66rem; font-weight:800; padding:3px 8px; border-radius:999px; background:transparent; color:${isSlotReRequested ? "#fbbf24" : (isSlotRequested && !displayImgUrl ? "#38bdf8" : (displayImgUrl ? "#34d399" : "var(--text-muted)"))}; border:1px solid ${isSlotReRequested ? "rgba(245,158,11,0.45)" : (isSlotRequested && !displayImgUrl ? "rgba(56,189,248,0.45)" : (displayImgUrl ? "rgba(16,185,129,0.35)" : "var(--glass-border)"))}; white-space:nowrap;">
-                          ${isSlotReRequested ? "Re-requested" : (isSlotRequested && !displayImgUrl ? "Requested" : (displayImgUrl ? "Uploaded" : activeUploadMonthLabel))}
-                        </span>
                       </div>
 
                       ${isSlotReRequested ? `
@@ -21797,15 +21919,15 @@ function formatMonthLabel(rawVal) {
                             <i class="fa-solid fa-magnifying-glass-plus"></i> View Photo
                           </div>
                         </div>
-                        <div style="font-size:0.68rem; color:#34d399; font-weight:700; display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                          <span><i class="fa-brands fa-google-drive"></i> Saved on Google Drive (${activeUploadMonthLabel})</span>
-                          ${uploadedTimeStr ? `<span style="color:var(--text-muted);">${uploadedTimeStr}</span>` : ""}
-                        </div>
+                        ${uploadedTimeStr ? `
+                          <div style="font-size:0.68rem; color:var(--text-muted); font-weight:700; display:flex; align-items:center; justify-content:flex-end; gap:6px;">
+                            <span>${uploadedTimeStr}</span>
+                          </div>
+                        ` : ""}
                       ` : `
                         <div style="width:100%; height:148px; border-radius:11px; border:1.5px dashed var(--glass-border); background:transparent; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--text-muted); padding:12px; text-align:center; margin-bottom:8px;">
                           <i class="${cat.icon}" style="font-size:1.5rem; color:${cat.accent}; opacity:0.8;"></i>
                           <div style="font-size:0.74rem; font-weight:800; color:var(--text-main);">No ${cat.title} for ${activeUploadMonthLabel}</div>
-                          <div style="font-size:0.67rem; color:var(--text-muted);">${isThisCatUnlockedByAdmin ? "Tap Live Camera button below to capture" : "Locked until Admin requests this photo"}</div>
                         </div>
                       `}
                     </div>
@@ -22203,15 +22325,6 @@ function formatMonthLabel(rawVal) {
                   </h3>
                 </div>
               </div>
-              <button
-                type="button"
-                id="btnMaintenanceUploadAPhoto"
-                onclick="navigateRenterQuickNav('upload_photo')"
-                style="padding:10px 16px; border-radius:12px; background:transparent; border:1.5px solid rgba(16,185,129,0.55); color:#34d399; font-size:0.84rem; font-weight:900; cursor:pointer; display:inline-flex; align-items:center; gap:8px;"
-              >
-                <i class="fa-solid fa-camera"></i>
-                <span>Upload a Photo</span>
-              </button>
             </div>
 
             <div style="background:transparent; border:1px solid rgba(245,158,11,0.35); border-radius:14px; padding:16px; margin-bottom:18px;">
@@ -25782,11 +25895,16 @@ function formatMonthLabel(rawVal) {
       if (document.getElementById("profDisplayHeroName")) {
         document.getElementById("profDisplayHeroName").innerText = heroDispName;
       }
-      if (document.getElementById("profRoleBadgePill")) {
-        document.getElementById("profRoleBadgePill").innerText = heroDispRole;
-        document.getElementById("profRoleBadgePill").style.background = heroDispRole === "ADMIN" 
-          ? "rgba(16, 185, 129, 0.35)" 
-          : (heroDispRole === "RENTER" ? "rgba(168, 85, 247, 0.35)" : "rgba(245, 158, 11, 0.35)");
+      const profRoleBadgeEl = document.getElementById("profRoleBadgePill");
+      if (profRoleBadgeEl) {
+        const isRenterRole = heroDispRole.trim() === "RENTER";
+        profRoleBadgeEl.style.display = isRenterRole ? "none" : "";
+        if (!isRenterRole) {
+          profRoleBadgeEl.innerText = heroDispRole;
+          profRoleBadgeEl.style.background = heroDispRole === "ADMIN"
+            ? "rgba(16, 185, 129, 0.35)"
+            : "rgba(245, 158, 11, 0.35)";
+        }
       }
       if (document.getElementById("profDisplayHeroUser")) {
         document.getElementById("profDisplayHeroUser").innerText = heroDispUser;
@@ -25809,7 +25927,7 @@ function formatMonthLabel(rawVal) {
       }
       document.getElementById("profViewUsername").value = activeUser || "";
       document.getElementById("changeNameOnlyInput").value = activeUserFullName || activeUser || "";
-      document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "+91 ";
+      document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "";
       if (document.getElementById("changeEmailOnlyInput")) {
         document.getElementById("changeEmailOnlyInput").value = activeUserEmail || "";
       }
@@ -25863,8 +25981,17 @@ function formatMonthLabel(rawVal) {
           if (document.getElementById("profDisplayHeroName")) {
             document.getElementById("profDisplayHeroName").innerText = activeUserFullName;
           }
-          if (document.getElementById("profRoleBadgePill")) {
-            document.getElementById("profRoleBadgePill").innerText = (activeRole || "ADMIN").toUpperCase();
+          const refreshedRoleBadgeEl = document.getElementById("profRoleBadgePill");
+          if (refreshedRoleBadgeEl) {
+            const refreshedRoleUpper = String(activeRole || "ADMIN").trim().toUpperCase();
+            const isRefreshedRenter = refreshedRoleUpper === "RENTER";
+            refreshedRoleBadgeEl.style.display = isRefreshedRenter ? "none" : "";
+            if (!isRefreshedRenter) {
+              refreshedRoleBadgeEl.innerText = refreshedRoleUpper;
+              refreshedRoleBadgeEl.style.background = refreshedRoleUpper === "ADMIN"
+                ? "rgba(16, 185, 129, 0.35)"
+                : "rgba(245, 158, 11, 0.35)";
+            }
           }
           if (document.getElementById("profDisplayHeroUser")) {
             document.getElementById("profDisplayHeroUser").innerText = `@${res.username || activeUser}`;
@@ -25880,7 +26007,7 @@ function formatMonthLabel(rawVal) {
           }
           document.getElementById("profViewUsername").value = res.username || activeUser;
           document.getElementById("changeNameOnlyInput").value = activeUserFullName;
-          document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "+91 ";
+          document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "";
           const modalEmailIn = document.getElementById("changeEmailOnlyInput");
           if (modalEmailIn && !modalEmailIn.value.trim() && activeUserEmail) {
             modalEmailIn.value = activeUserEmail;
@@ -26389,13 +26516,18 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
-      if (!isValidIndianMobilePlus91(rawMobileInput)) {
-        msgBox.innerText = "Please enter a valid Indian mobile number starting with +91 followed by 10 digits.";
-        msgBox.className = "bottom-status-msg error";
-        triggerSideToast("Invalid Mobile Number", "Mobile number must start with +91 and contain exactly 10 digits after it.", false);
-        return;
+      const mobileDigitsAfterPrefix = rawMobileInput.replace(/^\+?91\s*/, "").replace(/\D/g, "");
+      const isMobileEmpty = !rawMobileInput || !mobileDigitsAfterPrefix;
+      let newMobile = "";
+      if (!isMobileEmpty) {
+        if (!isValidIndianMobilePlus91(rawMobileInput)) {
+          msgBox.innerText = "Please enter a valid Indian mobile number starting with +91 followed by 10 digits, or leave it blank.";
+          msgBox.className = "bottom-status-msg error";
+          triggerSideToast("Invalid Mobile Number", "Mobile number must start with +91 and contain 10 digits, or leave it blank.", false);
+          return;
+        }
+        newMobile = formatIndianMobilePlus91(rawMobileInput);
       }
-      const newMobile = formatIndianMobilePlus91(rawMobileInput);
       document.getElementById("changeMobileOnlyInput").value = newMobile;
 
       if (isRenterAccount) {
@@ -43367,7 +43499,7 @@ function formatMonthLabel(rawVal) {
       if (activeRole === "Renter" && typeof renderAllDashboardUI === "function") renderAllDashboardUI();
       renderContactUsDynamicBody();
       renderAdminMaintenanceTickets();
-      triggerSideToast("Maintenance Ticket Raised", `Ticket ${ticket.id} (${cat}) saved directly to Google Sheets.`, true);
+      triggerSideToast("Maintenance Ticket Raised", `Ticket ${ticket.id} (${cat}) `, true);
     }
 
     function escapeHtml(str) {
