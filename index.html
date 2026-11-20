@@ -4648,6 +4648,23 @@
     background: rgba(239, 68, 68, 0.1);
     color: #dc2626;
   }
+  /* Focused 25% Transparency (75% Opacity) for #btnCloseAdminOpsHub ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div > button#btnCloseAdminOpsHub,
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div > button#btnCloseAdminOpsHub {
+    background: rgba(220, 38, 38, 0.75) !important;
+    background-color: rgba(220, 38, 38, 0.75) !important;
+    color: #ffffff !important;
+    border-color: rgba(248, 113, 113, 0.85) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div > button#btnCloseAdminOpsHub:hover,
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div > button#btnCloseAdminOpsHub:hover {
+    background: rgba(239, 68, 68, 0.85) !important;
+    background-color: rgba(239, 68, 68, 0.85) !important;
+    color: #ffffff !important;
+    border-color: #fca5a5 !important;
+  }
   .admin-ops-hub-carousel {
     display: flex;
     flex-wrap: nowrap;
@@ -8283,33 +8300,33 @@
     box-shadow: none !important;
   }
 
-  /* Focused 70% Transparency (30% Opacity) for Android APK & iOS App Cards inside #adminOpsHubPanelSlot_applinks ONLY */
+  /* Focused 25% Transparency (75% Opacity) for Android APK & iOS App Cards inside #adminOpsHubPanelSlot_applinks ONLY */
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) {
-    background: rgba(15, 23, 42, 0.30) !important;
-    background-color: rgba(15, 23, 42, 0.30) !important;
+    background: rgba(15, 23, 42, 0.75) !important;
+    background-color: rgba(15, 23, 42, 0.75) !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
   }
   body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1),
   body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_applinks > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) {
-    background: rgba(255, 255, 255, 0.30) !important;
-    background-color: rgba(255, 255, 255, 0.30) !important;
+    background: rgba(255, 255, 255, 0.75) !important;
+    background-color: rgba(255, 255, 255, 0.75) !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
   }
 
-  /* Focused 50% Transparency (50% Opacity) for #adminOpsHubPanelSlot_utr inner card ONLY */
+  /* Focused 25% Transparency (75% Opacity) for #adminOpsHubPanelSlot_utr inner card ONLY */
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type {
-    background: rgba(15, 23, 42, 0.50) !important;
-    background-color: rgba(15, 23, 42, 0.50) !important;
+    background: rgba(15, 23, 42, 0.75) !important;
+    background-color: rgba(15, 23, 42, 0.75) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
   }
   body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type {
-    background: rgba(255, 255, 255, 0.50) !important;
-    background-color: rgba(255, 255, 255, 0.50) !important;
+    background: rgba(255, 255, 255, 0.75) !important;
+    background-color: rgba(255, 255, 255, 0.75) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
@@ -10379,7 +10396,7 @@
               <i class="fa-solid fa-user"></i>
             </div>
             <div style="min-width:0;">
-              <h3 style="margin:0; font-size:1.05rem; font-weight:900; color:var(--text-main);">Verification, Notifications, Contact &amp; Tickets</h3>
+              <h3 style="margin:0; font-size:1.05rem; font-weight:900; color:var(--text-main);">Renter Notifications</h3>
             </div>
           </div>
           <button type="button" id="btnCloseAdminOpsHub" class="admin-ops-hub-close-btn" onclick="closeAdminResidentOpsHub()">
@@ -12124,18 +12141,12 @@
               <span style="font-weight:800; font-size:0.88rem; color:#f59e0b;">
                 <i class="fa-solid fa-address-book"></i> Contact Us Details &amp; WhatsApp Support Configuration
               </span>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Assign official contact information to All properties or a specific property.
-              </div>
             </div>
-            <span style="font-size:0.7rem; color:#f59e0b; font-weight:700; background:rgba(245,158,11,0.15); padding:3px 8px; border-radius:12px;">
-              <i class="fa-solid fa-headset"></i> Live Support Sync
-            </span>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
             <div class="form-group" style="margin-bottom:0;">
-              <label>Support Contact Person / Admin Name</label>
+              <label>Support Contact Person</label>
               <input type="text" id="cfgContactName" class="form-control" placeholder="e.g. Property Admin / Help Desk" oninput="markContactSettingsDirty()">
             </div>
             <div class="form-group" style="margin-bottom:0;">
@@ -12168,8 +12179,8 @@
 
           <div style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:10px; margin-top:4px;">
             <div style="display:flex; align-items:center; gap:7px; background:var(--bg-input); border:1px solid rgba(245,158,11,0.38); border-radius:10px; padding:4px 10px;">
-              <label for="cfgContactProperty" style="font-size:0.72rem; font-weight:800; color:#f59e0b; margin:0; white-space:nowrap; display:flex; align-items:center; gap:5px;">
-                <i class="fa-solid fa-building-user"></i> Which property does this contact info belong to?
+              <label for="cfgContactProperty" style="font-size:0.72rem; font-weight:800; color:#0ea5e9; margin:0; white-space:nowrap; display:flex; align-items:center; gap:5px;">
+                <i class="fa-solid fa-building-user"></i> Property
               </label>
               <select id="cfgContactProperty" class="form-control" style="width:auto; min-width:120px; max-width:190px; padding:4px 8px; height:30px; font-size:0.75rem; font-weight:700; color:var(--text-main); background:var(--bg-card); cursor:pointer;" onchange="onContactSettingsPropertyChange(true)">
                 <option value="ALL">All</option>
@@ -19994,7 +20005,40 @@ function formatMonthLabel(rawVal) {
         reRequestedCats: {}
       };
       let hasClosedEntry = false;
+      let latestRenterClosedTs = 0;
 
+      // Pass 1: track latest explicit renter-scoped closure timestamp for this month
+      Object.keys(reqMap).forEach(k => {
+        const entry = reqMap[k];
+        if (!entry || typeof entry !== "object") return;
+        const entryMonth = normalizeMonthYear(entry.monthYear);
+        if (cleanMonth && entryMonth !== cleanMonth) return;
+        const scopeType = String(entry.scope || "").toUpperCase();
+        if (scopeType !== "RENTER") return;
+        const st = String(entry.status || "").toLowerCase();
+        if (st !== "closed") return;
+
+        const eRenterId = String(entry.renterId || "").trim().toLowerCase();
+        const eAadh = String(entry.aadhaar || entry.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+        const eProp = String(entry.propertyName || "").trim().toLowerCase();
+        const eFlat = String(entry.flatName || "").trim().toLowerCase();
+        const validFlatMatch = Boolean(
+          normProp && normFlat && normFlat !== "--" &&
+          eProp && eFlat && eFlat !== "--" &&
+          eProp === normProp && eFlat === normFlat
+        );
+        const matchesRenter =
+          (normRenterId && eRenterId && normRenterId === eRenterId) ||
+          (normAadh.length === 12 && eAadh === normAadh) ||
+          validFlatMatch;
+        if (!matchesRenter) return;
+
+        hasClosedEntry = true;
+        const ts = Date.parse(entry.closedAt || entry.updatedAt || "") || 0;
+        if (ts > latestRenterClosedTs) latestRenterClosedTs = ts;
+      });
+
+      // Pass 2: evaluate matching requests (respecting per-renter exclusions/closures on ALL_ACTIVE)
       Object.keys(reqMap).forEach(k => {
         const entry = reqMap[k];
         if (!entry || typeof entry !== "object") return;
@@ -20015,7 +20059,15 @@ function formatMonthLabel(rawVal) {
 
         let matchesRenter = false;
         if (scopeType === "ALL_ACTIVE") {
-          if (Array.isArray(entry.targetRenters) && entry.targetRenters.length > 0) {
+          const isExplicitlyExcluded = Array.isArray(entry.excludedRenters) && entry.excludedRenters.some(tr =>
+            doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, normAadh)
+          );
+          const allActiveReqTs = Date.parse(entry.requestedAt || entry.updatedAt || "") || 0;
+          const closedAfterBulkReq = latestRenterClosedTs > 0 && latestRenterClosedTs >= allActiveReqTs;
+          if (isExplicitlyExcluded || closedAfterBulkReq) {
+            hasClosedEntry = true;
+            matchesRenter = false;
+          } else if (Array.isArray(entry.targetRenters) && entry.targetRenters.length > 0) {
             matchesRenter = entry.targetRenters.some(tr => doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, normAadh));
           } else {
             matchesRenter = true;
@@ -20056,50 +20108,21 @@ function formatMonthLabel(rawVal) {
       const reqMap = (DB.globalConfig && DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object")
         ? DB.globalConfig.screenshotRequests
         : {};
-      const normProp = String(propName || "").trim().toLowerCase();
-      const normFlat = String(flatName || "").trim().toLowerCase();
-      const normRenterId = String(renterId || "").trim().toLowerCase();
-      const normAadh = String(aadhaarNum || "").replace(/\D/g, "").slice(0, 12);
-      const monthsSet = new Set();
-
+      const candidateMonths = new Set();
       Object.keys(reqMap).forEach(k => {
         const entry = reqMap[k];
         if (!entry || typeof entry !== "object") return;
-        const st = String(entry.status || "").toLowerCase();
-        if (st === "closed" || st === "submitted") return;
         const entryMonth = normalizeMonthYear(entry.monthYear);
-        if (!entryMonth) return;
-        const scopeType = String(entry.scope || "").toUpperCase();
-        const eRenterId = String(entry.renterId || "").trim().toLowerCase();
-        const eAadh = String(entry.aadhaar || entry.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-        const eProp = String(entry.propertyName || "").trim().toLowerCase();
-        const eFlat = String(entry.flatName || "").trim().toLowerCase();
-
-        const validFlatMatch = Boolean(
-          normProp && normFlat && normFlat !== "--" &&
-          eProp && eFlat && eFlat !== "--" &&
-          eProp === normProp && eFlat === normFlat
-        );
-
-        let matches = false;
-        if (scopeType === "ALL_ACTIVE") {
-          if (Array.isArray(entry.targetRenters) && entry.targetRenters.length > 0) {
-            matches = entry.targetRenters.some(tr => doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, normAadh));
-          } else {
-            matches = true;
-          }
-        } else {
-          matches =
-            (normRenterId && eRenterId && normRenterId === eRenterId) ||
-            (normAadh.length === 12 && eAadh === normAadh) ||
-            validFlatMatch;
-        }
-
-        if (matches) {
-          monthsSet.add(entryMonth);
+        if (entryMonth) candidateMonths.add(entryMonth);
+      });
+      const openMonths = [];
+      candidateMonths.forEach(m => {
+        const info = getMatchingScreenshotRequestsForRenter(m, propName, flatName, renterId, aadhaarNum);
+        if (info && info.hasAnyRequest) {
+          openMonths.push(m);
         }
       });
-      return Array.from(monthsSet).sort().reverse();
+      return openMonths.sort().reverse();
     }
 
     let liveCameraStream = null;
@@ -28315,13 +28338,9 @@ function formatMonthLabel(rawVal) {
         const safeFlat = card.flatName.replace(/'/g, "\\'");
         const safeRenterId = card.renterId.replace(/'/g, "\\'");
         const safeAadh = card.rawAadh.replace(/'/g, "\\'");
-        const reqBadge = card.hasReRequestedSlot
-          ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(245,158,11,0.18); color:#d97706; border:1px solid rgba(245,158,11,0.45);"><i class="fa-solid fa-rotate-right"></i> Re-requested (${selectedMonthLabel})</span>`
-          : (card.hasBulkAllRequest
-              ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(56,189,248,0.16); color:#0284c7; border:1px solid rgba(56,189,248,0.38);"><i class="fa-solid fa-paper-plane"></i> Requested All (${selectedMonthLabel})</span>`
-              : (card.hasAnySingleSlotRequest
-                  ? `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(168,85,247,0.16); color:#a855f7; border:1px solid rgba(168,85,247,0.38);"><i class="fa-solid fa-camera"></i> Single Slot Requested (${selectedMonthLabel})</span>`
-                  : `<span style="font-size:0.68rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(148,163,184,0.14); color:var(--text-muted); border:1px solid var(--glass-border);">Closed / Not Requested</span>`));
+        const hasAnyOpenForRenter = Boolean(
+          card.hasMonthRequest || card.hasBulkAllRequest || card.hasAnySingleSlotRequest || card.hasReRequestedSlot
+        );
 
         return `
           <div class="ssv-renter-card">
@@ -28330,23 +28349,20 @@ function formatMonthLabel(rawVal) {
                 <div style="font-size:0.96rem; font-weight:900; color:var(--text-main);">
                   <i class="fa-solid fa-user-check" style="color:#10b981; margin-right:5px;"></i>${card.rName}
                 </div>
-                ${card.renterId ? `<span style="font-size:0.74rem; font-weight:800; padding:4px 9px; border-radius:8px; background:rgba(168,85,247,0.16); color:#c084fc; border:1px solid rgba(168,85,247,0.38);"><i class="fa-solid fa-fingerprint"></i> ID: ${escapeHtml(card.renterId)}</span>` : ""}
-                <span style="font-size:0.78rem; font-weight:800; padding:4px 10px; border-radius:8px; background:rgba(56,189,248,0.15); color:#0284c7; border:1px solid rgba(56,189,248,0.35);">
-                  <i class="fa-solid fa-id-card"></i> Aadhaar: ${card.formattedAadh}
-                </span>
                 <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">
                   <i class="fa-solid fa-building"></i> ${card.propName || "--"} — Flat ${card.flatName || "--"}
                 </span>
+                <span style="font-size:0.78rem; font-weight:800; padding:4px 10px; border-radius:8px; background:rgba(56,189,248,0.15); color:#0284c7; border:1px solid rgba(56,189,248,0.35);">
+                  <i class="fa-solid fa-id-card"></i> Aadhaar: ${card.formattedAadh}
+                </span>
               </div>
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span class="badge-paid" style="font-size:0.7rem;">Active Renter</span>
-                ${reqBadge}
-                <span style="font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:999px; background:rgba(16,185,129,0.16); color:#10b981; border:1px solid rgba(16,185,129,0.35);">
-                  ${card.uploadedCount} / 3 Uploaded (${selectedMonthLabel})
-                </span>
                 ${isStrictAdmin ? `
                   <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#10b981; border-color:rgba(16,185,129,0.45);" onclick="sendAdminMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
                     <i class="fa-solid fa-paper-plane"></i> ${card.hasBulkAllRequest ? "Resend Month Request" : "Request Month"}
+                  </button>
+                  <button type="button" class="btn-ledger-action" style="padding:5px 10px; font-size:0.71rem; font-weight:800; color:#ef4444; border-color:rgba(239,68,68,0.45);${hasAnyOpenForRenter ? "" : " opacity:0.45; cursor:not-allowed;"}" ${hasAnyOpenForRenter ? "" : "disabled"} title="${hasAnyOpenForRenter ? `Close active photo request for ${escapeHtml(card.rName)} (${selectedMonthLabel})` : `No open photo request to close for ${escapeHtml(card.rName)}`}" onclick="closeAdminRenterMonthlyScreenshotRequest('${safeRenterId}', '${safeProp}', '${safeFlat}', '${safeAadh}', '${safeName}')">
+                    <i class="fa-solid fa-lock"></i> Close Request
                   </button>
                 ` : ""}
               </div>
@@ -28497,6 +28513,14 @@ function formatMonthLabel(rawVal) {
       };
 
       DB.globalConfig.screenshotRequests[reqKey] = reqEntry;
+      if (isSingleRenter) {
+        const bulkEntry = DB.globalConfig.screenshotRequests[`ALL_ACTIVE__${selectedMonth}`];
+        if (bulkEntry && Array.isArray(bulkEntry.excludedRenters)) {
+          bulkEntry.excludedRenters = bulkEntry.excludedRenters.filter(tr =>
+            !doesRenterMatchTargetEntry(tr, normProp, normFlat, cleanRenterId.toLowerCase(), cleanAadh)
+          );
+        }
+      }
       saveLocalGlobalConfigMaster(DB.globalConfig);
       saveDbSnapshotToCache();
       renderAdminScreenshotVerificationGrid();
@@ -28582,6 +28606,137 @@ function formatMonthLabel(rawVal) {
         requesterRole: activeRole || "Admin",
         requesterUsername: activeUser || "Admin",
         monthYear: selectedMonth,
+        screenshotRequests: DB.globalConfig.screenshotRequests
+      });
+    }
+
+    async function closeAdminRenterMonthlyScreenshotRequest(targetRenterId = "", targetProp = "", targetFlat = "", targetAadhaar = "", targetName = "") {
+      if (String(activeRole || "").trim().toLowerCase() !== "admin") {
+        return triggerSideToast("Admin Only", "Only the Admin can close monthly photo requests.", false);
+      }
+      const monthInput = document.getElementById("screenshotVerifyMonthInput");
+      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
+      if (monthInput) monthInput.value = selectedMonth;
+      window.selectedAdminScreenshotVerifyMonth = selectedMonth;
+      const monthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(selectedMonth) : selectedMonth;
+
+      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+      if (!DB.globalConfig.screenshotRequests || typeof DB.globalConfig.screenshotRequests !== "object") {
+        DB.globalConfig.screenshotRequests = {};
+      }
+
+      const cleanPropRaw = String(targetProp || "").trim();
+      const cleanFlatRaw = String(targetFlat || "").trim();
+      const normProp = cleanPropRaw.toLowerCase();
+      const normFlat = cleanFlatRaw.toLowerCase();
+      const cleanRenterId = String(targetRenterId || "").trim();
+      const normRenterId = cleanRenterId.toLowerCase();
+      const cleanAadh = String(targetAadhaar || "").replace(/\D/g, "").slice(0, 12);
+      const closedIso = new Date().toISOString();
+      const closedBy = activeUser || "Admin";
+      const targetDescriptor = {
+        renterId: cleanRenterId,
+        aadhaar: cleanAadh,
+        propertyName: cleanPropRaw,
+        flatName: cleanFlatRaw
+      };
+
+      Object.keys(DB.globalConfig.screenshotRequests).forEach(k => {
+        const entry = DB.globalConfig.screenshotRequests[k];
+        if (!entry || typeof entry !== "object") return;
+        if (normalizeMonthYear(entry.monthYear) !== selectedMonth) return;
+
+        const scopeType = String(entry.scope || "").toUpperCase();
+        if (scopeType === "ALL_ACTIVE") {
+          const st = String(entry.status || "").toLowerCase();
+          if (st === "closed" || st === "submitted") return;
+          const nextExcluded = Array.isArray(entry.excludedRenters) ? [...entry.excludedRenters] : [];
+          const alreadyExcluded = nextExcluded.some(tr =>
+            doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, cleanAadh)
+          );
+          if (!alreadyExcluded) nextExcluded.push(targetDescriptor);
+          entry.excludedRenters = nextExcluded;
+
+          if (Array.isArray(entry.targetRenters) && entry.targetRenters.length > 0) {
+            const remaining = entry.targetRenters.filter(tr =>
+              !doesRenterMatchTargetEntry(tr, normProp, normFlat, normRenterId, cleanAadh)
+            );
+            entry.targetRenters = remaining;
+            if (remaining.length === 0) {
+              entry.status = "closed";
+              entry.closedBy = closedBy;
+              entry.closedAt = closedIso;
+            }
+          }
+          entry.updatedAt = closedIso;
+          return;
+        }
+
+        const eRenterId = String(entry.renterId || "").trim().toLowerCase();
+        const eAadh = String(entry.aadhaar || entry.identityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+        const eProp = String(entry.propertyName || "").trim().toLowerCase();
+        const eFlat = String(entry.flatName || "").trim().toLowerCase();
+        const validFlatMatch = Boolean(
+          normProp && normFlat && normFlat !== "--" &&
+          eProp && eFlat && eFlat !== "--" &&
+          eProp === normProp && eFlat === normFlat
+        );
+        const matchesThisRenter =
+          (normRenterId && eRenterId && normRenterId === eRenterId) ||
+          (cleanAadh.length === 12 && eAadh === cleanAadh) ||
+          validFlatMatch;
+
+        if (matchesThisRenter) {
+          entry.status = "closed";
+          entry.closedBy = closedBy;
+          entry.closedAt = closedIso;
+          entry.updatedAt = closedIso;
+        }
+      });
+
+      const reqKey = `RENTER__${normProp}__${normFlat}__${cleanRenterId || cleanAadh || "r"}__${selectedMonth}`;
+      const closedEntry = {
+        ...(DB.globalConfig.screenshotRequests[reqKey] || {}),
+        requestKey: reqKey,
+        scope: "RENTER",
+        status: "closed",
+        monthYear: selectedMonth,
+        propertyName: cleanPropRaw,
+        flatName: cleanFlatRaw,
+        renterId: cleanRenterId,
+        aadhaar: cleanAadh,
+        renterName: targetName || "",
+        closedBy: closedBy,
+        closedAt: closedIso,
+        updatedAt: closedIso
+      };
+      DB.globalConfig.screenshotRequests[reqKey] = closedEntry;
+
+      saveLocalGlobalConfigMaster(DB.globalConfig);
+      saveDbSnapshotToCache();
+      renderAdminScreenshotVerificationGrid();
+      renderAllDashboardUI();
+
+      triggerSideToast(
+        "Renter Request Closed",
+        `Closed photo request for ${targetName || "renter"} (${monthLabel}). Other renters' requests remain unchanged.`,
+        true
+      );
+
+      await sendFirebaseAction({
+        action: "saveScreenshotRequests",
+        requesterRole: activeRole || "Admin",
+        requesterUsername: activeUser || "Admin",
+        requestKey: reqKey,
+        requestEntry: closedEntry,
+        monthYear: selectedMonth,
+        scope: "RENTER",
+        propertyName: cleanPropRaw,
+        flatName: cleanFlatRaw,
+        renterId: cleanRenterId,
+        aadhaar: cleanAadh,
+        renterName: targetName || "",
         screenshotRequests: DB.globalConfig.screenshotRequests
       });
     }
