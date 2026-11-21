@@ -12443,17 +12443,12 @@
         <div id="otherPanelChangeBg" class="stat-pill admin-only" style="text-align: left; display: none;">
           <div style="display:flex; flex-direction:column; gap:12px;">
             <div style="background:var(--bg-input); padding:12px; border-radius:12px; border:1px solid var(--glass-border);">
-              <label style="font-size:0.76rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:6px; margin-bottom:6px;">
-                <i class="fa-solid fa-globe" style="color:#ec4899;"></i> Global Background Link (Auto-filled from Google Drive or Paste URL)
-              </label>
-              <div style="display:flex; gap:8px; margin-bottom:8px;">
-                <input
-                  type="url"
-                  id="bgUrlLoginScreen"
-                  class="form-control"
-                  placeholder="Paste HD image link or upload photo below (e.g. https://...)"
-                  style="font-size:0.78rem;"
-                >
+              <input type="hidden" id="bgUrlLoginScreen">
+              <div class="admin-only" style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <label style="font-size:0.74rem; font-weight:700; color:var(--text-main); margin:0; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-cloud-arrow-up" style="color:#ec4899;"></i> Upload Photo</label>
+                  <input type="file" id="bgDirectUploadFileInput" accept="image/*" class="form-control" style="padding:5px 8px; font-size:0.74rem; max-width:260px;" onchange="handleDirectBgUpload(this)">
+                </div>
                 <button
                   type="button"
                   id="btnDeleteCustomBgPhoto"
@@ -12464,19 +12459,11 @@
                   <i class="fa-solid fa-trash-can"></i> Delete
                 </button>
               </div>
-              <div class="admin-only" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <label style="font-size:0.72rem; color:var(--text-muted); margin:0;"><i class="fa-solid fa-cloud-arrow-up" style="color:#ec4899;"></i> Upload Photo to Google Drive:</label>
-                <input type="file" id="bgDirectUploadFileInput" accept="image/*" class="form-control" style="padding:5px 8px; font-size:0.74rem; max-width:260px;" onchange="handleDirectBgUpload(this)">
-              </div>
-              <div id="bgLoginStatusHint" style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">
-                Applies globally across Login, Home, and all Portal screens from Google Sheets.
-              </div>
               <!-- Requirement 10: Persistent Live Preview Box inside Background Photo Settings -->
               <div id="bgActivePreviewContainer" style="margin-top:10px; padding:10px; border-radius:10px; background:rgba(15,23,42,0.35); border:1px dashed rgba(236,72,153,0.45); display:flex; align-items:center; gap:12px;">
                 <img id="bgActivePreviewImg" src="" alt="Home Background Preview" style="width:92px; height:56px; object-fit:cover; border-radius:8px; border:1.5px solid #ec4899; flex-shrink:0; background:#0f172a;">
                 <div style="font-size:0.73rem; line-height:1.35;">
                   <div id="bgActivePreviewBadge" style="font-weight:800; color:#10b981;"><i class="fa-solid fa-circle-check"></i> Active Home Background Locked</div>
-                  <div id="bgActivePreviewSub" style="color:var(--text-muted); font-size:0.69rem; margin-top:2px;">Admin-only deletion: deleting applies the default placeholder photo across all locations.</div>
                 </div>
               </div>
             </div>
