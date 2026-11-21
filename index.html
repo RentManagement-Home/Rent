@@ -12640,12 +12640,6 @@
               <span style="font-weight:800; font-size:0.88rem; color:#fb7185;">
                 <i class="fa-solid fa-shield-cat"></i> Audit Trail Log (Max 30 Records)
               </span>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Holds up to 30 latest records at a time. When a 31st record is added, the oldest record is automatically deleted.
-              </div>
-            </div>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <input type="text" id="auditLogSearchInput" class="form-control" style="width:170px; padding:5px 10px; font-size:0.74rem;" placeholder="Filter actor / action..." oninput="renderAdminAuditTrailList(this.value)">
             </div>
           </div>
           <div id="adminAuditTrailList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:6px; font-size:0.76rem;"></div>
@@ -13655,45 +13649,10 @@
             
             <div class="form-group"><label>Renter Name <span class="req-star">*</span></label><input type="text" id="renterName" class="form-control"></div>
 
-            <!-- Requirement 8: Upload Renter Profile Photo placed right below Renter Name -->
-            <div class="form-group admin-only" style="background:rgba(56, 189, 248, 0.08); border:1px dashed rgba(56, 189, 248, 0.45); border-radius:10px; padding:10px;">
-              <label style="font-size:0.76rem; color:#38bdf8; margin-bottom:4px;"><i class="fa-solid fa-camera-retro"></i> Upload Renter Profile Photo (or Paste Drive Link)</label>
-              <input type="file" id="fileProfilePic" class="form-control" style="padding:6px; font-size:0.76rem; margin-bottom:6px;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'profile')">
-              <div style="display:flex; gap:6px; align-items:center;">
-                <input type="url" id="inputProfilePicUrl" class="form-control" style="padding:6px 8px; font-size:0.74rem; flex:1;" placeholder="Or paste Google Drive / Image URL here...">
-                <button type="button" class="btn-ledger-action" style="padding:6px 10px; font-size:0.72rem; color:#38bdf8; border-color:rgba(56,189,248,0.45); white-space:nowrap;" onclick="applyRenterDocumentLink('profile')">
-                  <i class="fa-solid fa-link"></i> Apply Link
-                </button>
-              </div>
-            </div>
-
             <div class="form-group">
               <label>Aadhaar Card Number (12 Digits: XXXX-XXXX-XXXX)</label>
               <input type="text" id="renterIdentityNum" class="form-control" maxlength="14" inputmode="numeric" placeholder="XXXX-XXXX-XXXX" oninput="this.value = formatAadhaarWithHyphens(this.value); handleAadhaarLookupInput(this.value)" onchange="this.value = formatAadhaarWithHyphens(this.value); handleAadhaarLookupInput(this.value)">
               <div id="aadhaarPreviousRenterPrompt" style="display:none; margin-top:8px;"></div>
-            </div>
-
-            <!-- Requirement 8 & 9: Upload Aadhaar Card Photo (Front Side + Back Side) placed right below Aadhaar Card Number -->
-            <div class="form-group admin-only" style="background:rgba(16, 185, 129, 0.08); border:1px dashed rgba(16, 185, 129, 0.45); border-radius:10px; padding:10px;">
-              <label style="font-size:0.76rem; color:#34d399; margin-bottom:4px;"><i class="fa-solid fa-id-card"></i> Upload Aadhaar Card Photo — Front Side (or Paste Drive Link)</label>
-              <input type="file" id="fileIdentityPic" class="form-control" style="padding:6px; font-size:0.76rem; margin-bottom:6px;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'identity')">
-              <div style="display:flex; gap:6px; align-items:center;">
-                <input type="url" id="inputIdentityPicUrl" class="form-control" style="padding:6px 8px; font-size:0.74rem; flex:1;" placeholder="Or paste Google Drive / Image URL (Front)...">
-                <button type="button" class="btn-ledger-action" style="padding:6px 10px; font-size:0.72rem; color:#34d399; border-color:rgba(16,185,129,0.45); white-space:nowrap;" onclick="applyRenterDocumentLink('identity')">
-                  <i class="fa-solid fa-link"></i> Apply Link
-                </button>
-              </div>
-            </div>
-
-            <div class="form-group admin-only" style="background:rgba(14, 165, 233, 0.08); border:1px dashed rgba(56, 189, 248, 0.45); border-radius:10px; padding:10px;">
-              <label style="font-size:0.76rem; color:#38bdf8; margin-bottom:4px;"><i class="fa-solid fa-id-card-clip"></i> Upload Aadhaar Card Photo — Back Side (or Paste Drive Link)</label>
-              <input type="file" id="fileIdentityBackPic" class="form-control" style="padding:6px; font-size:0.76rem; margin-bottom:6px;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'identity_back')">
-              <div style="display:flex; gap:6px; align-items:center;">
-                <input type="url" id="inputIdentityBackPicUrl" class="form-control" style="padding:6px 8px; font-size:0.74rem; flex:1;" placeholder="Or paste Google Drive / Image URL (Back)...">
-                <button type="button" class="btn-ledger-action" style="padding:6px 10px; font-size:0.72rem; color:#38bdf8; border-color:rgba(56,189,248,0.45); white-space:nowrap;" onclick="applyRenterDocumentLink('identity_back')">
-                  <i class="fa-solid fa-link"></i> Apply Link
-                </button>
-              </div>
             </div>
 
             <div class="form-group"><label>Mobile Number (+91 &amp; 10 Digits)</label><input type="tel" id="renterMobile" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value)"></div>
@@ -13773,6 +13732,16 @@
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
               </div>
               <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
+                <input type="file" id="fileProfilePic" style="display:none;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'profile')">
+                <button
+                  type="button"
+                  id="btnUploadProfilePic"
+                  class="btn-ledger-action admin-only"
+                  style="background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  onclick="const f=document.getElementById('fileProfilePic'); if(f){ f.value=''; f.click(); }"
+                >
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Photo
+                </button>
                 <button
                   type="button"
                   id="btnDownloadProfilePic"
@@ -13807,6 +13776,16 @@
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
               </div>
               <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
+                <input type="file" id="fileIdentityPic" style="display:none;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'identity')">
+                <button
+                  type="button"
+                  id="btnUploadIdentityPic"
+                  class="btn-ledger-action admin-only"
+                  style="background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  onclick="const f=document.getElementById('fileIdentityPic'); if(f){ f.value=''; f.click(); }"
+                >
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Photo
+                </button>
                 <button
                   type="button"
                   id="btnDownloadIdentityPic"
@@ -13841,6 +13820,16 @@
                 <span class="zoomable-photo-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> Click Photo to Zoom</span>
               </div>
               <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">
+                <input type="file" id="fileIdentityBackPic" style="display:none;" accept="image/*" onchange="handleRenterDocumentUpload(this, 'identity_back')">
+                <button
+                  type="button"
+                  id="btnUploadIdentityBackPic"
+                  class="btn-ledger-action admin-only"
+                  style="background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  onclick="const f=document.getElementById('fileIdentityBackPic'); if(f){ f.value=''; f.click(); }"
+                >
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Upload Photo
+                </button>
                 <button
                   type="button"
                   id="btnDownloadIdentityBackPic"
