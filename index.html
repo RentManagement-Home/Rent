@@ -10733,9 +10733,6 @@
 
         <!-- Horizontally Scrollable Left-to-Right Carousel with Manual Scroll Controls (Ordered: Notifications, Screenshot Verification, UTR Verification, Maintenance Tickets, Contact Info, Apps) -->
         <div class="admin-ops-hub-carousel-rail" id="adminOpsHubCarouselRail">
-          <button type="button" id="btnAdminOpsScrollLeft" class="admin-ops-scroll-btn is-edge" onclick="scrollAdminOpsHubCarousel(-1)" aria-label="Scroll Operations Options Left">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
           <div class="admin-ops-hub-carousel" id="adminOpsHubCarouselTrack" role="tablist" aria-label="Admin Operations Options" onscroll="updateAdminOpsScrollButtons()">
             <button type="button" class="admin-ops-carousel-card ops-tab-notifications active" data-ops-tab="notifications" onclick="switchAdminOpsHubTab('notifications')">
               <span class="admin-ops-card-icon"><i class="fa-solid fa-bell"></i></span>
@@ -10765,9 +10762,6 @@
               <span class="admin-ops-card-label">Apps</span>
             </button>
           </div>
-          <button type="button" id="btnAdminOpsScrollRight" class="admin-ops-scroll-btn" onclick="scrollAdminOpsHubCarousel(1)" aria-label="Scroll Operations Options Right">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
         </div>
 
         <!-- Active Option Workspace Body -->
@@ -11706,11 +11700,11 @@
             <input type="text" id="profViewFullName" class="form-control" readonly style="background:transparent; border:none; padding:0; font-weight:800; font-size:0.92rem; color:var(--text-main); cursor:default; box-shadow:none;">
           </div>
 
-          <div style="background:rgba(56,189,248,0.08); border:1.5px solid rgba(56,189,248,0.25); border-radius:14px; padding:10px 12px;">
+          <div style="background:rgba(56,189,248,0.08); border:1.5px solid rgba(56,189,248,0.25); border-radius:14px; padding:10px 12px; min-width:0;">
             <label style="font-size:0.7rem; font-weight:800; color:#38bdf8; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px; margin-bottom:4px;">
-              <i class="fa-solid fa-phone"></i> Mobile No.
+              <i class="fa-solid fa-envelope"></i> Email ID
             </label>
-            <input type="text" id="profViewMobile" class="form-control" readonly placeholder="Not set" style="background:transparent; border:none; padding:0; font-weight:800; font-size:0.92rem; color:var(--text-main); cursor:default; box-shadow:none;">
+            <input type="text" id="profViewEmail" class="form-control" readonly placeholder="Not linked" style="background:transparent; border:none; padding:0; font-weight:800; font-size:0.86rem; color:var(--text-main); cursor:default; box-shadow:none; text-overflow:ellipsis;">
           </div>
 
           <div style="background:rgba(236,72,153,0.08); border:1.5px solid rgba(236,72,153,0.25); border-radius:14px; padding:10px 12px;">
@@ -11730,13 +11724,6 @@
                 <i id="profPassEyeIcon" class="fa-solid fa-eye"></i>
               </button>
             </div>
-          </div>
-
-          <div style="grid-column: 1 / -1; background:rgba(16,185,129,0.08); border:1.5px solid rgba(16,185,129,0.25); border-radius:14px; padding:10px 12px;">
-            <label style="font-size:0.7rem; font-weight:800; color:#34d399; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px; margin-bottom:4px;">
-              <i class="fa-solid fa-envelope"></i> Email ID
-            </label>
-            <input type="text" id="profViewEmail" class="form-control" readonly placeholder="Not set" style="background:transparent; border:none; padding:0; font-weight:800; font-size:0.92rem; color:var(--text-main); cursor:default; box-shadow:none;">
           </div>
         </div>
 
@@ -11784,7 +11771,7 @@
               onclick="toggleProfileDrawer('drawerChangeTheme', 'btnShowChangeTheme')"
             >
               <i class="fa-solid fa-palette" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
-              Theme (<span id="otherProfileTheme">DARK</span>)
+              Theme
             </button>
             <button
               type="button"
@@ -11885,10 +11872,6 @@
             <label>New Full Name <span class="req-star">*</span></label>
             <input type="text" id="changeNameOnlyInput" class="form-control" placeholder="Enter your official full name">
           </div>
-          <div class="form-group">
-            <label>Mobile No.</label>
-            <input type="tel" id="changeMobileOnlyInput" class="form-control" maxlength="14" inputmode="tel" placeholder="+91 9876543210 (Optional)" oninput="const d = this.value.replace(/^\+?91\s*/, '').replace(/\D/g, ''); this.value = d ? formatIndianMobilePlus91(this.value) : '';">
-          </div>
           <div class="form-group" id="changeEmailFieldGroup">
             <label>Email ID <span id="changeEmailReqStar" class="req-star" style="display:none;">*</span></label>
             <input type="email" id="changeEmailOnlyInput" class="form-control" placeholder="Enter your email ID (e.g. name@gmail.com)" oninput="resetPendingProfileEmailOtpState('modal')">
@@ -11945,9 +11928,6 @@
 
       <!-- Horizontal Left-to-Right Options Rail (Ordered: Create User ID, Register User, Background Photo, Last Login, Audit Trail Log, Edit Everything, Delete Center) -->
       <div class="settings-horizontal-options-box">
-        <button type="button" id="btnSettingsNavScrollLeft" class="settings-nav-scroll-btn is-edge" onclick="scrollSettingsNavGrid(-1)" aria-label="Scroll Settings Options Left">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
         <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid" onscroll="updateSettingsNavScrollButtons()">
           <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create active" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
             <div class="s-nav-icon"><i class="fa-solid fa-user-plus"></i></div>
@@ -11982,9 +11962,6 @@
             <div class="s-nav-title">Notifications</div>
           </div>
         </div>
-        <button type="button" id="btnSettingsNavScrollRight" class="settings-nav-scroll-btn" onclick="scrollSettingsNavGrid(1)" aria-label="Scroll Settings Options Right">
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>
       </div>
 
       <!-- Settings Tab: Screenshot Verification (Split into Live Photo & History Photo) -->
@@ -19384,7 +19361,7 @@ function formatMonthLabel(rawVal) {
       mountSharedWorkspaceInto("sharedMaintenanceTicketsWorkspace", "otherPanelTickets");
     }
 
-    window.activeAdminOpsHubTab = window.activeAdminOpsHubTab || "screenshot";
+    window.activeAdminOpsHubTab = window.activeAdminOpsHubTab || "notifications";
 
     function syncAdminOpsHubBadges() {
       const pendingUtr = (typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : []).filter(p => p && p.status === "Pending").length;
@@ -19428,7 +19405,7 @@ function formatMonthLabel(rawVal) {
       if (document.body.classList.contains("admin-ops-hub-open")) {
         closeAdminResidentOpsHub();
       } else {
-        openAdminResidentOpsHub();
+        openAdminResidentOpsHub("notifications");
       }
     }
 
@@ -19445,8 +19422,12 @@ function formatMonthLabel(rawVal) {
       document.body.classList.add("admin-ops-hub-open");
       if (hubSection) hubSection.style.display = "block";
 
-      const targetTab = initialTab || window.activeAdminOpsHubTab || "notifications";
+      const targetTab = initialTab || "notifications";
       switchAdminOpsHubTab(targetTab);
+      if (targetTab === "notifications") {
+        const track = document.getElementById("adminOpsHubCarouselTrack");
+        if (track) track.scrollLeft = 0;
+      }
       syncAdminOpsHubBadges();
       if (typeof updateAdminOpsScrollButtons === "function") {
         requestAnimationFrame(updateAdminOpsScrollButtons);
@@ -26074,13 +26055,12 @@ function formatMonthLabel(rawVal) {
 
       activeUserMobile = sanitizeContactPhoneDisplay(activeUserMobile);
       document.getElementById("profViewFullName").value = activeUserFullName || activeUser || "";
-      document.getElementById("profViewMobile").value = activeUserMobile || "";
       if (document.getElementById("profViewEmail")) {
         document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+        document.getElementById("profViewEmail").title = activeUserEmail || "Not linked";
       }
       document.getElementById("profViewUsername").value = activeUser || "";
       document.getElementById("changeNameOnlyInput").value = activeUserFullName || activeUser || "";
-      document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "";
       if (document.getElementById("changeEmailOnlyInput")) {
         document.getElementById("changeEmailOnlyInput").value = activeUserEmail || "";
       }
@@ -26153,13 +26133,12 @@ function formatMonthLabel(rawVal) {
           }
 
           document.getElementById("profViewFullName").value = activeUserFullName;
-          document.getElementById("profViewMobile").value = activeUserMobile;
           if (document.getElementById("profViewEmail")) {
             document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+            document.getElementById("profViewEmail").title = activeUserEmail || "Not linked";
           }
           document.getElementById("profViewUsername").value = res.username || activeUser;
           document.getElementById("changeNameOnlyInput").value = activeUserFullName;
-          document.getElementById("changeMobileOnlyInput").value = activeUserMobile || "";
           const modalEmailIn = document.getElementById("changeEmailOnlyInput");
           if (modalEmailIn && !modalEmailIn.value.trim() && activeUserEmail) {
             modalEmailIn.value = activeUserEmail;
@@ -26594,10 +26573,11 @@ function formatMonthLabel(rawVal) {
         document.getElementById("profAvatarInitials").innerText = (newFullName[0] || "U").toUpperCase();
       }
       if (document.getElementById("profViewFullName")) document.getElementById("profViewFullName").value = activeUserFullName;
-      if (document.getElementById("profViewMobile")) document.getElementById("profViewMobile").value = activeUserMobile;
-      if (document.getElementById("profViewEmail")) document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+      if (document.getElementById("profViewEmail")) {
+        document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+        document.getElementById("profViewEmail").title = activeUserEmail || "Not linked";
+      }
       if (document.getElementById("changeNameOnlyInput")) document.getElementById("changeNameOnlyInput").value = activeUserFullName;
-      if (document.getElementById("changeMobileOnlyInput")) document.getElementById("changeMobileOnlyInput").value = activeUserMobile;
       if (document.getElementById("changeEmailOnlyInput")) document.getElementById("changeEmailOnlyInput").value = activeUserEmail;
 
       resetPendingProfileEmailOtpState(source);
@@ -26645,7 +26625,7 @@ function formatMonthLabel(rawVal) {
 
     async function submitChangeNameAndMobile() {
       const newFullName = document.getElementById("changeNameOnlyInput").value.trim();
-      const rawMobileInput = document.getElementById("changeMobileOnlyInput").value.trim();
+      const newMobile = sanitizeContactPhoneDisplay(activeUserMobile || "");
       const cleanEmail = String(document.getElementById("changeEmailOnlyInput")?.value || "").trim().toLowerCase();
       const msgBox = document.getElementById("nameChangeBottomMsg");
       const isRenterAccount = String(activeRole || "").trim().toLowerCase() === "renter";
@@ -26658,20 +26638,6 @@ function formatMonthLabel(rawVal) {
         triggerSideToast("Name Required", "Please enter your Full Name.", false);
         return;
       }
-
-      const mobileDigitsAfterPrefix = rawMobileInput.replace(/^\+?91\s*/, "").replace(/\D/g, "");
-      const isMobileEmpty = !rawMobileInput || !mobileDigitsAfterPrefix;
-      let newMobile = "";
-      if (!isMobileEmpty) {
-        if (!isValidIndianMobilePlus91(rawMobileInput)) {
-          msgBox.innerText = "Please enter a valid Indian mobile number starting with +91 followed by 10 digits, or leave it blank.";
-          msgBox.className = "bottom-status-msg error";
-          triggerSideToast("Invalid Mobile Number", "Mobile number must start with +91 and contain 10 digits, or leave it blank.", false);
-          return;
-        }
-        newMobile = formatIndianMobilePlus91(rawMobileInput);
-      }
-      document.getElementById("changeMobileOnlyInput").value = newMobile;
 
       if (isRenterAccount) {
         if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
@@ -26698,9 +26664,9 @@ function formatMonthLabel(rawVal) {
       sessionStorage.setItem("active_session_mobile", activeUserMobile);
       sessionStorage.setItem("active_session_email", activeUserEmail || "");
       document.getElementById("profViewFullName").value = activeUserFullName;
-      document.getElementById("profViewMobile").value = activeUserMobile;
       if (document.getElementById("profViewEmail")) {
         document.getElementById("profViewEmail").value = activeUserEmail || "Not linked";
+        document.getElementById("profViewEmail").title = activeUserEmail || "Not linked";
       }
 
       (DB.users || []).forEach(u => {
@@ -27905,7 +27871,7 @@ function formatMonthLabel(rawVal) {
                   ${isCurrentLoggedUser ? `<span style="font-size:0.66rem; color:var(--accent-green); font-weight:800; margin-left:4px;">(You)</span>` : ''}
                 </div>
                 <div style="font-size:0.73rem; color:var(--text-muted); margin-top:2px;">
-                  ${sanitizeContactPhoneDisplay(u.MobileNumber) ? `<i class="fa-solid fa-phone"></i> ${sanitizeContactPhoneDisplay(u.MobileNumber)}` : 'No mobile set'}
+                  ${String(u.Email || u.email || "").trim() ? `<i class="fa-solid fa-envelope"></i> ${escapeHtml(String(u.Email || u.email || "").trim())}` : 'No email set'}
                 </div>
                 ${assignedInfo}
               </div>
@@ -39373,7 +39339,7 @@ function formatMonthLabel(rawVal) {
           document.body.classList.remove("modal-open-hide-chat");
         }
         if (el.id === "settingsModal" && document.body.classList.contains("admin-ops-hub-open")) {
-          switchAdminOpsHubTab(window.activeAdminOpsHubTab || "screenshot");
+          switchAdminOpsHubTab(window.activeAdminOpsHubTab || "notifications");
         }
       }
     }
