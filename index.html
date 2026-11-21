@@ -11377,10 +11377,20 @@
 
       <input type="hidden" id="editAssignTargetUsername">
 
-      <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
         <div class="form-group">
           <label><i class="fa-solid fa-id-badge" style="color:#38bdf8;"></i> Username (User ID)</label>
           <input type="text" id="editAssignUsernameDisplay" class="form-control" minlength="3" placeholder="Min 3 characters (e.g. user01)">
+        </div>
+
+        <div class="form-group">
+          <label><i class="fa-solid fa-key" style="color:#f59e0b;"></i> Login Password</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <input type="text" id="editAssignPasswordInput" class="form-control" placeholder="Enter new or current Password" style="padding-right:36px;">
+            <button type="button" onclick="const inp=document.getElementById('editAssignPasswordInput'); if(inp){inp.type=inp.type==='password'?'text':'password';}" style="position:absolute; right:8px; background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:0.82rem;">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -11804,13 +11814,13 @@
 
           <div style="background:rgba(245,158,11,0.08); border:1.5px solid rgba(245,158,11,0.25); border-radius:14px; padding:10px 12px;">
             <label style="font-size:0.7rem; font-weight:800; color:#fbbf24; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px; margin-bottom:4px;">
-              <i class="fa-solid fa-key"></i> Password Security
+              <i class="fa-solid fa-key"></i> Current Password
             </label>
             <div class="password-field-wrapper" style="margin:0;">
-              <input type="text" id="profViewPassword" class="form-control" readonly value="SHA-256 Protected" style="background:transparent; border:none; padding:0; font-weight:800; font-size:0.88rem; color:var(--text-main); cursor:default; box-shadow:none;">
-              <span class="eye-toggle-btn" style="color:#10b981; opacity:0.95; pointer-events:none;" title="Passwords are stored as one-way SHA-256 hashes">
-                <i id="profPassEyeIcon" class="fa-solid fa-shield-halved"></i>
-              </span>
+              <input type="password" id="profViewPassword" class="form-control" readonly placeholder="Fetching live..." style="background:transparent; border:none; padding:0; font-weight:800; font-size:0.92rem; color:var(--text-main); cursor:default; box-shadow:none;">
+              <button type="button" class="eye-toggle-btn" style="color:#fbbf24; opacity:0.9;" onclick="togglePasswordVisibility('profViewPassword', this)">
+                <i id="profPassEyeIcon" class="fa-solid fa-eye"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -14854,86 +14864,6 @@
       return null;
     }
 
-    function isSha256HexHash(value) {
-      return /^[a-f0-9]{64}$/i.test(String(value || "").trim());
-    }
-
-    function sha256HexFallback(message) {
-      const K = [
-        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-        0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-        0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-        0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-        0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-        0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-        0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-      ];
-      let bytes;
-      if (typeof TextEncoder !== "undefined") {
-        bytes = Array.from(new TextEncoder().encode(String(message || "")));
-      } else {
-        const utf8Str = unescape(encodeURIComponent(String(message || "")));
-        bytes = [];
-        for (let i = 0; i < utf8Str.length; i++) bytes.push(utf8Str.charCodeAt(i));
-      }
-      const bitLen = bytes.length * 8;
-      bytes.push(0x80);
-      while ((bytes.length % 64) !== 56) bytes.push(0x00);
-      const hiBits = Math.floor(bitLen / 0x100000000);
-      const loBits = bitLen >>> 0;
-      bytes.push((hiBits >>> 24) & 0xff, (hiBits >>> 16) & 0xff, (hiBits >>> 8) & 0xff, hiBits & 0xff);
-      bytes.push((loBits >>> 24) & 0xff, (loBits >>> 16) & 0xff, (loBits >>> 8) & 0xff, loBits & 0xff);
-
-      const H = [
-        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-        0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-      ];
-      const W = new Array(64);
-      const rotr = function(n, x) { return (x >>> n) | (x << (32 - n)); };
-
-      for (let i = 0; i < bytes.length; i += 64) {
-        for (let t = 0; t < 16; t++) {
-          const j = i + t * 4;
-          W[t] = ((bytes[j] << 24) | (bytes[j + 1] << 16) | (bytes[j + 2] << 8) | bytes[j + 3]) >>> 0;
-        }
-        for (let t = 16; t < 64; t++) {
-          const s0 = (rotr(7, W[t - 15]) ^ rotr(18, W[t - 15]) ^ (W[t - 15] >>> 3)) >>> 0;
-          const s1 = (rotr(17, W[t - 2]) ^ rotr(19, W[t - 2]) ^ (W[t - 2] >>> 10)) >>> 0;
-          W[t] = (W[t - 16] + s0 + W[t - 7] + s1) >>> 0;
-        }
-        let a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
-        for (let t = 0; t < 64; t++) {
-          const S1 = (rotr(6, e) ^ rotr(11, e) ^ rotr(25, e)) >>> 0;
-          const ch = ((e & f) ^ ((~e) & g)) >>> 0;
-          const temp1 = (h + S1 + ch + K[t] + W[t]) >>> 0;
-          const S0 = (rotr(2, a) ^ rotr(13, a) ^ rotr(22, a)) >>> 0;
-          const maj = ((a & b) ^ (a & c) ^ (b & c)) >>> 0;
-          const temp2 = (S0 + maj) >>> 0;
-          h = g; g = f; f = e; e = (d + temp1) >>> 0;
-          d = c; c = b; b = a; a = (temp1 + temp2) >>> 0;
-        }
-        H[0] = (H[0] + a) >>> 0; H[1] = (H[1] + b) >>> 0; H[2] = (H[2] + c) >>> 0; H[3] = (H[3] + d) >>> 0;
-        H[4] = (H[4] + e) >>> 0; H[5] = (H[5] + f) >>> 0; H[6] = (H[6] + g) >>> 0; H[7] = (H[7] + h) >>> 0;
-      }
-      return H.map(function(word) { return word.toString(16).padStart(8, "0"); }).join("");
-    }
-
-    async function hashPasswordSha256(rawPassword) {
-      const clean = String(rawPassword || "").trim();
-      if (!clean) return "";
-      if (isSha256HexHash(clean)) return clean.toLowerCase();
-      try {
-        if (window.crypto && window.crypto.subtle && typeof TextEncoder !== "undefined") {
-          const encoded = new TextEncoder().encode(clean);
-          const digestBuf = await window.crypto.subtle.digest("SHA-256", encoded);
-          const hashArr = Array.from(new Uint8Array(digestBuf));
-          return hashArr.map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
-        }
-      } catch (e) {}
-      return sha256HexFallback(clean);
-    }
-
     async function portalLogin(username, password, sessionToken) {
       const cleanUser = String(username || "").trim();
       const cleanPass = String(password || "").trim();
@@ -14941,9 +14871,6 @@
       if (!cleanUser || !cleanPass) {
         return { status: "error", message: "Username and password are required." };
       }
-
-      // Hash the password on the frontend with SHA-256 before any comparison or transmission
-      const enteredPassHash = await hashPasswordSha256(cleanPass);
 
       // STEP 1: Fetch Google Sheet data directly from Google Apps Script
       const liveGasPromise = fetchGasSheetData(true, true);
@@ -15056,13 +14983,12 @@
         }
       }
 
-      // STEP 4: Verify SHA-256 hashed password directly against the live Google Sheet user record
+      // STEP 4: Verify password directly against the live Google Sheet user record
       const rawLivePass = liveMatch.Password !== undefined && liveMatch.Password !== null
         ? liveMatch.Password
         : (liveMatch.password !== undefined && liveMatch.password !== null ? liveMatch.password : "");
       const livePassword = String(rawLivePass).trim();
-      const livePasswordHash = livePassword ? await hashPasswordSha256(livePassword) : "";
-      if (!livePasswordHash || livePasswordHash !== enteredPassHash) {
+      if (livePassword !== cleanPass) {
         return {
           status: "wrong_password",
           userExists: true,
@@ -15071,11 +14997,11 @@
         };
       }
 
-      // STEP 5: Hashed password matches live Google Sheet!
+      // STEP 5: Password matches live Google Sheet!
       // Immediately stamp sessionToken onto liveSheetData & cache so post-login sync never sees a stale token
       const userDocData = Object.assign({}, liveMatch, {
         Username: liveMatch.Username,
-        Password: enteredPassHash,
+        Password: cleanPass,
         FullName: liveMatch.FullName || liveMatch.Username,
         Role: liveMatch.Role || "Admin",
         Status: "Active",
@@ -15086,7 +15012,7 @@
       if (Array.isArray(liveSheetData?.users)) {
         liveSheetData.users = liveSheetData.users.map(function(u) {
           if (String(u.Username || "").trim().toLowerCase() === cleanUKey) {
-            return Object.assign({}, u, { Password: enteredPassHash, ActiveSessionToken: sessionToken, Status: "Active", AccountStatus: "Active" });
+            return Object.assign({}, u, { ActiveSessionToken: sessionToken, Status: "Active", AccountStatus: "Active" });
           }
           return u;
         });
@@ -15099,8 +15025,8 @@
       }
 
       try {
-        sessionStorage.setItem("active_session_password", enteredPassHash);
-        localStorage.setItem("portal_session_pass_" + cleanUKey, enteredPassHash);
+        sessionStorage.setItem("active_session_password", cleanPass);
+        localStorage.setItem("portal_session_pass_" + cleanUKey, cleanPass);
         localStorage.setItem("portal_device_session_" + cleanUKey, sessionToken);
         localStorage.setItem(getRoleSessionStorageKey(liveMatch.Role), sessionToken);
       } catch (e) {}
@@ -15111,11 +15037,11 @@
       lastLoginCompletedAt = Date.now();
       isLoginWriteInFlight = true;
 
-      // Send ONLY the SHA-256 hashed password to Google Apps Script (never plain text)
+      // Record login session & reset lockout in Google Apps Script and wait up to 10s so sheet sync reflects ActiveSessionToken immediately
       const loginPayloadObj = {
         action: "loginUser",
         username: liveMatch.Username,
-        password: enteredPassHash,
+        password: cleanPass,
         sessionToken: sessionToken,
         deviceId: getOrCreatePortalDeviceId(),
         loginTime: formatDateOnly(new Date()),
@@ -15265,10 +15191,9 @@
               }
             }
             const managerPerms = Array.isArray(data.managerPermissions) ? data.managerPermissions : [];
-            const hashedCreatePass = await hashPasswordSha256(data.newPassword || data.password || "");
             const userDoc = {
               Username: uName,
-              Password: hashedCreatePass,
+              Password: String(data.newPassword || "").trim(),
               FullName: String(data.fullName || uName).trim(),
               Role: roleVal,
               Theme: data.theme || "system",
@@ -15286,7 +15211,7 @@
               ActiveSessionToken: ""
             };
             const nextUsersPreview = usersList.concat([userDoc]);
-            const gasCreateRes = await sendGasSheetAction({ ...data, newPassword: hashedCreatePass, password: hashedCreatePass, userDoc: userDoc, users: nextUsersPreview });
+            const gasCreateRes = await sendGasSheetAction({ ...data, userDoc: userDoc, users: nextUsersPreview });
             if (gasCreateRes && (gasCreateRes.status === "error" || gasCreateRes.status === "duplicate")) {
               return gasCreateRes;
             }
@@ -15345,10 +15270,8 @@
               ManagerPermissions: roleVal === "Manager" ? managerPerms : [],
               UpdatedAt: new Date().toISOString()
             };
-            let hashedUpdatedPassword = "";
             if (data.newPassword !== undefined && String(data.newPassword).trim() !== "") {
-              hashedUpdatedPassword = await hashPasswordSha256(data.newPassword);
-              updateFields.Password = hashedUpdatedPassword;
+              updateFields.Password = String(data.newPassword).trim();
             }
             if (nextStatus.toLowerCase() === "blocked") {
               updateFields.ActiveSessionToken = "";
@@ -15373,12 +15296,7 @@
               usersList.push(updateFields);
             }
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({
-              ...data,
-              newPassword: hashedUpdatedPassword || undefined,
-              updatedUser: updateFields,
-              users: usersList
-            });
+            await sendGasSheetAction({ ...data, updatedUser: updateFields, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("UPDATE_USER", `Updated user @${rawTarget} -> @${newUsernameClean} (${roleVal}, ${nextStatus})`, activeUser || "Admin");
             }
@@ -15492,24 +15410,22 @@
             const idx = usersList.findIndex(function(u) {
               return String(u.Username || "").trim().toLowerCase() === lowerU;
             });
-            const currentPass = idx !== -1 ? String(usersList[idx].Password || "").trim() : "";
-            const currentPassHash = currentPass ? await hashPasswordSha256(currentPass) : "";
-            const oldPassHash = data.oldPassword ? await hashPasswordSha256(data.oldPassword) : "";
-            if (oldPassHash && currentPassHash && oldPassHash !== currentPassHash) {
+            const currentPass = idx !== -1 ? String(usersList[idx].Password || "") : "";
+            if (data.oldPassword && currentPass && String(data.oldPassword) !== currentPass) {
               return { status: "error", message: "Current password does not match." };
             }
-            const newPasswordHash = await hashPasswordSha256(data.newPassword || "");
+            const newPasswordClean = String(data.newPassword || "").trim();
             if (idx !== -1) {
               usersList[idx] = {
                 ...usersList[idx],
-                Password: newPasswordHash,
+                Password: newPasswordClean,
                 ActiveSessionToken: "",
                 UpdatedAt: new Date().toISOString()
               };
             } else {
               usersList.push({
                 Username: rawUser,
-                Password: newPasswordHash,
+                Password: newPasswordClean,
                 FullName: activeUserFullName || rawUser,
                 Role: activeRole || "Admin",
                 Status: "Active",
@@ -15523,12 +15439,7 @@
               localStorage.removeItem("portal_session_pass_" + lowerU);
             } catch (e) {}
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({
-              ...data,
-              oldPassword: oldPassHash,
-              newPassword: newPasswordHash,
-              users: usersList
-            });
+            await sendGasSheetAction({ ...data, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("CHANGE_PASSWORD", `Password changed for @${rawUser}`, activeUser || rawUser);
             }
@@ -24979,16 +24890,12 @@ function formatMonthLabel(rawVal) {
           }
 
           const savedSessionPass = sessionStorage.getItem("active_session_password") || localStorage.getItem("portal_session_pass_" + String(activeUser || "").trim().toLowerCase()) || "";
-          if (isVerifiedSheetUsers && matchedServerUser && savedSessionPass && String(matchedServerUser.Password || "").trim()) {
-            const savedSessionPassHash = await hashPasswordSha256(savedSessionPass);
-            const serverPassHash = await hashPasswordSha256(String(matchedServerUser.Password || "").trim());
-            if (savedSessionPassHash && serverPassHash && serverPassHash !== savedSessionPassHash) {
-              performConfirmedLogout();
-              setTimeout(() => {
-                triggerSideToast("Password Changed", "Your account password was changed. Please log in with your new password.", false);
-              }, 120);
-              return;
-            }
+          if (isVerifiedSheetUsers && matchedServerUser && savedSessionPass && String(matchedServerUser.Password || "").trim() && String(matchedServerUser.Password || "").trim() !== savedSessionPass) {
+            performConfirmedLogout();
+            setTimeout(() => {
+              triggerSideToast("Password Changed", "Your account password was changed. Please log in with your new password.", false);
+            }, 120);
+            return;
           }
 
           const incomingProperties = Array.isArray(res.properties) ? res.properties : [];
@@ -26262,12 +26169,10 @@ function formatMonthLabel(rawVal) {
 
       const passInput = document.getElementById("profViewPassword");
       const eyeIcon = document.getElementById("profPassEyeIcon");
-      if (passInput) {
-        passInput.type = "text";
-        passInput.value = "SHA-256 Protected";
-        passInput.placeholder = "";
-      }
-      if (eyeIcon) eyeIcon.className = "fa-solid fa-shield-halved";
+      passInput.type = "password";
+      if (eyeIcon) eyeIcon.className = "fa-solid fa-eye";
+      passInput.value = (matchedLocalUser && matchedLocalUser.Password) ? String(matchedLocalUser.Password) : "";
+      passInput.placeholder = passInput.value ? "" : "Fetching live from Google Sheets...";
 
       document.getElementById("passChangeBottomMsg").className = "bottom-status-msg";
       document.getElementById("userChangeBottomMsg").className = "bottom-status-msg";
@@ -26336,16 +26241,14 @@ function formatMonthLabel(rawVal) {
           if (modalEmailIn && !modalEmailIn.value.trim() && activeUserEmail) {
             modalEmailIn.value = activeUserEmail;
           }
-          if (passInput) {
-            passInput.value = (res.password || (matchedLocalUser && matchedLocalUser.Password)) ? "SHA-256 Protected" : "Password not set";
-            passInput.placeholder = "";
-          }
+          passInput.value = res.password || (matchedLocalUser && matchedLocalUser.Password) || "";
+          passInput.placeholder = passInput.value ? "" : "Password not set";
         }
       } catch (e) {
-        if (passInput && !passInput.value) {
-          passInput.value = (matchedLocalUser && matchedLocalUser.Password) ? "SHA-256 Protected" : "Password not set";
-          passInput.placeholder = "";
+        if (!passInput.value && matchedLocalUser && matchedLocalUser.Password) {
+          passInput.value = String(matchedLocalUser.Password);
         }
+        passInput.placeholder = "Unable to load password offline";
       }
     }
     function toggleProfileDrawer(drawerId, btnId) {
@@ -26914,24 +26817,21 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
-      const oldPassHash = await hashPasswordSha256(oldP);
-      const newPassHash = await hashPasswordSha256(newP);
-
       const res = await sendFirebaseAction({
         action: "changePassword",
         username: activeUser,
-        oldPassword: oldPassHash,
-        newPassword: newPassHash
+        oldPassword: oldP,
+        newPassword: newP
       });
 
       if (res && res.status === "success") {
         (DB.users || []).forEach(u => {
           if (String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase()) {
-            u.Password = newPassHash;
+            u.Password = newP;
           }
         });
         const passInput = document.getElementById("profViewPassword");
-        if (passInput) passInput.value = "SHA-256 Protected";
+        if (passInput) passInput.value = newP;
         msgBox.innerText = "Password updated successfully! Logging out for security...";
         msgBox.className = "bottom-status-msg success";
         triggerSideToast("Password Updated", "Logging out for security...", true);
@@ -27572,6 +27472,11 @@ function formatMonthLabel(rawVal) {
 
       document.getElementById("editAssignTargetUsername").value = u.Username || "";
       document.getElementById("editAssignUsernameDisplay").value = u.Username || "";
+      const pwdInput = document.getElementById("editAssignPasswordInput");
+      if (pwdInput) {
+        pwdInput.value = u.Password || "";
+        pwdInput.type = "password";
+      }
       document.getElementById("editAssignFullName").value = u.FullName || u.Username || "";
       const isEditingSelf = String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase();
       const statusSelect = document.getElementById("editAssignStatus");
@@ -27718,7 +27623,10 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      const existingStoredPass = String(u.Password || "").trim();
+      const newPasswordRaw = String(document.getElementById("editAssignPasswordInput")?.value || "").trim();
+      if (!newPasswordRaw) {
+        return triggerSideToast("Password Required", "Login password cannot be empty.", false);
+      }
       const newFullNameRaw = String(document.getElementById("editAssignFullName")?.value || "").trim() || rawEnteredUsername;
       const uKeyLow = targetUser.toLowerCase();
       const newStatusRaw = String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active";
@@ -27771,10 +27679,11 @@ function formatMonthLabel(rawVal) {
         }
       }
 
-      const finalPasswordHash = existingStoredPass ? await hashPasswordSha256(existingStoredPass) : "";
+      const oldPasswordBeforeEdit = String(u.Password || "").trim();
+      const didPasswordChange = oldPasswordBeforeEdit !== newPasswordRaw;
 
       u.Username = rawEnteredUsername;
-      if (finalPasswordHash) u.Password = finalPasswordHash;
+      u.Password = newPasswordRaw;
       u.FullName = newFullNameRaw;
       u.Status = newStatusRaw;
       u.AccountStatus = newStatusRaw;
@@ -27825,8 +27734,8 @@ function formatMonthLabel(rawVal) {
         sessionStorage.setItem("active_session_assigned_flat", assignedFlat);
         sessionStorage.setItem("active_session_assigned_aadhaar", assignedAadhaar);
         sessionStorage.setItem("active_session_manager_perms", JSON.stringify(managerPermissions));
-        sessionStorage.setItem("active_session_password", finalPasswordHash);
-        localStorage.setItem("portal_session_pass_" + rawEnteredUsername.toLowerCase(), finalPasswordHash);
+        sessionStorage.setItem("active_session_password", newPasswordRaw);
+        localStorage.setItem("portal_session_pass_" + rawEnteredUsername.toLowerCase(), newPasswordRaw);
         if (localStorage.getItem("remembered_user")) {
           localStorage.setItem("remembered_user", rawEnteredUsername);
         }
@@ -27847,6 +27756,7 @@ function formatMonthLabel(rawVal) {
         requesterUsername: activeUser,
         targetUsername: targetUser,
         newUsername: rawEnteredUsername,
+        newPassword: newPasswordRaw,
         newFullName: newFullNameRaw,
         newStatus: newStatusRaw,
         newRole: newRole,
@@ -27855,6 +27765,12 @@ function formatMonthLabel(rawVal) {
         assignedAadhaar: assignedAadhaar,
         managerPermissions: managerPermissions
       });
+
+      if (isSelfEdit && didPasswordChange) {
+        triggerSideToast("Password Updated", "Logging out so you can sign in with your new password...", true);
+        setTimeout(() => performConfirmedLogout(), 800);
+        return;
+      }
 
       triggerSideToast(
         "User Updated",
@@ -29701,15 +29617,13 @@ function formatMonthLabel(rawVal) {
       setCreateUserBannerState("loading", "Creating user... Please wait while saving to database.");
 
       try {
-        // Hash password using SHA-256 on the frontend before sending to Google Apps Script
-        const hashedNewPass = await hashPasswordSha256(newP);
         const res = await sendFirebaseAction({
           action: "createUser",
           requesterUsername: activeUser,
           fullName: fullName,
           mobile: mobile,
           newUsername: newU,
-          newPassword: hashedNewPass,
+          newPassword: newP,
           role: role,
           theme: "system",
           assignedProperty: assignedProperty,
@@ -29724,7 +29638,7 @@ function formatMonthLabel(rawVal) {
           if (!alreadyExists) {
             DB.users.push(res.user || {
               Username: newU,
-              Password: hashedNewPass,
+              Password: newP,
               FullName: fullName,
               Role: role,
               Theme: "system",
