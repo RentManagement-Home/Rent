@@ -8356,6 +8356,23 @@
     border-radius: 12px;
   }
 
+  /* Focused High-Contrast Styling for #paymentProofPendingCountBadge ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div:nth-of-type(1) > div:nth-of-type(2) > span#paymentProofPendingCountBadge {
+    background: linear-gradient(135deg, #b45309 0%, #d97706 100%) !important;
+    color: #ffffff !important;
+    border: 1.5px solid #fcd34d !important;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.32) !important;
+    letter-spacing: 0.02em !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div:nth-of-type(1) > div:nth-of-type(2) > span#paymentProofPendingCountBadge {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    color: #78350f !important;
+    border: 1.5px solid #d97706 !important;
+    box-shadow: 0 3px 8px rgba(180, 83, 9, 0.16) !important;
+    text-shadow: none !important;
+  }
+
   /* Focused 20% Transparency (80% Opacity) for Notification Compose & Bulk Broadcast Cards inside #adminOpsHubPanelSlot_notifications ONLY */
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard,
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard:focus-within,
@@ -8398,6 +8415,44 @@
     padding: 18px !important;
     border-radius: 16px !important;
     border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  }
+
+  /* Focused 10% Transparency (90% Opacity) for #sharedContactSettingsWorkspace inside #adminOpsHubPanelSlot_contact ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_contact > div#sharedContactSettingsWorkspace {
+    background: rgba(15, 23, 42, 0.90) !important;
+    background-color: rgba(15, 23, 42, 0.90) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 18px !important;
+    border-radius: 16px !important;
+    border: 1.5px solid rgba(245, 158, 11, 0.32) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_contact > div#sharedContactSettingsWorkspace {
+    background: rgba(255, 255, 255, 0.90) !important;
+    background-color: rgba(255, 255, 255, 0.90) !important;
+    background-image: none !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 18px !important;
+    border-radius: 16px !important;
+    border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  }
+
+  /* Focused 10% Transparency (90% Opacity) for #adminResidentOpsHubSection topbar ONLY */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div:nth-of-type(1) > div:nth-of-type(1) {
+    background: rgba(15, 23, 42, 0.90) !important;
+    background-color: rgba(15, 23, 42, 0.90) !important;
+    background-image: none !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div:nth-of-type(1) > div:nth-of-type(1) {
+    background: rgba(255, 255, 255, 0.90) !important;
+    background-color: rgba(255, 255, 255, 0.90) !important;
+    background-image: none !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
   }
 
   /* Focused Zero-Clipping Left/Right Layout for #sharedScreenshotVerificationWorkspace inside #adminOpsHubPanelSlot_screenshot ONLY */
@@ -10873,9 +10928,6 @@
                   <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#38bdf8;">
                     <i class="fa-solid fa-receipt"></i> Renter UTR &amp; Payment Proof Queue
                   </div>
-                  <h4 style="margin:3px 0 0 0; font-size:1.05rem; font-weight:900; color:var(--text-main);">
-                    UTR Verification &amp; Approval Center
-                  </h4>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <span id="paymentProofPendingCountBadge" style="font-size:0.74rem; font-weight:800; padding:5px 11px; border-radius:999px; background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.4);">0 Pending</span>
@@ -11368,11 +11420,8 @@
       <button class="modal-close-btn" onclick="closeModal('editUserAssignmentModal')"><i class="fa-solid fa-xmark"></i></button>
       <div style="margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border); padding-right:34px;">
         <h3 style="margin:0; font-size:1.15rem; display:flex; align-items:center; gap:8px;">
-          <i class="fa-solid fa-user-gear" style="color:var(--primary);"></i> Edit User ID, Password, Block Status &amp; Role
+          <i class="fa-solid fa-user-gear" style="color:var(--primary);"></i> Edit Center
         </h3>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">
-          Change username (User ID), login password, block/unblock status, role, or flat assignment in Google Sheets.
-        </p>
       </div>
 
       <input type="hidden" id="editAssignTargetUsername">
@@ -12045,7 +12094,7 @@
           </div>
           <div id="btnOtherOptAuditLog" class="flat-nav-item settings-nav-card nav-audit admin-only" onclick="switchOtherSubOption('auditLog')">
             <div class="s-nav-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="s-nav-title">Audit Trail Log</div>
+            <div class="s-nav-title">Activity Log</div>
           </div>
           <div id="btnOtherOptEditEverything" class="flat-nav-item settings-nav-card nav-edit admin-only" onclick="switchOtherSubOption('editEverything')">
             <div class="s-nav-icon"><i class="fa-solid fa-pen-ruler"></i></div>
@@ -12343,7 +12392,7 @@
               <span class="badge-unpaid" style="font-size:0.68rem;">Cascade Delete</span>
             </div>
             <p style="font-size:0.79rem; color:var(--text-muted); margin-bottom:12px; line-height:1.4;">
-              Permanently delete a building/property along with all flats, tenant profiles, renter User IDs, and billing history inside it from Google Sheet.
+              Permanently delete a building/property along with all flats, tenant profiles, renter User IDs, and billing history.
             </p>
             <button type="button" class="btn-primary admin-only" style="background:linear-gradient(135deg, #dc2626, #ef4444);" onclick="closeModal('settingsModal'); syncPropertyDropdowns(); openModal('deletePropertyModal');">
               <i class="fa-solid fa-trash-can"></i> Open Delete Property Tool
@@ -12460,9 +12509,6 @@
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
             <div>
               <span style="font-weight:800; font-size:0.85rem;"><i class="fa-solid fa-pen-ruler" style="color:var(--primary);"></i> SYSTEM-WIDE BILLING HISTORY (EDIT &amp; DELETE EVERYTHING)</span>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
-                Admin master control: edit any bill field or permanently delete accidental/mistaken entries.
-              </div>
             </div>
             <input
               type="text"
@@ -12530,7 +12576,7 @@
               <input type="text" id="cfgContactName" class="form-control" placeholder="e.g. Property Admin / Help Desk" oninput="markContactSettingsDirty()">
             </div>
             <div class="form-group" style="margin-bottom:0;">
-              <label>Mobile Number</label>
+              <label>Site Problem Phone Number</label>
               <input type="tel" id="cfgContactMobile" class="form-control" placeholder="+91 9876543210" onfocus="ensurePlus91Prefix(this)" oninput="this.value = formatIndianMobilePlus91(this.value); markContactSettingsDirty();">
             </div>
           </div>
@@ -27923,14 +27969,6 @@ function formatMonthLabel(rawVal) {
               </div>
             `;
           } else {
-            const roleToggleBtn = isTargetAdmin
-              ? `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="promptDemoteAdminToRegularUser('${safeUName}')">
-                   <i class="fa-solid fa-user-shield"></i> Make Regular User
-                 </button>`
-              : `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-green); border-color:rgba(16,185,129,0.4);" onclick="promptPromoteUserToAdmin('${safeUName}')">
-                   <i class="fa-solid fa-arrow-up-right-dots"></i> Promote to Admin
-                 </button>`;
-
             const deleteBtn = `<button type="button" class="btn-ledger-action" style="padding:5px 9px; font-size:0.72rem; font-weight:700; color:var(--accent-red); border-color:rgba(239,68,68,0.4);" onclick="confirmDeleteRegisteredUser('${safeUName}')">
                 <i class="fa-solid fa-trash-can"></i> Delete
               </button>`;
@@ -27949,9 +27987,8 @@ function formatMonthLabel(rawVal) {
             adminControlsHtml = `
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px;">
                 <button type="button" class="btn-ledger-action edit-btn" style="padding:5px 9px; font-size:0.72rem; font-weight:700;" onclick="openEditUserAssignmentModal('${safeUName}')">
-                  <i class="fa-solid fa-pen-to-square"></i> Edit ID / Password / Block / Role
+                  <i class="fa-solid fa-pen-to-square"></i> Edit ID 
                 </button>
-                ${roleToggleBtn}
                 ${blockBtn}
                 ${deleteBtn}
               </div>
@@ -28257,7 +28294,6 @@ function formatMonthLabel(rawVal) {
 
       const cats = [
         { key: "electricity_meter", label: "Electricity Meter", shortLabel: "Electricity", icon: "fa-bolt", color: "#38bdf8" },
-        { key: "completed_payment", label: "Payment Screenshot", shortLabel: "Payment", icon: "fa-receipt", color: "#10b981" },
         { key: "water_meter_bill", label: "Water Meter / Bill", shortLabel: "Water", icon: "fa-faucet-drip", color: "#06b6d4" },
         { key: "png_gas_meter", label: "PNG Gas Meter", shortLabel: "PNG Gas", icon: "fa-fire-flame-simple", color: "#f59e0b" }
       ];
@@ -29318,7 +29354,7 @@ function formatMonthLabel(rawVal) {
         renderAdminScreenshotVerificationGrid();
         if (typeof renderRegisteredUsersList === "function") renderRegisteredUsersList();
         renderAllDashboardUI();
-        triggerSideToast("Verification Refreshed", "Synced latest active renters & Google Drive photos from Google Sheets.", true);
+        triggerSideToast("Verification Refreshed", ".", true);
       } catch (err) {
         triggerSideToast("Refresh Failed", "Could not reach Google Sheets right now. Please try again.", false);
       } finally {
@@ -42697,7 +42733,7 @@ function formatMonthLabel(rawVal) {
         const propNameDisplay = String(p.propertyName || p.PropertyName || "").trim();
         const flatNameDisplay = String(p.flatName || p.FlatName || "").trim();
         const headerDetailsDisplay = [renterNameDisplay, propNameDisplay, flatNameDisplay ? `Flat ${flatNameDisplay}` : ""].filter(Boolean).join(", ");
-        const monthYearDisplay = formatMonthLabel(p.monthYear || p.MonthYear);
+        const submittedDateDisplay = formatUtrDateOnly(p.submittedAt || p.SubmittedAt || "") || formatMonthLabel(p.monthYear || p.MonthYear);
         return `
           <div class="utr-proof-row">
             <div style="min-width:0; flex:1 1 220px;">
@@ -42706,7 +42742,7 @@ function formatMonthLabel(rawVal) {
                 <strong style="color:#10b981;">₹${Number(p.amount || 0).toLocaleString("en-IN")}</strong>
               </div>
               <div style="color:var(--text-muted); font-size:0.72rem; margin-top:3px; overflow-wrap:anywhere;">
-                ${escapeHtml(monthYearDisplay)} | UTR: <strong style="color:#38bdf8;">${escapeHtml(p.utr || p.UTRNumber || "--")}</strong> (${escapeHtml(p.mode || p.paymentMode || "UPI")}) | ${escapeHtml(formatUtrDateOnly(p.submittedAt || p.SubmittedAt || ""))}
+                UTR No: <strong style="color:#38bdf8;">${escapeHtml(p.utr || p.UTRNumber || "--")}</strong>${submittedDateDisplay ? ` | ${escapeHtml(submittedDateDisplay)}` : ""}
               </div>
               ${statusText === "Rejected" && rejReason ? `
                 <div class="utr-rejection-reason-box">
