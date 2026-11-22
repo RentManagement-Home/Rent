@@ -1,6 +1,0 @@
-{
-  "name": "KirayaHub",
-  "description": "Multi-property rent, billing, utility tracking, and resident management portal with Google Sheets and Google Drive integration.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
