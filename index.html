@@ -10603,8 +10603,10 @@
     transform: translateY(-1px) scale(0.97);
   }
 
-  /* Focused #btnDeletePngProof: strictly hidden whenever no PNG photo is uploaded */
-  button#btnDeletePngProof:not([data-has-proof="true"]) {
+  /* Focused Meter Proof Delete Buttons: strictly hidden whenever no photo is uploaded */
+  button#btnDeleteMeterProof:not([data-has-proof="true"]),
+  button#btnDeletePngProof:not([data-has-proof="true"]),
+  button#btnDeleteWaterProof:not([data-has-proof="true"]) {
     display: none !important;
   }
 
@@ -33025,12 +33027,12 @@ function formatMonthLabel(rawVal) {
         navItems.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
         tabContents.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
         modal.querySelectorAll("#tabCalc .admin-only, #tabCalc .pencil-lock-btn").forEach(el => {
-          if (el.id === "btnDeletePngProof") return;
+          if (el.id === "btnDeleteMeterProof" || el.id === "btnDeletePngProof" || el.id === "btnDeleteWaterProof") return;
           if (canBill) el.style.removeProperty("display");
           else el.style.setProperty("display", "none", "important");
         });
-        if (typeof syncUtilityProofButtonsVisibility === "function") {
-          syncUtilityProofButtonsVisibility("png");
+        if (typeof syncAllUtilityProofButtonsVisibility === "function") {
+          syncAllUtilityProofButtonsVisibility();
         }
         modal.querySelectorAll("#tabProfile input, #tabProfile select, #tabProfile textarea").forEach(inp => {
           if (canEditProf) {
@@ -43932,12 +43934,8 @@ function formatMonthLabel(rawVal) {
       if (delBtn) {
         const canEdit = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
         const showDel = Boolean(hasProof && canEdit);
-        if (delBtn.id === "btnDeletePngProof") {
-          delBtn.setAttribute("data-has-proof", showDel ? "true" : "false");
-          delBtn.style.setProperty("display", showDel ? "inline-flex" : "none", "important");
-        } else {
-          delBtn.style.display = showDel ? "inline-flex" : "none";
-        }
+        delBtn.setAttribute("data-has-proof", showDel ? "true" : "false");
+        delBtn.style.setProperty("display", showDel ? "inline-flex" : "none", "important");
       }
     }
 
@@ -44043,6 +44041,11 @@ function formatMonthLabel(rawVal) {
             triggerSideToast("Upload successfully", "Upload successfully", true);
           }
         } catch (e) {
+          const urlElCheck = document.getElementById(meta.urlInputId);
+          if (!(urlElCheck?.value || "").trim()) {
+            window[meta.previewVar] = "";
+          }
+          syncUtilityProofButtonsVisibility(utilType);
           triggerSideToast("Upload Failed", e?.message || "Could not upload meter photo.", false);
         } finally {
           window[meta.promiseVar] = null;
