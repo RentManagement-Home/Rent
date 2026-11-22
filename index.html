@@ -126,8 +126,12 @@
     .bg-canvas {
       position: fixed;
       inset: 0;
-      background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=90') center/cover no-repeat fixed;
+      background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=90') center/cover no-repeat;
       z-index: -1;
+      pointer-events: none;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+      contain: strict;
       transition: background 0.3s ease;
     }
 
@@ -147,7 +151,7 @@
       align-items: center;
       justify-content: center;
       padding: 16px;
-      background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=90') center/cover no-repeat fixed;
+      background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=90') center/cover no-repeat;
     }
 
     .glass-card {
@@ -10275,7 +10279,7 @@
     scrollbar-width: none !important;
   }
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
   }
   html::-webkit-scrollbar,
   body::-webkit-scrollbar,
@@ -10608,6 +10612,88 @@
   button#btnDeletePngProof:not([data-has-proof="true"]),
   button#btnDeleteWaterProof:not([data-has-proof="true"]) {
     display: none !important;
+  }
+
+  /* ============================================================================
+     60FPS SMOOTHNESS & GPU COMPOSITING OPTIMIZATION LAYER
+     Eliminates scroll jank, double-blur GPU stalls, and layout thrashing
+     ============================================================================ */
+  button, a, .flat-card-merged, .theme-card, .flat-nav-item, .btn-switch-option {
+    touch-action: manipulation;
+  }
+
+  /* Eliminate full-viewport backdrop double-blur behind modals */
+  .modal-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(2, 6, 23, 0.72);
+    contain: layout style;
+  }
+
+  /* Cap heavy multi-pass blur(16px-24px) to lightweight GPU-fast blur(8px) on primary overlays/headers */
+  .glass-card,
+  #settingsModal .modal-window,
+  body.theme-white #settingsModal .modal-window,
+  #appDownloadModal .modal-window,
+  .renter-hero-banner,
+  .admin-ops-hub-topbar,
+  .admin-ops-hub-body,
+  .side-toast,
+  .action-menu.home-portfolio-menu,
+  #actionMenu.action-menu {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Remove nested per-item backdrop-filter inside scrolling grids/lists (massive scroll FPS gain) */
+  #flatsList > .flat-card-merged,
+  .admin-ops-carousel-card,
+  .renter-statement-card,
+  .renter-payment-card,
+  .renter-recent-bills-card,
+  .calc-grid-card,
+  .history-ledger-card,
+  .ledger-row {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    contain: layout style;
+  }
+
+  /* Isolate modal and hub scroll containers for smooth native momentum scrolling */
+  .modal-window,
+  .admin-ops-hub-body,
+  #adminFlatDetailsHubSection,
+  #adminResidentOpsHubSection {
+    contain: layout style;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Convert CPU-repainting infinite box-shadow/position keyframes to pure GPU transform/opacity */
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.95; }
+    50% { transform: scale(1.12); opacity: 0.65; }
+  }
+  @keyframes overdueDuePillPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.04); opacity: 0.88; }
+  }
+  @keyframes houseTriggerPulse {
+    0%, 100% { transform: scale(0.92); opacity: 0.85; }
+    50% { transform: scale(1.16); opacity: 1; }
+  }
+  @keyframes kirayaLogoSheen {
+    0%, 72% { transform: translateX(-160%) rotate(18deg); opacity: 0; }
+    82% { opacity: 0.85; }
+    100% { transform: translateX(260%) rotate(18deg); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
 </style>
@@ -19529,8 +19615,45 @@ function formatMonthLabel(rawVal) {
 
     let isSyncingLive = false;
     let lastSyncedDataHash = "";
+    let lastSyncedGlobalConfigHash = "";
     let pendingWriteCount = 0;
     let lastWriteCompletedAt = 0;
+    let pendingDashboardRenderRaf = null;
+
+    function computeCanonicalDbSyncHash(dataSource = DB, globalCfg = DB.globalConfig) {
+      try {
+        const cfg = (globalCfg && typeof globalCfg === "object") ? globalCfg : {};
+        return JSON.stringify({
+          p: dataSource.properties || [],
+          f: dataSource.flats || [],
+          r: dataSource.renters || [],
+          b: dataSource.bills || [],
+          u: dataSource.users || [],
+          l: dataSource.loginHistory || [],
+          fd: dataSource.fdRecords || [],
+          kh: dataSource.khetRecords || [],
+          kharch: dataSource.kharchRecords || [],
+          rmp: cfg.renterMonthlyPhotos || {},
+          srq: cfg.screenshotRequests || {},
+          pp: cfg.paymentProofs || [],
+          mt: cfg.maintenanceTickets || [],
+          adl: cfg.appDownloadLinks || null,
+          bn: cfg.broadcastNotices || [],
+          pc: cfg.privateChats || {},
+          cc: cfg.contactConfig || {}
+        });
+      } catch (e) {
+        return "";
+      }
+    }
+
+    function scheduleSmoothDashboardRender() {
+      if (pendingDashboardRenderRaf) cancelAnimationFrame(pendingDashboardRenderRaf);
+      pendingDashboardRenderRaf = requestAnimationFrame(() => {
+        pendingDashboardRenderRaf = null;
+        renderAllDashboardUI();
+      });
+    }
 
     // Zero-Cache Policy: Never save DB snapshots to localStorage or sessionStorage so Google Sheets is always the single source of truth
     function saveDbSnapshotToCache() {
@@ -19538,17 +19661,7 @@ function formatMonthLabel(rawVal) {
         sortPropertiesAlphabetically(DB.properties);
         sessionStorage.removeItem("cached_db_snapshot");
         localStorage.removeItem("portal_full_db_backup");
-        lastSyncedDataHash = JSON.stringify({
-          p: DB.properties,
-          f: DB.flats,
-          r: DB.renters,
-          b: DB.bills,
-          u: DB.users,
-          l: DB.loginHistory,
-          fd: DB.fdRecords,
-          kh: DB.khetRecords,
-          kharch: DB.kharchRecords
-        });
+        lastSyncedDataHash = computeCanonicalDbSyncHash(DB, DB.globalConfig);
       } catch (e) {}
     }
 
@@ -24594,10 +24707,18 @@ function formatMonthLabel(rawVal) {
       } catch (e) {}
 
       if (syncTimer) clearInterval(syncTimer);
-      // Poll every 3 seconds so second-device logins & sheet changes are detected rapidly
+      // Poll every 10 seconds to keep live sync & session conflict checks responsive without main-thread stutter
       syncTimer = setInterval(() => {
         if (!document.hidden && typeof syncDataLive === "function") syncDataLive(false);
-      }, 3000);
+      }, 10000);
+      if (!window.__visibilitySyncListenerBound) {
+        window.__visibilitySyncListenerBound = true;
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden && activeUser && typeof syncDataLive === "function") {
+            syncDataLive(false);
+          }
+        });
+      }
     }
 
     
@@ -25784,140 +25905,152 @@ function formatMonthLabel(rawVal) {
             incomingLoginHistory = [];
           }
 
-          const incomingHash = JSON.stringify({
-            p: incomingProperties,
-            f: incomingFlats,
-            r: incomingRenters,
-            b: incomingBills,
-            u: incomingUsers,
-            l: incomingLoginHistory,
-            fd: incomingFdRecords,
-            kh: incomingKhetRecords,
-            kharch: incomingKharchRecords,
-            rmp: res.globalConfig?.renterMonthlyPhotos || {},
-            srq: res.globalConfig?.screenshotRequests || {},
-            pp: res.globalConfig?.paymentProofs || [],
-            mt: res.globalConfig?.maintenanceTickets || [],
-            adl: res.globalConfig?.appDownloadLinks || null
+          sortPropertiesAlphabetically(incomingProperties);
+
+          const incomingHash = computeCanonicalDbSyncHash({
+            properties: incomingProperties,
+            flats: incomingFlats,
+            renters: incomingRenters,
+            bills: incomingBills,
+            users: incomingUsers,
+            loginHistory: incomingLoginHistory,
+            fdRecords: incomingFdRecords,
+            khetRecords: incomingKhetRecords,
+            kharchRecords: incomingKharchRecords
+          }, res.globalConfig || DB.globalConfig);
+
+          const incomingGlobalConfigHash = JSON.stringify({
+            gc: res.globalConfig || null,
+            bgl: res.bgLoginUrl || res.userBgLogin || "",
+            bgd: res.bgDashboardUrl || res.userBgDashboard || ""
           });
 
           const hasDataChanged = incomingHash !== lastSyncedDataHash;
-          lastSyncedDataHash = incomingHash;
+          const hasGlobalConfigChanged = incomingGlobalConfigHash !== lastSyncedGlobalConfigHash;
 
-          DB.properties = incomingProperties;
-          DB.flats = incomingFlats;
-          DB.renters = incomingRenters;
-          DB.bills = incomingBills;
-          DB.users = incomingUsers;
-          DB.loginHistory = incomingLoginHistory;
-          DB.fdRecords = incomingFdRecords;
-          DB.khetRecords = incomingKhetRecords;
-          DB.kharchRecords = incomingKharchRecords;
+          if (hasDataChanged || forceRender) {
+            DB.properties = incomingProperties;
+            DB.flats = incomingFlats;
+            DB.renters = incomingRenters;
+            DB.bills = incomingBills;
+            DB.users = incomingUsers;
+            DB.loginHistory = incomingLoginHistory;
+            DB.fdRecords = incomingFdRecords;
+            DB.khetRecords = incomingKhetRecords;
+            DB.kharchRecords = incomingKharchRecords;
 
-          rebindSelectedFlatAndRenterReferences();
-          saveDbSnapshotToCache();
+            rebindSelectedFlatAndRenterReferences();
+          }
 
-          syncServerBackgroundsToLocal(res.globalConfig || res, res.bgLoginUrl || res.userBgLogin || "", res.bgDashboardUrl || res.userBgDashboard || "", Boolean(res.globalConfig));
-          if (res.globalConfig && typeof res.globalConfig === "object") {
-            if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-            const trustServerMonthly = Boolean(res._liveSheetVerified && !pendingWriteCount);
-            const mergedMonthlyPhotos = trustServerMonthly
-              ? { ...((res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object") ? res.globalConfig.renterMonthlyPhotos : {}) }
-              : {
-                  ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
-                  ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
-                };
+          if (hasGlobalConfigChanged || forceRender) {
+            lastSyncedGlobalConfigHash = incomingGlobalConfigHash;
+            syncServerBackgroundsToLocal(res.globalConfig || res, res.bgLoginUrl || res.userBgLogin || "", res.bgDashboardUrl || res.userBgDashboard || "", Boolean(res.globalConfig));
+            if (res.globalConfig && typeof res.globalConfig === "object") {
+              if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+              const trustServerMonthly = Boolean(res._liveSheetVerified && !pendingWriteCount);
+              const mergedMonthlyPhotos = trustServerMonthly
+                ? { ...((res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object") ? res.globalConfig.renterMonthlyPhotos : {}) }
+                : {
+                    ...(DB.globalConfig.renterMonthlyPhotos && typeof DB.globalConfig.renterMonthlyPhotos === "object" ? DB.globalConfig.renterMonthlyPhotos : {}),
+                    ...(res.globalConfig.renterMonthlyPhotos && typeof res.globalConfig.renterMonthlyPhotos === "object" ? res.globalConfig.renterMonthlyPhotos : {})
+                  };
 
-            // Preserve any photos uploaded in the last 90s against slower sheet reads, and respect admin deletes in the last 30s
-            const nowSyncTs = Date.now();
-            if (window.__deletedMonthlyPhotoSlots) {
-              Object.keys(window.__deletedMonthlyPhotoSlots).forEach(dk => {
-                if (nowSyncTs - window.__deletedMonthlyPhotoSlots[dk] < 30000) {
-                  delete mergedMonthlyPhotos[dk];
-                } else {
-                  delete window.__deletedMonthlyPhotoSlots[dk];
-                }
-              });
-            }
-            if (window.__recentMonthlyPhotoUploads) {
-              Object.keys(window.__recentMonthlyPhotoUploads).forEach(uk => {
-                const entry = window.__recentMonthlyPhotoUploads[uk];
-                if (entry && entry.slot && (nowSyncTs - entry.at < 90000)) {
-                  const serverSlot = mergedMonthlyPhotos[uk];
-                  if (!serverSlot || !(serverSlot.imageUrl || serverSlot.previewUrl)) {
-                    mergedMonthlyPhotos[uk] = entry.slot;
+              // Preserve any photos uploaded in the last 90s against slower sheet reads, and respect admin deletes in the last 30s
+              const nowSyncTs = Date.now();
+              if (window.__deletedMonthlyPhotoSlots) {
+                Object.keys(window.__deletedMonthlyPhotoSlots).forEach(dk => {
+                  if (nowSyncTs - window.__deletedMonthlyPhotoSlots[dk] < 30000) {
+                    delete mergedMonthlyPhotos[dk];
+                  } else {
+                    delete window.__deletedMonthlyPhotoSlots[dk];
                   }
-                  if (entry.targetPhotoCol && (entry.driveUrl || entry.slot.imageUrl)) {
-                    const fallbackUrl = entry.driveUrl || entry.slot.imageUrl;
-                    (DB.renters || []).forEach(r => {
-                      const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
-                      const sameId = entry.renterId && String(r.RenterID || "") === String(entry.renterId);
-                      const sameAadh = entry.aadhaar && entry.aadhaar.length === 12 && rAadh === entry.aadhaar && String(r.Status || "").toLowerCase() === "active";
-                      const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, entry.propName, entry.flatName) && String(r.Status || "").toLowerCase() === "active";
-                      if ((sameId || sameAadh || sameFlat) && !r[entry.targetPhotoCol]) {
-                        r[entry.targetPhotoCol] = fallbackUrl;
-                      }
-                    });
+                });
+              }
+              if (window.__recentMonthlyPhotoUploads) {
+                Object.keys(window.__recentMonthlyPhotoUploads).forEach(uk => {
+                  const entry = window.__recentMonthlyPhotoUploads[uk];
+                  if (entry && entry.slot && (nowSyncTs - entry.at < 90000)) {
+                    const serverSlot = mergedMonthlyPhotos[uk];
+                    if (!serverSlot || !(serverSlot.imageUrl || serverSlot.previewUrl)) {
+                      mergedMonthlyPhotos[uk] = entry.slot;
+                    }
+                    if (entry.targetPhotoCol && (entry.driveUrl || entry.slot.imageUrl)) {
+                      const fallbackUrl = entry.driveUrl || entry.slot.imageUrl;
+                      (DB.renters || []).forEach(r => {
+                        const rAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+                        const sameId = entry.renterId && String(r.RenterID || "") === String(entry.renterId);
+                        const sameAadh = entry.aadhaar && entry.aadhaar.length === 12 && rAadh === entry.aadhaar && String(r.Status || "").toLowerCase() === "active";
+                        const sameFlat = isSamePropAndFlat(r.PropertyName, r.FlatName, entry.propName, entry.flatName) && String(r.Status || "").toLowerCase() === "active";
+                        if ((sameId || sameAadh || sameFlat) && !r[entry.targetPhotoCol]) {
+                          r[entry.targetPhotoCol] = fallbackUrl;
+                        }
+                      });
+                    }
+                  } else {
+                    delete window.__recentMonthlyPhotoUploads[uk];
                   }
-                } else {
-                  delete window.__recentMonthlyPhotoUploads[uk];
-                }
-              });
-            }
+                });
+              }
 
-            const mergedScreenshotReqs = trustServerMonthly
-              ? ((res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object") ? res.globalConfig.screenshotRequests : {})
-              : {
-                  ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
-                  ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
-                };
-            const rawServerProofs = Array.isArray(res.globalConfig.paymentProofs) ? res.globalConfig.paymentProofs : [];
-            const filteredServerProofs = window.__deletedPaymentProofIds
-              ? rawServerProofs.filter(p => {
-                  const pid = String(p?.id || p?.ProofID || "");
-                  const delTs = window.__deletedPaymentProofIds[pid];
-                  if (delTs && (nowSyncTs - delTs < 30000)) return false;
-                  if (delTs) delete window.__deletedPaymentProofIds[pid];
-                  return true;
-                })
-              : rawServerProofs;
-            DB.globalConfig = {
-              ...DB.globalConfig,
-              ...res.globalConfig,
-              renterMonthlyPhotos: mergedMonthlyPhotos,
-              screenshotRequests: mergedScreenshotReqs,
-              contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
-              broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
-              privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
-              paymentProofs: filteredServerProofs,
-              maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
-              appDownloadLinks: (res.globalConfig.appDownloadLinks && typeof res.globalConfig.appDownloadLinks === "object")
-                ? res.globalConfig.appDownloadLinks
-                : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" }),
-              auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
-            };
-            if (typeof initAdminAppDownloadLinksForm === "function" && document.body.classList.contains("admin-ops-hub-open") && window.activeAdminOpsHubTab === "applinks") {
-              initAdminAppDownloadLinksForm();
-            }
-            if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
-            const contactModalEl = document.getElementById("contactUsModal");
-            if (contactModalEl && contactModalEl.classList.contains("active") && typeof renderContactUsDynamicBody === "function") {
-              renderContactUsDynamicBody();
-            }
-            if (typeof syncServerBroadcastNoticesToLocal === "function") {
-              syncServerBroadcastNoticesToLocal(DB.globalConfig.broadcastNotices, true);
-            }
-            if (typeof syncServerPrivateChatsToLocal === "function") {
-              syncServerPrivateChatsToLocal(DB.globalConfig.privateChats);
-            }
-            const maintModalEl = document.getElementById("renterMaintenanceModal");
-            if (maintModalEl && maintModalEl.classList.contains("active") && typeof renderRenterMaintenanceModalBody === "function") {
-              renderRenterMaintenanceModalBody();
-            }
-            if (typeof renderAdminMaintenanceTickets === "function") {
-              renderAdminMaintenanceTickets();
+              const mergedScreenshotReqs = trustServerMonthly
+                ? ((res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object") ? res.globalConfig.screenshotRequests : {})
+                : {
+                    ...(DB.globalConfig.screenshotRequests && typeof DB.globalConfig.screenshotRequests === "object" ? DB.globalConfig.screenshotRequests : {}),
+                    ...(res.globalConfig.screenshotRequests && typeof res.globalConfig.screenshotRequests === "object" ? res.globalConfig.screenshotRequests : {})
+                  };
+              const rawServerProofs = Array.isArray(res.globalConfig.paymentProofs) ? res.globalConfig.paymentProofs : [];
+              const filteredServerProofs = window.__deletedPaymentProofIds
+                ? rawServerProofs.filter(p => {
+                    const pid = String(p?.id || p?.ProofID || "");
+                    const delTs = window.__deletedPaymentProofIds[pid];
+                    if (delTs && (nowSyncTs - delTs < 30000)) return false;
+                    if (delTs) delete window.__deletedPaymentProofIds[pid];
+                    return true;
+                  })
+                : rawServerProofs;
+              DB.globalConfig = {
+                ...DB.globalConfig,
+                ...res.globalConfig,
+                renterMonthlyPhotos: mergedMonthlyPhotos,
+                screenshotRequests: mergedScreenshotReqs,
+                contactConfig: (res.globalConfig.contactConfig && typeof res.globalConfig.contactConfig === "object") ? res.globalConfig.contactConfig : {},
+                broadcastNotices: Array.isArray(res.globalConfig.broadcastNotices) ? res.globalConfig.broadcastNotices : [],
+                privateChats: (res.globalConfig.privateChats && typeof res.globalConfig.privateChats === "object") ? res.globalConfig.privateChats : {},
+                paymentProofs: filteredServerProofs,
+                maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
+                appDownloadLinks: (res.globalConfig.appDownloadLinks && typeof res.globalConfig.appDownloadLinks === "object")
+                  ? res.globalConfig.appDownloadLinks
+                  : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" }),
+                auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
+              };
+              if (typeof initAdminAppDownloadLinksForm === "function" && document.body.classList.contains("admin-ops-hub-open") && window.activeAdminOpsHubTab === "applinks") {
+                initAdminAppDownloadLinksForm();
+              }
+              if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
+              const contactModalEl = document.getElementById("contactUsModal");
+              if (contactModalEl && contactModalEl.classList.contains("active") && typeof renderContactUsDynamicBody === "function") {
+                renderContactUsDynamicBody();
+              }
+              if (typeof syncServerBroadcastNoticesToLocal === "function") {
+                syncServerBroadcastNoticesToLocal(DB.globalConfig.broadcastNotices, true);
+              }
+              if (typeof syncServerPrivateChatsToLocal === "function") {
+                syncServerPrivateChatsToLocal(DB.globalConfig.privateChats);
+              }
+              const maintModalEl = document.getElementById("renterMaintenanceModal");
+              if (maintModalEl && maintModalEl.classList.contains("active") && typeof renderRenterMaintenanceModalBody === "function") {
+                renderRenterMaintenanceModalBody();
+              }
+              if (typeof renderAdminMaintenanceTickets === "function") {
+                renderAdminMaintenanceTickets();
+              }
             }
           }
+
+          if (hasDataChanged || hasGlobalConfigChanged || forceRender) {
+            saveDbSnapshotToCache();
+          }
+
           if (res.userAssignedProperty !== undefined) {
             activeAssignedProperty = res.userAssignedProperty || "";
             sessionStorage.setItem("active_session_assigned_prop", activeAssignedProperty);
@@ -25961,12 +26094,16 @@ function formatMonthLabel(rawVal) {
             sessionStorage.setItem("active_session_email", activeUserEmail);
           }
 
-          if (activeUser && authSessionEpoch === syncEpochAtStart) {
+          if (activeUser && authSessionEpoch === syncEpochAtStart && (hasDataChanged || forceRender)) {
             persistActiveAuthSession();
           }
 
           if (hasDataChanged || forceRender) {
-            renderAllDashboardUI();
+            if (forceRender) {
+              renderAllDashboardUI();
+            } else {
+              scheduleSmoothDashboardRender();
+            }
             const ssvPanel = document.getElementById("setSubScreenshotVerification");
             const isHubOpen = document.body.classList.contains("admin-ops-hub-open");
             if (isHubOpen) {
@@ -25980,9 +26117,9 @@ function formatMonthLabel(rawVal) {
             } else if (ssvPanel && ssvPanel.classList.contains("active") && typeof renderAdminScreenshotVerificationGrid === "function") {
               renderAdminScreenshotVerificationGrid();
             }
-          }
-          if (typeof syncAdminOpsHubBadges === "function") {
-            syncAdminOpsHubBadges();
+            if (typeof syncAdminOpsHubBadges === "function") {
+              syncAdminOpsHubBadges();
+            }
           }
           if (res._liveSheetVerified === true && typeof triggerDailyApproachingDueEmailCheck === "function") {
             triggerDailyApproachingDueEmailCheck();
