@@ -10603,6 +10603,11 @@
     transform: translateY(-1px) scale(0.97);
   }
 
+  /* Focused #btnDeletePngProof: strictly hidden whenever no PNG photo is uploaded */
+  button#btnDeletePngProof:not([data-has-proof="true"]) {
+    display: none !important;
+  }
+
 </style>
 </head>
 <body class="theme-black">
@@ -33020,9 +33025,13 @@ function formatMonthLabel(rawVal) {
         navItems.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
         tabContents.forEach((el, idx) => el.classList.toggle("active", idx === defaultTabIdx));
         modal.querySelectorAll("#tabCalc .admin-only, #tabCalc .pencil-lock-btn").forEach(el => {
+          if (el.id === "btnDeletePngProof") return;
           if (canBill) el.style.removeProperty("display");
           else el.style.setProperty("display", "none", "important");
         });
+        if (typeof syncUtilityProofButtonsVisibility === "function") {
+          syncUtilityProofButtonsVisibility("png");
+        }
         modal.querySelectorAll("#tabProfile input, #tabProfile select, #tabProfile textarea").forEach(inp => {
           if (canEditProf) {
             if (inp.id !== "profFlatNumber") {
@@ -43916,13 +43925,19 @@ function formatMonthLabel(rawVal) {
     function syncUtilityProofButtonsVisibility(utilType = "elec") {
       const meta = getUtilityProofMeta(utilType);
       const urlVal = (document.getElementById(meta.urlInputId)?.value || "").trim();
-      const hasProof = Boolean(window[meta.previewVar] || urlVal);
+      const hasProof = Boolean(String(window[meta.previewVar] || "").trim() || urlVal);
       const prevBtn = document.getElementById(meta.previewBtnId);
       const delBtn = document.getElementById(meta.deleteBtnId);
       if (prevBtn) prevBtn.style.display = hasProof ? "inline-flex" : "none";
       if (delBtn) {
         const canEdit = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
-        delBtn.style.display = (hasProof && canEdit) ? "inline-flex" : "none";
+        const showDel = Boolean(hasProof && canEdit);
+        if (delBtn.id === "btnDeletePngProof") {
+          delBtn.setAttribute("data-has-proof", showDel ? "true" : "false");
+          delBtn.style.setProperty("display", showDel ? "inline-flex" : "none", "important");
+        } else {
+          delBtn.style.display = showDel ? "inline-flex" : "none";
+        }
       }
     }
 
