@@ -27931,21 +27931,67 @@ function formatMonthLabel(rawVal) {
       }
     }
 
+    function getMatchingRentersForEditUser(u) {
+      const allRenters = (DB.renters || []).map((r, origIdx) => ({ r, origIdx }))
+        .filter(({ r }) => r && (r.RenterName || r.IdentityDocNumber));
+      if (!u) return [];
+
+      const uAadh = String(u.AssignedAadhaar || u.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+      const uProp = String(u.AssignedProperty || "").trim().toLowerCase();
+      const uFlat = String(u.AssignedFlat || "").trim().toLowerCase();
+      const uName = String(u.FullName || "").trim().toLowerCase();
+      const uUser = String(u.Username || "").trim().toLowerCase();
+      const uMob = String(u.MobileNumber || "").replace(/\D/g, "").slice(-10);
+
+      // 1. Primary strict filter: exact 12-digit Aadhaar match
+      if (uAadh.length === 12) {
+        const byAadh = allRenters.filter(({ r }) =>
+          String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12) === uAadh
+        );
+        if (byAadh.length > 0) return byAadh;
+      }
+
+      // 2. Secondary filter: exact assigned Property + Flat (narrowed by name/mobile if multiple stays exist)
+      if (uProp && uProp !== "all" && !uProp.includes(",") && uFlat) {
+        const byFlat = allRenters.filter(({ r }) =>
+          String(r.PropertyName || "").trim().toLowerCase() === uProp &&
+          String(r.FlatName || "").trim().toLowerCase() === uFlat
+        );
+        if (byFlat.length > 0) {
+          const byFlatAndIdentity = byFlat.filter(({ r }) => {
+            const rName = String(r.RenterName || "").trim().toLowerCase();
+            const rMob = String(r.MobileNumber || "").replace(/\D/g, "").slice(-10);
+            return (uName && rName === uName) || (uMob.length === 10 && rMob === uMob);
+          });
+          return byFlatAndIdentity.length > 0 ? byFlatAndIdentity : byFlat;
+        }
+      }
+
+      // 3. Fallback filter: exact mobile number or exact full name/username match
+      const byContactOrName = allRenters.filter(({ r }) => {
+        const rName = String(r.RenterName || "").trim().toLowerCase();
+        const rMob = String(r.MobileNumber || "").replace(/\D/g, "").slice(-10);
+        if (uMob.length === 10 && rMob === uMob) return true;
+        if (uName && rName === uName) return true;
+        if (uUser && rName === uUser) return true;
+        return false;
+      });
+      return byContactOrName;
+    }
+
     // Requirement 4: Registered User Management & Aadhaar-Bound Renter Creation (1 Unique ID per Aadhaar)
-    function populateRenterQuickSelectDropdowns() {
-      const renters = (DB.renters || []).filter(r => r.RenterName || r.IdentityDocNumber);
+    function populateRenterQuickSelectDropdowns(selectedUserForEdit = null) {
+      const allRenters = (DB.renters || []).map((r, origIdx) => ({ r, origIdx }))
+        .filter(({ r }) => r && (r.RenterName || r.IdentityDocNumber));
       const createOpts = ['<option value="">-- Choose Eligible Renter Without Existing User ID --</option>'];
-      const editOpts = ['<option value="">-- Choose Existing Renter Profile (by Name & Aadhaar) --</option>'];
       const seenCreateAadhaars = new Set();
 
-      renters.forEach((r, idx) => {
+      allRenters.forEach(({ r, origIdx }) => {
         const cleanAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
         const statusTag = String(r.Status || "Active").toLowerCase() === "active" ? "Active" : "Inactive";
         const label = `${r.RenterName || "Tenant"} — ${r.PropertyName || ""} Flat ${r.FlatName || ""} (${cleanAadh ? "Aadhaar: " + cleanAadh : "No Aadhaar"} • ${statusTag})`;
-        const val = `${r.RenterID || ("IDX-" + idx)}`;
+        const val = `${r.RenterID || ("IDX-" + origIdx)}`;
         const optionHtml = `<option value="${String(val).replace(/"/g, '&quot;')}">${label}</option>`;
-
-        editOpts.push(optionHtml);
 
         // For Create User ID: if an ID has already been created for this Aadhaar number (whether renter is active or inactive),
         // do NOT display their details in the Create User quick-select list.
@@ -27959,9 +28005,48 @@ function formatMonthLabel(rawVal) {
       });
 
       const createSel = document.getElementById("createUserRenterQuickSelect");
-      const editSel = document.getElementById("editAssignRenterQuickSelect");
       if (createSel) createSel.innerHTML = createOpts.join("");
-      if (editSel) editSel.innerHTML = editOpts.join("");
+
+      // Strictly filter #editAssignRenterQuickSelect to ONLY the selected user's own renter profile(s)
+      const editSel = document.getElementById("editAssignRenterQuickSelect");
+      if (editSel) {
+        let targetUserObj = selectedUserForEdit;
+        if (!targetUserObj) {
+          const currentEditUsername = String(document.getElementById("editAssignTargetUsername")?.value || "").trim().toLowerCase();
+          if (currentEditUsername) {
+            targetUserObj = (DB.users || []).find(item => String(item.Username || "").trim().toLowerCase() === currentEditUsername) || null;
+          }
+        }
+        const matchedEntries = getMatchingRentersForEditUser(targetUserObj);
+        if (matchedEntries.length === 0) {
+          editSel.innerHTML = '<option value="">-- No Matching Renter Profile for Selected User --</option>';
+        } else {
+          const editOpts = ['<option value="">-- Select Renter Profile for This User --</option>'];
+          let preferredVal = "";
+          const uProp = String(targetUserObj?.AssignedProperty || "").trim().toLowerCase();
+          const uFlat = String(targetUserObj?.AssignedFlat || "").trim().toLowerCase();
+          matchedEntries.forEach(({ r, origIdx }) => {
+            const cleanAadh = String(r.IdentityDocNumber || "").replace(/\D/g, "").slice(0, 12);
+            const statusTag = String(r.Status || "Active").toLowerCase() === "active" ? "Active" : "Inactive";
+            const label = `${r.RenterName || "Tenant"} — ${r.PropertyName || ""} Flat ${r.FlatName || ""} (${cleanAadh ? "Aadhaar: " + cleanAadh : "No Aadhaar"} • ${statusTag})`;
+            const val = `${r.RenterID || ("IDX-" + origIdx)}`;
+            editOpts.push(`<option value="${String(val).replace(/"/g, '&quot;')}">${label}</option>`);
+            const matchesAssignedFlat = uProp && uFlat &&
+              String(r.PropertyName || "").trim().toLowerCase() === uProp &&
+              String(r.FlatName || "").trim().toLowerCase() === uFlat;
+            if (!preferredVal && matchesAssignedFlat && statusTag === "Active") {
+              preferredVal = val;
+            }
+          });
+          if (!preferredVal) {
+            const activeMatch = matchedEntries.find(({ r }) => String(r.Status || "Active").toLowerCase() === "active");
+            const firstEntry = activeMatch || matchedEntries[0];
+            preferredVal = `${firstEntry.r.RenterID || ("IDX-" + firstEntry.origIdx)}`;
+          }
+          editSel.innerHTML = editOpts.join("");
+          editSel.value = preferredVal;
+        }
+      }
     }
 
     function handleCreateUserRenterQuickSelect(renterIdOrIdx) {
@@ -28431,9 +28516,8 @@ function formatMonthLabel(rawVal) {
       const u = (DB.users || []).find(item => String(item.Username || "").trim().toLowerCase() === String(targetUsername).trim().toLowerCase());
       if (!u) return triggerSideToast("Error", "User record not found.", false);
 
-      populateRenterQuickSelectDropdowns();
-
       document.getElementById("editAssignTargetUsername").value = u.Username || "";
+      populateRenterQuickSelectDropdowns(u);
       const usernameDispInput = document.getElementById("editAssignUsernameDisplay");
       if (usernameDispInput) usernameDispInput.value = u.Username || "";
       const pwdInput = document.getElementById("editAssignPasswordInput");
