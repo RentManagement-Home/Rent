@@ -10293,6 +10293,316 @@
     background: transparent !important;
   }
 
+  /* Focused Colorful & Stylish Theme Button inside #profileModal ONLY (matched to Password box style) */
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 12px;
+    padding: 9px 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    border: 1px solid rgba(168, 85, 247, 0.38);
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(139, 92, 246, 0.12) 50%, rgba(236, 72, 153, 0.12) 100%);
+    color: #c4b5fd;
+    box-shadow: none;
+    text-shadow: none;
+    animation: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme::before,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme::after {
+    display: none;
+    content: none;
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme > i {
+    font-size: 0.85rem;
+    line-height: 1;
+    margin: 0;
+    display: inline-block;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #22d3ee 0%, #a855f7 50%, #f472b6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.2s ease;
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(139, 92, 246, 0.22) 50%, rgba(236, 72, 153, 0.2) 100%);
+    border-color: rgba(192, 132, 252, 0.72);
+    color: #e9d5ff;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.22);
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover > i {
+    transform: scale(1.1) rotate(-8deg);
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active {
+    transform: scale(0.98);
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
+    background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 52%, #ec4899 100%);
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.38);
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme.active > i {
+    background: none;
+    -webkit-text-fill-color: #ffffff;
+    color: #ffffff;
+  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme {
+    background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 52%, #fce7f3 100%) !important;
+    color: #6d28d9 !important;
+    border-color: #a855f7 !important;
+    box-shadow: none !important;
+  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme > i {
+    background: linear-gradient(135deg, #0284c7 0%, #7c3aed 52%, #db2777 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover {
+    background: linear-gradient(135deg, #bae6fd 0%, #ddd6fe 52%, #fbcfe8 100%) !important;
+    border-color: #7c3aed !important;
+    color: #5b21b6 !important;
+  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
+    background: linear-gradient(135deg, #0284c7 0%, #7c3aed 52%, #db2777 100%) !important;
+    border-color: #6d28d9 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme.active > i {
+    background: none;
+    -webkit-text-fill-color: #ffffff;
+    color: #ffffff;
+  }
+
+  /* Focused Stylish Design for Theme Cards (#themeCardBlack, #themeCardWhite, #themeCardSystem) ONLY */
+  div#profileModal #drawerChangeTheme #themeCardBlack,
+  div#profileModal #drawerChangeTheme #themeCardWhite,
+  div#profileModal #drawerChangeTheme #themeCardSystem {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 6px 7px 6px;
+    border-radius: 11px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s ease, border-color 0.24s ease;
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack::before,
+  div#profileModal #drawerChangeTheme #themeCardWhite::before,
+  div#profileModal #drawerChangeTheme #themeCardSystem::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, rgba(255, 255, 255, 0.22) 0%, transparent 46%, transparent 100%);
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.25s ease;
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack::after,
+  div#profileModal #drawerChangeTheme #themeCardWhite::after,
+  div#profileModal #drawerChangeTheme #themeCardSystem::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    pointer-events: none;
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack.active::after,
+  div#profileModal #drawerChangeTheme #themeCardWhite.active::after,
+  div#profileModal #drawerChangeTheme #themeCardSystem.active::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Icon Orb & Label shared structure for the 3 focused theme cards */
+  div#profileModal #drawerChangeTheme #themeCardBlack .kh-theme-icon-orb,
+  div#profileModal #drawerChangeTheme #themeCardWhite .kh-theme-icon-orb,
+  div#profileModal #drawerChangeTheme #themeCardSystem .kh-theme-icon-orb {
+    position: relative;
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease;
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack .kh-theme-icon-orb svg,
+  div#profileModal #drawerChangeTheme #themeCardWhite .kh-theme-icon-orb svg,
+  div#profileModal #drawerChangeTheme #themeCardSystem .kh-theme-icon-orb svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack strong,
+  div#profileModal #drawerChangeTheme #themeCardWhite strong,
+  div#profileModal #drawerChangeTheme #themeCardSystem strong {
+    position: relative;
+    z-index: 2;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.015em;
+    line-height: 1.15;
+    display: block;
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack .kh-theme-mini-bar,
+  div#profileModal #drawerChangeTheme #themeCardWhite .kh-theme-mini-bar,
+  div#profileModal #drawerChangeTheme #themeCardSystem .kh-theme-mini-bar {
+    position: relative;
+    z-index: 2;
+    width: 22px;
+    height: 2.5px;
+    border-radius: 999px;
+    opacity: 0.9;
+  }
+
+  /* 1. Black Theme Card — Light Black Charcoal */
+  div#profileModal #drawerChangeTheme #themeCardBlack {
+    background: linear-gradient(155deg, #2e2e33 0%, #232327 55%, #1a1a1e 100%);
+    border: 1.5px solid rgba(96, 165, 250, 0.34);
+    box-shadow: 0 8px 18px rgba(2, 6, 23, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack::after {
+    background: #38bdf8;
+    box-shadow: 0 0 10px #38bdf8;
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack .kh-theme-icon-orb {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(30, 27, 75, 0.92));
+    border: 1px solid rgba(96, 165, 250, 0.45);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.65), 0 0 14px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack strong {
+    color: #f8fafc;
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack .kh-theme-mini-bar {
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack:hover {
+    transform: translateY(-3px);
+    border-color: rgba(56, 189, 248, 0.78);
+    box-shadow: 0 12px 24px rgba(2, 6, 23, 0.58), 0 0 18px rgba(56, 189, 248, 0.28);
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack:hover .kh-theme-icon-orb {
+    transform: scale(1.08);
+    box-shadow: 0 8px 18px rgba(56, 189, 248, 0.4);
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack:hover .kh-theme-icon-orb svg {
+    transform: rotate(-12deg) scale(1.06);
+  }
+  div#profileModal #drawerChangeTheme #themeCardBlack.active {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35), 0 10px 22px rgba(56, 189, 248, 0.28);
+  }
+
+  /* 2. White Theme Card — Daylight Pearl */
+  div#profileModal #drawerChangeTheme #themeCardWhite {
+    background: radial-gradient(circle at 82% 16%, rgba(251, 191, 36, 0.28), transparent 55%),
+                linear-gradient(155deg, #ffffff 0%, #fefce8 58%, #ffedd5 100%);
+    border: 1.5px solid rgba(245, 158, 11, 0.44);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite::after {
+    background: #f59e0b;
+    box-shadow: 0 0 10px #f59e0b;
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite .kh-theme-icon-orb {
+    background: linear-gradient(145deg, #fef3c7, #fed7aa);
+    border: 1px solid rgba(245, 158, 11, 0.52);
+    box-shadow: 0 6px 14px rgba(245, 158, 11, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite strong {
+    color: #0f172a;
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite .kh-theme-mini-bar {
+    background: linear-gradient(90deg, #f59e0b, #fb7185);
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite:hover {
+    transform: translateY(-3px);
+    border-color: #f59e0b;
+    box-shadow: 0 12px 24px rgba(245, 158, 11, 0.26), 0 4px 12px rgba(15, 23, 42, 0.12);
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite:hover .kh-theme-icon-orb {
+    transform: scale(1.08);
+    box-shadow: 0 8px 18px rgba(245, 158, 11, 0.38);
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite:hover .kh-theme-icon-orb svg {
+    transform: rotate(35deg) scale(1.06);
+  }
+  div#profileModal #drawerChangeTheme #themeCardWhite.active {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.38), 0 10px 22px rgba(245, 158, 11, 0.3);
+  }
+
+  /* 3. System Auto Theme Card — Pure White & Black Mixed Gradient */
+  div#profileModal #drawerChangeTheme #themeCardSystem {
+    background: linear-gradient(145deg, #ffffff 0%, #e4e4e7 32%, #52525b 54%, #18181b 74%, #050507 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.42);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem::after {
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 3px rgba(0, 0, 0, 0.6);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem .kh-theme-icon-orb {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(15, 23, 42, 0.72) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem strong {
+    color: #ffffff;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.85);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem .kh-theme-mini-bar {
+    background: linear-gradient(90deg, #ffffff 0%, #9ca3af 50%, #111827 100%);
+    border: 0.5px solid rgba(255, 255, 255, 0.35);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.46), 0 0 14px rgba(255, 255, 255, 0.22);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem:hover .kh-theme-icon-orb {
+    transform: scale(1.08);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem:hover .kh-theme-icon-orb svg {
+    transform: rotate(18deg) scale(1.06);
+  }
+  div#profileModal #drawerChangeTheme #themeCardSystem.active {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.42), 0 10px 22px rgba(0, 0, 0, 0.44);
+  }
+
+  div#profileModal #drawerChangeTheme #themeCardBlack:active,
+  div#profileModal #drawerChangeTheme #themeCardWhite:active,
+  div#profileModal #drawerChangeTheme #themeCardSystem:active {
+    transform: translateY(-1px) scale(0.97);
+  }
+
 </style>
 </head>
 <body class="theme-black">
@@ -12422,10 +12732,9 @@
               type="button"
               id="btnShowChangeTheme"
               class="btn-switch-option"
-              style="border-radius:12px; padding:9px 6px; font-size:0.75rem; font-weight:700; border:1px solid rgba(129,140,248,0.3); background:rgba(129,140,248,0.08); color:#818cf8;"
               onclick="toggleProfileDrawer('drawerChangeTheme', 'btnShowChangeTheme')"
             >
-              <i class="fa-solid fa-palette" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
+              <i class="fa-solid fa-palette"></i>
               Theme
             </button>
             <button
@@ -12446,17 +12755,59 @@
             <i class="fa-solid fa-palette"></i> Select Portal Visual Theme
           </h4>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:8px;">
-            <div id="themeCardBlack" class="theme-card active" onclick="selectAndSaveTheme('black')" style="cursor:pointer; padding:12px 8px; text-align:center; border-radius:12px; border:1.5px solid rgba(255,255,255,0.15); background:#090d16;">
-              <i class="fa-solid fa-moon" style="font-size:1.2rem; color:#60a5fa; margin-bottom:6px; display:block;"></i>
-              <strong style="font-size:0.78rem; color:#fff;">Black</strong>
+            <div id="themeCardBlack" class="theme-card active" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardBlack')); selectAndSaveTheme('black')">
+              <span class="kh-theme-icon-orb" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="khMoonGrad" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#38bdf8"/>
+                      <stop offset="55%" stop-color="#818cf8"/>
+                      <stop offset="100%" stop-color="#c084fc"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M19.4 14.7A7.8 7.8 0 0 1 9.3 4.6a.6.6 0 0 0-.74-.77A8.5 8.5 0 1 0 20.17 15.44a.6.6 0 0 0-.77-.74Z" fill="url(#khMoonGrad)"/>
+                  <path d="M16.5 4.2l.55 1.45 1.45.55-1.45.55-.55 1.45-.55-1.45-1.45-.55 1.45-.55.55-1.45Z" fill="#fde047"/>
+                  <circle cx="19.6" cy="9.4" r="1.05" fill="#7dd3fc"/>
+                </svg>
+              </span>
+              <strong>Black</strong>
+              <span class="kh-theme-mini-bar" aria-hidden="true"></span>
             </div>
-            <div id="themeCardWhite" class="theme-card" onclick="selectAndSaveTheme('white')" style="cursor:pointer; padding:12px 8px; text-align:center; border-radius:12px; border:1.5px solid rgba(255,255,255,0.15); background:#f8fafc;">
-              <i class="fa-solid fa-sun" style="font-size:1.2rem; color:#f59e0b; margin-bottom:6px; display:block;"></i>
-              <strong style="font-size:0.78rem; color:#0f172a;">White </strong>
+            <div id="themeCardWhite" class="theme-card" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardWhite')); selectAndSaveTheme('white')">
+              <span class="kh-theme-icon-orb" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="khSunGrad" x1="4" y1="4" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#facc15"/>
+                      <stop offset="55%" stop-color="#f59e0b"/>
+                      <stop offset="100%" stop-color="#f43f5e"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="12" cy="12" r="4.8" fill="url(#khSunGrad)"/>
+                  <path d="M12 2.4v2.3M12 19.3v2.3M4.7 12H2.4M21.6 12h-2.3M5.21 5.21l1.63 1.63M17.16 17.16l1.63 1.63M18.79 5.21l-1.63 1.63M6.84 17.16l-1.63 1.63" stroke="url(#khSunGrad)" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <strong>White</strong>
+              <span class="kh-theme-mini-bar" aria-hidden="true"></span>
             </div>
-            <div id="themeCardSystem" class="theme-card" onclick="selectAndSaveTheme('system')" style="cursor:pointer; padding:12px 8px; text-align:center; border-radius:12px; border:1.5px solid rgba(255,255,255,0.15); background:#1e293b;">
-              <i class="fa-solid fa-desktop" style="font-size:1.2rem; color:#a855f7; margin-bottom:6px; display:block;"></i>
-              <strong style="font-size:0.78rem; color:#e2e8f0;">System Auto</strong>
+            <div id="themeCardSystem" class="theme-card" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardSystem')); selectAndSaveTheme('system')">
+              <span class="kh-theme-icon-orb" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="khSysGrad" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#22d3ee"/>
+                      <stop offset="50%" stop-color="#c084fc"/>
+                      <stop offset="100%" stop-color="#f472b6"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="12" cy="12" r="8.5" stroke="url(#khSysGrad)" stroke-width="1.9"/>
+                  <path d="M12 3.5a8.5 8.5 0 0 1 0 17V3.5Z" fill="url(#khSysGrad)"/>
+                  <path d="M7.6 8.3l.45 1.2 1.2.45-1.2.45-.45 1.2-.45-1.2-1.2-.45 1.2-.45.45-1.2Z" fill="#fde047"/>
+                  <circle cx="8.2" cy="14.7" r="1.15" fill="#67e8f9"/>
+                </svg>
+              </span>
+              <strong>System Auto</strong>
+              <span class="kh-theme-mini-bar" aria-hidden="true"></span>
             </div>
           </div>
         </div>
