@@ -6074,27 +6074,6 @@
     color: #1e293b !important;
   }
 
-  /* Requirement 5: Theme-Adaptive Flat Graph Zoom Modal in Light Mode */
-  body.theme-white #flatGraphZoomModal {
-    background: rgba(15, 23, 42, 0.55) !important;
-  }
-  body.theme-white #flatGraphZoomModal .modal-window {
-    background: linear-gradient(160deg, #ffffff, #f8fafc) !important;
-    border: 2px solid #6366f1 !important;
-    color: #0f172a !important;
-    box-shadow: 0 28px 80px rgba(15, 23, 42, 0.28) !important;
-  }
-  body.theme-white #flatGraphZoomModal #flatGraphZoomModalTitle {
-    color: #0f172a !important;
-  }
-  body.theme-white #flatGraphZoomModal #flatGraphZoomModalSubtitle {
-    color: #475569 !important;
-  }
-  body.theme-white #flatGraphZoomModal #flatGraphZoomViewport {
-    background: #f8fafc !important;
-    border: 1.5px solid #cbd5e1 !important;
-  }
-
   /* Universal Top-Level 3-Tab Navigation Bar for FD, Khet & Kharch Modals (Manual Horizontal Scroll Left <-> Right) */
   .kharch-top-tabs-nav,
   .module-top-tabs-nav {
@@ -10854,14 +10833,14 @@
       <!-- Three Top Tabs for Kharch & Financial Analytics -->
       <div class="kharch-top-tabs-nav">
         <button type="button" id="btnKharchTabCalc" class="kharch-nav-tab active" onclick="switchKharchSectionTab('calc')">
-          <i class="fa-solid fa-calculator" style="color:#f59e0b;"></i> 1. Calculate &amp; Add Expense
+          <i class="fa-solid fa-calculator" style="color:#f59e0b;"></i> 1. Calculate
         </button>
         <button type="button" id="btnKharchTabHistory" class="kharch-nav-tab" onclick="switchKharchSectionTab('history')">
-          <i class="fa-solid fa-clock-rotate-left" style="color:#0284c7;"></i> 2. Expense History &amp; Records (<span id="kharchRecordsBadgeCount">0</span>)
+          <i class="fa-solid fa-clock-rotate-left" style="color:#0284c7;"></i> 2.History(<span id="kharchRecordsBadgeCount">0</span>)
         </button>
         <button type="button" id="btnKharchTabRoi" class="kharch-nav-tab" onclick="switchKharchSectionTab('roi')">
-          <i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 3. Property ROI &amp; FY Tax / CA Report
-        </button>
+          <i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 3. Property ROI 
+                  </button>
       </div>
 
       <!-- TAB 1: ADD & CALCULATION EXPENSE (Manual Left-to-Right Scroll) -->
@@ -13233,9 +13212,6 @@
           <i class="fa-solid fa-user-plus"></i>
         </div>
         <div class="exec-modal-title-wrap">
-          <span class="exec-modal-badge" style="background:rgba(16,185,129,0.2); color:#34d399; border:1px solid rgba(16,185,129,0.4);">
-            <i class="fa-solid fa-id-card-clip"></i> Tenant Onboarding
-          </span>
           <h3 class="exec-modal-title">Add New Renter</h3>
         </div>
       </div>
@@ -13247,7 +13223,6 @@
               <label class="exec-field-label" for="addRenterPropDropdown">
                 <i class="fa-solid fa-location-dot" style="color:#10b981;"></i> 1. Location <span class="req-star">*</span>
               </label>
-              <span class="exec-field-tag tag-required">Compulsory</span>
             </div>
             <select id="addRenterPropDropdown" class="form-control" onchange="populateAddRenterFlatsDropdown()" required></select>
           </div>
@@ -13257,7 +13232,6 @@
               <label class="exec-field-label" for="addRenterFlatDropdown">
                 <i class="fa-solid fa-door-open" style="color:#06b6d4;"></i> 2. Flat <span class="req-star">*</span>
               </label>
-              <span class="exec-field-tag tag-required">Compulsory</span>
             </div>
             <select id="addRenterFlatDropdown" class="form-control" onchange="handleAddRenterFlatSelectionChange()" required></select>
           </div>
@@ -13268,7 +13242,6 @@
             <label class="exec-field-label" for="addRenterNameInput">
               <i class="fa-solid fa-user" style="color:#8b5cf6;"></i> 3. Renter Full Name <span class="req-star">*</span>
             </label>
-            <span class="exec-field-tag tag-required">Compulsory</span>
           </div>
           <input type="text" id="addRenterNameInput" class="form-control" placeholder="Enter Renter Full Name" required>
         </div>
@@ -13280,7 +13253,6 @@
               <label class="exec-field-label" for="addRenterFlatRateInput">
                 <i class="fa-solid fa-indian-rupee-sign" style="color:#10b981;"></i> 4. ₹ Flat Rate  <span class="req-star">*</span>
               </label>
-              <span class="exec-field-tag tag-required">Compulsory</span>
             </div>
             <input
               type="number"
@@ -14430,60 +14402,6 @@
       <button type="button" class="btn-primary" style="background:#ef4444; border-color:#dc2626; font-weight:800;" onclick="closeAccountBlockedModal()">
         <i class="fa-solid fa-arrow-right-from-bracket"></i> Understood &amp; Return to Login
       </button>
-    </div>
-  </div>
-
-  <!-- REQUIREMENT 9: FLAT ANALYTICS GRAPH FULLSCREEN / LARGE DISPLAY & HIGH-RESOLUTION ZOOM MODAL -->
-  <div id="flatGraphZoomModal" class="modal-overlay" style="z-index: 99985; background: rgba(2, 6, 23, 0.92); backdrop-filter: blur(18px);">
-    <div class="modal-window" style="max-width: 96vw; width: 1380px; max-height: 94vh; display: flex; flex-direction: column; padding: 20px 24px; border-radius: 24px; border: 2px solid rgba(99, 102, 241, 0.55); background: linear-gradient(160deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.96)); box-shadow: 0 28px 80px rgba(0, 0, 0, 0.7);">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.14);">
-        <div>
-          <h3 id="flatGraphZoomModalTitle" style="margin: 0; font-size: 1.15rem; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 10px;">
-            <i class="fa-solid fa-magnifying-glass-chart" style="color: #38bdf8;"></i> High-Definition Interactive Analytics Graph
-          </h3>
-          <p id="flatGraphZoomModalSubtitle" style="margin: 4px 0 0 0; font-size: 0.78rem; color: #94a3b8;">
-            Use Zoom In (+) / Zoom Out (-) or Ctrl + Mouse Wheel to inspect exact monthly values, micro-gridlines, and detailed breakdowns in crystal-clear vector HD.
-          </p>
-        </div>
-
-        <!-- Graph Switcher + Zoom Controls Toolbar -->
-        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <div style="display: inline-flex; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 12px; padding: 3px; gap: 4px;">
-            <button type="button" id="btnZoomSwitchGraph1" class="btn-ledger-action" style="padding: 6px 12px; font-size: 0.76rem; font-weight: 800; border-radius: 9px;" onclick="switchFlatGraphZoomTarget('graph1')">
-              <i class="fa-solid fa-chart-pie"></i> 1. Expense Breakdown
-            </button>
-            <button type="button" id="btnZoomSwitchGraph2" class="btn-ledger-action" style="padding: 6px 12px; font-size: 0.76rem; font-weight: 800; border-radius: 9px;" onclick="switchFlatGraphZoomTarget('graph2')">
-              <i class="fa-solid fa-chart-line"></i> 2. Consolidated Annual Graph
-            </button>
-          </div>
-
-          <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(15, 23, 42, 0.9); border: 1.5px solid rgba(56, 189, 248, 0.45); border-radius: 12px; padding: 5px 10px;">
-            <button type="button" class="btn-ledger-action" style="padding: 5px 10px; font-size: 0.82rem; font-weight: 900;" onclick="adjustFlatGraphZoom(-0.25)">
-              <i class="fa-solid fa-magnifying-glass-minus"></i> Zoom Out
-            </button>
-            <input type="range" id="flatGraphZoomSlider" min="0.75" max="3.5" step="0.25" value="1.5" style="width: 110px; accent-color: #38bdf8; cursor: pointer;" oninput="setFlatGraphZoom(this.value)" />
-            <span id="flatGraphZoomPctBadge" style="min-width: 54px; text-align: center; font-size: 0.8rem; font-weight: 900; color: #38bdf8; background: rgba(56, 189, 248, 0.14); padding: 3px 8px; border-radius: 8px;">150%</span>
-            <button type="button" class="btn-ledger-action" style="padding: 5px 10px; font-size: 0.82rem; font-weight: 900;" onclick="adjustFlatGraphZoom(0.25)">
-              <i class="fa-solid fa-magnifying-glass-plus"></i> Zoom In
-            </button>
-            <button type="button" class="btn-ledger-action" style="padding: 5px 9px; font-size: 0.74rem; font-weight: 800;" onclick="setFlatGraphZoom(1.25)">
-              Reset
-            </button>
-          </div>
-
-          <button type="button" class="modal-close-btn" style="position: static; width: 38px; height: 38px;" onclick="closeModal('flatGraphZoomModal')">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Interactive Filter Toolbar Inside Zoom Modal -->
-      <div id="flatGraphZoomFiltersBar" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 0;"></div>
-
-      <!-- Scrollable High-Resolution Vector Viewport -->
-      <div id="flatGraphZoomViewport" style="flex: 1; overflow: auto; background: rgba(2, 6, 23, 0.72); border: 1.5px solid rgba(148, 163, 184, 0.24); border-radius: 16px; padding: 18px; position: relative; min-height: 420px; -webkit-overflow-scrolling: touch;">
-        <div id="flatGraphZoomCanvasHost" style="min-width: 100%; min-height: 100%; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;"></div>
-      </div>
     </div>
   </div>
 
@@ -29782,9 +29700,6 @@ function formatMonthLabel(rawVal) {
       if (typeof refreshAllAnalyticsGraphs === "function") {
         refreshAllAnalyticsGraphs();
       }
-      if (document.getElementById("flatGraphZoomModal")?.classList.contains("active") && typeof renderZoomedFlatGraphCanvas === "function") {
-        renderZoomedFlatGraphCanvas();
-      }
     }
 
     async function selectAndSaveTheme(themePref) {
@@ -31764,9 +31679,6 @@ function formatMonthLabel(rawVal) {
       const chartBoxBorder = isLightTheme ? "1.5px dashed rgba(79, 70, 229, 0.35)" : "1px dashed rgba(56, 189, 248, 0.28)";
       const pillOnText = isLightTheme ? "#0f172a" : "#ffffff";
       const pillOffBg = isLightTheme ? "#f1f5f9" : "rgba(255, 255, 255, 0.03)";
-      const enlargeBtnStyle = isLightTheme
-        ? "background:linear-gradient(135deg, #e0f2fe, #e0e7ff); border:1.5px solid #0284c7; color:#0369a1;"
-        : "background:linear-gradient(135deg, rgba(56,189,248,0.22), rgba(99,102,241,0.22)); border:1px solid #38bdf8; color:#38bdf8;";
 
       const currentYear = new Date().getFullYear();
       const yearsSet = new Set([currentYear, currentYear - 1, currentYear - 2]);
@@ -31885,9 +31797,6 @@ function formatMonthLabel(rawVal) {
             <div>
               <h4 style="font-size:0.98rem; font-weight:800; color:var(--text-main); margin:0; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span><i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 1. Total Expense Breakdown — Rent, Electricity, Water, PNG Gas &amp; Other (Active Users Only)</span>
-                <button type="button" onclick="openFlatGraphZoomModal('graph1')" style="display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:0.7rem; font-weight:800; ${enlargeBtnStyle} cursor:pointer;">
-                  <i class="fa-solid fa-expand"></i> Click to Enlarge &amp; Zoom (HD)
-                </button>
               </h4>
               <p style="font-size:0.74rem; color:var(--text-muted); margin:3px 0 0 0;">
                 ${prop} — Flat ${flat} • <span style="color:var(--accent-green); font-weight:800;">Active Users Only</span> (${flatGraph1SelectedScope === 'ALL' ? 'All Active User Bills' : 'Year ' + flatGraph1SelectedScope}) • Combined Total: <strong style="color:var(--text-main);">₹${grandTotalAllFour.toLocaleString('en-IN')}</strong>
@@ -31907,8 +31816,8 @@ function formatMonthLabel(rawVal) {
             <button type="button" class="btn-ledger-action" style="padding:4px 9px; font-size:0.68rem;" onclick="toggleFlatGraph1Expense('ALL_ON')">Show All 5</button>
           </div>
 
-          <!-- SVG Total Breakdown Bar Chart (Click to Open Fullscreen HD Zoom Layout) -->
-          <div onclick="openFlatGraphZoomModal('graph1')" style="overflow-x:auto; -webkit-overflow-scrolling:touch; cursor:zoom-in; border-radius:12px; padding:8px; border:${chartBoxBorder}; background:${chartBoxBg}; transition:height 0.25s ease;">
+          <!-- SVG Total Breakdown Bar Chart -->
+          <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:12px; padding:8px; border:${chartBoxBorder}; background:${chartBoxBg}; transition:height 0.25s ease;">
             <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:500px; height:${chartHeight}px; overflow:visible;">
               ${[0, 0.2, 0.4, 0.6, 0.8, 1].map(step => {
                 const yLine = padTop + usableH * step;
@@ -31944,9 +31853,6 @@ function formatMonthLabel(rawVal) {
       if (typeof selectedProperty !== "undefined" && typeof selectedFlat !== "undefined" && selectedProperty && selectedFlat) {
         renderAllRentersGraphForFlat(selectedFlat.PropertyName || selectedProperty, selectedFlat.FlatName || selectedFlat);
       }
-      if (document.getElementById("flatGraphZoomModal")?.classList.contains("active")) {
-        renderZoomedFlatGraphCanvas();
-      }
     }
 
     // Requirement 5 & 7: Second Graph (Consolidated Graph) with Dynamic Year Scrolling & Theme Adaptation
@@ -31958,9 +31864,6 @@ function formatMonthLabel(rawVal) {
       const chartBoxBg = isLightTheme ? "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)" : "rgba(15, 23, 42, 0.28)";
       const chartBoxBorder = isLightTheme ? "1.5px dashed rgba(79, 70, 229, 0.35)" : "1px dashed rgba(99, 102, 241, 0.28)";
       const inactiveBtnBg = isLightTheme ? "#f1f5f9" : "rgba(255, 255, 255, 0.06)";
-      const enlargeBtnStyle2 = isLightTheme
-        ? "background:linear-gradient(135deg, #e0e7ff, #d1fae5); border:1.5px solid #4f46e5; color:#4338ca;"
-        : "background:linear-gradient(135deg, rgba(99,102,241,0.22), rgba(16,185,129,0.22)); border:1px solid #818cf8; color:#818cf8;";
 
       const currentYear = new Date().getFullYear();
 
@@ -32135,9 +32038,6 @@ function formatMonthLabel(rawVal) {
             <div>
               <h4 style="margin:0; font-size:0.95rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span><i class="fa-solid fa-chart-line" style="color:#6366f1;"></i> 2. Consolidated Annual &amp; Monthly Graph (${isSpecificYear ? flatGraph2SelectedMode : 'Last 3 Years'})</span>
-                <button type="button" onclick="openFlatGraphZoomModal('graph2')" style="display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:999px; font-size:0.7rem; font-weight:800; ${enlargeBtnStyle2} cursor:pointer;">
-                  <i class="fa-solid fa-expand"></i> Click to Enlarge &amp; Zoom (HD)
-                </button>
               </h4>
               <p style="font-size:0.72rem; color:var(--text-muted); margin:3px 0 0 0;">
                 ${prop} — Flat ${flat} • Shows all renters (active + departed) • Auto-scrolls upcoming years as time passes
@@ -32154,8 +32054,8 @@ function formatMonthLabel(rawVal) {
             ${summaryCards}
           </div>
 
-          <!-- SVG Chart Area (Click to Open Fullscreen HD Zoom Layout) -->
-          <div onclick="openFlatGraphZoomModal('graph2')" style="overflow-x:auto; -webkit-overflow-scrolling:touch; width:100%; cursor:zoom-in; border-radius:12px; padding:8px; border:${chartBoxBorder}; background:${chartBoxBg}; transition:height 0.25s ease;">
+          <!-- SVG Chart Area -->
+          <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; width:100%; border-radius:12px; padding:8px; border:${chartBoxBorder}; background:${chartBoxBg}; transition:height 0.25s ease;">
             <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:580px; height:${chartHeight}px; overflow:visible;">
               ${gridSvg}
               ${barsSvg}
@@ -32165,348 +32065,6 @@ function formatMonthLabel(rawVal) {
           </div>
         </div>
       `;
-    }
-
-    // Requirement 9: Fullscreen / Large Display Graph Modal with Progressive High-Definition Vector Zoom In & Zoom Out
-    let flatGraphActiveZoomTarget = "graph1"; // 'graph1' or 'graph2'
-    let flatGraphCurrentZoom = 1.5; // Default 150% enlarged HD view when clicked
-
-    function openFlatGraphZoomModal(targetGraph = "graph1") {
-      flatGraphActiveZoomTarget = targetGraph === "graph2" ? "graph2" : "graph1";
-      flatGraphCurrentZoom = 1.5;
-      const slider = document.getElementById("flatGraphZoomSlider");
-      if (slider) slider.value = String(flatGraphCurrentZoom);
-      openModal("flatGraphZoomModal");
-      renderZoomedFlatGraphCanvas();
-
-      const viewport = document.getElementById("flatGraphZoomViewport");
-      if (viewport && !viewport.dataset.wheelBound) {
-        viewport.dataset.wheelBound = "true";
-        viewport.addEventListener("wheel", (e) => {
-          if (e.ctrlKey || e.metaKey) {
-            e.preventDefault();
-            adjustFlatGraphZoom(e.deltaY < 0 ? 0.25 : -0.25);
-          }
-        }, { passive: false });
-      }
-    }
-
-    function switchFlatGraphZoomTarget(targetGraph) {
-      flatGraphActiveZoomTarget = targetGraph === "graph2" ? "graph2" : "graph1";
-      renderZoomedFlatGraphCanvas();
-    }
-
-    function adjustFlatGraphZoom(delta) {
-      const next = Math.min(3.5, Math.max(0.75, Math.round((flatGraphCurrentZoom + delta) * 100) / 100));
-      setFlatGraphZoom(next);
-    }
-
-    function setFlatGraphZoom(val) {
-      const num = parseFloat(val);
-      if (isNaN(num)) return;
-      flatGraphCurrentZoom = Math.min(3.5, Math.max(0.75, num));
-      const slider = document.getElementById("flatGraphZoomSlider");
-      if (slider) slider.value = String(flatGraphCurrentZoom);
-      const badge = document.getElementById("flatGraphZoomPctBadge");
-      if (badge) badge.innerText = Math.round(flatGraphCurrentZoom * 100) + "%";
-      renderZoomedFlatGraphCanvas();
-    }
-
-    function renderZoomedFlatGraphCanvas() {
-      const host = document.getElementById("flatGraphZoomCanvasHost");
-      const filtersBar = document.getElementById("flatGraphZoomFiltersBar");
-      const titleEl = document.getElementById("flatGraphZoomModalTitle");
-      const badge = document.getElementById("flatGraphZoomPctBadge");
-      const btn1 = document.getElementById("btnZoomSwitchGraph1");
-      const btn2 = document.getElementById("btnZoomSwitchGraph2");
-      if (!host) return;
-
-      const isLightTheme = document.body.classList.contains("theme-white");
-      const svgTextMain = isLightTheme ? "#0f172a" : "#ffffff";
-      const svgTextSub = isLightTheme ? "#334155" : "#e2e8f0";
-      const svgTextMuted = isLightTheme ? "#475569" : "#cbd5e1";
-      const svgGridLine = isLightTheme ? "rgba(15, 23, 42, 0.14)" : "rgba(148, 163, 184, 0.16)";
-      const svgBaseLine = isLightTheme ? "rgba(15, 23, 42, 0.35)" : "rgba(255, 255, 255, 0.35)";
-      const circleStroke = isLightTheme ? "#ffffff" : "#0f172a";
-
-      if (badge) badge.innerText = Math.round(flatGraphCurrentZoom * 100) + "%";
-      if (btn1) {
-        btn1.style.background = flatGraphActiveZoomTarget === "graph1" ? "#10b981" : "transparent";
-        btn1.style.color = flatGraphActiveZoomTarget === "graph1" ? "#ffffff" : (isLightTheme ? "#334155" : "#94a3b8");
-      }
-      if (btn2) {
-        btn2.style.background = flatGraphActiveZoomTarget === "graph2" ? "#6366f1" : "transparent";
-        btn2.style.color = flatGraphActiveZoomTarget === "graph2" ? "#ffffff" : (isLightTheme ? "#334155" : "#94a3b8");
-      }
-
-      const prop = selectedFlat?.PropertyName || selectedProperty || "";
-      const flat = selectedFlat?.FlatName || "";
-      const allFlatBills = (DB.bills || []).filter(b => isSamePropAndFlat(b.PropertyName, b.FlatName, prop, flat));
-      const activeRentersInFlat = (DB.renters || []).filter(r =>
-        isSamePropAndFlat(r.PropertyName, r.FlatName, prop, flat) &&
-        String(r.Status || "").trim().toLowerCase() === "active"
-      );
-      const inactiveRentersInFlat = (DB.renters || []).filter(r =>
-        isSamePropAndFlat(r.PropertyName, r.FlatName, prop, flat) &&
-        String(r.Status || "").trim().toLowerCase() !== "active"
-      );
-      const inactiveIds = new Set(inactiveRentersInFlat.map(r => String(r.RenterID || "").trim()).filter(Boolean));
-      const inactiveNames = new Set(inactiveRentersInFlat.map(r => String(r.RenterName || "").trim().toLowerCase()).filter(Boolean));
-      const activeIds = new Set(activeRentersInFlat.map(r => String(r.RenterID || "").trim()).filter(Boolean));
-      const activeNames = new Set(activeRentersInFlat.map(r => String(r.RenterName || "").trim().toLowerCase()).filter(Boolean));
-
-      let activeUsersBills = [];
-      if (activeRentersInFlat.length > 0) {
-        activeUsersBills = allFlatBills.filter(b => {
-          const bRId = String(b.RenterID || "").trim();
-          const bTName = String(b.TenantName || "").trim().toLowerCase();
-          if (bRId) return activeIds.has(bRId) && !inactiveIds.has(bRId);
-          if (bTName) {
-            if (activeNames.has(bTName)) return true;
-            if (inactiveNames.has(bTName)) return false;
-          }
-          return true;
-        });
-      }
-
-      const z = flatGraphCurrentZoom;
-      const isHighDetail = z >= 1.25;
-      const isUltraDetail = z >= 1.75;
-
-      if (flatGraphActiveZoomTarget === "graph1") {
-        if (titleEl) {
-          titleEl.innerHTML = `<i class="fa-solid fa-chart-pie" style="color:#10b981;"></i> 1. Total Expense Breakdown — ${prop} (Flat ${flat}) • High-Definition Vector Zoom (${Math.round(z * 100)}%)`;
-        }
-        const currentYear = new Date().getFullYear();
-        const yearsSet = new Set([currentYear, currentYear - 1, currentYear - 2]);
-        activeUsersBills.forEach(b => {
-          const normM = normalizeMonthYear(b.MonthYear);
-          const billD = toInputDateValue(b.BillDate);
-          const mMatch = (normM && normM.match(/^(\d{4})-/)) || (billD && billD.match(/^(\d{4})-/));
-          if (mMatch) {
-            const yNum = parseInt(mMatch[1], 10);
-            if (yNum >= 2000 && yNum <= 2100) yearsSet.add(yNum);
-          }
-        });
-        const threeYears = Array.from(yearsSet).sort((a, b) => b - a);
-        const scopedBills = activeUsersBills.filter(b => {
-          if (flatGraph1SelectedScope === "ALL") return true;
-          const norm = normalizeMonthYear(b.MonthYear);
-          return norm.startsWith(String(flatGraph1SelectedScope) + "-");
-        });
-
-        const totals = { rent: 0, elec: 0, water: 0, png: 0, other: 0 };
-        const counts = { rent: 0, elec: 0, water: 0, png: 0, other: 0 };
-        scopedBills.forEach(b => {
-          const parts = extractBillExpenseParts(b);
-          totals.rent += parts.rent;
-          totals.elec += parts.elec;
-          totals.water += parts.water;
-          totals.png += parts.png;
-          totals.other += parts.other;
-          if (parts.rent > 0) counts.rent++;
-          if (parts.elec > 0) counts.elec++;
-          if (parts.water > 0) counts.water++;
-          if (parts.png > 0) counts.png++;
-          if (parts.other > 0) counts.other++;
-        });
-
-        const enabledExpenses = FLAT_EXPENSE_SERIES.filter(s => flatGraph1ExpenseFilters[s.key]);
-        const grandTotalAllFour = totals.rent + totals.elec + totals.water + totals.png + totals.other;
-        let rawZoomMax1 = 0;
-        enabledExpenses.forEach(s => { if (totals[s.key] > rawZoomMax1) rawZoomMax1 = totals[s.key]; });
-        const zoomScale1 = computeDynamicGraphScale(rawZoomMax1, 380);
-        const maxBarVal = zoomScale1.niceMax;
-
-        if (filtersBar) {
-          const scopeBtns = [
-            `<button type="button" class="btn-ledger-action ${flatGraph1SelectedScope === 'ALL' ? 'active' : ''}" style="padding:5px 12px; font-size:0.75rem; font-weight:800; ${flatGraph1SelectedScope === 'ALL' ? 'background:var(--primary); color:#fff;' : ''}" onclick="setFlatGraph1Scope('ALL'); renderZoomedFlatGraphCanvas();">All Time Total</button>`,
-            ...threeYears.map(y => `<button type="button" class="btn-ledger-action ${String(flatGraph1SelectedScope) === String(y) ? 'active' : ''}" style="padding:5px 12px; font-size:0.75rem; font-weight:800; ${String(flatGraph1SelectedScope) === String(y) ? 'background:var(--primary); color:#fff;' : ''}" onclick="setFlatGraph1Scope('${y}'); renderZoomedFlatGraphCanvas();">${y}</button>`)
-          ].join("");
-          const expBtns = FLAT_EXPENSE_SERIES.map(s => {
-            const isOn = Boolean(flatGraph1ExpenseFilters[s.key]);
-            return `<button type="button" onclick="toggleFlatGraph1Expense('${s.key}'); renderZoomedFlatGraphCanvas();" style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; font-size:0.74rem; font-weight:800; cursor:pointer; border:1.5px solid ${isOn ? s.color : 'var(--glass-border)'}; background:${isOn ? s.bg : 'transparent'}; color:${isOn ? svgTextMain : svgTextMuted};"><span style="width:9px; height:9px; border-radius:50%; background:${s.color};"></span>${s.label}</button>`;
-          }).join("");
-          filtersBar.innerHTML = `<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">${expBtns}</div><div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">${scopeBtns}</div>`;
-        }
-
-        const baseW = 960;
-        const baseH = 380;
-        const scaledW = Math.round(baseW * z);
-        const scaledH = Math.round(baseH * z);
-        const padLeft = 88;
-        const padRight = 48;
-        const padTop = 52;
-        const padBottom = 68;
-        const usableW = baseW - padLeft - padRight;
-        const usableH = baseH - padTop - padBottom;
-
-        const gridSteps = isUltraDetail ? 10 : (isHighDetail ? 8 : 5);
-        let gridSvg = "";
-        for (let i = 0; i <= gridSteps; i++) {
-          const yPos = padTop + (usableH * (i / gridSteps));
-          const valAtLine = Math.round(maxBarVal * (1 - (i / gridSteps)));
-          gridSvg += `<line x1="${padLeft}" y1="${yPos.toFixed(1)}" x2="${baseW - padRight}" y2="${yPos.toFixed(1)}" stroke="${i === gridSteps ? svgBaseLine : svgGridLine}" stroke-dasharray="${i === gridSteps ? '' : '4,4'}" />`;
-          gridSvg += `<text x="${padLeft - 12}" y="${(yPos + 4).toFixed(1)}" font-size="11" font-weight="700" fill="${svgTextMuted}" text-anchor="end">₹${valAtLine.toLocaleString('en-IN')}</text>`;
-        }
-
-        const slotW = usableW / Math.max(1, enabledExpenses.length);
-        let barsSvg = "";
-        enabledExpenses.forEach((s, idx) => {
-          const val = totals[s.key] || 0;
-          const barW = Math.min(130, Math.max(52, slotW * 0.54));
-          const centerX = padLeft + (idx * slotW) + (slotW / 2);
-          const barX = centerX - (barW / 2);
-          const barH = (val / maxBarVal) * usableH;
-          const barY = padTop + usableH - barH;
-          const pct = grandTotalAllFour > 0 ? ((val / grandTotalAllFour) * 100).toFixed(1) : "0.0";
-          const avgPerBill = counts[s.key] > 0 ? Math.round(val / counts[s.key]) : 0;
-
-          barsSvg += `
-            <g>
-              <rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW.toFixed(1)}" height="${Math.max(5, barH).toFixed(1)}" rx="10" fill="${s.color}" fill-opacity="0.9" stroke="${s.color}" stroke-opacity="0.65" stroke-width="1.5" />
-              <text x="${centerX.toFixed(1)}" y="${Math.max(20, barY - (isHighDetail ? 22 : 10)).toFixed(1)}" font-size="13.5" font-weight="900" fill="${s.color}" text-anchor="middle">₹${val.toLocaleString('en-IN')}</text>
-              ${isHighDetail ? `<text x="${centerX.toFixed(1)}" y="${Math.max(34, barY - 7).toFixed(1)}" font-size="10.5" font-weight="700" fill="${svgTextSub}" text-anchor="middle">${pct}% Share • ${counts[s.key]} Bills (Avg ₹${avgPerBill.toLocaleString('en-IN')})</text>` : ''}
-              <text x="${centerX.toFixed(1)}" y="${baseH - 36}" font-size="13" font-weight="900" fill="${svgTextMain}" text-anchor="middle">${s.label}</text>
-              <text x="${centerX.toFixed(1)}" y="${baseH - 18}" font-size="11" font-weight="700" fill="${svgTextMuted}" text-anchor="middle">Share: ${pct}% of ₹${grandTotalAllFour.toLocaleString('en-IN')}</text>
-            </g>
-          `;
-        });
-
-        host.innerHTML = `
-          <svg viewBox="0 0 ${baseW} ${baseH}" width="${scaledW}" height="${scaledH}" style="width:${scaledW}px; height:${scaledH}px; display:block; shape-rendering:geometricPrecision; text-rendering:geometricPrecision;">
-            ${gridSvg}
-            ${barsSvg}
-          </svg>
-        `;
-      } else {
-        if (titleEl) {
-          titleEl.innerHTML = `<i class="fa-solid fa-chart-line" style="color:#6366f1;"></i> 2. Consolidated Annual &amp; Monthly Graph — ${prop} (Flat ${flat}) • High-Definition Vector Zoom (${Math.round(z * 100)}%)`;
-        }
-        const currentYear = new Date().getFullYear();
-        const yearsSet = new Set([currentYear, currentYear - 1, currentYear - 2]);
-        allFlatBills.forEach(b => {
-          const norm = normalizeMonthYear(b.MonthYear);
-          if (norm) {
-            const yr = parseInt(norm.substring(0, 4), 10);
-            if (!isNaN(yr) && yr >= 2000 && yr <= 2100) yearsSet.add(yr);
-          }
-        });
-        const allAvailableYears = Array.from(yearsSet).sort((a, b) => b - a);
-        const paletteColors = [
-          { color: "#6366f1", bg: "rgba(99, 102, 241, 0.16)" },
-          { color: "#10b981", bg: "rgba(16, 185, 129, 0.16)" },
-          { color: "#f59e0b", bg: "rgba(245, 158, 11, 0.16)" },
-          { color: "#ec4899", bg: "rgba(236, 72, 153, 0.16)" }
-        ];
-
-        const isSpecificYear = flatGraph2SelectedMode !== "LAST_3_YEARS" && allAvailableYears.includes(Number(flatGraph2SelectedMode));
-        const activeYearsConfig = isSpecificYear
-          ? [{ year: Number(flatGraph2SelectedMode), label: `${flatGraph2SelectedMode} Full Year`, color: "#6366f1", bg: "rgba(99, 102, 241, 0.18)" }]
-          : allAvailableYears.slice(0, 3).map((yr, idx) => ({
-              year: yr,
-              label: yr === currentYear ? `${yr} (Current Year)` : `${yr}`,
-              color: paletteColors[idx % paletteColors.length].color,
-              bg: paletteColors[idx % paletteColors.length].bg
-            }));
-
-        if (filtersBar) {
-          const isAll3 = flatGraph2SelectedMode === "LAST_3_YEARS";
-          let yrBtns = `<button type="button" class="btn-ledger-action" style="padding:5px 12px; font-size:0.74rem; font-weight:800; border-radius:20px; ${isAll3 ? 'background:#6366f1; color:#fff;' : ''}" onclick="selectFlatGraph2Mode('LAST_3_YEARS')"><i class="fa-solid fa-layer-group"></i> Last 3 Years</button>`;
-          allAvailableYears.forEach(yr => {
-            const isSel = String(flatGraph2SelectedMode) === String(yr);
-            yrBtns += `<button type="button" class="btn-ledger-action" style="padding:5px 12px; font-size:0.74rem; font-weight:800; border-radius:20px; ${isSel ? 'background:#10b981; color:#fff;' : ''}" onclick="selectFlatGraph2Mode(${yr})">${yr}</button>`;
-          });
-          filtersBar.innerHTML = `<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">${yrBtns}</div><div style="font-size:0.76rem; color:${isLightTheme ? '#0284c7' : '#38bdf8'}; font-weight:700;"><i class="fa-solid fa-wand-magic-sparkles"></i> Zoom in to reveal exact ₹ amounts &amp; 10-step micro-gridlines on every month</div>`;
-        }
-
-        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const yearMonthlyTotals = {};
-        let rawZoomMax2 = 0;
-        activeYearsConfig.forEach(yc => {
-          yearMonthlyTotals[yc.year] = [];
-          for (let m = 1; m <= 12; m++) {
-            const monthKey = yc.year + "-" + String(m).padStart(2, "0");
-            const monthBills = allFlatBills.filter(b => normalizeMonthYear(b.MonthYear) === monthKey);
-            let mSum = 0;
-            monthBills.forEach(b => { mSum += extractBillExpenseParts(b).total; });
-            yearMonthlyTotals[yc.year].push(mSum);
-            if (mSum > rawZoomMax2) rawZoomMax2 = mSum;
-          }
-        });
-        const zoomScale2 = computeDynamicGraphScale(rawZoomMax2, 400);
-        const maxVal = zoomScale2.niceMax;
-
-        const baseW = 1040;
-        const baseH = zoomScale2.dynamicHeight;
-        const scaledW = Math.round(baseW * z);
-        const scaledH = Math.round(baseH * z);
-        const padLeft = 88;
-        const padRight = 42;
-        const padTop = 48;
-        const padBottom = 58;
-        const usableW = baseW - padLeft - padRight;
-        const usableH = baseH - padTop - padBottom;
-
-        const gridSteps = isUltraDetail ? 10 : (isHighDetail ? 8 : 5);
-        let gridSvg = "";
-        for (let s = 0; s <= gridSteps; s++) {
-          const yVal = padTop + (usableH * (s / gridSteps));
-          const numVal = Math.round(maxVal * (1 - (s / gridSteps)));
-          gridSvg += `<line x1="${padLeft}" y1="${yVal.toFixed(1)}" x2="${baseW - padRight}" y2="${yVal.toFixed(1)}" stroke="${s === gridSteps ? svgBaseLine : svgGridLine}" stroke-dasharray="${s === gridSteps ? '' : '4,4'}"/>`;
-          gridSvg += `<text x="${padLeft - 12}" y="${(yVal + 4).toFixed(1)}" font-size="10.5" font-weight="700" fill="${svgTextMuted}" text-anchor="end">₹${numVal.toLocaleString('en-IN')}</text>`;
-        }
-
-        let barsSvg = "";
-        let linesSvg = "";
-        let labelsSvg = "";
-
-        months.forEach((mLabel, mIdx) => {
-          const centerX = padLeft + (mIdx * (usableW / 11));
-          labelsSvg += `<line x1="${centerX.toFixed(1)}" y1="${padTop}" x2="${centerX.toFixed(1)}" y2="${padTop + usableH}" stroke="${svgGridLine}" />`;
-          labelsSvg += `<text x="${centerX.toFixed(1)}" y="${baseH - 22}" font-size="12" font-weight="800" fill="${svgTextSub}" text-anchor="middle">${mLabel}</text>`;
-
-          const count = activeYearsConfig.length;
-          const barW = Math.max(10, Math.min(26, Math.floor(54 / Math.max(1, count))));
-          const totalGroupW = count * barW + Math.max(0, count - 1) * 4;
-          const startX = centerX - (totalGroupW / 2);
-
-          activeYearsConfig.forEach((yc, yIdx) => {
-            const val = yearMonthlyTotals[yc.year][mIdx] || 0;
-            const barH = (val / maxVal) * usableH;
-            const barY = padTop + usableH - barH;
-            const barX = startX + yIdx * (barW + 4);
-            barsSvg += `<rect x="${barX.toFixed(1)}" y="${barY.toFixed(1)}" width="${barW}" height="${Math.max(0, barH).toFixed(1)}" rx="4" fill="${yc.color}" fill-opacity="0.42"></rect>`;
-          });
-        });
-
-        activeYearsConfig.forEach((yc, yIdx) => {
-          const pts = months.map((mLabel, mIdx) => {
-            const val = yearMonthlyTotals[yc.year][mIdx] || 0;
-            const x = padLeft + (mIdx * (usableW / 11));
-            const y = padTop + usableH - ((val / maxVal) * usableH);
-            return { x, y, val, mLabel };
-          });
-          const pathD = pts.reduce((acc, pt, idx) => idx === 0 ? `M ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}` : `${acc} L ${pt.x.toFixed(1)} ${pt.y.toFixed(1)}`, "");
-          linesSvg += `<path d="${pathD}" fill="none" stroke="${yc.color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />`;
-          pts.forEach(pt => {
-            linesSvg += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="5.5" fill="${yc.color}" stroke="${circleStroke}" stroke-width="2"></circle>`;
-            if (pt.val > 0 && (isHighDetail || activeYearsConfig.length === 1)) {
-              const yOffset = pt.y - 10 - (yIdx * 13);
-              linesSvg += `<text x="${pt.x.toFixed(1)}" y="${Math.max(16, yOffset).toFixed(1)}" font-size="10.5" font-weight="800" fill="${yc.color}" text-anchor="middle">₹${pt.val.toLocaleString('en-IN')}</text>`;
-            }
-          });
-        });
-
-        host.innerHTML = `
-          <svg viewBox="0 0 ${baseW} ${baseH}" width="${scaledW}" height="${scaledH}" style="width:${scaledW}px; height:${scaledH}px; display:block; shape-rendering:geometricPrecision; text-rendering:geometricPrecision;">
-            ${gridSvg}
-            ${barsSvg}
-            ${linesSvg}
-            ${labelsSvg}
-          </svg>
-        `;
-      }
     }
 
     function renderAllRentersGraphForFlat(prop, flat) {
