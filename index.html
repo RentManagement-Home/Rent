@@ -9262,7 +9262,10 @@
     -webkit-text-fill-color: transparent !important;
   }
 
-  /* Focused Portfolio Hub Full-Width Zero-Clipping Layout (#adminPortfolioHubSection > .admin-ops-hub-shell > #adminPortfolioHubBody) */
+  /* Focused Portfolio Hub Full-Width Zero-Clipping & Smooth Scroll Layout (#adminPortfolioHubSection > .admin-ops-hub-shell > #adminPortfolioHubBody) */
+  body.admin-portfolio-hub-open {
+    overflow-y: auto !important;
+  }
   #adminPortfolioHubSection {
     width: 100% !important;
     max-width: 100% !important;
@@ -9270,7 +9273,9 @@
     margin: 0 !important;
     padding: 10px 14px 32px 14px !important;
     box-sizing: border-box !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    overscroll-behavior: auto !important;
   }
   #adminPortfolioHubSection > .admin-ops-hub-shell {
     width: 100% !important;
@@ -9279,6 +9284,7 @@
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+    overflow: visible !important;
   }
   #adminPortfolioHubSection .admin-ops-hub-topbar,
   #adminPortfolioHubSection #adminPortfolioHubCarouselTrack {
@@ -9287,6 +9293,14 @@
     min-width: 0 !important;
     box-sizing: border-box !important;
   }
+  #adminPortfolioHubSection #adminPortfolioHubCarouselTrack {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-y: auto !important;
+    overscroll-behavior-x: contain !important;
+    touch-action: pan-x pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
   #adminPortfolioHubSection #adminPortfolioHubBody {
     width: 100% !important;
     max-width: 100% !important;
@@ -9294,7 +9308,10 @@
     margin: 0 !important;
     padding: 18px 20px !important;
     box-sizing: border-box !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    overscroll-behavior: auto !important;
+    touch-action: pan-y !important;
   }
   #adminPortfolioHubSection #adminPortfolioHubBody .admin-ops-hub-slot,
   #adminPortfolioHubSection #adminPortfolioHubBody #sharedKharchWorkspace,
@@ -9304,8 +9321,18 @@
     max-width: 100% !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
+    overflow: visible !important;
   }
-  #adminPortfolioHubSection #adminPortfolioHubBody .manual-horiz-scroll-container,
+  /* Eliminate accidental nested vertical scroll traps inside Kharch, Khet & FD inline tabs */
+  #adminPortfolioHubSection #adminPortfolioHubBody .manual-horiz-scroll-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    overscroll-behavior: auto !important;
+  }
   #adminPortfolioHubSection #adminPortfolioHubBody .manual-horiz-scroll-container > div,
   #adminPortfolioHubSection #adminPortfolioHubBody #fdCashflowProjectionContainer,
   #adminPortfolioHubSection #adminPortfolioHubBody #kharchRoiAndTaxReportContainer {
@@ -9314,6 +9341,23 @@
     min-width: 0 !important;
     box-sizing: border-box !important;
   }
+  /* Let inline history lists expand cleanly with page scroll instead of trapping scroll in a short 440px box */
+  #adminPortfolioHubSection #adminPortfolioHubBody #kharchRecordsList,
+  #adminPortfolioHubSection #adminPortfolioHubBody #fdRecordsList,
+  #adminPortfolioHubSection #adminPortfolioHubBody #khetRecordsList {
+    max-height: none !important;
+    overflow-y: visible !important;
+    overflow-x: clip !important;
+    overscroll-behavior: auto !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody #khetRecordsList > div:has(table),
+  #adminPortfolioHubSection #adminPortfolioHubBody #fdCashflowProjectionContainer {
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: auto !important;
+    touch-action: pan-x pan-y !important;
+  }
   #adminPortfolioHubSection #adminPortfolioHubBody .kharch-top-tabs-nav,
   #adminPortfolioHubSection #adminPortfolioHubBody .module-top-tabs-nav {
     width: 100% !important;
@@ -9321,6 +9365,10 @@
     box-sizing: border-box !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-y: auto !important;
+    touch-action: pan-x pan-y !important;
   }
   #adminPortfolioHubSection #adminPortfolioHubBody .kharch-nav-tab,
   #adminPortfolioHubSection #adminPortfolioHubBody .module-nav-tab {
@@ -9342,10 +9390,19 @@
   #adminPortfolioHubSection #adminPortfolioHubBody #kharchPropertyRoiTableContainer,
   #adminPortfolioHubSection #adminPortfolioHubBody #kharchFyTaxSummaryGrid,
   #adminPortfolioHubSection #adminPortfolioHubBody #fdPropertyBreakdownBadges,
-  #adminPortfolioHubSection #adminPortfolioHubBody .kharch-scroller-track-wrapper {
+  #adminPortfolioHubSection #adminPortfolioHubBody .kharch-scroller-track-wrapper,
+  #adminPortfolioHubSection #adminPortfolioHubBody .kharch-prop-squares-scroller,
+  #adminPortfolioHubSection #adminPortfolioHubBody div[style*="overflow-x:auto"]:not(.manual-horiz-scroll-container):not(#kharchRecordsList):not(#fdRecordsList):not(#khetRecordsList) {
     max-width: 100% !important;
     overflow-x: auto !important;
+    overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: auto !important;
+    overscroll-behavior-x: contain !important;
+    touch-action: pan-x pan-y !important;
+  }
+  #adminPortfolioHubSection #adminPortfolioHubBody #kharchPropertyRoiTableContainer {
+    overflow-y: visible !important;
   }
   @media (max-width: 768px) {
     #adminPortfolioHubSection {
@@ -10659,14 +10716,314 @@
     contain: layout style;
   }
 
-  /* Isolate modal and hub scroll containers for smooth native momentum scrolling */
-  .modal-window,
-  .admin-ops-hub-body,
-  #adminFlatDetailsHubSection,
-  #adminResidentOpsHubSection {
+  /* Isolate popup modal scroll containers without trapping inline full-page hub vertical scroll */
+  .modal-window {
     contain: layout style;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+  }
+
+  /* Ensure #adminPortfolioHubSection inner cards skip redundant backdrop blurs for buttery scrolling */
+  #adminPortfolioHubSection #adminPortfolioHubBody > div button,
+  #adminPortfolioHubSection #adminPortfolioHubBody #kharchAutoScrollerTrack > div,
+  #adminPortfolioHubSection #adminPortfolioHubBody #kharchTabCalcContent > div:nth-of-type(1) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* ============================================================================
+     FOCUSED STYLISH REDESIGN: div#editUserAssignmentModal > div.modal-window
+     ============================================================================ */
+  div#editUserAssignmentModal > div.modal-window {
+    position: relative !important;
+    max-width: 560px !important;
+    width: min(94vw, 560px) !important;
+    padding: 24px 24px 22px !important;
+    border-radius: 22px !important;
+    background: linear-gradient(160deg, rgba(15, 23, 42, 0.98) 0%, rgba(19, 28, 52, 0.97) 52%, rgba(13, 20, 38, 0.99) 100%) !important;
+    border: 1.5px solid rgba(129, 140, 248, 0.42) !important;
+    box-shadow:
+      0 28px 70px rgba(2, 6, 23, 0.76),
+      0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+      0 1px 0 rgba(165, 180, 252, 0.22) inset !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(129, 140, 248, 0.45) transparent;
+  }
+  div#editUserAssignmentModal > div.modal-window::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #38bdf8 0%, #6366f1 36%, #a855f7 70%, #34d399 100%);
+    pointer-events: none;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window {
+    background: linear-gradient(160deg, #ffffff 0%, #f8fafc 58%, #f1f5f9 100%) !important;
+    border: 1.5px solid rgba(99, 102, 241, 0.26) !important;
+    box-shadow:
+      0 26px 64px rgba(15, 23, 42, 0.18),
+      0 0 0 1px rgba(255, 255, 255, 0.95) inset !important;
+  }
+
+  /* Stylish Close Button */
+  div#editUserAssignmentModal > div.modal-window > button.modal-close-btn {
+    top: 18px !important;
+    right: 18px !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 11px !important;
+    background: rgba(148, 163, 184, 0.14) !important;
+    border: 1px solid rgba(148, 163, 184, 0.28) !important;
+    color: #cbd5e1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > button.modal-close-btn:hover {
+    background: rgba(239, 68, 68, 0.20) !important;
+    border-color: rgba(248, 113, 113, 0.65) !important;
+    color: #fca5a5 !important;
+    transform: scale(1.06) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window > button.modal-close-btn {
+    background: rgba(15, 23, 42, 0.05) !important;
+    border-color: rgba(148, 163, 184, 0.36) !important;
+    color: #475569 !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window > button.modal-close-btn:hover {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-color: rgba(239, 68, 68, 0.45) !important;
+    color: #dc2626 !important;
+  }
+
+  /* Header Bar & Illuminated Icon Badge */
+  div#editUserAssignmentModal > div.modal-window > div:nth-of-type(1) {
+    margin-bottom: 18px !important;
+    padding-bottom: 14px !important;
+    padding-right: 42px !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.20) !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > div:nth-of-type(1) > h3 {
+    font-size: 1.22rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    gap: 11px !important;
+    color: #f8fafc !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window > div:nth-of-type(1) > h3 {
+    color: #0f172a !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > div:nth-of-type(1) > h3 > i {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #0ea5e9 100%) !important;
+    color: #ffffff !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Top 2-Column Fields Grid */
+  div#editUserAssignmentModal > div.modal-window > div:nth-of-type(2) {
+    gap: 12px !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* Form Labels & Elevated Controls */
+  div#editUserAssignmentModal > div.modal-window .form-group {
+    margin-bottom: 13px !important;
+  }
+  div#editUserAssignmentModal > div.modal-window .form-group > label {
+    font-size: 0.74rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+    color: #cbd5e1 !important;
+    margin-bottom: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window .form-group > label {
+    color: #334155 !important;
+  }
+  div#editUserAssignmentModal > div.modal-window input.form-control,
+  div#editUserAssignmentModal > div.modal-window select.form-control {
+    background: rgba(15, 23, 42, 0.72) !important;
+    border: 1.5px solid rgba(148, 163, 184, 0.28) !important;
+    border-radius: 12px !important;
+    padding: 10px 13px !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    color: #f8fafc !important;
+    box-shadow: inset 0 1px 2px rgba(2, 6, 23, 0.35) !important;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease !important;
+  }
+  div#editUserAssignmentModal > div.modal-window input.form-control:hover,
+  div#editUserAssignmentModal > div.modal-window select.form-control:hover {
+    border-color: rgba(129, 140, 248, 0.55) !important;
+  }
+  div#editUserAssignmentModal > div.modal-window input.form-control:focus,
+  div#editUserAssignmentModal > div.modal-window select.form-control:focus {
+    outline: none !important;
+    border-color: #818cf8 !important;
+    background: rgba(15, 23, 42, 0.92) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25), 0 4px 14px rgba(79, 70, 229, 0.18) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window input.form-control,
+  body.theme-white div#editUserAssignmentModal > div.modal-window select.form-control {
+    background: #ffffff !important;
+    border-color: rgba(148, 163, 184, 0.45) !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window input.form-control:focus,
+  body.theme-white div#editUserAssignmentModal > div.modal-window select.form-control:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18) !important;
+  }
+
+  /* Manager Permissions Emerald Card */
+  div#editUserAssignmentModal > div.modal-window #editAssignManagerPermissionsBox {
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 78, 59, 0.16) 100%) !important;
+    border: 1.5px solid rgba(52, 211, 153, 0.42) !important;
+    border-radius: 16px !important;
+    padding: 14px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 8px 22px rgba(6, 78, 59, 0.18) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window #editAssignManagerPermissionsBox {
+    background: linear-gradient(145deg, rgba(236, 253, 245, 0.95) 0%, rgba(209, 250, 229, 0.65) 100%) !important;
+    border-color: rgba(16, 185, 129, 0.40) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window #editAssignManagerPermissionsBox > div:first-child > div:first-child {
+    color: #047857 !important;
+  }
+  div#editUserAssignmentModal > div.modal-window #editAssignManagerPermsList {
+    border-radius: 11px !important;
+    padding: 8px !important;
+    border-color: rgba(52, 211, 153, 0.26) !important;
+  }
+
+  /* Scope Section Inset Card */
+  div#editUserAssignmentModal > div.modal-window #editAssignScopeBox {
+    background: linear-gradient(160deg, rgba(30, 41, 59, 0.56) 0%, rgba(15, 23, 42, 0.66) 100%) !important;
+    border: 1.5px solid rgba(148, 163, 184, 0.24) !important;
+    border-radius: 16px !important;
+    padding: 14px !important;
+    margin-bottom: 16px !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window #editAssignScopeBox {
+    background: linear-gradient(160deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border-color: rgba(148, 163, 184, 0.34) !important;
+  }
+
+  /* Renter Aadhaar Binding Violet Card */
+  div#editUserAssignmentModal > div.modal-window #editAssignRenterAadhaarBox {
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.18) 0%, rgba(168, 85, 247, 0.10) 100%) !important;
+    border: 1.5px solid rgba(192, 132, 252, 0.48) !important;
+    border-radius: 14px !important;
+    padding: 13px !important;
+    margin-bottom: 12px !important;
+    box-shadow: 0 8px 22px rgba(109, 40, 217, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window #editAssignRenterAadhaarBox {
+    background: linear-gradient(145deg, #f5f3ff 0%, #ede9fe 100%) !important;
+    border-color: rgba(139, 92, 246, 0.36) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window #editAssignRenterAadhaarBox > div:first-child {
+    color: #5b21b6 !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window #editAssignRenterAadhaarBox > div:last-child {
+    color: #6d28d9 !important;
+  }
+  div#editUserAssignmentModal > div.modal-window #editAssignAadhaar {
+    letter-spacing: 0.08em !important;
+    font-weight: 700 !important;
+  }
+  div#editUserAssignmentModal > div.modal-window #editAssignPropsCheckboxesContainer {
+    border-radius: 11px !important;
+    padding: 9px !important;
+  }
+
+  /* Stylish Footer Action Bar */
+  div#editUserAssignmentModal > div.modal-window > div:last-of-type {
+    margin-top: 16px !important;
+    padding-top: 14px !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.20) !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > div:last-of-type > button.btn-confirm-cancel {
+    border-radius: 12px !important;
+    padding: 10px 18px !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    background: rgba(148, 163, 184, 0.14) !important;
+    border: 1.5px solid rgba(148, 163, 184, 0.30) !important;
+    color: #e2e8f0 !important;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s ease !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > div:last-of-type > button.btn-confirm-cancel:hover {
+    background: rgba(148, 163, 184, 0.24) !important;
+    border-color: rgba(203, 213, 225, 0.50) !important;
+    transform: translateY(-1px) !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window > div:last-of-type > button.btn-confirm-cancel {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+    color: #334155 !important;
+  }
+  body.theme-white div#editUserAssignmentModal > div.modal-window > div:last-of-type > button.btn-confirm-cancel:hover {
+    background: #e2e8f0 !important;
+    border-color: #94a3b8 !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > div:last-of-type > button.btn-primary {
+    border-radius: 12px !important;
+    padding: 10px 24px !important;
+    font-size: 0.86rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.01em !important;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #0284c7 100%) !important;
+    border: 1px solid rgba(199, 210, 254, 0.35) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.40), inset 0 1px 0 rgba(255, 255, 255, 0.30) !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > div:last-of-type > button.btn-primary:hover {
+    transform: translateY(-1.5px) !important;
+    box-shadow: 0 14px 30px rgba(79, 70, 229, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
+    filter: brightness(1.06) !important;
+  }
+  div#editUserAssignmentModal > div.modal-window > div:last-of-type > button.btn-primary:active {
+    transform: translateY(0) scale(0.98) !important;
+  }
+
+  @media (max-width: 520px) {
+    div#editUserAssignmentModal > div.modal-window {
+      padding: 20px 16px 18px !important;
+      border-radius: 18px !important;
+    }
+    div#editUserAssignmentModal > div.modal-window > div:nth-of-type(2) {
+      grid-template-columns: 1fr !important;
+    }
+    div#editUserAssignmentModal > div.modal-window > div:last-of-type {
+      flex-direction: column-reverse !important;
+      align-items: stretch !important;
+    }
+    div#editUserAssignmentModal > div.modal-window > div:last-of-type > button {
+      width: 100% !important;
+      justify-content: center !important;
+    }
   }
 
   /* Convert CPU-repainting infinite box-shadow/position keyframes to pure GPU transform/opacity */
@@ -20630,8 +20987,9 @@ function formatMonthLabel(rawVal) {
         mountPortfolioWorkspaceInto("sharedFdWorkspace", activeSlot);
         if (typeof initFdInlineWorkspace === "function") initFdInlineWorkspace();
       }
+      document.body.style.overflow = "";
       if (typeof window.scrollTo === "function") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "auto" });
       }
     }
 
