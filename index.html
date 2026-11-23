@@ -10671,6 +10671,12 @@
     display: none !important;
   }
 
+  /* Focused Aadhaar Back Download & Delete Buttons: strictly hidden whenever no photo is uploaded */
+  button#btnDownloadIdentityBackPic:not([data-has-photo="true"]),
+  button#btnDeleteIdentityBackPic:not([data-has-photo="true"]) {
+    display: none !important;
+  }
+
   /* ============================================================================
      60FPS SMOOTHNESS & GPU COMPOSITING OPTIMIZATION LAYER
      Eliminates scroll jank, double-blur GPU stalls, and layout thrashing
@@ -11024,6 +11030,51 @@
       width: 100% !important;
       justify-content: center !important;
     }
+  }
+
+  /* Focused Compact Small Boxes: Rooms, Kitchen, Bathroom & Hall inside #flatLocationNumberCard */
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) {
+    grid-template-columns: repeat(auto-fit, minmax(84px, 116px)) !important;
+    gap: 8px !important;
+  }
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(1),
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2),
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(3),
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(4) {
+    max-width: 116px !important;
+    width: 100% !important;
+    padding: 6px 8px !important;
+    border-radius: 10px !important;
+    background: rgba(56, 189, 248, 0.08) !important;
+    border: 1px solid rgba(56, 189, 248, 0.30) !important;
+    align-self: start !important;
+    justify-self: start !important;
+  }
+  body.theme-white div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(1),
+  body.theme-white div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2),
+  body.theme-white div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(3),
+  body.theme-white div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(4) {
+    background: rgba(14, 165, 233, 0.06) !important;
+    border-color: rgba(14, 165, 233, 0.32) !important;
+  }
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div > label {
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 3px !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0.02em !important;
+  }
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div > input#renterBhkRoomsInput,
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div > input#renterBhkKitchenInput,
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div > input#renterBhkBathroomInput,
+  div#flatLocationNumberCard > div:nth-of-type(3) > div:nth-of-type(1) > div > input#renterBhkToiletInput {
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 3px 8px !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    text-align: center !important;
   }
 
   /* Convert CPU-repainting infinite box-shadow/position keyframes to pure GPU transform/opacity */
@@ -15013,7 +15064,6 @@
                 <span style="font-weight:800; font-size:0.84rem; color:var(--text-main); display:flex; align-items:center; gap:6px;">
                   <i class="fa-solid fa-user" style="color:#38bdf8;"></i> Renter Photo
                 </span>
-                <span id="profileCloudStatusBadge" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">No Photo</span>
               </div>
               <div class="image-frame-container zoomable-photo-frame" style="height: 165px; margin-bottom: 10px;" onclick="openPhotoZoomModal(document.getElementById('profilePicturePreview')?.src, (document.getElementById('renterName')?.value || 'Renter') + ' — Profile Photo')">
                 <img id="profilePicturePreview" onerror="handleDriveImgFallback(this)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%3Crect%20width%3D%22150%22%20height%3D%22150%22%20fill%3D%22%231e293b%22%2F%3E%3Ccircle%20cx%3D%2275%22%20cy%3D%2254%22%20r%3D%2226%22%20fill%3D%22%23475569%22%2F%3E%3Cpath%20d%3D%22M30%20132c0-25%2020-42%2045-42s45%2017%2045%2042%22%20fill%3D%22%23475569%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22144%22%20font-family%3D%22sans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22bold%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%3ENo%20Profile%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Renter Profile Photo">
@@ -15122,7 +15172,8 @@
                   type="button"
                   id="btnDownloadIdentityBackPic"
                   class="btn-ledger-action admin-only"
-                  style="background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  data-has-photo="false"
+                  style="display:none; background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="downloadRenterDocumentPhoto('identity_back')"
                 >
                   <i class="fa-solid fa-download"></i> Download Back
@@ -15131,7 +15182,8 @@
                   type="button"
                   id="btnDeleteIdentityBackPic"
                   class="btn-ledger-action admin-only"
-                  style="background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  data-has-photo="false"
+                  style="display:none; background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="deleteRenterDocumentFromCloud('identity_back')"
                 >
                   <i class="fa-solid fa-trash-can"></i> Delete
@@ -15184,11 +15236,11 @@
                     <input type="number" id="renterBhkBathroomInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
                   </div>
                   <div>
-                    <label for="renterBhkToiletInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Toilet</label>
+                    <label for="renterBhkToiletInput" style="font-size:0.68rem; color:var(--text-muted); margin-bottom:3px; display:block;">Hall</label>
                     <input type="number" id="renterBhkToiletInput" class="form-control" min="0" placeholder="0" oninput="syncBhkDetailsSummaryFromCounts()">
                   </div>
                 </div>
-                <input type="text" id="renterBhkDetailsInput" class="form-control" placeholder="e.g. 2 BHK (2 Rooms, 1 Kitchen, 1 Bathroom, 1 Toilet)" oninput="parseBhkCountsFromSummaryInput(this.value)">
+                <input type="text" id="renterBhkDetailsInput" class="form-control" placeholder="e.g. 2 BHK (2 Rooms, 1 Kitchen, 1 Bathroom, 1 Hall)" oninput="parseBhkCountsFromSummaryInput(this.value)">
               </div>
               <button type="button" id="btnSaveProfileFlatLocationNumber" class="btn-primary admin-only" onclick="saveProfileFlatLocationAndNumber()">
                 <i class="fa-solid fa-floppy-disk"></i> Save Flat Location &amp; BHK Details
@@ -31796,9 +31848,11 @@ function formatMonthLabel(rawVal) {
         badgeEl.style.color = hasRealImage ? "var(--accent-green)" : "var(--text-muted)";
       }
       if (delBtn) {
+        delBtn.dataset.hasPhoto = hasRealImage ? "true" : "false";
         delBtn.style.display = hasRealImage ? "inline-flex" : "none";
       }
       if (dlBtn) {
+        dlBtn.dataset.hasPhoto = hasRealImage ? "true" : "false";
         dlBtn.style.display = hasRealImage ? "inline-flex" : "none";
       }
       if (!hasRealImage && fileInput) {
@@ -33631,6 +33685,14 @@ function formatMonthLabel(rawVal) {
           else btn.setAttribute("disabled", "disabled");
         });
         modal.querySelectorAll("#tabProfile .admin-only").forEach(el => {
+          if (el.id === "btnDownloadIdentityBackPic" || el.id === "btnDeleteIdentityBackPic") {
+            if (canEditProf && el.dataset.hasPhoto === "true") {
+              el.style.display = "inline-flex";
+            } else {
+              el.style.setProperty("display", "none", "important");
+            }
+            return;
+          }
           if (canEditProf) {
             if (el.id === "btnShiftToAnotherFlat") {
               el.style.setProperty("display", "flex", "important");
@@ -40228,8 +40290,8 @@ function formatMonthLabel(rawVal) {
       const roomWord = r === 1 ? "Room" : "Rooms";
       const kitchenWord = k === 1 ? "Kitchen" : "Kitchens";
       const bathWord = b === 1 ? "Bathroom" : "Bathrooms";
-      const toiletWord = t === 1 ? "Toilet" : "Toilets";
-      return `${r} BHK (${r} ${roomWord}, ${k} ${kitchenWord}, ${b} ${bathWord}, ${t} ${toiletWord})`;
+      const hallWord = t === 1 ? "Hall" : "Halls";
+      return `${r} BHK (${r} ${roomWord}, ${k} ${kitchenWord}, ${b} ${bathWord}, ${t} ${hallWord})`;
     }
 
     function parseBhkCountsFromString(str) {
@@ -40238,7 +40300,7 @@ function formatMonthLabel(rawVal) {
       const rMatch = text.match(/(\d+)\s*rooms?/i) || text.match(/(\d+)\s*bhk/i);
       const kMatch = text.match(/(\d+)\s*kitchens?/i);
       const bMatch = text.match(/(\d+)\s*bathrooms?/i);
-      const tMatch = text.match(/(\d+)\s*(?:toilet)s?/i);
+      const tMatch = text.match(/(\d+)\s*(?:halls?|toilets?)/i);
       return {
         rooms: rMatch ? parseInt(rMatch[1], 10) : "",
         kitchen: kMatch ? parseInt(kMatch[1], 10) : "",
