@@ -8502,18 +8502,18 @@
     box-shadow: none !important;
   }
 
-  /* Focused 25% Transparency (75% Opacity) for #adminPaymentProofQueueList > div:nth-of-type(1) ONLY */
-  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div:nth-of-type(1) {
-    background: rgba(15, 23, 42, 0.75) !important;
-    background-color: rgba(15, 23, 42, 0.75) !important;
+  /* Focused 10% Transparency (90% Opacity) for all UTR verification boxes inside #adminPaymentProofQueueList */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div {
+    background: rgba(15, 23, 42, 0.90) !important;
+    background-color: rgba(15, 23, 42, 0.90) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
     border-radius: 12px;
   }
-  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div:nth-of-type(1) {
-    background: rgba(255, 255, 255, 0.75) !important;
-    background-color: rgba(255, 255, 255, 0.75) !important;
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div {
+    background: rgba(255, 255, 255, 0.90) !important;
+    background-color: rgba(255, 255, 255, 0.90) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
@@ -8537,13 +8537,14 @@
     text-shadow: none !important;
   }
 
-  /* Focused 20% Transparency (80% Opacity) for Notification Compose & Bulk Broadcast Cards inside #adminOpsHubPanelSlot_notifications ONLY */
+  /* Focused 10% Transparency (90% Opacity) for Notification Compose, Bulk Broadcast & Notification Cards inside #adminOpsHubPanelSlot_notifications ONLY */
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard,
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard:focus-within,
   section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2),
-  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2):focus-within {
-    background: rgba(15, 23, 42, 0.80) !important;
-    background-color: rgba(15, 23, 42, 0.80) !important;
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2):focus-within,
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div#notificationsListContainer > div {
+    background: rgba(15, 23, 42, 0.90) !important;
+    background-color: rgba(15, 23, 42, 0.90) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
@@ -8551,9 +8552,10 @@
   body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard,
   body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div#adminNotificationComposeCard:focus-within,
   body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2),
-  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2):focus-within {
-    background: rgba(255, 255, 255, 0.80) !important;
-    background-color: rgba(255, 255, 255, 0.80) !important;
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div:nth-of-type(1) > div:nth-of-type(2):focus-within,
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_notifications > div#sharedNotificationsWorkspace > div#notificationsListContainer > div {
+    background: rgba(255, 255, 255, 0.90) !important;
+    background-color: rgba(255, 255, 255, 0.90) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
@@ -10067,7 +10069,8 @@
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(2),
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div#renterInlinePayPhotoPendingBox,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(3) > label:nth-of-type(1),
-  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4) {
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div {
     background: rgba(15, 23, 42, 0.75) !important;
     background-color: rgba(15, 23, 42, 0.75) !important;
     background-image: none !important;
@@ -10078,7 +10081,8 @@
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterInstantUpiPaymentCard > div:nth-of-type(2),
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div#renterInlinePayPhotoPendingBox,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(3) > label:nth-of-type(1),
-  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4) {
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(4),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div {
     background: rgba(255, 255, 255, 0.75) !important;
     background-color: rgba(255, 255, 255, 0.75) !important;
     background-image: none !important;
@@ -10089,7 +10093,6 @@
   /* Focused Elements: 30% Transparent (0.70 Opacity) inside #renterInlineProfileCard & #renterPaymentPhotoAndUtrCard */
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard .renter-profile-subcard-30,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileLocationBhkCard,
-  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(1),
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > span:nth-of-type(1),
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
     background: rgba(15, 23, 42, 0.70) !important;
@@ -10100,7 +10103,6 @@
   }
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard .renter-profile-subcard-30,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileLocationBhkCard,
-  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(1),
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > span:nth-of-type(1),
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
     background: rgba(255, 255, 255, 0.70) !important;
@@ -11150,6 +11152,470 @@
       transition-duration: 0.01ms !important;
     }
   }
+
+  /* Focused Stylish Icon-Only Design for #btnLedgerPrev & #btnLedgerNext ONLY */
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev,
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(99, 102, 241, 0.32)) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.55) !important;
+    color: #e0f2fe !important;
+    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), background 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, color 0.22s ease !important;
+    cursor: pointer !important;
+    position: relative;
+  }
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev i,
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext i {
+    font-size: 0.92rem !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    transition: transform 0.2s ease !important;
+  }
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev:hover:not(:disabled),
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext:hover:not(:disabled) {
+    background: linear-gradient(135deg, #0ea5e9, #6366f1) !important;
+    border-color: rgba(186, 230, 253, 0.85) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.06) !important;
+    box-shadow: 0 10px 22px rgba(14, 165, 233, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  }
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev:hover:not(:disabled) i {
+    transform: translateX(-1.5px) !important;
+  }
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext:hover:not(:disabled) i {
+    transform: translateX(1.5px) !important;
+  }
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev:active:not(:disabled),
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext:active:not(:disabled) {
+    transform: translateY(0) scale(0.95) !important;
+  }
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev:disabled,
+  #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext:disabled {
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  body.theme-white #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev,
+  body.theme-white #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext {
+    background: linear-gradient(135deg, #f0f9ff, #e0e7ff) !important;
+    border: 1.5px solid rgba(14, 165, 233, 0.45) !important;
+    color: #0284c7 !important;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+  }
+  body.theme-white #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerPrev:hover:not(:disabled),
+  body.theme-white #sharedFlatDetailsWorkspace #tabHistory > div > button#btnLedgerNext:hover:not(:disabled) {
+    background: linear-gradient(135deg, #0284c7, #4f46e5) !important;
+    border-color: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 18px rgba(2, 132, 199, 0.32) !important;
+  }
+
+  /* Focused Visible Horizontal-Only Scrollbar for #tabHistory > .ledger-table-wrap (vertical scrollbar hidden, smooth up/down scroll preserved) */
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 6px !important;
+    -ms-overflow-style: auto !important;
+    scrollbar-width: auto !important;
+    scrollbar-color: auto !important;
+  }
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar {
+    display: block !important;
+    width: 0px !important;
+    height: 10px !important;
+    background: transparent !important;
+  }
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar:vertical {
+    display: none !important;
+    width: 0px !important;
+    background: transparent !important;
+  }
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar:horizontal {
+    display: block !important;
+    height: 10px !important;
+    background: rgba(15, 23, 42, 0.45) !important;
+    border-radius: 999px !important;
+  }
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar-track:horizontal {
+    background: rgba(15, 23, 42, 0.55) !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(56, 189, 248, 0.18) !important;
+  }
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar-thumb:horizontal {
+    background: linear-gradient(90deg, #38bdf8, #6366f1) !important;
+    border-radius: 999px !important;
+    border: 2px solid rgba(15, 23, 42, 0.55) !important;
+  }
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar-thumb:horizontal:hover {
+    background: linear-gradient(90deg, #7dd3fc, #818cf8) !important;
+  }
+  section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar-corner {
+    display: none !important;
+    background: transparent !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar:horizontal {
+    background: rgba(15, 23, 42, 0.08) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar-track:horizontal {
+    background: rgba(15, 23, 42, 0.08) !important;
+    border: 1px solid rgba(2, 132, 199, 0.18) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar-thumb:horizontal {
+    background: linear-gradient(90deg, #0284c7, #4f46e5) !important;
+    border: 2px solid rgba(241, 245, 249, 0.9) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminFlatDetailsHubSection > div > div#adminFlatDetailsWorkspaceHost > div#sharedFlatDetailsWorkspace > div#tabHistory > .ledger-table-wrap::-webkit-scrollbar-thumb:horizontal:hover {
+    background: linear-gradient(90deg, #0369a1, #4338ca) !important;
+  }
+
+  /* Focused Stylish & Colorful Horizontal-Only Scrollbar ONLY for #adminOpsHubCarouselTrack */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding-bottom: 10px !important;
+    -ms-overflow-style: auto !important;
+    scrollbar-width: auto !important;
+    scrollbar-color: auto !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar {
+    display: block !important;
+    width: 0px !important;
+    height: 10px !important;
+    background: transparent !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar:vertical {
+    display: none !important;
+    width: 0px !important;
+    background: transparent !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar:horizontal {
+    display: block !important;
+    height: 10px !important;
+    background: rgba(15, 23, 42, 0.55) !important;
+    border-radius: 999px !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar-track:horizontal {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.14), rgba(56, 189, 248, 0.14), rgba(139, 92, 246, 0.16), rgba(236, 72, 153, 0.14)) !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(148, 163, 184, 0.24) !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar-thumb:horizontal {
+    background: linear-gradient(90deg, #f59e0b 0%, #10b981 28%, #38bdf8 58%, #8b5cf6 82%, #ec4899 100%) !important;
+    border-radius: 999px !important;
+    border: 2px solid rgba(15, 23, 42, 0.65) !important;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.45) !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar-thumb:horizontal:hover {
+    background: linear-gradient(90deg, #fbbf24 0%, #34d399 28%, #7dd3fc 58%, #a78bfa 82%, #f472b6 100%) !important;
+    border-color: rgba(15, 23, 42, 0.45) !important;
+  }
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar-corner {
+    display: none !important;
+    background: transparent !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar:horizontal {
+    background: rgba(15, 23, 42, 0.08) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar-track:horizontal {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.14), rgba(14, 165, 233, 0.14), rgba(99, 102, 241, 0.14), rgba(236, 72, 153, 0.14)) !important;
+    border: 1px solid rgba(15, 23, 42, 0.14) !important;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar-thumb:horizontal {
+    background: linear-gradient(90deg, #d97706 0%, #059669 28%, #0284c7 58%, #7c3aed 82%, #db2777 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.85) !important;
+  }
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubCarouselRail > div#adminOpsHubCarouselTrack::-webkit-scrollbar-thumb:horizontal:hover {
+    background: linear-gradient(90deg, #f59e0b 0%, #10b981 28%, #0ea5e9 58%, #8b5cf6 82%, #ec4899 100%) !important;
+  }
+
+  /* Focused Modern Help Center Design ONLY for div#contactUsModal > div:nth-of-type(1) */
+  div#contactUsModal > div:nth-of-type(1) {
+    max-width: 486px !important;
+    width: calc(100% - 24px) !important;
+    padding: 0 !important;
+    border-radius: 22px !important;
+    overflow: hidden !important;
+    background: linear-gradient(165deg, rgba(15, 23, 42, 0.96) 0%, rgba(12, 20, 38, 0.98) 100%) !important;
+    border: 1.5px solid rgba(52, 211, 153, 0.36) !important;
+    box-shadow: 0 26px 60px rgba(2, 6, 23, 0.72), 0 0 0 1px rgba(255, 255, 255, 0.05) inset !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+  }
+  div#contactUsModal > div:nth-of-type(1) > .modal-close-btn {
+    top: 14px !important;
+    right: 14px !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: rgba(15, 23, 42, 0.48) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    color: #f8fafc !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 5 !important;
+    transition: transform 0.2s ease, background 0.2s ease !important;
+  }
+  div#contactUsModal > div:nth-of-type(1) > .modal-close-btn:hover {
+    background: rgba(239, 68, 68, 0.85) !important;
+    border-color: rgba(254, 202, 202, 0.65) !important;
+    transform: rotate(90deg) scale(1.06) !important;
+  }
+  div#contactUsModal .hc-hero-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 54px 18px 20px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.24) 0%, rgba(14, 165, 233, 0.18) 55%, rgba(245, 158, 11, 0.16) 100%);
+    border-bottom: 1px solid rgba(52, 211, 153, 0.25);
+  }
+  div#contactUsModal .hc-hero-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    box-shadow: 0 10px 22px rgba(16, 185, 129, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  div#contactUsModal .hc-hero-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    color: #f8fafc;
+    line-height: 1.2;
+  }
+  div#contactUsModal .hc-hero-sub {
+    margin: 3px 0 0;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #94a3b8;
+  }
+  div#contactUsModal #contactUsDynamicBody {
+    padding: 16px 18px 20px !important;
+    gap: 12px !important;
+    max-height: 76vh;
+    overflow-y: auto;
+  }
+  div#contactUsModal .hc-profile-banner {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(30, 41, 59, 0.72));
+    border: 1px solid rgba(52, 211, 153, 0.30);
+    border-radius: 16px;
+    padding: 13px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  div#contactUsModal .hc-profile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  div#contactUsModal .hc-avatar-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(56, 189, 248, 0.22));
+    border: 1px solid rgba(52, 211, 153, 0.45);
+    color: #34d399;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  div#contactUsModal .hc-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.67rem;
+    font-weight: 800;
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.16);
+    border: 1px solid rgba(52, 211, 153, 0.42);
+    white-space: nowrap;
+  }
+  div#contactUsModal .hc-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+  }
+  div#contactUsModal .hc-prop-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 9px;
+    border-top: 1px dashed rgba(148, 163, 184, 0.22);
+  }
+  div#contactUsModal .hc-channel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  div#contactUsModal .hc-channel-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 13px;
+    border-radius: 15px;
+    background: rgba(30, 41, 59, 0.62);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  div#contactUsModal .hc-channel-card:hover {
+    transform: translateY(-1px);
+    background: rgba(30, 41, 59, 0.86);
+    border-color: rgba(56, 189, 248, 0.42);
+    box-shadow: 0 8px 20px rgba(2, 6, 23, 0.32);
+  }
+  div#contactUsModal .hc-channel-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    flex: 1;
+  }
+  div#contactUsModal .hc-icon-tile {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.98rem;
+    flex-shrink: 0;
+  }
+  div#contactUsModal .hc-icon-phone { background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
+  div#contactUsModal .hc-icon-wa { background: rgba(34, 197, 94, 0.16); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.35); }
+  div#contactUsModal .hc-icon-mobile { background: rgba(168, 85, 247, 0.16); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
+  div#contactUsModal .hc-icon-email { background: rgba(6, 182, 212, 0.16); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.35); }
+  div#contactUsModal .hc-icon-addr { background: rgba(244, 63, 94, 0.16); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); }
+  div#contactUsModal .hc-field-label {
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #94a3b8;
+    line-height: 1.2;
+  }
+  div#contactUsModal .hc-field-val {
+    font-size: 0.89rem;
+    font-weight: 800;
+    color: #f8fafc;
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+    line-height: 1.3;
+  }
+  div#contactUsModal .hc-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 11px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  }
+  div#contactUsModal .hc-action-btn:hover {
+    transform: translateY(-1px) scale(1.03);
+    filter: brightness(1.08);
+  }
+  div#contactUsModal .hc-btn-call { background: linear-gradient(135deg, #0ea5e9, #2563eb); box-shadow: 0 6px 14px rgba(14, 165, 233, 0.32); }
+  div#contactUsModal .hc-btn-wa { background: linear-gradient(135deg, #16a34a, #10b981); box-shadow: 0 6px 14px rgba(22, 163, 74, 0.32); }
+  div#contactUsModal .hc-btn-site { background: linear-gradient(135deg, #8b5cf6, #6366f1); box-shadow: 0 6px 14px rgba(139, 92, 246, 0.32); }
+  div#contactUsModal .hc-btn-mail { background: linear-gradient(135deg, #0891b2, #0284c7); box-shadow: 0 6px 14px rgba(8, 145, 178, 0.28); }
+  div#contactUsModal .hc-na-pill {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgba(148, 163, 184, 0.1);
+    flex-shrink: 0;
+  }
+  div#contactUsModal .hc-empty-box {
+    background: rgba(30, 41, 59, 0.55);
+    border: 1.5px dashed rgba(245, 158, 11, 0.38);
+    border-radius: 16px;
+    padding: 26px 18px;
+    text-align: center;
+  }
+
+  /* Light Theme Support for Focused Help Center Modal ONLY */
+  body.theme-white div#contactUsModal > div:nth-of-type(1) {
+    background: linear-gradient(165deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
+    box-shadow: 0 24px 54px rgba(15, 23, 42, 0.16) !important;
+  }
+  body.theme-white div#contactUsModal > div:nth-of-type(1) > .modal-close-btn {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(15, 23, 42, 0.14) !important;
+    color: #0f172a !important;
+  }
+  body.theme-white div#contactUsModal > div:nth-of-type(1) > .modal-close-btn:hover {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+  }
+  body.theme-white div#contactUsModal .hc-hero-header {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(14, 165, 233, 0.12) 58%, rgba(245, 158, 11, 0.12) 100%);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.22);
+  }
+  body.theme-white div#contactUsModal .hc-hero-title { color: #0f172a; }
+  body.theme-white div#contactUsModal .hc-hero-sub { color: #475569; }
+  body.theme-white div#contactUsModal .hc-profile-banner {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(241, 245, 249, 0.92));
+    border: 1px solid rgba(16, 185, 129, 0.28);
+  }
+  body.theme-white div#contactUsModal .hc-live-pill {
+    color: #047857;
+    background: rgba(16, 185, 129, 0.14);
+    border-color: rgba(16, 185, 129, 0.36);
+  }
+  body.theme-white div#contactUsModal .hc-channel-card {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
+  }
+  body.theme-white div#contactUsModal .hc-channel-card:hover {
+    background: #f8fafc;
+    border-color: rgba(14, 165, 233, 0.42);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  }
+  body.theme-white div#contactUsModal .hc-field-label { color: #64748b; }
+  body.theme-white div#contactUsModal .hc-field-val { color: #0f172a; }
+  body.theme-white div#contactUsModal .hc-empty-box { background: #f8fafc; }
 
 </style>
 </head>
@@ -12584,19 +13050,20 @@
     </div>
   </div>
 
-  <!-- CONTACT US MODAL FOR RENTER & VIEWER ROLES (Requirement 6) -->
+  <!-- CONTACT US / HELP CENTER MODAL FOR RENTER & VIEWER ROLES (Requirement 6) -->
   <div id="contactUsModal" class="modal-overlay" style="z-index: 8950;" onclick="if(event.target===this) closeModal('contactUsModal')">
-    <div class="modal-window" style="max-width: 460px;">
-      <button class="modal-close-btn" onclick="closeModal('contactUsModal')"><i class="fa-solid fa-xmark"></i></button>
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border); padding-right:32px;">
-        <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, #ea580c, #f59e0b); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:1.25rem; flex-shrink:0;">
+    <div class="modal-window">
+      <button class="modal-close-btn" onclick="closeModal('contactUsModal')" aria-label="Close Help Center"><i class="fa-solid fa-xmark"></i></button>
+      <div class="hc-hero-header">
+        <div class="hc-hero-icon">
           <i class="fa-solid fa-headset"></i>
         </div>
         <div>
-          <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Contact Property Admin</h3>
+          <h3 class="hc-hero-title">Help Center</h3>
+          <p class="hc-hero-sub">Contact Property Admin &amp; Direct Support</p>
         </div>
       </div>
-      <div id="contactUsDynamicBody" style="display:flex; flex-direction:column; gap:10px;"></div>
+      <div id="contactUsDynamicBody" style="display:flex; flex-direction:column; gap:12px;"></div>
     </div>
   </div>
 
@@ -13600,11 +14067,7 @@
                 </div>
               </div>
 
-              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08);">
-                <select id="adminNoticeTargetSelect" class="form-control" style="width:auto; flex:1 1 180px; padding:7px 10px; font-size:0.75rem;">
-                  <option value="ALL">All Renters &amp; Users in Selected Properties</option>
-                  <option value="RENTERS">Active Renters Only in Selected Properties</option>
-                </select>
+              <div style="display:flex; justify-content:flex-end; align-items:center; gap:8px; flex-wrap:wrap; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08);">
                 <div style="display:flex; align-items:center; gap:6px;">
                   <button type="button" id="btnCancelAdminNotice" class="btn-ledger-action" style="display:none; padding:7px 12px; font-size:0.75rem; color:#ef4444;" onclick="cancelEditingAdminNotice()">
                     <i class="fa-solid fa-xmark"></i> Cancel
@@ -15014,12 +15477,12 @@
         </div>
         <!-- Requirement 6: Flat History 6-Items-per-Page Pagination Controls -->
         <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:12px; padding:10px 4px; border-top:1px solid var(--glass-border);">
-          <button type="button" id="btnLedgerPrev" class="btn-ledger-action" style="padding:7px 14px; font-weight:700;" onclick="changeLedgerPage(-1)">
-            <i class="fa-solid fa-chevron-left"></i> Previous 6
+          <button type="button" id="btnLedgerPrev" class="btn-ledger-action" title="Previous 6" aria-label="Previous 6" onclick="changeLedgerPage(-1)">
+            <i class="fa-solid fa-chevron-left"></i>
           </button>
           <span id="ledgerPageIndicator" style="font-size:0.78rem; font-weight:800; color:var(--text-muted);">Page 1 of 1 (0 Total Bills)</span>
-          <button type="button" id="btnLedgerNext" class="btn-ledger-action" style="padding:7px 14px; font-weight:700;" onclick="changeLedgerPage(1)">
-            Next 6 <i class="fa-solid fa-chevron-right"></i>
+          <button type="button" id="btnLedgerNext" class="btn-ledger-action" title="Next 6" aria-label="Next 6" onclick="changeLedgerPage(1)">
+            <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
       </div>
@@ -19170,8 +19633,9 @@
         if (!yNum || mIdx < 0 || mIdx > 11 || dNum < 1 || dNum > 31) return "";
         return `${String(dNum).padStart(2, "0")} ${months[mIdx]} ${yNum}`;
       };
-      // Handle YYYY-MM-DD or YYYY/MM/DD (with optional ISO/time suffix)
-      const ymdMatch = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\b|T|,|\s|$)/);
+      // Handle YYYY-MM-DD or YYYY/MM/DD (skip full ISO timestamps with explicit timezone so UTC strings like ...T18:30:00.000Z convert to local date instead of shifting -1 day)
+      const isIsoWithTz = /^\d{4}-\d{2}-\d{2}T[\d:.]+(?:Z|[+-]\d{2}:?\d{2})$/i.test(s);
+      const ymdMatch = isIsoWithTz ? null : s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\b|T|,|\s|$)/);
       if (ymdMatch) {
         return formatDMY(ymdMatch[3], Number(ymdMatch[2]) - 1, ymdMatch[1]) || "--";
       }
@@ -20746,10 +21210,133 @@ function formatMonthLabel(rawVal) {
       return Array.from(propsSet);
     }
 
+    function isUserAccountBlockedForNotice(userObj) {
+      if (!userObj || typeof userObj !== "object") return false;
+      const st = String(userObj.Status || userObj.AccountStatus || "Active").trim().toLowerCase();
+      if (st === "blocked" || st === "suspended" || st === "inactive") return true;
+      if (String(userObj.IsPermanentlyBlocked || "").trim().toLowerCase() === "true") return true;
+      if (String(userObj.MovedOutAutoBlocked || "").trim().toLowerCase() === "true") return true;
+      const uname = String(userObj.Username || "").trim().toLowerCase();
+      if (uname) {
+        try {
+          const blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+          if (Array.isArray(blockedList) && blockedList.some(b => String(b || "").trim().toLowerCase() === uname)) {
+            return true;
+          }
+        } catch (e) {}
+      }
+      return false;
+    }
+
+    function isCurrentLoggedInUserBlocked() {
+      const roleLower = String(activeRole || "").trim().toLowerCase();
+      if (roleLower === "admin") return false;
+      const uname = String(activeUser || "").trim().toLowerCase();
+      if (!uname) return false;
+      const matchedU = (DB.users || []).find(u => String(u.Username || "").trim().toLowerCase() === uname);
+      if (matchedU && isUserAccountBlockedForNotice(matchedU)) return true;
+      try {
+        const blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+        if (Array.isArray(blockedList) && blockedList.some(b => String(b || "").trim().toLowerCase() === uname)) {
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    function getUserAssociatedPropertiesForNoticeRecord(userObj) {
+      if (!userObj || typeof userObj !== "object") return [];
+      const roleLower = String(userObj.Role || "").trim().toLowerCase();
+      if (roleLower === "admin") return ["ALL"];
+      const propsSet = new Set();
+      const assignedProp = String(userObj.AssignedProperty || "").trim();
+      if (assignedProp.toUpperCase() === "ALL") return ["ALL"];
+      if (assignedProp) {
+        assignedProp.split(",").forEach(p => {
+          if (p.trim()) propsSet.add(p.trim().toLowerCase());
+        });
+      } else if (roleLower === "manager") {
+        return ["ALL"];
+      }
+      if (roleLower === "renter") {
+        const uAadh = String(userObj.AssignedAadhaar || userObj.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+        if (uAadh.length === 12) {
+          const matches = (DB.renters || []).filter(r =>
+            String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12) === uAadh
+          );
+          const activeMatches = matches.filter(r => String(r.Status || "").trim().toLowerCase() === "active");
+          (activeMatches.length > 0 ? activeMatches : matches).forEach(r => {
+            if (r && r.PropertyName) propsSet.add(String(r.PropertyName).trim().toLowerCase());
+          });
+        }
+      }
+      return Array.from(propsSet);
+    }
+
+    function buildActiveNoticeRecipientsSnapshot(targetProperties) {
+      const targetList = Array.isArray(targetProperties) && targetProperties.length > 0 ? targetProperties : ["ALL"];
+      const isAllProps = targetList.some(tp => String(tp || "").trim().toUpperCase() === "ALL");
+      const targetLowerSet = new Set(targetList.map(tp => String(tp || "").trim().toLowerCase()).filter(Boolean));
+
+      const recipientUsernames = [];
+      const excludedBlockedUsers = [];
+      let blockedInScopeCount = 0;
+
+      (DB.users || []).forEach(u => {
+        if (!u || !u.Username) return;
+        const roleLower = String(u.Role || "").trim().toLowerCase();
+        if (roleLower === "admin") return;
+        const unameLower = String(u.Username).trim().toLowerCase();
+        if (!unameLower) return;
+
+        const userProps = getUserAssociatedPropertiesForNoticeRecord(u);
+        const matchesProp = isAllProps ||
+          userProps.includes("ALL") ||
+          userProps.includes("all") ||
+          userProps.some(p => targetLowerSet.has(p));
+
+        if (isUserAccountBlockedForNotice(u)) {
+          if (!excludedBlockedUsers.includes(unameLower)) excludedBlockedUsers.push(unameLower);
+          if (matchesProp) blockedInScopeCount++;
+          return;
+        }
+
+        if (matchesProp && !recipientUsernames.includes(unameLower)) {
+          recipientUsernames.push(unameLower);
+        }
+      });
+
+      return {
+        activeOnly: true,
+        recipientUsernames,
+        excludedBlockedUsers,
+        activeCount: recipientUsernames.length,
+        blockedInScopeCount
+      };
+    }
+
     function isNoticeVisibleToCurrentUser(n) {
       if (!n || !n.id) return false;
       const userRole = String(activeRole || "").trim().toLowerCase();
       if (userRole === "admin") return true;
+
+      // Never deliver or show notifications to blocked users
+      if (isCurrentLoggedInUserBlocked()) return false;
+
+      const currentUserKey = String(activeUser || "").trim().toLowerCase();
+      const canManageNotices = typeof canCurrentUserManageNotifications === "function" && canCurrentUserManageNotifications();
+
+      if (!canManageNotices) {
+        if (currentUserKey && Array.isArray(n.excludedBlockedUsers) && n.excludedBlockedUsers.length > 0) {
+          const excludedSet = new Set(n.excludedBlockedUsers.map(u => String(u || "").trim().toLowerCase()).filter(Boolean));
+          if (excludedSet.has(currentUserKey)) return false;
+        }
+        if (n.activeOnly === true && Array.isArray(n.recipientUsernames) && n.recipientUsernames.length > 0) {
+          const allowedSet = new Set(n.recipientUsernames.map(u => String(u || "").trim().toLowerCase()).filter(Boolean));
+          if (!currentUserKey || !allowedSet.has(currentUserKey)) return false;
+        }
+      }
+
       if (n.target === "RENTERS" && userRole !== "renter") return false;
 
       const targetProps = Array.isArray(n.targetProperties) ? n.targetProperties : ["ALL"];
@@ -21536,6 +22123,15 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Select Target Property", "Please select at least one property for the target audience.", false);
       }
 
+      const audienceSnap = buildActiveNoticeRecipientsSnapshot(targetProperties);
+      if (!currentEditingNoticeId && audienceSnap.activeCount === 0 && audienceSnap.blockedInScopeCount > 0) {
+        return triggerSideToast(
+          "No Active Users",
+          "All users in the selected audience are currently blocked. Notifications are only sent to active users.",
+          false
+        );
+      }
+
       const existing = getStoredBroadcastNotifications().slice();
 
       if (currentEditingNoticeId) {
@@ -21548,6 +22144,9 @@ function formatMonthLabel(rawVal) {
             body,
             target,
             targetProperties,
+            activeOnly: true,
+            recipientUsernames: audienceSnap.recipientUsernames,
+            excludedBlockedUsers: audienceSnap.excludedBlockedUsers,
             sender: activeUserFullName || activeUser || "Admin",
             updatedAt: Date.now()
           };
@@ -21557,15 +22156,18 @@ function formatMonthLabel(rawVal) {
         DB.globalConfig.broadcastNotices = existing;
         syncNotificationsBadgeUI();
         renderNotificationsListUI();
-        triggerSideToast("Notice Updated", `Notice "${title}" updated live!`, true);
+        triggerSideToast("Notice Updated", `Notice "${title}" updated for active users only!`, true);
       } else {
-        // Add new notification
+        // Add new notification (strictly active non-blocked users only)
         const newNotice = {
           id: "notice_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6),
           title,
           body,
           target,
           targetProperties,
+          activeOnly: true,
+          recipientUsernames: audienceSnap.recipientUsernames,
+          excludedBlockedUsers: audienceSnap.excludedBlockedUsers,
           sender: activeUserFullName || activeUser || "Admin",
           timestamp: Date.now()
         };
@@ -21582,7 +22184,13 @@ function formatMonthLabel(rawVal) {
         renderNotificationsListUI();
         notifyCrossTabSync("notices", existing);
         const audienceDesc = targetProperties.includes("ALL") ? "all properties" : targetProperties.join(", ");
-        triggerSideToast("Broadcast Sent", `Notice "${title}" sent to ${audienceDesc}!`, true);
+        const activeSummary = audienceSnap.activeCount > 0
+          ? `${audienceSnap.activeCount} active user${audienceSnap.activeCount === 1 ? "" : "s"} (${audienceDesc})`
+          : `active users in ${audienceDesc}`;
+        const blockedNote = audienceSnap.blockedInScopeCount > 0
+          ? ` • ${audienceSnap.blockedInScopeCount} blocked excluded`
+          : "";
+        triggerSideToast("Broadcast Sent", `Notice "${title}" sent to ${activeSummary}${blockedNote}!`, true);
       }
 
       // Sync immediately to Google Apps Script so all connected devices update live
@@ -42537,11 +43145,12 @@ function formatMonthLabel(rawVal) {
 
       if (!hasAnyDetails) {
         body.innerHTML = `
-          <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:14px; padding:20px; text-align:center;">
-            <div style="width:48px; height:48px; border-radius:50%; background:rgba(245,158,11,0.15); color:#f59e0b; display:inline-flex; align-items:center; justify-content:center; font-size:1.3rem; margin-bottom:10px;">
+          <div class="hc-empty-box">
+            <div style="width:52px; height:52px; border-radius:16px; background:rgba(245,158,11,0.16); border:1px solid rgba(245,158,11,0.35); color:#f59e0b; display:inline-flex; align-items:center; justify-content:center; font-size:1.35rem; margin-bottom:10px;">
               <i class="fa-solid fa-address-book"></i>
             </div>
-            <h4 style="font-size:0.95rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">No Contact Info Configured</h4>
+            <h4 style="font-size:0.96rem; font-weight:800; color:var(--text-main); margin:0 0 4px;">No Contact Info Configured</h4>
+            <p style="font-size:0.76rem; color:var(--text-muted); margin:0;">Property admin contact details will appear here once set up.</p>
           </div>
         `;
         return;
@@ -42560,53 +43169,82 @@ function formatMonthLabel(rawVal) {
       const waUrl = waNumber ? `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(cfg.name || "Admin")}%2C%20I%20am%20contacting%20regarding%20${encodeURIComponent(propLabel || "my flat")}.` : "";
 
       body.innerHTML = `
-        <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:12px;">
+        <div class="hc-profile-banner">
+          <div class="hc-profile-top">
+            <div style="display:flex; align-items:center; gap:11px; min-width:0; flex:1;">
+              <span class="hc-avatar-badge"><i class="fa-solid fa-user-shield"></i></span>
+              <div style="min-width:0;">
+                <div class="hc-field-label">Support Contact Person</div>
+                <div class="hc-field-val" style="font-size:0.98rem;">${escapeHtml(supportPersonName)}</div>
+              </div>
+            </div>
+            <span class="hc-live-pill"><span class="hc-live-dot"></span> 24/7 Help Center</span>
+          </div>
           ${propLabel ? `
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
-              <span style="font-size:0.75rem; font-weight:800; color:#f59e0b;"><i class="fa-solid fa-building"></i> ${escapeHtml(propLabel)}</span>
-              <span style="font-size:0.68rem; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:2px 8px; border-radius:6px;"><i class="fa-solid fa-shield-check"></i> Property Isolated</span>
+            <div class="hc-prop-strip">
+              <span style="font-size:0.75rem; font-weight:800; color:#f59e0b; display:inline-flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-building"></i> ${escapeHtml(propLabel)}
+              </span>
+              <span style="font-size:0.66rem; font-weight:800; color:#10b981; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.3); padding:3px 9px; border-radius:999px;">
+                <i class="fa-solid fa-shield-halved"></i> Property Isolated
+              </span>
             </div>
           ` : ""}
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Contact Person</div>
-              <div style="font-size:0.95rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-user-shield" style="color:#10b981; margin-right:5px;"></i>${escapeHtml(supportPersonName)}</div>
+        </div>
+
+        <div class="hc-channel-list">
+          <div class="hc-channel-card">
+            <div class="hc-channel-left">
+              <span class="hc-icon-tile hc-icon-phone"><i class="fa-solid fa-phone"></i></span>
+              <div style="min-width:0;">
+                <div class="hc-field-label">Support Phone Number</div>
+                <div class="hc-field-val">${escapeHtml(supportPhone)}</div>
+              </div>
             </div>
-            <span class="badge-paid" style="font-size:0.68rem;">24/7 Help Center</span>
+            ${cfg.phone ? `<a href="tel:${String(cfg.phone).replace(/\s+/g, "")}" class="hc-action-btn hc-btn-call"><i class="fa-solid fa-phone"></i> Call</a>` : `<span class="hc-na-pill">N/A</span>`}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Phone Number</div>
-              <div style="font-size:0.95rem; font-weight:900; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i>${escapeHtml(supportPhone)}</div>
+          <div class="hc-channel-card">
+            <div class="hc-channel-left">
+              <span class="hc-icon-tile hc-icon-wa"><i class="fa-brands fa-whatsapp"></i></span>
+              <div style="min-width:0;">
+                <div class="hc-field-label">WhatsApp Support</div>
+                <div class="hc-field-val" style="color:#22c55e;">${escapeHtml(whatsappPhone)}</div>
+              </div>
             </div>
-            ${cfg.phone ? `<a href="tel:${String(cfg.phone).replace(/\s+/g, "")}" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none;"><i class="fa-solid fa-phone"></i> Call</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
+            ${waUrl ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="hc-action-btn hc-btn-wa"><i class="fa-brands fa-whatsapp"></i> Chat</a>` : `<span class="hc-na-pill">N/A</span>`}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">WhatsApp Support Phone</div>
-              <div style="font-size:0.92rem; font-weight:800; color:#22c55e;"><i class="fa-brands fa-whatsapp"></i> ${escapeHtml(whatsappPhone)}</div>
+          <div class="hc-channel-card">
+            <div class="hc-channel-left">
+              <span class="hc-icon-tile hc-icon-mobile"><i class="fa-solid fa-mobile-screen-button"></i></span>
+              <div style="min-width:0;">
+                <div class="hc-field-label">Site Problem Mobile</div>
+                <div class="hc-field-val">${escapeHtml(mobilePhone)}</div>
+              </div>
             </div>
-            ${waUrl ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none; background:linear-gradient(135deg, #16a34a, #22c55e);"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
+            ${cfg.mobile ? `<a href="tel:${String(cfg.mobile).replace(/\s+/g, "")}" class="hc-action-btn hc-btn-site"><i class="fa-solid fa-phone"></i> Call</a>` : `<span class="hc-na-pill">N/A</span>`}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Site Problem Mobile Number</div>
-              <div style="font-size:0.92rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-mobile-screen-button" style="color:#a855f7; margin-right:5px;"></i>${escapeHtml(mobilePhone)}</div>
+          <div class="hc-channel-card">
+            <div class="hc-channel-left">
+              <span class="hc-icon-tile hc-icon-email"><i class="fa-solid fa-envelope"></i></span>
+              <div style="min-width:0;">
+                <div class="hc-field-label">Support Email ID</div>
+                <div class="hc-field-val" style="font-size:0.83rem; color:var(--accent-cyan);">${escapeHtml(supportEmail)}</div>
+              </div>
             </div>
-            ${cfg.mobile ? `<a href="tel:${String(cfg.mobile).replace(/\s+/g, "")}" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none; background:linear-gradient(135deg, #8b5cf6, #6366f1);"><i class="fa-solid fa-phone"></i> Call</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
+            ${cfg.email ? `<a href="mailto:${encodeURIComponent(String(cfg.email).trim())}" class="hc-action-btn hc-btn-mail"><i class="fa-solid fa-paper-plane"></i> Mail</a>` : `<span class="hc-na-pill">N/A</span>`}
           </div>
 
-          <div style="padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Email ID</div>
-            <div style="font-size:0.86rem; font-weight:700; color:var(--accent-cyan); margin-top:2px;"><i class="fa-solid fa-envelope"></i> ${escapeHtml(supportEmail)}</div>
-          </div>
-
-          <div>
-            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Official Property Address</div>
-            <div style="font-size:0.84rem; color:var(--text-main); margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ${escapeHtml(officialAddress)}</div>
+          <div class="hc-channel-card" style="align-items:flex-start;">
+            <div class="hc-channel-left" style="align-items:flex-start;">
+              <span class="hc-icon-tile hc-icon-addr"><i class="fa-solid fa-location-dot"></i></span>
+              <div style="min-width:0;">
+                <div class="hc-field-label">Official Property Address</div>
+                <div class="hc-field-val" style="font-size:0.82rem; font-weight:600; line-height:1.45;">${escapeHtml(officialAddress)}</div>
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -43712,11 +44350,14 @@ function formatMonthLabel(rawVal) {
         const resolvedName = resolvePaymentProofRenterName(item);
         const finalName = resolvedName !== "--" ? resolvedName : String(item.renterName || item.tenantName || "").trim();
         const finalUser = String(item.username || item.Username || item.submittedBy || "").trim();
+        const rawSub = item.submittedAt || item.SubmittedAt || "";
+        const cleanSub = formatUtrDateOnly(rawSub) || String(rawSub || "").replace(/^'+/, "").trim();
         return {
           ...item,
           renterName: finalName,
           tenantName: finalName,
-          username: finalUser
+          username: finalUser,
+          submittedAt: cleanSub
         };
       });
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
@@ -43895,7 +44536,7 @@ function formatMonthLabel(rawVal) {
         mode: mode,
         screenshotUrl: finalScreenshotUrl,
         status: "Pending",
-        submittedAt: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+        submittedAt: formatDateOnly(new Date())
       };
       list.unshift(newProof);
       saveStoredPaymentProofs(list);
