@@ -11077,6 +11077,53 @@
     text-align: center !important;
   }
 
+  /* Focused Compact Small Boxes: Property cards inside #propertiesList */
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList {
+    gap: 9px !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card,
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card {
+    min-width: 142px !important;
+    max-width: 192px !important;
+    padding: 8px 11px !important;
+    gap: 8px !important;
+    border-radius: 13px !important;
+    border-top-width: 2.5px !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card::after {
+    width: 56px !important;
+    height: 56px !important;
+    top: -18px !important;
+    right: -16px !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-icon,
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-icon {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 9px !important;
+    font-size: 0.82rem !important;
+    flex-shrink: 0 !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info {
+    min-width: 0 !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info h4,
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info h4 {
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info span,
+  body.theme-white section#dashboardScreen > section:nth-of-type(5) > div#propertiesList > .prop-card .prop-info span {
+    padding: 1px 6px !important;
+    border-radius: 6px !important;
+    font-size: 0.62rem !important;
+    line-height: 1.25 !important;
+  }
+
   /* Convert CPU-repainting infinite box-shadow/position keyframes to pure GPU transform/opacity */
   @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 0.95; }
@@ -22264,6 +22311,8 @@ function formatMonthLabel(rawVal) {
             aadhaar: normAadhaar,
             monthYear: cleanMonth,
             tenantName: renterName || activeUserFullName || activeUser || "Resident",
+            renterName: renterName || activeUserFullName || activeUser || "Resident",
+            username: activeUser || "",
             submittedBy: activeUser || renterName || "Resident",
             amount: inlineAmt,
             utr: inlineUtrVal,
@@ -22599,6 +22648,8 @@ function formatMonthLabel(rawVal) {
           aadhaar: aadhaarNum,
           monthYear: targetMonth,
           tenantName: renterName,
+          renterName: renterName,
+          username: activeUser || "",
           submittedBy: activeUser || renterName,
           amount: amount,
           utr: utr,
@@ -43589,8 +43640,85 @@ function formatMonthLabel(rawVal) {
       return [];
     }
 
+    function resolvePaymentProofRenterName(p) {
+      if (!p || typeof p !== "object") return "--";
+      const isGenericName = (val) => {
+        const s = String(val || "").trim();
+        if (!s || s === "--") return true;
+        const low = s.toLowerCase();
+        return low === "tenant" || low === "resident" || low === "renter" || low === "unknown";
+      };
+
+      const directName = String(p.renterName || p.RenterName || p.tenantName || p.TenantName || p.fullName || p.FullName || "").trim();
+      if (!isGenericName(directName)) return directName;
+
+      const rentersArr = Array.isArray(DB?.renters) ? DB.renters : [];
+      const billsArr = Array.isArray(DB?.bills) ? DB.bills : [];
+      const usersArr = Array.isArray(DB?.users) ? DB.users : [];
+
+      const proofRenterId = String(p.renterId || p.RenterID || "").trim();
+      if (proofRenterId) {
+        const byId = rentersArr.find(r => String(r.RenterID || "").trim() === proofRenterId && !isGenericName(r.RenterName));
+        if (byId) return String(byId.RenterName).trim();
+      }
+
+      const proofAadhaar = typeof normalizeAadhaar12 === "function"
+        ? normalizeAadhaar12(p.aadhaar || p.AadhaarNumber || p.identityDocNumber || "")
+        : String(p.aadhaar || p.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+      if (proofAadhaar.length === 12) {
+        const matchedAadh = rentersArr.filter(r => {
+          const rAadh = typeof normalizeAadhaar12 === "function"
+            ? normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "")
+            : String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+          return rAadh === proofAadhaar && !isGenericName(r.RenterName);
+        });
+        const bestAadh = matchedAadh.find(r => String(r.Status || "").trim().toLowerCase() === "active") || matchedAadh[0];
+        if (bestAadh) return String(bestAadh.RenterName).trim();
+      }
+
+      const proofBillId = String(p.billId || p.BillID || "").trim();
+      if (proofBillId) {
+        const byBill = billsArr.find(b => String(b.BillID || "").trim() === proofBillId && !isGenericName(b.TenantName));
+        if (byBill) return String(byBill.TenantName).trim();
+      }
+
+      const proofProp = String(p.propertyName || p.PropertyName || "").trim();
+      const proofFlat = String(p.flatName || p.FlatName || "").trim();
+      if (proofProp && proofFlat) {
+        const sameFlatRenters = rentersArr.filter(r => isSamePropAndFlat(r.PropertyName, r.FlatName, proofProp, proofFlat) && !isGenericName(r.RenterName));
+        const activeFlatRenter = sameFlatRenters.find(r => String(r.Status || "").trim().toLowerCase() === "active") || sameFlatRenters[sameFlatRenters.length - 1];
+        if (activeFlatRenter) return String(activeFlatRenter.RenterName).trim();
+
+        const proofMonth = typeof normalizeMonthYear === "function" ? normalizeMonthYear(p.monthYear || p.MonthYear || "") : "";
+        const sameFlatBills = billsArr.filter(b => isSamePropAndFlat(b.PropertyName, b.FlatName, proofProp, proofFlat) && !isGenericName(b.TenantName));
+        const exactMonthBill = proofMonth ? sameFlatBills.find(b => normalizeMonthYear(b.MonthYear) === proofMonth) : null;
+        const pickedBill = exactMonthBill || sameFlatBills[sameFlatBills.length - 1];
+        if (pickedBill) return String(pickedBill.TenantName).trim();
+      }
+
+      const proofUsername = String(p.username || p.Username || p.submittedBy || "").trim();
+      if (proofUsername) {
+        const matchedUser = usersArr.find(u => String(u.Username || "").trim().toLowerCase() === proofUsername.toLowerCase());
+        if (matchedUser && !isGenericName(matchedUser.FullName)) return String(matchedUser.FullName).trim();
+        if (!isGenericName(proofUsername)) return proofUsername;
+      }
+
+      return directName || "--";
+    }
+
     function saveStoredPaymentProofs(list) {
-      const clean = Array.isArray(list) ? list : [];
+      const clean = (Array.isArray(list) ? list : []).map(item => {
+        if (!item || typeof item !== "object") return item;
+        const resolvedName = resolvePaymentProofRenterName(item);
+        const finalName = resolvedName !== "--" ? resolvedName : String(item.renterName || item.tenantName || "").trim();
+        const finalUser = String(item.username || item.Username || item.submittedBy || "").trim();
+        return {
+          ...item,
+          renterName: finalName,
+          tenantName: finalName,
+          username: finalUser
+        };
+      });
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.paymentProofs = clean;
       saveDbSnapshotToCache();
@@ -43759,6 +43887,8 @@ function formatMonthLabel(rawVal) {
         aadhaar: resolvedProofAadhaar,
         monthYear: cleanMonth,
         tenantName: tenantName,
+        renterName: tenantName,
+        username: activeUser || "",
         submittedBy: activeUser || tenantName,
         amount: amount,
         utr: utr,
@@ -43800,10 +43930,10 @@ function formatMonthLabel(rawVal) {
         const isPending = statusText === "Pending";
         const stColor = statusText === "Approved" ? "#10b981" : (statusText === "Rejected" ? "#ef4444" : "#f59e0b");
         const rejReason = String(p.rejectionReason || p.reason || p.notes || p.Notes || "").trim();
-        const renterNameDisplay = String(p.tenantName || p.TenantName || p.renterName || p.RenterName || "--").trim() || "--";
+        const renterNameDisplay = resolvePaymentProofRenterName(p);
         const propNameDisplay = String(p.propertyName || p.PropertyName || "").trim();
         const flatNameDisplay = String(p.flatName || p.FlatName || "").trim();
-        const headerDetailsDisplay = [renterNameDisplay, propNameDisplay, flatNameDisplay ? `Flat ${flatNameDisplay}` : ""].filter(Boolean).join(", ");
+        const headerDetailsDisplay = [renterNameDisplay !== "--" ? renterNameDisplay : "", propNameDisplay, flatNameDisplay ? `Flat ${flatNameDisplay}` : ""].filter(Boolean).join(", ") || "--";
         const submittedDateDisplay = formatUtrDateOnly(p.submittedAt || p.SubmittedAt || "") || formatMonthLabel(p.monthYear || p.MonthYear);
         return `
           <div class="utr-proof-row">
