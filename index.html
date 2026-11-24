@@ -10089,7 +10089,6 @@
   /* Focused Elements: 30% Transparent (0.70 Opacity) inside #renterInlineProfileCard & #renterPaymentPhotoAndUtrCard */
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard .renter-profile-subcard-30,
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileLocationBhkCard,
-  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(1),
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > span:nth-of-type(1),
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
     background: rgba(15, 23, 42, 0.70) !important;
@@ -10100,11 +10099,26 @@
   }
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard .renter-profile-subcard-30,
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterInlineProfileCard > div#renterProfileLocationBhkCard,
-  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div:nth-of-type(1),
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > span:nth-of-type(1),
   body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) {
     background: rgba(255, 255, 255, 0.70) !important;
     background-color: rgba(255, 255, 255, 0.70) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Focused Elements: 10% Transparent (0.90 Opacity) for all UTR Verification boxes inside #renterPaymentPhotoAndUtrCard */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div {
+    background: rgba(15, 23, 42, 0.90) !important;
+    background-color: rgba(15, 23, 42, 0.90) !important;
+    background-image: none !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterPaymentPhotoAndUtrCard > div:nth-of-type(5) > div:nth-of-type(2) > div {
+    background: rgba(255, 255, 255, 0.90) !important;
+    background-color: rgba(255, 255, 255, 0.90) !important;
     background-image: none !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
@@ -22106,14 +22120,14 @@
       }
     }
 
-    function buildNpciUpiParamString(rawUpiId, rawUpiName, rawAmount, rawNote, defaultPayeeName = "Rent Payment") {
+    function buildNpciUpiParamString(rawUpiId, rawUpiName, rawAmount, rawNote, defaultPayeeName = "Rent Payment", rawTxnRef = "") {
       // 1. Keep '@' intact in pa (username@bank); remove spaces/quotes and invalid VPA chars
       const cleanPa = String(rawUpiId || "")
         .replace(/\s+/g, "")
         .replace(/[^a-zA-Z0-9._@-]/g, "")
         .trim();
       if (!cleanPa || !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/.test(cleanPa)) {
-        return { valid: false, pa: "", pn: "", am: "", tn: "", paramStr: "" };
+        return { valid: false, pa: "", pn: "", am: "", tn: "", tr: "", paramStr: "" };
       }
 
       // 2. Remove all special characters from payee name (pn); allow only letters, numbers, and single spaces
@@ -22123,7 +22137,7 @@
         : "";
       const cleanPn = (sanitizedName || String(defaultPayeeName || "Rent Payment").replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, " ").trim() || "Rent Payment").slice(0, 50).trim();
 
-      // 3. Parse amount strictly as positive number formatted to 2 decimal places (e.g., 500.00)
+      // 3. Parse amount strictly as positive number formatted to 2 decimal places (e.g., 100.00)
       let numericAmt = 0;
       if (rawAmount !== undefined && rawAmount !== null && rawAmount !== "") {
         const cleanedAmtStr = String(rawAmount).replace(/[^0-9.]/g, "");
@@ -22138,15 +22152,18 @@
       }
       const formattedAm = numericAmt > 0 ? numericAmt.toFixed(2) : "";
 
-      // 4. Remove all special characters from transaction note (tn); allow only letters, numbers, and single spaces
-      const cleanTn = String(rawNote || "")
+      // 4. Remove all special characters from transaction note (tn) and guarantee a clean non-empty note
+      const sanitizedNote = String(rawNote || "")
         .replace(/[^a-zA-Z0-9 ]/g, " ")
         .replace(/\s+/g, " ")
-        .trim()
-        .slice(0, 50)
         .trim();
+      const cleanTn = (sanitizedNote || "Rent Payment").slice(0, 50).trim();
 
-      // 5. Build NPCI-compliant query string with encodeURIComponent (%20 for spaces, never '+' from URLSearchParams) and literal '@' in pa
+      // 5. Generate a unique dynamic alphanumeric Transaction Reference ID (tr) so strict apps like BHIM do not reject missing/duplicate refs
+      const cleanCustomTr = String(rawTxnRef || "").replace(/[^a-zA-Z0-9]/g, "").slice(0, 35);
+      const dynamicTr = cleanCustomTr || (`KH${Date.now()}${Math.floor(1000 + Math.random() * 9000)}`);
+
+      // 6. Build NPCI-compliant query string with encodeURIComponent (%20 for spaces, never '+' from URLSearchParams) and literal '@' in pa
       const parts = [
         `pa=${cleanPa}`,
         `pn=${encodeURIComponent(cleanPn)}`
@@ -22155,9 +22172,8 @@
         parts.push(`am=${formattedAm}`);
       }
       parts.push("cu=INR");
-      if (cleanTn) {
-        parts.push(`tn=${encodeURIComponent(cleanTn)}`);
-      }
+      parts.push(`tn=${encodeURIComponent(cleanTn)}`);
+      parts.push(`tr=${encodeURIComponent(dynamicTr)}`);
 
       return {
         valid: true,
@@ -22166,6 +22182,7 @@
         am: formattedAm,
         numericAmt,
         tn: cleanTn,
+        tr: dynamicTr,
         paramStr: parts.join("&")
       };
     }
@@ -25565,7 +25582,7 @@
         if (credBox) credBox.style.display = "none";
         if (otpBox) otpBox.style.display = "none";
 
-        const okMsg = res.message || `OTP verified! Your Name, Username, Password, Aadhaar / Renter ID, and Contact Number have been automatically sent to ${cleanEmail}.`;
+        const okMsg = res.message || `OTP verified! Your account credentials have been automatically sent to ${cleanEmail}.`;
         setInlineForgotPasswordStatus(okMsg, "success");
         triggerSideToast("Details Sent", `All account details sent to ${cleanEmail}.`, true);
       } catch (err) {
@@ -35200,17 +35217,18 @@
     // Requirements 1, 4 & 5: Valid NPCI-Compliant UPI QR Code (Never encodes '@' as '%40'), Removed WhatsApp Target Line, and Removed Total Amount Paid from Receipt
     let lastQrFetchToken = 0;
 
-    function buildValidUpiUri(rawUpiId, rawUpiName, exactAmount, rawTransactionNote) {
+    function buildValidUpiUri(rawUpiId, rawUpiName, exactAmount, rawTransactionNote, rawTxnRef) {
       const upiData = buildNpciUpiParamString(
         rawUpiId,
         rawUpiName,
         exactAmount,
         rawTransactionNote,
-        "Rent Payment"
+        "Rent Payment",
+        rawTxnRef
       );
       if (!upiData.valid) return "";
 
-      // CRITICAL: Keep literal '@' in pa= and use encodeURIComponent (%20, never '+') per NPCI UPI Linking Spec
+      // CRITICAL: Keep literal '@' in pa=, include dynamic tr, and use encodeURIComponent (%20, never '+') per NPCI UPI Linking Spec
       return `upi://pay?${upiData.paramStr}`;
     }
 
