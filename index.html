@@ -31343,7 +31343,7 @@
       if (!parent) return;
       parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
       parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-      ["otherPanelUsers", "otherPanelLoginHistory", "otherPanelChangeBg", "otherPanelEditEverything", "otherPanelContactSettings", "otherPanelTickets", "otherPanelSheetSetup"].forEach(id => {
+      ["otherPanelUsers", "otherPanelLoginHistory", "otherPanelChangeBg", "otherPanelEditEverything", "otherPanelContactSettings", "otherPanelTickets"].forEach(id => {
         const p = document.getElementById(id);
         if (p) p.style.display = "none";
       });
@@ -45611,82 +45611,6 @@
       }
     }
     const exportAdminAuditLogCsv = downloadAdminAuditLogPdf;
-
-
-    // --- BUG 1 FIX HELPERS: AUTO-CREATE SEPARATE SHEETS, COLUMNS & ROWS + COPY/DOWNLOAD CODE.GS ---
-    async function loadFixedGasCodeIntoViewer() {
-      if (window.__cachedFixedGasCode && window.__cachedFixedGasCode.length > 100) {
-        return window.__cachedFixedGasCode;
-      }
-      try {
-        let text = "";
-        const apiRes = await fetch("/api/gas-code");
-        if (apiRes.ok) {
-          const json = await apiRes.json();
-          if (json && json.code) text = json.code;
-        }
-        if (!text) {
-          const fileRes = await fetch("/code.js");
-          if (fileRes.ok) text = await fileRes.text();
-        }
-        if (text) {
-          window.__cachedFixedGasCode = text;
-          return text;
-        }
-      } catch (e) {}
-      return "";
-    }
-
-    async function copyFixedGasCodeToClipboard() {
-      const code = await loadFixedGasCodeIntoViewer();
-      if (!code) {
-        return triggerSideToast("Load Notice", "Could not load Code.gs text.", false);
-      }
-      try {
-        await navigator.clipboard.writeText(code);
-        triggerSideToast("Code.gs Copied", "Fixed Google Apps Script code copied! Paste it into Extensions > Apps Script in your Google Sheet and Deploy.", true);
-      } catch (e) {
-        triggerSideToast("Copy Failed", "Clipboard access was blocked. Use Download Code.gs instead.", false);
-      }
-    }
-
-    async function downloadFixedGasCodeFile() {
-      const code = await loadFixedGasCodeIntoViewer();
-      if (!code) return;
-      const blob = new Blob([code], { type: "text/javascript;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "code.gs";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      triggerSideToast("Code.gs Downloaded", "Saved fixed Google Apps Script as code.gs.", true);
-    }
-
-    async function triggerAutoCreateAllSheetsAndColumnsNow() {
-      triggerSideToast("Creating Sheets & Columns...", "Auto-creating all 15 separate Google Sheet tabs, column headers, and syncing rows...", "warning");
-      try {
-        await sendFirebaseAction({ action: "setupAllSheets" });
-        await sendFirebaseAction({
-          action: "syncAllData",
-          properties: DB.properties || [],
-          flats: DB.flats || [],
-          renters: DB.renters || [],
-          bills: DB.bills || [],
-          users: getKnownUsersList(),
-          fdRecords: DB.fdRecords || [],
-          khetRecords: DB.khetRecords || [],
-          kharchRecords: DB.kharchRecords || []
-        });
-        await sendFirebaseAction({ action: "saveMaintenanceTickets", maintenanceTickets: getStoredMaintenanceTickets() });
-        await sendFirebaseAction({ action: "saveAuditLogs", auditLogs: getStoredAdminAuditLogs() });
-        triggerSideToast("Sheets & Columns Created", "All 15 separate sheets, column headers (Row 1), and data rows have been created and synced to Google Sheets!", true);
-      } catch (err) {
-        triggerSideToast("Sync Notice", "Setup command sent to Google Sheets.", true);
-      }
-    }
 
     function initAntiScreenCaptureProtection() {
       if (window.__antiScreenCaptureInitialized) return;
