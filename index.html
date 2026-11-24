@@ -12197,6 +12197,8 @@
           </button>
         </div>
 
+        <div id="fpStatusMsg" style="display:none; font-size:0.78rem; font-weight:700; padding:8px 11px; border-radius:10px; margin-bottom:10px; line-height:1.35;"></div>
+
         <div id="fpCredentialsStepBox">
           <div class="form-group" style="margin-bottom:12px;">
             <div class="login-input-shell">
@@ -13585,7 +13587,7 @@
         </div>
       </div>
 
-      <!-- Horizontal Left-to-Right Options Rail (Ordered: Create User ID, Register User, Background Photo, Last Login, Audit Trail Log, Edit Everything, Delete Center) -->
+      <!-- Horizontal Left-to-Right Options Rail (Ordered: Create User ID, Register User, Background Photo, Last Login, Edit Everything, Delete Center) -->
       <div class="settings-horizontal-options-box">
         <div class="flat-nav-bar settings-nav-grid" id="settingsHorizontalNavGrid" onscroll="updateSettingsNavScrollButtons()">
           <div id="settingsTabBtnCreateUser" class="flat-nav-item settings-nav-card nav-create active" onclick="switchSettingsSubTab(event, 'setSubCreateUser')">
@@ -13603,10 +13605,6 @@
           <div id="btnOtherOptLoginHistory" class="flat-nav-item settings-nav-card nav-history admin-only" onclick="switchOtherSubOption('history')">
             <div class="s-nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
             <div class="s-nav-title">Last Login</div>
-          </div>
-          <div id="btnOtherOptAuditLog" class="flat-nav-item settings-nav-card nav-audit admin-only" onclick="switchOtherSubOption('auditLog')">
-            <div class="s-nav-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="s-nav-title">Activity Log</div>
           </div>
           <div id="btnOtherOptEditEverything" class="flat-nav-item settings-nav-card nav-edit admin-only" onclick="switchOtherSubOption('editEverything')">
             <div class="s-nav-icon"><i class="fa-solid fa-pen-ruler"></i></div>
@@ -14125,18 +14123,6 @@
           </div>
           <div id="adminMaintenanceTicketsList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
           </div>
-        </div>
-
-        <!-- Option 7 Panel (Feature G3): Detailed Admin Audit Trail & Activity Log -->
-        <div id="otherPanelAuditLog" class="stat-pill admin-only" style="text-align: left; display: none;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
-            <div>
-              <span style="font-weight:800; font-size:0.88rem; color:#fb7185;">
-                <i class="fa-solid fa-shield-cat"></i> Audit Trail Log (Max 30 Records)
-              </span>
-            </div>
-          </div>
-          <div id="adminAuditTrailList" style="max-height: 310px; overflow-y: auto; display:flex; flex-direction:column; gap:6px; font-size:0.76rem;"></div>
         </div>
     </div>
   </div>
@@ -16003,7 +15989,120 @@
 
     let gasPostQueuePromise = Promise.resolve();
 
-    async function sendGasSheetAction(data) {
+    window.__portalPendingSyncQueue = Array.isArray(window.__portalPendingSyncQueue) ? window.__portalPendingSyncQueue : [];
+    const MAX_PENDING_SYNC_QUEUE_SIZE = 25;
+    let lastSyncPendingToastAt = 0;
+    let fallbackSyncVerifyTimer = null;
+    let isFlushingPendingSyncQueue = false;
+
+    function enqueuePendingSyncAction(payload) {
+      if (!payload || typeof payload !== "object") return false;
+      const act = String(payload.action || "").trim();
+      // Do not queue massive raw base64 uploads in memory
+      const approxLen = JSON.stringify(payload).length;
+      if (approxLen > 350000) return false;
+      // Replace older queued entry for the same singleton config/sync action to avoid redundant writes
+      const singletonActions = new Set([
+        "saveConfig", "saveContactConfig", "saveBroadcastNotices", "savePrivateChats",
+        "savePaymentProofs", "saveMaintenanceTickets", "saveAuditLogs", "saveFlatChecklist",
+        "saveAppDownloadLinks", "saveBackgrounds", "saveGlobalAppConfig", "saveTheme", "updateTheme"
+      ]);
+      if (singletonActions.has(act)) {
+        const keySig = act === "saveConfig" ? (act + "::" + String(payload.configKey || "")) : act;
+        window.__portalPendingSyncQueue = window.__portalPendingSyncQueue.filter(item => item.keySig !== keySig);
+        window.__portalPendingSyncQueue.push({ keySig, payload, queuedAt: Date.now() });
+      } else {
+        window.__portalPendingSyncQueue.push({ keySig: act + "::" + Date.now(), payload, queuedAt: Date.now() });
+      }
+      if (window.__portalPendingSyncQueue.length > MAX_PENDING_SYNC_QUEUE_SIZE) {
+        window.__portalPendingSyncQueue.splice(0, window.__portalPendingSyncQueue.length - MAX_PENDING_SYNC_QUEUE_SIZE);
+      }
+      return true;
+    }
+
+    function notifySyncStatusToast(title, message, isError) {
+      const now = Date.now();
+      if (now - lastSyncPendingToastAt < 5000) return;
+      lastSyncPendingToastAt = now;
+      if (typeof triggerSideToast === "function") {
+        triggerSideToast(title, message, isError ? false : "warning");
+      }
+    }
+
+    function scheduleFallbackSyncVerification() {
+      if (fallbackSyncVerifyTimer) clearTimeout(fallbackSyncVerifyTimer);
+      fallbackSyncVerifyTimer = setTimeout(function() {
+        fallbackSyncVerifyTimer = null;
+        if (typeof syncDataLive === "function" && navigator.onLine !== false) {
+          try { syncDataLive(true); } catch (e) {}
+        }
+      }, 2500);
+    }
+
+    async function flushPendingSyncQueue() {
+      if (isFlushingPendingSyncQueue || !Array.isArray(window.__portalPendingSyncQueue) || window.__portalPendingSyncQueue.length === 0) {
+        return;
+      }
+      if (typeof navigator !== "undefined" && navigator.onLine === false) return;
+      isFlushingPendingSyncQueue = true;
+      try {
+        const pendingItems = window.__portalPendingSyncQueue.splice(0, window.__portalPendingSyncQueue.length);
+        let syncedCount = 0;
+        for (let i = 0; i < pendingItems.length; i++) {
+          const item = pendingItems[i];
+          const res = await sendGasSheetAction(item.payload, { isRetryFlush: true });
+          if (res && res.status === "error" && res.networkError) {
+            // Re-queue this and remaining items until connectivity recovers
+            window.__portalPendingSyncQueue.unshift(...pendingItems.slice(i));
+            break;
+          }
+          syncedCount++;
+        }
+        if (syncedCount > 0 && typeof triggerSideToast === "function") {
+          triggerSideToast("Pending Changes Synced", `Successfully synced ${syncedCount} queued update${syncedCount > 1 ? "s" : ""} to Google Sheet.`, true);
+        }
+      } finally {
+        isFlushingPendingSyncQueue = false;
+      }
+    }
+
+    if (typeof window !== "undefined" && !window.__portalOnlineRetryBound) {
+      window.__portalOnlineRetryBound = true;
+      window.addEventListener("online", function() {
+        flushPendingSyncQueue();
+      });
+    }
+
+    function finalizeGasSyncResponse(gasRes, fallbackSuccessMessage, extraFields) {
+      const extras = (extraFields && typeof extraFields === "object") ? extraFields : {};
+      if (!gasRes || gasRes.status === "error") {
+        return {
+          ...extras,
+          status: "error",
+          networkError: Boolean(gasRes && gasRes.networkError),
+          queuedForRetry: Boolean(gasRes && gasRes.queuedForRetry),
+          syncPending: Boolean(gasRes && gasRes.syncPending),
+          message: (gasRes && gasRes.message) || "Failed to sync changes to Google Sheet."
+        };
+      }
+      if (gasRes.unverifiedNoCors || gasRes.syncPending) {
+        return {
+          ...extras,
+          status: "success",
+          unverifiedNoCors: true,
+          syncPending: true,
+          message: gasRes.message || "Sent via fallback mode (sync verification pending)."
+        };
+      }
+      return {
+        ...extras,
+        status: gasRes.status || "success",
+        message: gasRes.message || fallbackSuccessMessage
+      };
+    }
+
+    async function sendGasSheetAction(data, options) {
+      const opts = options || {};
       gasWriteEpoch++;
       inFlightGasFetchPromise = null;
       updateLocalGasSheetCacheFromDB();
@@ -16044,6 +16143,7 @@
                 message: `Server returned an invalid response (HTTP ${response.status}). Please ensure Google Apps Script is deployed cleanly.`
               };
             }
+            notifySyncStatusToast("Sheet Sync Error", `Google Sheet returned HTTP ${response.status}. Changes may not have been saved.`, true);
             return { status: "error", message: `Server returned HTTP ${response.status}.` };
           }
           gasCacheNeedsRefresh = true;
@@ -16057,6 +16157,7 @@
             console.warn("Strict GAS action blocked by network/CORS:", err);
             return {
               status: "error",
+              networkError: true,
               message: "Could not reach Google Apps Script email/upload service due to network or CORS error. Please re-check your Apps Script Web App deployment."
             };
           }
@@ -16068,12 +16169,41 @@
               body: bodyStr
             });
           } catch (noCorsErr) {
-            console.warn("Google Apps Script fallback notice:", noCorsErr);
-            return { status: "error", message: "Network request failed while saving to Google Sheet." };
+            console.warn("Google Apps Script network failure:", noCorsErr);
+            const queued = !opts.isRetryFlush ? enqueuePendingSyncAction(data) : false;
+            notifySyncStatusToast(
+              "Save Failed — Sync Pending",
+              queued
+                ? "Could not reach Google Sheet. Update queued and will retry automatically when back online."
+                : "Network request failed while saving to Google Sheet. Please check your connection.",
+              true
+            );
+            return {
+              status: "error",
+              networkError: true,
+              queuedForRetry: queued,
+              syncPending: true,
+              message: queued
+                ? "Network request failed while saving to Google Sheet. Queued for automatic retry."
+                : "Network request failed while saving to Google Sheet."
+            };
           }
+          // Opaque no-cors fallback cannot verify HTTP status or backend errors — warn user and schedule live verification
+          console.warn("Google Apps Script POST fell back to opaque no-cors mode for action:", actName);
           gasCacheNeedsRefresh = true;
           lastGasFetchTimestamp = Date.now();
-          return { status: "success", unverifiedNoCors: true, message: "Saved directly to Google Sheet." };
+          scheduleFallbackSyncVerification();
+          notifySyncStatusToast(
+            "Sync Verification Pending",
+            "Saved in fallback mode (response unreadable). Verifying sync with Google Sheet...",
+            false
+          );
+          return {
+            status: "success",
+            unverifiedNoCors: true,
+            syncPending: true,
+            message: "Sent via fallback mode (sync verification pending)."
+          };
         }
       };
 
@@ -16765,11 +16895,11 @@
               usersList.push(updateFields);
             }
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({ ...data, updatedUser: updateFields, users: usersList });
+            const updUserRes = await sendGasSheetAction({ ...data, updatedUser: updateFields, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("UPDATE_USER", `Updated user @${rawTarget} -> @${newUsernameClean} (${roleVal}, ${nextStatus})`, activeUser || "Admin");
             }
-            return { status: "success", newUsername: newUsernameClean, message: "User details updated in Google Sheet." };
+            return finalizeGasSyncResponse(updUserRes, "User details updated in Google Sheet.", { newUsername: newUsernameClean });
           }
 
           case "toggleUserBlock": {
@@ -16808,8 +16938,8 @@
               saveLocalGlobalConfigMaster(globalConfig);
             }
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({ ...data, users: usersList });
-            return { status: "success", message: `User status updated to ${newStatus}.` };
+            const blkRes = await sendGasSheetAction({ ...data, users: usersList });
+            return finalizeGasSyncResponse(blkRes, `User status updated to ${newStatus}.`);
           }
 
           case "deleteUser": {
@@ -16870,7 +17000,7 @@
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("DELETE_USER", `Deleted user account @${rawTarget}`, activeUser || "Admin");
             }
-            return { status: "success", message: "User account deleted from Google Sheet." };
+            return finalizeGasSyncResponse(delRes, "User account deleted from Google Sheet.");
           }
 
           case "changePassword": {
@@ -16908,11 +17038,11 @@
               localStorage.removeItem("portal_session_pass_" + lowerU);
             } catch (e) {}
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({ ...data, users: usersList });
+            const pwdRes = await sendGasSheetAction({ ...data, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("CHANGE_PASSWORD", `Password changed for @${rawUser}`, activeUser || rawUser);
             }
-            return { status: "success", message: "Password updated in Google Sheet. Old password is no longer valid." };
+            return finalizeGasSyncResponse(pwdRes, "Password updated in Google Sheet. Old password is no longer valid.");
           }
 
           case "changeUsername": {
@@ -16955,11 +17085,11 @@
               });
             }
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({ ...data, users: usersList });
+            const chgUnameRes = await sendGasSheetAction({ ...data, users: usersList });
             if (typeof recordAdminAuditLog === "function") {
               recordAdminAuditLog("CHANGE_USERNAME", `Username changed from @${rawOld} to @${newU}`, newU);
             }
-            return { status: "success", newUsername: newU, message: "Username updated in Google Sheet. Old username is permanently removed." };
+            return finalizeGasSyncResponse(chgUnameRes, "Username updated in Google Sheet. Old username is permanently removed.", { newUsername: newU });
           }
 
           case "changeNameAndMobile": {
@@ -16982,13 +17112,14 @@
               return u;
             });
             saveLocalUsersMaster(usersList);
-            await sendGasSheetAction({ ...data, users: usersList });
-            return { status: "success", email: cleanEmail, message: "Profile details updated in Google Sheet." };
+            const profRes = await sendGasSheetAction({ ...data, users: usersList });
+            return finalizeGasSyncResponse(profRes, "Profile details updated in Google Sheet.", { email: cleanEmail });
           }
 
           case "saveTheme":
           case "updateTheme": {
             const rawUser = String(data.username || "").trim();
+            let themeRes = { status: "success" };
             if (rawUser) {
               const lowerU = rawUser.toLowerCase();
               usersList = usersList.map(function(u) {
@@ -16998,9 +17129,9 @@
                 return u;
               });
               saveLocalUsersMaster(usersList);
-              await sendGasSheetAction({ ...data, users: usersList });
+              themeRes = await sendGasSheetAction({ ...data, users: usersList });
             }
-            return { status: "success", message: "Theme preference saved." };
+            return finalizeGasSyncResponse(themeRes, "Theme preference saved.");
           }
 
           case "saveBackgrounds":
@@ -17019,8 +17150,13 @@
             };
             saveLocalGlobalConfigMaster(globalConfig);
 
-            await sendGasSheetAction({ ...data, bgLogin: nextBgUrl, bgDashboard: nextBgUrl, bgLoginUrl: nextBgUrl, bgDashboardUrl: nextBgUrl, backgroundUrl: nextBgUrl, customBackgrounds: [], globalConfig: globalConfig });
-            return { status: "success", driveFolderId: GOOGLE_DRIVE_FOLDER_ID, driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL, previewUrl: nextBgUrl, directImageUrl: nextBgUrl, message: "Saved to Google Drive & synced link to Google Sheets." };
+            const bgRes = await sendGasSheetAction({ ...data, bgLogin: nextBgUrl, bgDashboard: nextBgUrl, bgLoginUrl: nextBgUrl, bgDashboardUrl: nextBgUrl, backgroundUrl: nextBgUrl, customBackgrounds: [], globalConfig: globalConfig });
+            return finalizeGasSyncResponse(bgRes, "Saved to Google Drive & synced link to Google Sheets.", {
+              driveFolderId: GOOGLE_DRIVE_FOLDER_ID,
+              driveFolderUrl: GOOGLE_DRIVE_FOLDER_URL,
+              previewUrl: nextBgUrl,
+              directImageUrl: nextBgUrl
+            });
           }
 
           case "uploadBackgroundPhoto": {
@@ -17117,8 +17253,24 @@
               updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Contact configuration synced to Google Sheet." };
+            const cfgRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(cfgRes, "Contact configuration synced to Google Sheet.");
+          }
+
+          case "saveConfig": {
+            const cfgKey = String(data.configKey || data.key || "").trim();
+            if (!cfgKey) {
+              return { status: "error", message: "Missing configKey for saveConfig." };
+            }
+            const cfgVal = data.configValue !== undefined ? data.configValue : (data.value !== undefined ? data.value : {});
+            globalConfig = {
+              ...globalConfig,
+              [cfgKey]: cfgVal,
+              updatedAt: getIstNowIsoTimestamp()
+            };
+            saveLocalGlobalConfigMaster(globalConfig);
+            const cfgRes = await sendGasSheetAction({ ...data, configKey: cfgKey, configValue: cfgVal, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(cfgRes, `${cfgKey} synced to Google Sheet.`);
           }
 
           case "saveBroadcastNotices": {
@@ -17129,8 +17281,8 @@
               updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Broadcast notifications synced live." };
+            const noticesRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(noticesRes, "Broadcast notifications synced live.");
           }
 
           case "savePrivateChats": {
@@ -17141,8 +17293,8 @@
               updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Live chats synced to Google Sheet." };
+            const chatsRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(chatsRes, "Live chats synced to Google Sheet.");
           }
 
           case "savePaymentProofs": {
@@ -17153,8 +17305,8 @@
               updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Payment proofs synced to Google Sheet." };
+            const proofsRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(proofsRes, "Payment proofs synced to Google Sheet.");
           }
 
           case "deletePaymentProof": {
@@ -17194,8 +17346,8 @@
               updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Maintenance tickets." };
+            const ticketsRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(ticketsRes, "Maintenance tickets synced to Google Sheet.");
           }
 
           case "saveAuditLogs": {
@@ -17206,8 +17358,8 @@
               updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Audit logs synced to Google Sheet." };
+            const auditRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(auditRes, "Audit logs synced to Google Sheet.");
           }
 
           case "saveFlatChecklist": {
@@ -17219,13 +17371,13 @@
               updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
-            await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return { status: "success", message: "Flat checklist synced to Google Sheet." };
+            const clRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            return finalizeGasSyncResponse(clRes, "Flat checklist synced to Google Sheet.");
           }
 
           default: {
-            await sendGasSheetAction(data);
-            return { status: "success", message: "Processed action: " + action };
+            const defaultRes = await sendGasSheetAction(data);
+            return finalizeGasSyncResponse(defaultRes, "Processed action: " + action);
           }
         }
       } catch (err) {
@@ -17513,7 +17665,6 @@
     function initCustomBgInputs() {
       const { loginBg, dashBg } = getCustomBackgrounds();
       const inputLogin = document.getElementById("bgUrlLoginScreen");
-      const hintLogin = document.getElementById("bgLoginStatusHint");
       const previewWrap = document.getElementById("bgActivePreviewContainer");
       const previewImg = document.getElementById("bgActivePreviewImg");
       const isAdminUser = String(activeRole || "").trim().toLowerCase() === "admin";
@@ -17538,13 +17689,6 @@
           ? normalizeGoogleDriveBgUrl(dashBg.trim())
           : DEFAULT_PORTAL_BACKGROUND_IMAGE;
         previewWrap.style.display = "block";
-      }
-
-      if (hintLogin) {
-        hintLogin.innerText = hasCustom
-          ? "Custom background photo is saved in Google Drive & Google Sheets and active across all screens/pages."
-          : "Default placeholder background photo is active across all screens.";
-        hintLogin.style.color = hasCustom ? "var(--accent-green)" : "var(--text-muted)";
       }
     }
 
@@ -17716,12 +17860,7 @@
       }
       const file = inputEl.files && inputEl.files[0];
       if (!file) return;
-      const hintEl = document.getElementById("bgLoginStatusHint");
       const saveBtn = document.getElementById("btnSaveCustomBgPhoto");
-      if (hintEl) {
-        hintEl.innerText = "Uploading...";
-        hintEl.style.color = "#38bdf8";
-      }
       if (saveBtn) saveBtn.disabled = true;
       triggerSideToast("Uploading...", "Uploading...", "warning");
       try {
@@ -17758,10 +17897,6 @@
         initCustomBgInputs();
         const el = document.getElementById("bgUrlLoginScreen");
         if (el) el.value = driveBgUrl;
-        if (hintEl) {
-          hintEl.innerText = "Upload successfully";
-          hintEl.style.color = "#10b981";
-        }
         triggerSideToast("Upload successfully", "Upload successfully", true);
       } catch (err) {
         triggerSideToast("Upload Failed", err?.message || "Could not upload photo.", false);
@@ -18952,17 +19087,17 @@
 
       const todayStr = getLocalTodayIsoDate();
       const currentAadhaar = formatAadhaarWithHyphens(document.getElementById("renterIdentityNum")?.value || activeFlatRenterObj?.IdentityDocNumber || "");
-      const summaryEl = document.getElementById("shiftCurrentRenterDisplay") || document.getElementById("shiftCurrentRenterSummary");
+      const summaryEl = document.getElementById("shiftCurrentRenterDisplay");
       if (summaryEl) {
         summaryEl.value = `${rName || 'Current Renter'}${currentAadhaar ? ' (Aadhaar: ' + currentAadhaar + ')' : ''} • From ${selectedFlat.PropertyName} - Flat ${selectedFlat.FlatName}`;
       }
-      const dateEl = document.getElementById("shiftEffectiveDate") || (document.getElementById("shiftEffectiveDate") || (document.getElementById("shiftEffectiveDate") || document.getElementById("shiftDateInput")));
+      const dateEl = document.getElementById("shiftEffectiveDate");
       if (dateEl) dateEl.value = todayStr;
       const rentEl = document.getElementById("shiftTargetRentAmount");
       if (rentEl) rentEl.value = document.getElementById("profRent")?.value || selectedFlat.RentAmount || 0;
 
       sortPropertiesAlphabetically(DB.properties);
-      const propSelect = document.getElementById("shiftTargetPropSelect") || (document.getElementById("shiftTargetPropSelect") || (document.getElementById("shiftTargetPropSelect") || document.getElementById("shiftTargetPropertySelect")));
+      const propSelect = document.getElementById("shiftTargetPropSelect");
       if (propSelect) {
         propSelect.innerHTML = ['<option value="">-- Select Target Property --</option>'].concat(
           (DB.properties || []).map(p => `<option value="${p.PropertyName}">${p.PropertyName}</option>`)
@@ -18974,7 +19109,7 @@
     }
 
     function populateShiftRenterFlatsDropdown() {
-      const propName = (document.getElementById("shiftTargetPropSelect") || (document.getElementById("shiftTargetPropSelect") || document.getElementById("shiftTargetPropertySelect")))?.value || "";
+      const propName = document.getElementById("shiftTargetPropSelect")?.value || "";
       const flatSelect = document.getElementById("shiftTargetFlatSelect");
       if (!flatSelect) return;
       if (!propName) {
@@ -19003,7 +19138,7 @@
     }
 
     function handleShiftTargetFlatChange() {
-      const propName = (document.getElementById("shiftTargetPropSelect") || (document.getElementById("shiftTargetPropSelect") || document.getElementById("shiftTargetPropertySelect")))?.value || "";
+      const propName = document.getElementById("shiftTargetPropSelect")?.value || "";
       const flatName = document.getElementById("shiftTargetFlatSelect")?.value || "";
       if (!propName || !flatName) return;
       const targetFlatObj = findFlatObject(propName, flatName);
@@ -19015,9 +19150,9 @@
 
     async function confirmShiftRenterToFlat() {
       if (!selectedFlat) return;
-      const destProp = ((document.getElementById("shiftTargetPropSelect") || (document.getElementById("shiftTargetPropSelect") || document.getElementById("shiftTargetPropertySelect")))?.value || "").trim();
+      const destProp = (document.getElementById("shiftTargetPropSelect")?.value || "").trim();
       const destFlat = (document.getElementById("shiftTargetFlatSelect")?.value || "").trim();
-      const shiftDate = (document.getElementById("shiftEffectiveDate") || (document.getElementById("shiftEffectiveDate") || document.getElementById("shiftDateInput")))?.value || getLocalTodayIsoDate();
+      const shiftDate = document.getElementById("shiftEffectiveDate")?.value || getLocalTodayIsoDate();
       const newRentAmt = parseFloat(document.getElementById("shiftTargetRentAmount")?.value) || 0;
 
       if (!destProp || !destFlat) {
@@ -20865,7 +21000,7 @@
 
     function renderNoticeTargetPropertiesChecklist(selectedProps = null) {
       const container = document.getElementById("noticeTargetPropertiesChecklist");
-      const allToggle = document.getElementById("noticeTargetAllPropsCheckbox") || document.getElementById("noticeSelectAllPropsToggle");
+      const allToggle = document.getElementById("noticeTargetAllPropsCheckbox");
       if (!container) return;
 
       const props = (DB.properties || []).map(p => String(p.PropertyName || "").trim()).filter(Boolean);
@@ -20918,14 +21053,14 @@
     function toggleAllNoticeTargetProperties(isChecked) {
       const props = (DB.properties || []).map(p => String(p.PropertyName || "").trim()).filter(Boolean);
       renderNoticeTargetPropertiesChecklist(isChecked ? ["ALL"] : []);
-      const allToggle = document.getElementById("noticeTargetAllPropsCheckbox") || document.getElementById("noticeSelectAllPropsToggle");
+      const allToggle = document.getElementById("noticeTargetAllPropsCheckbox");
       if (allToggle) allToggle.checked = Boolean(isChecked) && props.length > 0;
     }
 
     function handleNoticePropertyCheckboxChange() {
       const allCbs = Array.from(document.querySelectorAll("#noticeTargetPropertiesChecklist .notice-prop-target-cb"));
       const checkedVals = allCbs.filter(cb => cb.checked).map(cb => cb.value);
-      const allToggle = document.getElementById("noticeTargetAllPropsCheckbox") || document.getElementById("noticeSelectAllPropsToggle");
+      const allToggle = document.getElementById("noticeTargetAllPropsCheckbox");
       if (allToggle) {
         allToggle.checked = allCbs.length > 0 && checkedVals.length === allCbs.length;
       }
@@ -21376,17 +21511,8 @@
     }
 
     function updateAdminOpsScrollButtons() {
-      const track = document.getElementById("adminOpsHubCarouselTrack");
-      const btnLeft = document.getElementById("btnAdminOpsScrollLeft");
-      const btnRight = document.getElementById("btnAdminOpsScrollRight");
-      if (!track || !btnLeft || !btnRight) return;
-      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
-      const atStart = track.scrollLeft <= 2;
-      const atEnd = maxScroll <= 2 || track.scrollLeft >= maxScroll - 2;
-      btnLeft.classList.toggle("is-edge", atStart);
-      btnRight.classList.toggle("is-edge", atEnd);
+      // Horizontal scroll uses wheel/touch gestures on #adminOpsHubCarouselTrack
     }
-    window.addEventListener("resize", updateAdminOpsScrollButtons);
 
     function bindAdminOpsCarouselWheelScroll() {
       const rail = document.getElementById("adminOpsHubCarouselRail");
@@ -21615,14 +21741,8 @@
       const links = getStoredAppDownloadLinks();
       const androidIn = document.getElementById("adminAndroidApkUrlInput");
       const iosIn = document.getElementById("adminIosAppUrlInput");
-      const noteEl = document.getElementById("adminAppLinksSavedNote");
       if (androidIn && document.activeElement !== androidIn) androidIn.value = links.androidApkUrl;
       if (iosIn && document.activeElement !== iosIn) iosIn.value = links.iosAppUrl;
-      if (noteEl) {
-        noteEl.innerText = (links.androidApkUrl || links.iosAppUrl)
-          ? "Click Download to test/install or click the Pencil icon to edit URLs."
-          : "Click the Pencil icon on either card to add & save its download URL.";
-      }
     }
 
     async function saveAdminAppDownloadLinks(editedPlatform = "") {
@@ -21653,8 +21773,6 @@
         toggleAdminAppLinkEdit("ios", false);
       }
       initAdminAppDownloadLinksForm();
-      const noteEl = document.getElementById("adminAppLinksSavedNote");
-      if (noteEl) noteEl.innerText = "App download links saved and synced live!";
 
       await sendFirebaseAction({
         action: "saveAppDownloadLinks",
@@ -21761,7 +21879,6 @@
 
     function syncNotificationsBadgeUI() {
       const badge = document.getElementById("navNotificationBadge");
-      const settingsBadge = document.getElementById("settingsNotificationBadge");
       const isAdminViewer = String(activeRole || "").trim().toLowerCase() === "admin";
       const allNotices = getStoredBroadcastNotifications();
       const readIds = getReadNotificationIds();
@@ -21779,14 +21896,6 @@
           badge.style.display = "flex";
         } else {
           badge.style.display = "none";
-        }
-      }
-      if (settingsBadge) {
-        if (unreadCount > 0) {
-          settingsBadge.innerText = badgeLabel;
-          settingsBadge.style.display = "flex";
-        } else {
-          settingsBadge.style.display = "none";
         }
       }
     }
@@ -21909,14 +22018,12 @@
       currentEditingNoticeId = noticeId;
       const titleInput = document.getElementById("adminNoticeTitleInput");
       const bodyInput = document.getElementById("adminNoticeBodyInput");
-      const targetSelect = document.getElementById("adminNoticeTargetSelect");
       const labelEl = document.getElementById("adminNoticeComposeLabel");
       const cancelBtn = document.getElementById("btnCancelAdminNotice");
       const submitBtn = document.getElementById("btnSubmitAdminNotice");
 
       if (titleInput) titleInput.value = targetNotice.title || "";
       if (bodyInput) bodyInput.value = targetNotice.body || "";
-      if (targetSelect) targetSelect.value = targetNotice.target || "ALL";
       renderNoticeTargetPropertiesChecklist(Array.isArray(targetNotice.targetProperties) ? targetNotice.targetProperties : ["ALL"]);
       if (labelEl) labelEl.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Broadcast Notification`;
       if (cancelBtn) cancelBtn.style.display = "inline-flex";
@@ -21932,7 +22039,6 @@
       currentEditingNoticeId = null;
       const titleInput = document.getElementById("adminNoticeTitleInput");
       const bodyInput = document.getElementById("adminNoticeBodyInput");
-      const targetSelect = document.getElementById("adminNoticeTargetSelect");
       const labelEl = document.getElementById("adminNoticeComposeLabel");
       const cancelBtn = document.getElementById("btnCancelAdminNotice");
       const submitBtn = document.getElementById("btnSubmitAdminNotice");
@@ -21941,7 +22047,6 @@
 
       if (titleInput) titleInput.value = "";
       if (bodyInput) bodyInput.value = "";
-      if (targetSelect) targetSelect.value = "ALL";
       renderNoticeTargetPropertiesChecklist(["ALL"]);
       if (drawer) drawer.style.display = "none";
       if (chevron) chevron.style.transform = "rotate(0deg)";
@@ -21954,11 +22059,10 @@
       if (!canCurrentUserManageNotifications()) return;
       const titleInput = document.getElementById("adminNoticeTitleInput");
       const bodyInput = document.getElementById("adminNoticeBodyInput");
-      const targetSelect = document.getElementById("adminNoticeTargetSelect");
 
       const title = (titleInput?.value || "").trim();
       const body = (bodyInput?.value || "").trim();
-      const target = targetSelect?.value || "ALL";
+      const target = "ALL";
 
       if (!title || !body) {
         return triggerSideToast("Required Fields", "Please enter both Title and Message for the notice.", false);
@@ -22111,14 +22215,6 @@
 
     function toggleRenterUpiAppsDrawer(ev) {
       if (ev && typeof ev.stopPropagation === "function") ev.stopPropagation();
-      const drawer = document.getElementById("renterUpiAppsDrawer");
-      const chevron = document.getElementById("renterUpiAppsDrawerChevron");
-      if (!drawer) return;
-      const isHidden = drawer.style.display === "none" || !drawer.style.display;
-      drawer.style.display = isHidden ? "block" : "none";
-      if (chevron) {
-        chevron.style.transform = isHidden ? "rotate(180deg)" : "rotate(0deg)";
-      }
     }
 
     function buildNpciUpiParamString(rawUpiId, rawUpiName, rawAmount, rawNote, defaultPayeeName = "Rent Payment", rawTxnRef = "") {
@@ -23235,9 +23331,7 @@
         if (renterQuickNavEl) renterQuickNavEl.style.display = "block";
         const flatsContainer = document.getElementById("flatsList");
         const propsBar = document.querySelector(".properties-bar");
-        const khetContainer = document.getElementById("homeKhetSectionContainer");
         if (propsBar) propsBar.style.display = "none";
-        if (khetContainer) khetContainer.style.display = "none";
 
         const renterAadhaar = getNormalizedActiveRenterAadhaar();
         const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
@@ -23307,10 +23401,6 @@
         if (effectiveAadhaar && effectiveAadhaar !== activeAssignedAadhaar) {
           activeAssignedAadhaar = effectiveAadhaar;
           try { sessionStorage.setItem("active_session_assigned_aadhaar", effectiveAadhaar); } catch (e) {}
-        }
-        const headerBadgeEl = document.getElementById("headerRoleBadge");
-        if (headerBadgeEl) {
-          headerBadgeEl.innerText = "Renter";
         }
         const renterPhoneDisplay = sanitizeContactPhoneDisplay(primaryRenter.MobileNumber || primaryRenter.AltMobileNumber || activeUserMobile);
 
@@ -25772,7 +25862,6 @@
       const plusAnchor = document.getElementById("plusMenuDropdownAnchor") || document.querySelector(".plus-icon-box-btn")?.closest(".dropdown-anchor");
       const adminOpsBtn = document.getElementById("btnAdminResidentOpsHub");
       const settingsBtn = document.querySelector(".settings-icon-box-btn");
-      const khetHomeContainer = document.getElementById("homeKhetSectionContainer");
 
       if (adminOpsBtn) {
         adminOpsBtn.style.setProperty("display", activeRole === "Admin" ? "inline-flex" : "none", "important");
@@ -25795,10 +25884,6 @@
       if (btnDashAppDl) {
         btnDashAppDl.style.setProperty("display", canUseHeaderAppDownload ? "inline-flex" : "none", "important");
       }
-      const btnProfAppDl = document.getElementById("btnProfileDownloadApp");
-      if (btnProfAppDl) {
-        btnProfAppDl.style.setProperty("display", (canUseHeaderAppDownload || activeRole === "Renter") ? "inline-flex" : "none", "important");
-      }
 
       // Requirement 2 & 3: Enforce Home Portfolio trigger & granular Manager permissions on all top dashboard controls
       if (activeRole === "Manager") {
@@ -25817,10 +25902,6 @@
         if (pfTabKharch) pfTabKharch.style.setProperty("display", hasManagerPermission("kharch") ? "inline-flex" : "none", "important");
         if (pfTabKhet) pfTabKhet.style.setProperty("display", hasManagerPermission("khet") ? "inline-flex" : "none", "important");
         if (pfTabFd) pfTabFd.style.setProperty("display", hasManagerPermission("fd") ? "inline-flex" : "none", "important");
-        if (khetHomeContainer) {
-          if (hasManagerPermission("khet")) khetHomeContainer.style.removeProperty("display");
-          else khetHomeContainer.style.setProperty("display", "none", "important");
-        }
         if (plusAnchor) plusAnchor.style.setProperty("display", hasManagerPermission("addMenu") ? "inline-flex" : "none", "important");
         if (settingsBtn) settingsBtn.style.setProperty("display", hasAnySettingsPermission() ? "inline-flex" : "none", "important");
         if (!hasAnyPortfolioPerm && typeof closeAdminPortfolioHub === "function") {
@@ -25831,7 +25912,6 @@
         if (searchWrap) searchWrap.style.removeProperty("display");
         if (rNavChat) rNavChat.style.setProperty("display", "inline-flex", "important");
         if (homePortfolioAnchor) homePortfolioAnchor.style.setProperty("display", "none", "important");
-        if (khetHomeContainer) khetHomeContainer.style.setProperty("display", "none", "important");
         if (plusAnchor) plusAnchor.style.setProperty("display", "none", "important");
         if (settingsBtn) settingsBtn.style.removeProperty("display");
       } else {
@@ -25842,7 +25922,6 @@
         if (pfTabKharch) pfTabKharch.style.setProperty("display", "inline-flex", "important");
         if (pfTabKhet) pfTabKhet.style.setProperty("display", "inline-flex", "important");
         if (pfTabFd) pfTabFd.style.setProperty("display", "inline-flex", "important");
-        if (khetHomeContainer) khetHomeContainer.style.removeProperty("display");
         if (plusAnchor) plusAnchor.style.removeProperty("display");
         if (settingsBtn) settingsBtn.style.removeProperty("display");
       }
@@ -25860,39 +25939,12 @@
         syncFloatingCornerButtonsByRole();
       }
 
-      const badge = document.getElementById("headerRoleBadge");
-      if (badge) {
-        const scope = resolveViewerAssignedScope();
-        if (activeRole === "Renter") {
-          badge.innerText = "Renter";
-        } else if (activeRole === "Manager") {
-          if (scope && scope.mode === "SELECTED") badge.innerText = `Manager • ${scope.prop}`;
-          else if (scope && scope.mode === "FLAT") badge.innerText = `Manager • ${scope.prop} (Flat ${scope.flat})`;
-          else badge.innerText = `Manager`;
-        } else if (activeRole === "Viewer" && scope) {
-          if (scope.mode === "ALL") badge.innerText = `Viewer • All Properties`;
-          else if (scope.mode === "SELECTED") badge.innerText = `Viewer • ${scope.prop}`;
-          else badge.innerText = `Viewer • ${scope.prop} (Flat ${scope.flat})`;
-        } else {
-          badge.innerText = activeRole;
-        }
-        badge.style.background = activeRole === "Admin"
-          ? "linear-gradient(135deg, rgba(16, 185, 129, 0.32), rgba(5, 150, 105, 0.2))"
-          : (activeRole === "Manager"
-            ? "linear-gradient(135deg, rgba(56, 189, 248, 0.32), rgba(37, 99, 235, 0.2))"
-            : (activeRole === "Renter"
-              ? "linear-gradient(135deg, rgba(168, 85, 247, 0.32), rgba(236, 72, 153, 0.2))"
-              : "linear-gradient(135deg, rgba(245, 158, 11, 0.32), rgba(217, 119, 6, 0.2))"));
-      }
       const btnLoginHist = document.getElementById("btnOtherOptLoginHistory");
       const panelLoginHist = document.getElementById("otherPanelLoginHistory");
       const btnEditEvery = document.getElementById("btnOtherOptEditEverything");
       const panelEditEvery = document.getElementById("otherPanelEditEverything");
       const btnChangeBg = document.getElementById("btnOtherOptChangeBg");
       const panelChangeBg = document.getElementById("otherPanelChangeBg");
-      const btnSheetSetup = document.getElementById("btnOtherOptSheetSetup");
-      const panelSheetSetup = document.getElementById("otherPanelSheetSetup");
-      const btnGrid = document.getElementById("otherOptionsBtnGrid");
       const hasControlOf = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"));
       if (!hasControlOf) {
         if (btnLoginHist) btnLoginHist.style.setProperty("display", "none", "important");
@@ -25901,15 +25953,10 @@
         if (panelEditEvery) panelEditEvery.style.display = "none";
         if (btnChangeBg) btnChangeBg.style.setProperty("display", "none", "important");
         if (panelChangeBg) panelChangeBg.style.display = "none";
-        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "none", "important");
-        if (panelSheetSetup) panelSheetSetup.style.display = "none";
-        if (btnGrid) btnGrid.style.gridTemplateColumns = "1fr";
       } else {
         if (btnLoginHist) btnLoginHist.style.setProperty("display", "flex", "important");
         if (btnEditEvery) btnEditEvery.style.setProperty("display", "flex", "important");
         if (btnChangeBg) btnChangeBg.style.setProperty("display", "flex", "important");
-        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "flex", "important");
-        if (btnGrid) btnGrid.style.gridTemplateColumns = "repeat(2, 1fr)";
       }
     }
 
@@ -28110,12 +28157,6 @@
         document.getElementById("profAvatarInitials").innerText = (heroDispName[0] || "U").toUpperCase();
       }
 
-      const isLightTheme = document.body.classList.contains("theme-white");
-      const profThemeBadge = document.getElementById("otherProfileTheme");
-      if (profThemeBadge) {
-        profThemeBadge.innerText = isLightTheme ? "White Mode" : "Dark Mode";
-      }
-
       activeUserMobile = sanitizeContactPhoneDisplay(activeUserMobile);
       document.getElementById("profViewFullName").value = activeUserFullName || activeUser || "";
       if (document.getElementById("profViewEmail")) {
@@ -28453,12 +28494,6 @@
         if (otpBox) otpBox.style.display = "none";
         clearProfileEmailOtpBoxes();
       }
-      if (!source || source === "inline") {
-        const inlineBox = document.getElementById("renterInlineEmailOtpBox");
-        const inlineIn = document.getElementById("renterInlineEmailOtpInput");
-        if (inlineBox) inlineBox.style.display = "none";
-        if (inlineIn) inlineIn.value = "";
-      }
     }
 
     function getProfileEmailUiEls(source) {
@@ -28652,38 +28687,6 @@
       triggerSideToast("Profile Saved & Verified", "Your Name, Phone Number, and Email ID have been verified and saved!", true);
       renderAllDashboardUI();
       syncDataLive(true);
-    }
-
-    async function submitRenterInlineProfileSave() {
-      const nameEl = document.getElementById("renterInlineProfName");
-      const phoneEl = document.getElementById("renterInlineProfPhone");
-      const emailEl = document.getElementById("renterInlineProfEmail");
-      const msgBox = document.getElementById("renterInlineProfileMsg");
-      const newFullName = String(nameEl?.value || "").trim();
-      const rawPhone = String(phoneEl?.value || "").trim();
-      const cleanEmail = String(emailEl?.value || "").trim().toLowerCase();
-
-      if (msgBox) msgBox.className = "bottom-status-msg";
-      if (!newFullName) {
-        if (nameEl) nameEl.focus();
-        if (msgBox) { msgBox.innerText = "Please enter your Full Name."; msgBox.className = "bottom-status-msg error"; }
-        return triggerSideToast("Name Required", "Please enter your Full Name.", false);
-      }
-      if (!isValidIndianMobilePlus91(rawPhone)) {
-        if (phoneEl) phoneEl.focus();
-        if (msgBox) { msgBox.innerText = "Please enter a valid +91 10-digit Phone Number."; msgBox.className = "bottom-status-msg error"; }
-        return triggerSideToast("Invalid Phone Number", "Phone number must start with +91 and contain 10 digits.", false);
-      }
-      const newMobile = formatIndianMobilePlus91(rawPhone);
-      if (phoneEl) phoneEl.value = newMobile;
-
-      if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-        if (emailEl) emailEl.focus();
-        if (msgBox) { msgBox.innerText = "Please enter a valid Email ID to receive the 4-digit OTP."; msgBox.className = "bottom-status-msg error"; }
-        return triggerSideToast("Valid Email Required", "Enter a valid Email ID so we can send a 4-digit verification OTP.", false);
-      }
-
-      await requestProfileEmailOtpAndShowBox("inline", newFullName, newMobile, cleanEmail);
     }
 
     async function submitChangeNameAndMobile() {
@@ -29081,10 +29084,6 @@
       if (nameInput && target.RenterName) {
         nameInput.value = target.RenterName;
       }
-      const mobInput = document.getElementById("createUserMobile");
-      if (mobInput && target.MobileNumber) {
-        mobInput.value = target.MobileNumber;
-      }
       const propSel = document.getElementById("createUserAssignedProp");
       if (propSel && target.PropertyName) {
         propSel.value = target.PropertyName;
@@ -29230,19 +29229,13 @@
       const eePanel = document.getElementById("otherPanelEditEverything");
       const contactPanel = document.getElementById("otherPanelContactSettings");
       const ticketsPanel = document.getElementById("otherPanelTickets");
-      const auditPanel = document.getElementById("otherPanelAuditLog");
-      const sheetSetupPanel = document.getElementById("otherPanelSheetSetup");
       const btnUsers = document.getElementById("btnOtherOptUsers");
       const btnHistory = document.getElementById("btnOtherOptLoginHistory");
       const btnChangeBg = document.getElementById("btnOtherOptChangeBg");
       const btnEe = document.getElementById("btnOtherOptEditEverything");
-      const btnContact = document.getElementById("btnOtherOptContactSettings");
-      const btnTickets = document.getElementById("btnOtherOptTickets");
-      const btnAudit = document.getElementById("btnOtherOptAuditLog");
-      const btnSheetSetup = document.getElementById("btnOtherOptSheetSetup");
       const canControlAll = String(activeRole || "").trim().toLowerCase() === "admin" || (activeRole === "Manager" && hasManagerPermission("controlOf"));
 
-      if ((opt === "users" || opt === "history" || opt === "editEverything" || opt === "changeBg" || opt === "contactSettings" || opt === "tickets" || opt === "auditLog" || opt === "sheetSetup") && !canControlAll) {
+      if ((opt === "users" || opt === "history" || opt === "editEverything" || opt === "changeBg" || opt === "contactSettings" || opt === "tickets") && !canControlAll) {
         triggerSideToast("Permission Required", "You do not have permission to access this section.", false);
         return;
       }
@@ -29254,7 +29247,7 @@
         parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
         parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
       }
-      [usersPanel, historyPanel, changeBgPanel, eePanel, contactPanel, ticketsPanel, auditPanel, sheetSetupPanel].forEach(p => { if (p) p.style.display = "none"; });
+      [usersPanel, historyPanel, changeBgPanel, eePanel, contactPanel, ticketsPanel].forEach(p => { if (p) p.style.display = "none"; });
 
       if (opt === "history") {
         if (historyPanel) historyPanel.style.display = "block";
@@ -29271,20 +29264,10 @@
         renderEditEverythingBillsList();
       } else if (opt === "contactSettings") {
         if (contactPanel) contactPanel.style.display = "block";
-        if (btnContact) btnContact.classList.add("active");
         initAdminContactSettingsInputs();
       } else if (opt === "tickets") {
         if (ticketsPanel) ticketsPanel.style.display = "block";
-        if (btnTickets) btnTickets.classList.add("active");
         if (typeof renderAdminMaintenanceTickets === "function") renderAdminMaintenanceTickets();
-      } else if (opt === "auditLog") {
-        if (auditPanel) auditPanel.style.display = "block";
-        if (btnAudit) btnAudit.classList.add("active");
-        if (typeof renderAdminAuditTrailList === "function") renderAdminAuditTrailList();
-      } else if (opt === "sheetSetup") {
-        if (sheetSetupPanel) sheetSetupPanel.style.display = "block";
-        if (btnSheetSetup) btnSheetSetup.classList.add("active");
-        if (typeof loadFixedGasCodeIntoViewer === "function") loadFixedGasCodeIntoViewer();
       } else {
         if (usersPanel) usersPanel.style.display = "block";
         if (btnUsers) btnUsers.classList.add("active");
@@ -29292,13 +29275,40 @@
       }
     }
 
-    // Render Edit Everything Bills Table
+    // Render Edit Everything Bills Table (strictly latest 6 receipts, no pagination/preview controls)
     function renderEditEverythingBillsList(searchFilter = "") {
       const container = document.getElementById("editEverythingBillsList");
       if (!container) return;
 
       const q = String(searchFilter || "").trim().toLowerCase();
-      const allBills = [...(DB.bills || [])].reverse();
+      const getBillRecencyDateMs = (b) => {
+        const rawDate = (typeof toInputDateValue === "function" ? toInputDateValue(b?.BillDate || b?.PaymentDate || "") : String(b?.BillDate || b?.PaymentDate || "").trim());
+        if (rawDate) {
+          const parsed = Date.parse(rawDate);
+          if (!Number.isNaN(parsed)) return parsed;
+        }
+        const ym = typeof normalizeMonthYear === "function" ? normalizeMonthYear(b?.MonthYear || "") : String(b?.MonthYear || "").trim();
+        if (ym && /^\d{4}-\d{2}$/.test(ym)) {
+          const parsedYm = Date.parse(ym + "-01");
+          if (!Number.isNaN(parsedYm)) return parsedYm;
+        }
+        return 0;
+      };
+      const getBillIdEpoch = (b) => {
+        const m = String(b?.BillID || "").match(/(\d{10,13})/);
+        return m ? parseInt(m[1], 10) : 0;
+      };
+
+      const allBills = (DB.bills || [])
+        .map((bill, idx) => ({ bill, idx }))
+        .sort((a, b) => {
+          const dateDiff = getBillRecencyDateMs(b.bill) - getBillRecencyDateMs(a.bill);
+          if (dateDiff !== 0) return dateDiff;
+          const idDiff = getBillIdEpoch(b.bill) - getBillIdEpoch(a.bill);
+          if (idDiff !== 0) return idDiff;
+          return b.idx - a.idx;
+        })
+        .map(item => item.bill);
 
       const filtered = allBills.filter(b => {
         if (!q) return true;
@@ -29310,12 +29320,14 @@
         return tenant.includes(q) || prop.includes(q) || flat.includes(q) || month.includes(q) || status.includes(q);
       });
 
-      if (filtered.length === 0) {
+      const latestSixBills = filtered.slice(0, 6);
+
+      if (latestSixBills.length === 0) {
         container.innerHTML = '<div style="text-align:center; padding:16px; color:var(--text-muted); font-size:0.8rem;">No billing records found.</div>';
         return;
       }
 
-      container.innerHTML = filtered.map(b => {
+      container.innerHTML = latestSixBills.map(b => {
         const safeId = String(b.BillID || "").replace(/'/g, "\\'");
         const cleanM = normalizeMonthYear(b.MonthYear);
         const billed = parseFloat(b.TotalBilled) || 0;
@@ -29520,13 +29532,6 @@
 
       document.getElementById("editAssignTargetUsername").value = u.Username || "";
       populateRenterQuickSelectDropdowns(u);
-      const usernameDispInput = document.getElementById("editAssignUsernameDisplay");
-      if (usernameDispInput) usernameDispInput.value = u.Username || "";
-      const pwdInput = document.getElementById("editAssignPasswordInput");
-      if (pwdInput) {
-        pwdInput.value = u.Password || "";
-        pwdInput.type = "password";
-      }
       document.getElementById("editAssignFullName").value = u.FullName || u.Username || "";
       const isEditingSelf = String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase();
       const statusSelect = document.getElementById("editAssignStatus");
@@ -29661,28 +29666,9 @@
       if (!u) return;
 
       const isSelfEdit = String(activeUser || "").trim().toLowerCase() === targetUser.toLowerCase();
-      const usernameInputEl = document.getElementById("editAssignUsernameDisplay");
-      const rawEnteredUsername = usernameInputEl
-        ? String(usernameInputEl.value || "").replace(/^@+/, "").trim().toLowerCase()
-        : targetUser.toLowerCase();
-      if (!rawEnteredUsername || rawEnteredUsername.length < 3) {
-        return triggerSideToast("Invalid Username", "Username (User ID) must be at least 3 characters.", false);
-      }
-      const isRenaming = rawEnteredUsername !== targetUser.toLowerCase();
-      if (isRenaming) {
-        const existingConflict = (DB.users || []).find(item => String(item.Username || "").trim().toLowerCase() === rawEnteredUsername);
-        if (existingConflict) {
-          return triggerSideToast("Username Taken", `User ID @${rawEnteredUsername} already exists. Please choose another username.`, false);
-        }
-      }
-
-      const pwdInputEl = document.getElementById("editAssignPasswordInput");
-      const newPasswordRaw = pwdInputEl
-        ? String(pwdInputEl.value || "").trim()
-        : String(u.Password || "").trim();
-      if (pwdInputEl && !newPasswordRaw) {
-        return triggerSideToast("Password Required", "Login password cannot be empty.", false);
-      }
+      const rawEnteredUsername = targetUser.toLowerCase();
+      const isRenaming = false;
+      const newPasswordRaw = String(u.Password || "").trim();
       const newFullNameRaw = String(document.getElementById("editAssignFullName")?.value || "").trim() || rawEnteredUsername;
       const uKeyLow = targetUser.toLowerCase();
       const newStatusRaw = String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active";
@@ -29795,10 +29781,6 @@
         if (localStorage.getItem("remembered_user")) {
           localStorage.setItem("remembered_user", rawEnteredUsername);
         }
-        const handleEl = document.getElementById("headerUserHandle");
-        if (handleEl) handleEl.innerText = "@" + rawEnteredUsername;
-        const dispEl = document.getElementById("userDisplayName");
-        if (dispEl) dispEl.innerText = newFullNameRaw;
         applyRolePermissions(newRole);
       }
 
@@ -30196,13 +30178,8 @@
       const panelEditEvery = document.getElementById("otherPanelEditEverything");
       const btnChangeBg = document.getElementById("btnOtherOptChangeBg");
       const panelChangeBg = document.getElementById("otherPanelChangeBg");
-      const btnContact = document.getElementById("btnOtherOptContactSettings");
       const panelContact = document.getElementById("otherPanelContactSettings");
-      const btnTickets = document.getElementById("btnOtherOptTickets");
-      const btnAudit = document.getElementById("btnOtherOptAuditLog");
       const btnUsers = document.getElementById("btnOtherOptUsers");
-      const btnSheetSetup = document.getElementById("btnOtherOptSheetSetup");
-      const panelSheetSetup = document.getElementById("otherPanelSheetSetup");
 
       populateCreateUserFlatsDropdown();
       populateRenterQuickSelectDropdowns();
@@ -30220,22 +30197,13 @@
         if (panelEditEvery) panelEditEvery.style.display = "none";
         if (btnChangeBg) btnChangeBg.style.setProperty("display", "none", "important");
         if (panelChangeBg) panelChangeBg.style.display = "none";
-        if (btnContact) btnContact.style.setProperty("display", "none", "important");
         if (panelContact) panelContact.style.display = "none";
-        if (btnTickets) btnTickets.style.setProperty("display", "none", "important");
-        if (btnAudit) btnAudit.style.setProperty("display", "none", "important");
         if (btnUsers) btnUsers.style.setProperty("display", "none", "important");
-        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "none", "important");
-        if (panelSheetSetup) panelSheetSetup.style.display = "none";
       } else {
         if (btnUsers) btnUsers.style.setProperty("display", "flex", "important");
         if (btnLoginHist) btnLoginHist.style.setProperty("display", "flex", "important");
         if (btnEditEvery) btnEditEvery.style.setProperty("display", "flex", "important");
         if (btnChangeBg) btnChangeBg.style.setProperty("display", "flex", "important");
-        if (btnContact) btnContact.style.setProperty("display", "flex", "important");
-        if (btnTickets) btnTickets.style.setProperty("display", "flex", "important");
-        if (btnAudit) btnAudit.style.setProperty("display", "flex", "important");
-        if (btnSheetSetup) btnSheetSetup.style.setProperty("display", "flex", "important");
         renderLoginHistoryPage();
       }
 
@@ -30249,9 +30217,6 @@
         switchOtherSubOption("users");
       }
       openModal("settingsModal");
-      if (typeof updateSettingsNavScrollButtons === "function") {
-        requestAnimationFrame(updateSettingsNavScrollButtons);
-      }
     }
 
     function scrollSettingsNavGrid(direction) {
@@ -30262,19 +30227,10 @@
         left: (direction < 0 ? -1 : 1) * step,
         behavior: "smooth"
       });
-      setTimeout(updateSettingsNavScrollButtons, 260);
     }
 
     function updateSettingsNavScrollButtons() {
-      const grid = document.getElementById("settingsHorizontalNavGrid");
-      const btnLeft = document.getElementById("btnSettingsNavScrollLeft");
-      const btnRight = document.getElementById("btnSettingsNavScrollRight");
-      if (!grid || !btnLeft || !btnRight) return;
-      const maxScroll = Math.max(0, grid.scrollWidth - grid.clientWidth);
-      const atStart = grid.scrollLeft <= 2;
-      const atEnd = maxScroll <= 2 || grid.scrollLeft >= maxScroll - 2;
-      btnLeft.classList.toggle("is-edge", atStart);
-      btnRight.classList.toggle("is-edge", atEnd);
+      // Horizontal scroll uses wheel/touch gestures on #settingsHorizontalNavGrid
     }
     function initSettingsNavGridWheelScroll() {
       const grid = document.getElementById("settingsHorizontalNavGrid");
@@ -30383,16 +30339,10 @@
       if (historyTabBtn) historyTabBtn.classList.toggle("active", activeTab === "history");
 
       const titleEl = document.getElementById("ssvModeTitleText");
-      const subtitleEl = document.getElementById("ssvModeSubtitleText");
       if (titleEl) {
         titleEl.innerHTML = activeTab === "history"
           ? `<i class="fa-solid fa-clock-rotate-left"></i> History Photo Verification (3+ Months Saved)`
           : `<i class="fa-solid fa-images"></i> Live Photo Verification (Active Renters)`;
-      }
-      if (subtitleEl) {
-        subtitleEl.innerHTML = activeTab === "history"
-          ? `Past uploaded photos grouped by active Aadhaar-linked <strong>Renter</strong> across saved months (retaining <strong>3+ months</strong>). Click any photo to zoom, save, or delete.`
-          : `Only <strong>Active Renters</strong> are shown. Select a month and send a request so renters can capture &amp; upload live camera photos. Click <strong>Close</strong> anytime to stop uploads for that month.`;
       }
 
       const currentMonthDefault = getCurrentCalendarYearMonth();
@@ -31393,7 +31343,7 @@
       if (!parent) return;
       parent.querySelectorAll(".settings-nav-grid .flat-nav-item").forEach(el => el.classList.remove("active"));
       parent.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-      ["otherPanelUsers", "otherPanelLoginHistory", "otherPanelChangeBg", "otherPanelEditEverything", "otherPanelContactSettings", "otherPanelTickets", "otherPanelAuditLog", "otherPanelSheetSetup"].forEach(id => {
+      ["otherPanelUsers", "otherPanelLoginHistory", "otherPanelChangeBg", "otherPanelEditEverything", "otherPanelContactSettings", "otherPanelTickets", "otherPanelSheetSetup"].forEach(id => {
         const p = document.getElementById(id);
         if (p) p.style.display = "none";
       });
@@ -31460,8 +31410,6 @@
 
     async function selectAndSaveTheme(themePref) {
       applyVisualTheme(themePref);
-      const otherThemeSpan = document.getElementById("otherProfileTheme");
-      if (otherThemeSpan) otherThemeSpan.innerText = themePref.toUpperCase();
       triggerSideToast("Theme Applied", `Switched to ${themePref.toUpperCase()} theme`, true);
 
       if (activeUser) {
@@ -31539,45 +31487,15 @@
 
     let isSubmittingCreateUser = false;
 
-    function setCreateUserBannerState(mode, message) {
-      const banner = document.getElementById("createUserSubmitStatusBanner");
-      if (!banner) return;
-      if (!mode || !message) {
-        banner.style.display = "none";
-        banner.innerHTML = "";
-        return;
-      }
-      banner.style.display = "flex";
-      if (mode === "loading") {
-        banner.style.background = "rgba(56,189,248,0.14)";
-        banner.style.color = "#38bdf8";
-        banner.style.border = "1px solid rgba(56,189,248,0.38)";
-        banner.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>${message}</span>`;
-      } else if (mode === "success") {
-        banner.style.background = "rgba(16,185,129,0.15)";
-        banner.style.color = "#34d399";
-        banner.style.border = "1px solid rgba(16,185,129,0.4)";
-        banner.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${message}</span>`;
-      } else {
-        banner.style.background = "rgba(239,68,68,0.14)";
-        banner.style.color = "#f87171";
-        banner.style.border = "1px solid rgba(239,68,68,0.4)";
-        banner.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> <span>${message}</span>`;
-      }
+    function setCreateUserBannerState() {
+      // Create-user feedback is delivered via triggerSideToast
     }
 
     async function submitCreateNewUser() {
       if (isSubmittingCreateUser) return;
-      setCreateUserBannerState("", "");
 
       const fullName = document.getElementById("createUserName").value.trim();
-      const rawMobile = (document.getElementById("createUserMobile")?.value || "").trim();
-      const digitsMob = extractIndianMobile10Digits(rawMobile);
-      if (rawMobile && rawMobile !== "+91" && digitsMob.length > 0 && digitsMob.length !== 10) {
-        setCreateUserBannerState("error", "Please enter a valid 10-digit Indian mobile number.");
-        return triggerSideToast("Invalid Mobile Number", "Please enter a valid 10-digit Indian mobile number.", false);
-      }
-      const mobile = (digitsMob.length === 10) ? ("+91 " + digitsMob) : "";
+      const mobile = "";
       const newU = document.getElementById("createUserLoginId").value.trim();
       const newP = document.getElementById("createUserPass").value;
       const role = document.getElementById("createUserRole").value;
@@ -31697,8 +31615,6 @@
           saveDbSnapshotToCache();
 
           document.getElementById("createUserName").value = "";
-          const mobResetEl = document.getElementById("createUserMobile");
-          if (mobResetEl) mobResetEl.value = "";
           document.getElementById("createUserLoginId").value = "";
           document.getElementById("createUserPass").value = "";
           const aadhEl = document.getElementById("createUserAssignedAadhaar");
@@ -31904,74 +31820,8 @@
       }
     }
 
-    function renderPrevMonthPendingRentDetailsBox(chosenMonth, existingBill, autoCarryBalance, allFlatBills) {
-      const box = document.getElementById("prevMonthPendingRentBox");
-      if (!box) return;
-
-      // Never display due or advance generated FOR chosenMonth itself inside chosenMonth's calculation.
-      // Only display unpaid due (> 0) or overpaid advance (< 0) carried forward from strictly PRIOR months (< chosenMonth).
-      const netCarryFromPriorMonths = Math.round((parseFloat(autoCarryBalance) || 0) * 100) / 100;
-      const priorPendingDue = netCarryFromPriorMonths > 0 ? netCarryFromPriorMonths : 0;
-      const priorAdvanceCredit = netCarryFromPriorMonths < 0 ? Math.abs(netCarryFromPriorMonths) : 0;
-
-      const priorBillsSorted = (allFlatBills || [])
-        .filter(b => {
-          if (normalizeMonthYear(b.MonthYear) >= chosenMonth) return false;
-          if (!activeFlatRenterObj) return true;
-          const bRId = String(b.RenterID || "").trim();
-          const aRId = String(activeFlatRenterObj.RenterID || "").trim();
-          if (bRId && aRId) return bRId === aRId;
-          return true;
-        })
-        .sort((a, b) => normalizeMonthYear(b.MonthYear).localeCompare(normalizeMonthYear(a.MonthYear)));
-      const priorPendingBill = priorBillsSorted.find(b => ((typeof getBillRawNetPayable === "function" ? getBillRawNetPayable(b) : (parseFloat(b.TotalBilled) || 0)) - (parseFloat(b.PaidAmount) || 0)) > 0) || priorBillsSorted[0] || null;
-      const priorAdvanceBill = priorBillsSorted.find(b => ((parseFloat(b.PaidAmount) || 0) - (typeof getBillRawNetPayable === "function" ? getBillRawNetPayable(b) : (parseFloat(b.TotalBilled) || 0))) > 0) || priorBillsSorted[0] || null;
-
-      if (priorPendingDue > 0) {
-        const srcLabel = priorPendingBill ? formatMonthLabel(normalizeMonthYear(priorPendingBill.MonthYear)) : "Prior Month(s)";
-        box.style.display = "block";
-        box.innerHTML = `
-          <div style="background:linear-gradient(135deg, rgba(245,158,11,0.16), rgba(15,23,42,0.85)); border:1.5px solid rgba(245,158,11,0.5); border-radius:14px; padding:12px 16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-              <span style="font-size:0.82rem; font-weight:800; color:#fbbf24; text-transform:uppercase; letter-spacing:0.5px;">
-                <i class="fa-solid fa-clock-rotate-left"></i> Previous Pending Due Carried Forward (From ${srcLabel})
-              </span>
-              <span class="badge-unpaid" style="font-size:0.74rem;">Carried Due: ₹${priorPendingDue.toLocaleString("en-IN")}</span>
-            </div>
-            ${priorPendingBill ? `
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; font-size:0.78rem; color:var(--text-main);">
-              <div>Source Month: <strong>${srcLabel}</strong></div>
-              <div>Base Rent: <strong>₹${(parseFloat(priorPendingBill.BaseRent) || 0).toLocaleString("en-IN")}</strong></div>
-              <div>Total Billed: <strong>₹${(parseFloat(priorPendingBill.TotalBilled) || 0).toLocaleString("en-IN")}</strong></div>
-              <div>Paid: <strong style="color:#10b981;">₹${(parseFloat(priorPendingBill.PaidAmount) || 0).toLocaleString("en-IN")}</strong></div>
-              <div>Carried Due Balance: <strong style="color:#ef4444;">₹${priorPendingDue.toLocaleString("en-IN")}</strong></div>
-            </div>` : ""}
-          </div>
-        `;
-      } else if (priorAdvanceCredit > 0) {
-        const srcLabel = priorAdvanceBill ? formatMonthLabel(normalizeMonthYear(priorAdvanceBill.MonthYear)) : "Prior Month(s)";
-        box.style.display = "block";
-        box.innerHTML = `
-          <div style="background:linear-gradient(135deg, rgba(16,185,129,0.16), rgba(15,23,42,0.85)); border:1.5px solid rgba(16,185,129,0.5); border-radius:14px; padding:12px 16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-              <span style="font-size:0.82rem; font-weight:800; color:#34d399; text-transform:uppercase; letter-spacing:0.5px;">
-                <i class="fa-solid fa-clock-rotate-left"></i> Previous Advance Credit Carried Forward (From ${srcLabel})
-              </span>
-              <span class="badge-paid" style="font-size:0.74rem;">Carried Advance: ₹${priorAdvanceCredit.toLocaleString("en-IN")}</span>
-            </div>
-            ${priorAdvanceBill ? `
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(135px, 1fr)); gap:8px; font-size:0.78rem; color:var(--text-main);">
-              <div>Source Month: <strong>${srcLabel}</strong></div>
-              <div>Total Billed: <strong>₹${(parseFloat(priorAdvanceBill.TotalBilled) || 0).toLocaleString("en-IN")}</strong></div>
-              <div>Paid: <strong style="color:#10b981;">₹${(parseFloat(priorAdvanceBill.PaidAmount) || 0).toLocaleString("en-IN")}</strong></div>
-              <div>Carried Advance Credit: <strong style="color:#34d399;">₹${priorAdvanceCredit.toLocaleString("en-IN")}</strong></div>
-            </div>` : ""}
-          </div>
-        `;
-      } else {
-        box.style.display = "none";
-        box.innerHTML = "";
-      }
+    function renderPrevMonthPendingRentDetailsBox() {
+      // Carry-forward balance is rendered inline inside the calculator carry-forward row
     }
 
     async function toggleCalcFieldLock(inputId, btnEl, fieldCategory) {
@@ -32455,13 +32305,7 @@
 
     // Requirement 5: Hide "Re-active Renter / Returning Renter (Choose Property & Flat)" for Active Renters; Only Display When Renter Has Left
     function syncProfileReactivateButtonVisibility() {
-      const btnEl = document.getElementById("btnReactivateProfileTab");
-      if (!btnEl) return;
-      const isLoadedRenterLeft = Boolean(
-        activeFlatRenterObj &&
-        String(activeFlatRenterObj.Status || "").trim().toLowerCase() === "inactive"
-      );
-      btnEl.style.display = isLoadedRenterLeft ? "inline-flex" : "none";
+      // Reactivate action is handled in the Renter History list
     }
 
     // Requirement 3 & 4: Universal Photo Zoom Lightbox Modal & Local Image Download Helpers
@@ -34111,20 +33955,6 @@
       if (profLocEl) profLocEl.value = String(flat.FlatLocation ?? flat.Location ?? renter?.FlatLocation ?? "").trim();
       populateProfileBhkDetailsInputs(flat, renter);
 
-      // Group A5 & A6: Populate Escalation %, Security Deposit, Deposit Date & Mode
-      if (document.getElementById("profEscalationPct")) {
-        document.getElementById("profEscalationPct").value = String(flat.EscalationPct ?? renter?.EscalationPct ?? 5);
-      }
-      if (document.getElementById("profSecurityDeposit")) {
-        document.getElementById("profSecurityDeposit").value = flat.SecurityDeposit ?? renter?.SecurityDeposit ?? "";
-      }
-      if (document.getElementById("profDepositDate")) {
-        document.getElementById("profDepositDate").value = toInputDateValue(flat.DepositDate || renter?.DepositDate || resolvedMeta.joinDate);
-      }
-      if (document.getElementById("profDepositMode")) {
-        document.getElementById("profDepositMode").value = flat.DepositMode || renter?.DepositMode || "UPI";
-      }
-
       const aadhaarPromptEl = document.getElementById("aadhaarPreviousRenterPrompt");
       if (aadhaarPromptEl) {
         aadhaarPromptEl.style.display = "none";
@@ -34179,11 +34009,7 @@
       }
 
       const rhSearchEl = document.getElementById("rhSearchInput");
-      const rhFromEl = document.getElementById("rhDateFrom");
-      const rhToEl = document.getElementById("rhDateTo");
       if (rhSearchEl) rhSearchEl.value = "";
-      if (rhFromEl) rhFromEl.value = "";
-      if (rhToEl) rhToEl.value = "";
 
       handleBillingMonthChange();
       populateHistoryLedger(flat.PropertyName, flat.FlatName);
@@ -34195,10 +34021,6 @@
 
       const modal = getFlatDetailsWorkspaceRoot();
       const navBar = document.getElementById("flatModalNavBar");
-      const qrHeaderBtn = document.getElementById("btnFlatHeaderQrCollect");
-      if (qrHeaderBtn) {
-        qrHeaderBtn.style.display = (activeRole === "Renter") ? "none" : "";
-      }
       if (String(activeRole || "").trim().toLowerCase() === "renter") {
         // Renter role inside flatDetailsModal only shows their own KYC Profile in strictly View-Only mode
         if (navBar) navBar.style.display = "none";
@@ -34245,9 +34067,6 @@
       } else {
         const canBill = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("billing"));
         const canEditProf = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("renterProfile"));
-        if (qrHeaderBtn) {
-          qrHeaderBtn.style.setProperty("display", canBill ? "" : "none", "important");
-        }
         const navItems = modal.querySelectorAll(".flat-nav-item");
         const tabContents = modal.querySelectorAll(".tab-content");
         if (navItems[0]) {
@@ -34429,8 +34248,6 @@
 
       const titleEl = document.getElementById("modalHeaderTitle");
       if (titleEl) titleEl.innerText = "My Profile";
-      const qrBtn = document.getElementById("btnFlatHeaderQrCollect");
-      if (qrBtn) qrBtn.style.display = "none";
     }
 
     function selectRenterHomeAvailableReceipt(billId, monthYear) {
@@ -36820,11 +36637,7 @@
 
     function clearRenterHistoryFilters() {
       const rhSearchEl = document.getElementById("rhSearchInput");
-      const rhFromEl = document.getElementById("rhDateFrom");
-      const rhToEl = document.getElementById("rhDateTo");
       if (rhSearchEl) rhSearchEl.value = "";
-      if (rhFromEl) rhFromEl.value = "";
-      if (rhToEl) rhToEl.value = "";
       if (selectedFlat) {
         populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, false);
       }
@@ -36832,13 +36645,12 @@
 
     function populateIsolatedRenterHistoryDropdown(prop, flat) {
       const container = document.getElementById("rhAllTenantsListContainer");
-      const countLabel = document.getElementById("rhFilteredCountLabel");
       const quickBanner = document.getElementById("rhQuickSearchResultBanner");
       if (!container) return;
 
       const searchQuery = (document.getElementById("rhSearchInput")?.value || "").trim().toLowerCase();
-      const fromDateStr = document.getElementById("rhDateFrom")?.value || "";
-      const toDateStr = document.getElementById("rhDateTo")?.value || "";
+      const fromDateStr = "";
+      const toDateStr = "";
 
       const allFlatRenters = DB.renters
         .map((r, originalIdx) => ({ r, rId: r.RenterID || `IDX-${originalIdx}` }))
@@ -36932,13 +36744,6 @@
           quickBanner.style.display = "none";
           quickBanner.innerHTML = "";
         }
-      }
-
-      if (countLabel) {
-        const hasFilters = Boolean(searchQuery || fromDateStr || toDateStr);
-        countLabel.innerText = hasFilters
-          ? `${filteredRenters.length} of ${allFlatRenters.length}`
-          : `${allFlatRenters.length}`;
       }
 
       if (filteredRenters.length === 0) {
@@ -37630,7 +37435,7 @@
     }
 
     function renderFdCashflowProjection() {
-      const container = document.getElementById("fdCashflowProjectionContainer") || document.getElementById("fdProjectionSummaryContainer");
+      const container = document.getElementById("fdCashflowProjectionContainer");
       if (!container) return;
       const rawList = getStoredFdRecords().filter(item => {
         const pType = String(item.purposeType || item.PurposeType || "Saving / Fixed Deposit (FD)");
@@ -38640,14 +38445,12 @@
       const elWater = document.getElementById("kharchCalcTotalWater");
       const elExtra = document.getElementById("kharchCalcTotalExtra");
       const elGrand = document.getElementById("kharchCalcGrandTotal");
-      const elCopyAmt = document.getElementById("kharchCopyBtnAmt");
 
       if (elElec) elElec.innerText = "₹" + totalElec.toLocaleString("en-IN");
       if (elPng) elPng.innerText = "₹" + totalPng.toLocaleString("en-IN");
       if (elWater) elWater.innerText = "₹" + totalWater.toLocaleString("en-IN");
       if (elExtra) elExtra.innerText = "₹" + totalExtra.toLocaleString("en-IN");
       if (elGrand) elGrand.innerText = "₹" + grandTotal.toLocaleString("en-IN");
-      if (elCopyAmt) elCopyAmt.innerText = grandTotal.toLocaleString("en-IN");
 
       if (track) {
         if (cards.length === 0) {
@@ -39016,14 +38819,9 @@
       });
 
       const modalFilter = document.getElementById("khetModalPartnerFilter");
-      const homeFilter = document.getElementById("homeKhetPartnerFilter");
       if (modalFilter) {
         modalFilter.innerHTML = filterOptions.join("");
         modalFilter.value = partners.some(p => p.name === activeKhetPartnerFilter) ? activeKhetPartnerFilter : "ALL";
-      }
-      if (homeFilter) {
-        homeFilter.innerHTML = filterOptions.join("");
-        homeFilter.value = partners.some(p => p.name === activeKhetPartnerFilter) ? activeKhetPartnerFilter : "ALL";
       }
 
       const quickSel = document.getElementById("khetQuickPartnerSelect");
@@ -39058,9 +38856,7 @@
     function setKhetPartnerFilter(partnerName) {
       activeKhetPartnerFilter = partnerName || "ALL";
       const modalFilter = document.getElementById("khetModalPartnerFilter");
-      const homeFilter = document.getElementById("homeKhetPartnerFilter");
       if (modalFilter && modalFilter.value !== activeKhetPartnerFilter) modalFilter.value = activeKhetPartnerFilter;
-      if (homeFilter && homeFilter.value !== activeKhetPartnerFilter) homeFilter.value = activeKhetPartnerFilter;
       renderKhetRecordsList();
       renderHomeKhetSection();
     }
@@ -39068,9 +38864,7 @@
     function setKhetSearchQuery(query) {
       activeKhetSearchQuery = String(query || "").trim();
       const modalSearch = document.getElementById("khetModalSearchInput");
-      const homeSearch = document.getElementById("homeKhetSearchInput");
       if (modalSearch && modalSearch.value !== activeKhetSearchQuery) modalSearch.value = activeKhetSearchQuery;
-      if (homeSearch && homeSearch.value !== activeKhetSearchQuery) homeSearch.value = activeKhetSearchQuery;
       renderKhetRecordsList();
       renderHomeKhetSection();
     }
@@ -39079,21 +38873,15 @@
       activeKhetViewMode = mode === "table" ? "table" : "cards";
       const mCards = document.getElementById("btnKhetModalViewCards");
       const mTable = document.getElementById("btnKhetModalViewTable");
-      const hCards = document.getElementById("btnHomeKhetViewCards");
-      const hTable = document.getElementById("btnHomeKhetViewTable");
 
-      [mCards, hCards].forEach(btn => {
-        if (btn) {
-          btn.style.background = activeKhetViewMode === "cards" ? "#10b981" : "";
-          btn.style.color = activeKhetViewMode === "cards" ? "#fff" : "";
-        }
-      });
-      [mTable, hTable].forEach(btn => {
-        if (btn) {
-          btn.style.background = activeKhetViewMode === "table" ? "#10b981" : "";
-          btn.style.color = activeKhetViewMode === "table" ? "#fff" : "";
-        }
-      });
+      if (mCards) {
+        mCards.style.background = activeKhetViewMode === "cards" ? "#10b981" : "";
+        mCards.style.color = activeKhetViewMode === "cards" ? "#fff" : "";
+      }
+      if (mTable) {
+        mTable.style.background = activeKhetViewMode === "table" ? "#10b981" : "";
+        mTable.style.color = activeKhetViewMode === "table" ? "#fff" : "";
+      }
 
       renderKhetRecordsList();
       renderHomeKhetSection();
@@ -39690,9 +39478,7 @@
     }
 
     function renderHomeKhetSection() {
-      const container = document.getElementById("homeKhetSectionContainer");
       if (activeRole === "Manager" && !hasManagerPermission("khet")) {
-        if (container) container.style.setProperty("display", "none", "important");
         return;
       }
       populateKhetPartnerFilterAndQuickFill();
@@ -39887,10 +39673,10 @@
       const cleanContractMobile = parsedContract.formatted;
       document.getElementById("profContractMobile").value = cleanContractMobile;
 
-      const escalationPctVal = parseFloat(document.getElementById("profEscalationPct")?.value) || 0;
-      const securityDepositVal = parseFloat(document.getElementById("profSecurityDeposit")?.value) || 0;
-      const depositDateVal = document.getElementById("profDepositDate")?.value || "";
-      const depositModeVal = document.getElementById("profDepositMode")?.value || "UPI";
+      const escalationPctVal = parseFloat(selectedFlat?.EscalationPct ?? activeFlatRenterObj?.EscalationPct ?? 0) || 0;
+      const securityDepositVal = parseFloat(selectedFlat?.SecurityDeposit ?? activeFlatRenterObj?.SecurityDeposit ?? 0) || 0;
+      const depositDateVal = String(selectedFlat?.DepositDate || activeFlatRenterObj?.DepositDate || "");
+      const depositModeVal = String(selectedFlat?.DepositMode || activeFlatRenterObj?.DepositMode || "UPI");
 
       const locElLeft = document.getElementById("renterFlatLocationInput");
       const flatLocationVal = String(locElLeft ? locElLeft.value : (selectedFlat.FlatLocation || "")).trim();
@@ -41213,8 +40999,8 @@
       const famEl = document.getElementById("addRenterFamilyInput");
       const joinEl = document.getElementById("addRenterJoinDateInput");
       const statEl = document.getElementById("addRenterStatusInput");
-      const profImg = document.getElementById("addRenterProfilePicPreview") || document.getElementById("addRenterProfPreview");
-      const idImg = document.getElementById("addRenterIdentityPicPreview") || document.getElementById("addRenterIdPreview");
+      const profImg = document.getElementById("addRenterProfilePicPreview");
+      const idImg = document.getElementById("addRenterIdentityPicPreview");
 
       if (altMobEl) altMobEl.value = "";
       if (addrEl) addrEl.value = "";
@@ -41400,8 +41186,8 @@
       const altMobEl = document.getElementById("addRenterAltMobileInput");
       const addrEl = document.getElementById("addRenterAddressInput");
       const famEl = document.getElementById("addRenterFamilyInput");
-      const profImg = document.getElementById("addRenterProfilePicPreview") || document.getElementById("addRenterProfPreview");
-      const idImg = document.getElementById("addRenterIdentityPicPreview") || document.getElementById("addRenterIdPreview");
+      const profImg = document.getElementById("addRenterProfilePicPreview");
+      const idImg = document.getElementById("addRenterIdentityPicPreview");
 
       if (aadhInput && digits.length === 12) {
         aadhInput.value = formatAadhaarWithHyphens(digits);
@@ -41486,8 +41272,8 @@
       const famEl = document.getElementById("addRenterFamilyInput");
       const joinEl = document.getElementById("addRenterJoinDateInput");
       const statEl = document.getElementById("addRenterStatusInput");
-      const profImg = document.getElementById("addRenterProfilePicPreview") || document.getElementById("addRenterProfPreview");
-      const idImg = document.getElementById("addRenterIdentityPicPreview") || document.getElementById("addRenterIdPreview");
+      const profImg = document.getElementById("addRenterProfilePicPreview");
+      const idImg = document.getElementById("addRenterIdentityPicPreview");
       const expBox = document.getElementById("addRenterExpandedDetailsBox");
 
       if (nameEl) nameEl.value = rec.RenterName || "";
@@ -41520,11 +41306,11 @@
         const sheetSafeBase64 = await compressImageFileToDataUrl(file, 760, 0.78);
         if (docType === "identity") {
           addRenterModalIdUrl = sheetSafeBase64;
-          const idImg = document.getElementById("addRenterIdentityPicPreview") || document.getElementById("addRenterIdPreview");
+          const idImg = document.getElementById("addRenterIdentityPicPreview");
           if (idImg) idImg.src = sheetSafeBase64;
         } else {
           addRenterModalProfUrl = sheetSafeBase64;
-          const profImg = document.getElementById("addRenterProfilePicPreview") || document.getElementById("addRenterProfPreview");
+          const profImg = document.getElementById("addRenterProfilePicPreview");
           if (profImg) profImg.src = sheetSafeBase64;
         }
         triggerSideToast("Photo Attached", `${docType === "identity" ? "Aadhaar Card" : "Profile"} photo ready to save with renter.`, true);
@@ -43892,7 +43678,7 @@
     }
 
     function renderCurrentChatMessages() {
-      const box = document.getElementById("floatingChatMessagesBox") || document.getElementById("chatWidgetMessagesArea");
+      const box = document.getElementById("floatingChatMessagesBox");
       if (!box) return;
       const isAdmin = activeRole === "Admin" || (activeRole === "Manager" && hasManagerPermission("liveChat"));
       const channelId = activeSelectedChatChannelId;
@@ -43948,7 +43734,7 @@
       if (activeRole === "Viewer") {
         return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access and cannot send messages.", false);
       }
-      const inputEl = document.getElementById("floatingChatInput") || document.getElementById("chatWidgetInput") || document.getElementById("settingsChatInput");
+      const inputEl = document.getElementById("floatingChatInput");
       if (!inputEl) return;
       const text = inputEl.value.trim();
       if (!text) return;
@@ -44105,7 +43891,6 @@
     }
 
     function updateLiveChatUnreadBadge() {
-      const badge = document.getElementById("liveChatUnreadBadge") || document.getElementById("fabLiveChatBadge");
       const topNavBadge = document.getElementById("renterNavChatBadge");
       const store = getPrivateChatStore();
       let unreadCount = 0;
@@ -44125,14 +43910,6 @@
         });
       }
       const badgeText = unreadCount > 99 ? "99+" : String(unreadCount);
-      if (badge) {
-        if (unreadCount > 0) {
-          badge.style.display = "inline-flex";
-          badge.innerText = badgeText;
-        } else {
-          badge.style.display = "none";
-        }
-      }
       if (topNavBadge) {
         if (unreadCount > 0) {
           topNavBadge.style.display = "inline-flex";
@@ -44450,8 +44227,8 @@
     }
 
     function renderAdminPaymentProofQueue() {
-      const box = document.getElementById("adminPaymentProofQueueList") || document.getElementById("adminPaymentProofVerificationList");
-      const badge = document.getElementById("pendingProofCountBadge") || document.getElementById("paymentProofPendingCountBadge");
+      const box = document.getElementById("adminPaymentProofQueueList");
+      const badge = document.getElementById("paymentProofPendingCountBadge");
       const list = getStoredPaymentProofs();
       const pendingCount = list.filter(p => p.status === "Pending").length;
       const isAdminUser = String(activeRole || "").trim().toLowerCase() === "admin";
@@ -44858,10 +44635,6 @@
       if (previewBadge) {
         previewBadge.innerText = `₹ ${penalty.toLocaleString("en-IN")}`;
       }
-      const txt = document.getElementById("lateFeePreviewText");
-      if (txt) {
-        txt.innerHTML = `Overdue: <strong>${overdueDays} Days</strong> (past ${dueDay}th) → Penalty: <strong style="color:#f87171;">₹${penalty.toLocaleString("en-IN")}</strong>`;
-      }
       return { overdueDays, penalty };
     }
 
@@ -44898,7 +44671,7 @@
       if (!data && activeRole === "Viewer") {
         return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
       }
-      const container = document.getElementById("splitInstallmentsListContainer") || document.getElementById("splitPaymentRowsContainer");
+      const container = document.getElementById("splitInstallmentsListContainer");
       if (!container) return;
       let d = data;
       if (!d) {
@@ -44942,7 +44715,7 @@
     }
 
     function collectSplitPaymentsFromDOM() {
-      const container = document.getElementById("splitInstallmentsListContainer") || document.getElementById("splitPaymentRowsContainer");
+      const container = document.getElementById("splitInstallmentsListContainer");
       if (!container) return [];
       const rows = container.querySelectorAll(".split-payment-row");
       const list = [];
@@ -44963,8 +44736,6 @@
       const sum = splits.reduce((acc, s) => acc + (parseFloat(s.amount) || 0), 0);
       const countBadge = document.getElementById("splitInstallmentsCountBadge");
       if (countBadge) countBadge.innerText = `${splits.length} Splits (₹${sum.toLocaleString("en-IN")})`;
-      const badge = document.getElementById("splitPaymentSumBadge");
-      if (badge) badge.innerText = `₹ ${sum.toLocaleString("en-IN")}`;
       if (splits.length > 0) {
         const paidNowEl = document.getElementById("calcPaidNow");
         if (paidNowEl) paidNowEl.value = sum;
@@ -44980,7 +44751,7 @@
     }
 
     function renderSplitPaymentInstallmentsFromBill(bill) {
-      const container = document.getElementById("splitInstallmentsListContainer") || document.getElementById("splitPaymentRowsContainer");
+      const container = document.getElementById("splitInstallmentsListContainer");
       if (!container) return;
       container.innerHTML = "";
       let splits = bill?.SplitPayments;
@@ -44992,54 +44763,26 @@
       const sum = splits.reduce((acc, s) => acc + (parseFloat(s.amount) || 0), 0);
       const countBadge = document.getElementById("splitInstallmentsCountBadge");
       if (countBadge) countBadge.innerText = `${splits.length} Splits (₹${sum.toLocaleString("en-IN")})`;
-      const badge = document.getElementById("splitPaymentSumBadge");
-      if (badge) badge.innerText = `₹ ${sum.toLocaleString("en-IN")}`;
     }
 
     // --- A5: SECURITY DEPOSIT LEDGER & MOVE-OUT SETTLEMENT ---
     function computeMoveOutSettlementPreview() {
       if (!selectedFlat) return { deposit: 0, unpaidDues: 0, paintDeduct: 0, damageDeduct: 0, netRefund: 0 };
 
-      const profDep = parseFloat(document.getElementById("profSecurityDeposit")?.value) || 0;
-      const moveDepEl = document.getElementById("moveOutDepositHeld");
-      if (moveDepEl && (moveDepEl.value === "" || moveDepEl.value === "0") && profDep > 0) {
-        moveDepEl.value = profDep;
-      }
-      const deposit = parseFloat(moveDepEl?.value ?? profDep) || 0;
+      const deposit = parseFloat(selectedFlat?.SecurityDeposit ?? activeFlatRenterObj?.SecurityDeposit ?? 0) || 0;
 
       const flatBills = (DB.bills || []).filter(b =>
         isSamePropAndFlat(b.PropertyName, b.FlatName, selectedFlat.PropertyName, selectedFlat.FlatName) &&
         (!activeFlatRenterObj?.RenterID || !b.RenterID || String(b.RenterID) === String(activeFlatRenterObj.RenterID))
       );
-      let computedArrears = 0;
+      let unpaidDues = 0;
       if (flatBills.length > 0) {
         const latestBill = flatBills[flatBills.length - 1];
-        computedArrears = Math.max(0, (parseFloat(latestBill.TotalBilled) || 0) - (parseFloat(latestBill.PaidAmount) || 0));
+        unpaidDues = Math.max(0, (parseFloat(latestBill.TotalBilled) || 0) - (parseFloat(latestBill.PaidAmount) || 0));
       }
-      const arrearsEl = document.getElementById("moveOutUnpaidArrears");
-      if (arrearsEl && document.activeElement !== arrearsEl && arrearsEl.value === "") {
-        arrearsEl.value = computedArrears;
-      }
-      const unpaidDues = arrearsEl ? (parseFloat(arrearsEl.value) || 0) : computedArrears;
-      const paintDeduct = parseFloat(document.getElementById("moveOutPaintDeduction")?.value) || 0;
-      const damageDeduct = (parseFloat(document.getElementById("moveOutDamageDeduction")?.value) || 0) + (parseFloat(document.getElementById("profMoveOutDeductions")?.value) || 0);
-
+      const paintDeduct = 0;
+      const damageDeduct = 0;
       const netRefund = deposit - unpaidDues - paintDeduct - damageDeduct;
-      const amtEl = document.getElementById("moveOutNetRefundAmount");
-      if (amtEl) {
-        amtEl.innerText = netRefund >= 0
-          ? `₹ ${netRefund.toLocaleString("en-IN")} (Refund to Tenant)`
-          : `₹ ${Math.abs(netRefund).toLocaleString("en-IN")} (Payable by Tenant)`;
-        amtEl.style.color = netRefund >= 0 ? "#10b981" : "#ef4444";
-      }
-      const box = document.getElementById("moveOutSettlementSummaryBox");
-      if (box) {
-        if (netRefund >= 0) {
-          box.innerHTML = `Advance Held: <strong>₹${deposit.toLocaleString("en-IN")}</strong> | Unpaid Bills: <strong style="color:#f87171;">-₹${unpaidDues.toLocaleString("en-IN")}</strong> | Deductions: <strong style="color:#f59e0b;">-₹${(paintDeduct + damageDeduct).toLocaleString("en-IN")}</strong> → <strong style="color:#10b981;">Refundable to Tenant: ₹${netRefund.toLocaleString("en-IN")}</strong>`;
-        } else {
-          box.innerHTML = `Advance Held: <strong>₹${deposit.toLocaleString("en-IN")}</strong> | Unpaid Bills: <strong style="color:#f87171;">-₹${unpaidDues.toLocaleString("en-IN")}</strong> | Deductions: <strong style="color:#f59e0b;">-₹${(paintDeduct + damageDeduct).toLocaleString("en-IN")}</strong> → <strong style="color:#ef4444;">Payable by Tenant: ₹${Math.abs(netRefund).toLocaleString("en-IN")}</strong>`;
-        }
-      }
       return { deposit, unpaidDues, paintDeduct, damageDeduct: paintDeduct + damageDeduct, netRefund };
     }
 
@@ -45072,7 +44815,7 @@
             <div style="display:flex; justify-content:space-between;"><span>Security Deposit (Advance Held):</span><strong style="color:#10b981;">+ ₹ ${deposit.toLocaleString("en-IN")}</strong></div>
             <div style="display:flex; justify-content:space-between;"><span>Less: Unpaid Rent &amp; Utility Arrears:</span><strong style="color:#ef4444;">- ₹ ${unpaidDues.toLocaleString("en-IN")}</strong></div>
             <div style="display:flex; justify-content:space-between;"><span>Less: Painting / Damage Deductions:</span><strong style="color:#f59e0b;">- ₹ ${damageDeduct.toLocaleString("en-IN")}</strong></div>
-            <hr style="border:none; border-top:1px solid var(--glass-border); margin:4px 0;">
+            <hr style="border:none; border-top:1px dashed var(--glass-border); margin:4px 0;">
             <div style="display:flex; justify-content:space-between; font-size:0.96rem;">
               <strong>${netRefund >= 0 ? "Net Deposit Refundable:" : "Net Balance Payable by Tenant:"}</strong>
               <strong style="color:${netRefund >= 0 ? "#10b981" : "#ef4444"};">₹ ${Math.abs(netRefund).toLocaleString("en-IN")}</strong>
@@ -45088,35 +44831,7 @@
 
     // --- A6: SCHEDULED ANNUAL RENT ESCALATION TRACKER ---
     function refreshRentEscalationTrackerUI() {
-      const box = document.getElementById("rentEscalationSummaryText") || document.getElementById("rentEscalationStatusBox");
-      if (!box || !selectedFlat) return;
-      const baseRent = parseFloat(document.getElementById("profRent")?.value) || 0;
-      const pct = parseFloat(document.getElementById("profEscalationPct")?.value) || 0;
-      const joinStr = toInputDateValue(document.getElementById("renterJoinDate")?.value || activeFlatRenterObj?.JoinDate || "");
-
-      if (pct <= 0 || baseRent <= 0) {
-        box.innerText = "Escalation disabled (0%) or base rent not set.";
-        return;
-      }
-
-      const escalatedRent = Math.round(baseRent * (1 + pct / 100));
-      let nextRenewalText = "11 months from Join Date";
-      if (joinStr) {
-        const jm = joinStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if (jm) {
-          const totalMonths = (Number(jm[1]) * 12 + (Number(jm[2]) - 1)) + 11;
-          const renYr = Math.floor(totalMonths / 12);
-          const renMo = (totalMonths % 12) + 1;
-          const maxRenDay = new Date(Date.UTC(renYr, renMo, 0)).getUTCDate();
-          const renDay = Math.min(Number(jm[3]), maxRenDay);
-          const renIso = `${String(renYr).padStart(4, "0")}-${String(renMo).padStart(2, "0")}-${String(renDay).padStart(2, "0")}`;
-          const renewalDate = new Date(renIso + "T00:00:00+05:30");
-          const todayIst = new Date(getLocalTodayIsoDate() + "T00:00:00+05:30");
-          const diffDays = Math.ceil((renewalDate - todayIst) / (1000 * 60 * 60 * 24));
-          nextRenewalText = `${formatDateOnly(renIso)} (${diffDays >= 0 ? `in ${diffDays} days` : `${Math.abs(diffDays)} days overdue`})`;
-        }
-      }
-      box.innerHTML = `Current: <strong>₹${baseRent.toLocaleString("en-IN")}</strong> → After +${pct}%: <strong style="color:#10b981;">₹${escalatedRent.toLocaleString("en-IN")}/mo</strong> | Next 11-Mo Renewal: <strong>${nextRenewalText}</strong>`;
+      // Escalation tracker panel is disabled in the current profile UI
     }
 
     async function applyScheduledRentEscalationNow() {
@@ -45125,13 +44840,12 @@
       }
       if (!selectedFlat) return;
       const baseRent = parseFloat(document.getElementById("profRent")?.value) || 0;
-      const pct = parseFloat(document.getElementById("profEscalationPct")?.value) || 0;
+      const pct = parseFloat(selectedFlat?.EscalationPct ?? activeFlatRenterObj?.EscalationPct ?? 0) || 0;
       if (baseRent <= 0 || pct <= 0) {
         return triggerSideToast("Escalation Not Configured", "Please set Base Rent and Escalation % first.", false);
       }
       const newRent = Math.round(baseRent * (1 + pct / 100));
       document.getElementById("profRent").value = newRent;
-      refreshRentEscalationTrackerUI();
       await saveUtilitiesLeft(false);
       triggerSideToast("Escalated Rent Applied", `Monthly rent increased by +${pct}% from ₹${baseRent} to ₹${newRent}!`, true);
     }
@@ -45156,9 +44870,9 @@
       if (document.getElementById("invGeysersCount")) document.getElementById("invGeysersCount").value = d.geysers ?? 0;
       if (document.getElementById("invKeysCount")) document.getElementById("invKeysCount").value = d.keys ?? 0;
       if (document.getElementById("invMeterCondition")) document.getElementById("invMeterCondition").value = d.meter || "";
-      const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
+      const paintEl = document.getElementById("invPaintCondition");
       if (paintEl) paintEl.value = d.paint || "";
-      const notesEl = document.getElementById("invExtraNotes") || document.getElementById("invConditionNotes");
+      const notesEl = document.getElementById("invExtraNotes");
       if (notesEl) notesEl.value = d.notes || "";
     }
 
@@ -45170,8 +44884,8 @@
         return triggerSideToast("Permission Required", "You do not have Renter Profile Control permission.", false);
       }
       if (!selectedFlat) return;
-      const paintEl = document.getElementById("invPaintCondition") || document.getElementById("invPaintStatus");
-      const notesEl = document.getElementById("invExtraNotes") || document.getElementById("invConditionNotes");
+      const paintEl = document.getElementById("invPaintCondition");
+      const notesEl = document.getElementById("invExtraNotes");
       const checklist = {
         fans: parseInt(document.getElementById("invFansCount")?.value || "0", 10) || 0,
         bulbs: parseInt(document.getElementById("invBulbsCount")?.value || "0", 10) || 0,
@@ -45192,18 +44906,19 @@
       if (typeof recordAdminAuditLog === "function") {
         recordAdminAuditLog("SAVE_INVENTORY_CHECKLIST", `${selectedFlat.PropertyName} Flat ${selectedFlat.FlatName}`, `Fans:${checklist.fans}, Bulbs:${checklist.bulbs}, Keys:${checklist.keys}, Paint:${checklist.paint || "Not Set"}`);
       }
-      triggerSideToast("Inventory Checklist Saved", `Move-In/Move-Out checklist saved for Flat ${selectedFlat.FlatName}.`, true);
-      await sendFirebaseAction({
+      const saveRes = await sendFirebaseAction({
         action: "saveFlatChecklist",
         propertyName: selectedFlat.PropertyName,
         flatName: selectedFlat.FlatName,
         checklist
       });
-      await sendFirebaseAction({
-        action: "saveConfig",
-        configKey: "flatChecklists",
-        configValue: DB.globalConfig.flatChecklists
-      });
+      if (saveRes && saveRes.status === "error") {
+        triggerSideToast("Checklist Sync Failed", saveRes.message || `Saved locally, but Google Sheet sync failed for Flat ${selectedFlat.FlatName}.`, false);
+      } else if (saveRes && saveRes.syncPending) {
+        triggerSideToast("Checklist Sync Pending", `Saved locally for Flat ${selectedFlat.FlatName}; verifying Google Sheet sync...`, "warning");
+      } else {
+        triggerSideToast("Inventory Checklist Saved", `Move-In/Move-Out checklist saved for Flat ${selectedFlat.FlatName}.`, true);
+      }
     }
 
     // --- GROUP C1 & C3: METER READING PHOTO PROOF & MASTER METER RECONCILIATION ---
@@ -45417,8 +45132,8 @@
       if (!selectedFlat) return;
       const propName = selectedFlat.PropertyName;
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "");
-      const masterUnits = parseFloat((document.getElementById("masterMeterUnitsInput") || document.getElementById("reconMasterUnits"))?.value) || 0;
-      const masterBillAmt = parseFloat((document.getElementById("masterMeterBillInput") || document.getElementById("reconMasterBillAmt"))?.value) || 0;
+      const masterUnits = parseFloat(document.getElementById("masterMeterUnitsInput")?.value) || 0;
+      const masterBillAmt = parseFloat(document.getElementById("masterMeterBillInput")?.value) || 0;
 
       const propMonthBills = (DB.bills || []).filter(b =>
         String(b.PropertyName || "").trim().toLowerCase() === String(propName || "").trim().toLowerCase() &&
@@ -45446,15 +45161,6 @@
       if (lossBadge) {
         lossBadge.innerText = `${unitLoss} Units (₹${Math.round(amtDiff).toLocaleString("en-IN")})`;
         lossBadge.style.color = unitLoss > 0 ? "#f59e0b" : "#10b981";
-      }
-
-      const box = document.getElementById("masterMeterReconSummary");
-      if (box) {
-        box.innerHTML = `
-          Property: <strong>${propName}</strong> (${formatMonthLabel(chosenMonth)}) |
-          Sum of ${propMonthBills.length} Flat Sub-Meters: <strong style="color:#38bdf8;">${subMetersUnits} U (₹${subMetersBilledAmt.toLocaleString("en-IN")})</strong> |
-          Common Area / Motor Loss: <strong style="color:${unitLoss > 0 ? '#f59e0b' : '#10b981'};">${unitLoss} U (₹${amtDiff.toLocaleString("en-IN")})</strong>
-        `;
       }
     }
 
@@ -45630,17 +45336,7 @@
     function renderAdminMaintenanceTickets() {
       const box = document.getElementById("adminMaintenanceTicketsList");
       if (!box) return;
-      const filterStatus = document.getElementById("maintTicketFilterStatus")?.value || "ALL";
-      const all = getStoredMaintenanceTickets();
-
-      const openCount = all.filter(t => t.status === "Open").length;
-      const progCount = all.filter(t => t.status === "In Progress").length;
-      const resCount = all.filter(t => t.status === "Resolved").length;
-      if (document.getElementById("maintOpenCountStat")) document.getElementById("maintOpenCountStat").innerText = String(openCount);
-      if (document.getElementById("maintProgressCountStat")) document.getElementById("maintProgressCountStat").innerText = String(progCount);
-      if (document.getElementById("maintResolvedCountStat")) document.getElementById("maintResolvedCountStat").innerText = String(resCount);
-
-      const filtered = filterStatus === "ALL" ? all : all.filter(t => t.status === filterStatus);
+      const filtered = getStoredMaintenanceTickets();
       if (filtered.length === 0) {
         box.innerHTML = `<div style="text-align:center; padding:22px; color:var(--text-muted); font-size:0.8rem;">No maintenance tickets match the selected filter.</div>`;
         return;
@@ -45696,7 +45392,7 @@
 
     // --- GROUP G2: ONE-CLICK BULK MONTHLY BILL BROADCAST ---
     function getUnpaidBillsForBroadcastMonth() {
-      const monthInput = document.getElementById("bulkBroadcastMonthInput") || document.getElementById("bulkBroadcastMonthPicker");
+      const monthInput = document.getElementById("bulkBroadcastMonthInput");
       if (monthInput && !monthInput.value) {
         monthInput.value = getCurrentCalendarYearMonth();
       }
@@ -45714,10 +45410,6 @@
       const countBadge = document.getElementById("bulkUnpaidCountBadge");
       if (countBadge) {
         countBadge.innerText = `${unpaid.length} Unpaid (₹${Math.round(totalDue).toLocaleString("en-IN")})`;
-      }
-      const summaryEl = document.getElementById("bulkBroadcastSummaryText");
-      if (summaryEl) {
-        summaryEl.innerHTML = `Unpaid / Partial Bills in Selected Month: <strong style="color:#f59e0b;">${unpaid.length} Flats</strong> (Total Pending: <strong style="color:#ef4444;">₹${Math.round(totalDue).toLocaleString("en-IN")}</strong>)`;
       }
       const drawer = document.getElementById("bulkWhatsAppQueueDrawer");
       if (!drawer) return;
@@ -45756,14 +45448,12 @@
       if (unpaid.length === 0) {
         return triggerSideToast("No Unpaid Bills", "There are no unpaid bills for the selected month to broadcast.", "warning");
       }
-      const monthInput = document.getElementById("bulkBroadcastMonthInput") || document.getElementById("bulkBroadcastMonthPicker");
+      const monthInput = document.getElementById("bulkBroadcastMonthInput");
       const monthLabel = formatMonthLabel(normalizeMonthYear(monthInput?.value || ""));
-      const titleInput = document.getElementById("adminNoticeTitleInput") || document.getElementById("notifTitleInput");
-      const msgInput = document.getElementById("adminNoticeBodyInput") || document.getElementById("notifMessageInput");
-      const targetSelect = document.getElementById("adminNoticeTargetSelect") || document.getElementById("notifTargetTypeSelect");
+      const titleInput = document.getElementById("adminNoticeTitleInput");
+      const msgInput = document.getElementById("adminNoticeBodyInput");
       if (titleInput) titleInput.value = `Rent & Utility Bill Reminder — ${monthLabel}`;
       if (msgInput) msgInput.value = `Dear Renter, your monthly rent & utility bill for ${monthLabel} is generated. Kindly check your History Ledger, scan the Dynamic UPI QR code to pay your pending due, and submit your UTR payment proof.`;
-      if (targetSelect) targetSelect.value = "ALL";
       if (typeof submitAdminBroadcastNotification === "function") {
         await submitAdminBroadcastNotification();
       } else if (typeof sendAdminBroadcastNotification === "function") {
@@ -45796,12 +45486,6 @@
       const trimmed = list.slice(0, 30);
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.auditLogs = trimmed;
-      if (typeof renderAdminAuditTrailList === "function") {
-        const panel = document.getElementById("otherPanelAuditLog");
-        if (panel && panel.style.display !== "none") {
-          renderAdminAuditTrailList();
-        }
-      }
       if (window._auditLogSyncDebounceTimer) {
         clearTimeout(window._auditLogSyncDebounceTimer);
       }
@@ -45811,9 +45495,9 @@
     }
 
     function renderAdminAuditTrailList(optionalQuery = "") {
-      const box = document.getElementById("adminAuditTrailList") || document.getElementById("adminAuditTrailListContainer");
+      const box = document.getElementById("adminAuditTrailList");
       if (!box) return;
-      const q = String(optionalQuery || document.getElementById("auditLogSearchInput")?.value || "").trim().toLowerCase();
+      const q = String(optionalQuery || "").trim().toLowerCase();
       const all = getStoredAdminAuditLogs();
       const filtered = q
         ? all.filter(a =>
@@ -45931,9 +45615,9 @@
 
     // --- BUG 1 FIX HELPERS: AUTO-CREATE SEPARATE SHEETS, COLUMNS & ROWS + COPY/DOWNLOAD CODE.GS ---
     async function loadFixedGasCodeIntoViewer() {
-      const ta = document.getElementById("fixedGasCodeViewerTextarea");
-      if (!ta) return "";
-      if (ta.value && ta.value.length > 100) return ta.value;
+      if (window.__cachedFixedGasCode && window.__cachedFixedGasCode.length > 100) {
+        return window.__cachedFixedGasCode;
+      }
       try {
         let text = "";
         const apiRes = await fetch("/api/gas-code");
@@ -45946,7 +45630,7 @@
           if (fileRes.ok) text = await fileRes.text();
         }
         if (text) {
-          ta.value = text;
+          window.__cachedFixedGasCode = text;
           return text;
         }
       } catch (e) {}
@@ -45960,16 +45644,9 @@
       }
       try {
         await navigator.clipboard.writeText(code);
-        const badge = document.getElementById("gasCodeCopyStatusBadge");
-        if (badge) badge.innerText = "Copied to Clipboard!";
         triggerSideToast("Code.gs Copied", "Fixed Google Apps Script code copied! Paste it into Extensions > Apps Script in your Google Sheet and Deploy.", true);
       } catch (e) {
-        const ta = document.getElementById("fixedGasCodeViewerTextarea");
-        if (ta) {
-          ta.select();
-          document.execCommand("copy");
-        }
-        triggerSideToast("Code.gs Selected", "Code selected and copied to clipboard.", true);
+        triggerSideToast("Copy Failed", "Clipboard access was blocked. Use Download Code.gs instead.", false);
       }
     }
 
@@ -46019,8 +45696,6 @@
       const flashScreenCaptureShield = (msgText, durationMs = 2400) => {
         document.body.classList.add("screen-privacy-blur");
         const overlay = document.getElementById("screenCaptureShieldOverlay");
-        const msgEl = document.getElementById("screenCaptureShieldMsg");
-        if (msgEl && msgText) msgEl.innerText = msgText;
         if (overlay) overlay.style.display = "flex";
         if (shieldTimer) clearTimeout(shieldTimer);
         shieldTimer = setTimeout(() => {
