@@ -11143,6 +11143,7 @@
     min-width: 0 !important;
     overflow-x: scroll !important;
     overflow-y: auto !important;
+    scroll-behavior: smooth !important;
     padding-bottom: 6px !important;
     box-sizing: border-box !important;
     -webkit-overflow-scrolling: touch !important;
@@ -11156,35 +11157,51 @@
   #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar {
     display: block !important;
     -webkit-appearance: none !important;
-    width: 10px !important;
+    width: 0 !important;
+    height: 12px !important;
+    background: transparent !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar:vertical,
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-track:vertical,
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb:vertical {
+    display: none !important;
+    width: 0 !important;
+    background: transparent !important;
+    border: none !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar:horizontal {
+    display: block !important;
     height: 12px !important;
     background: rgba(15, 23, 42, 0.45) !important;
   }
-  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-track {
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-track:horizontal {
     background: rgba(15, 23, 42, 0.45) !important;
     border-radius: 999px !important;
     border: 1px solid rgba(148, 163, 184, 0.25) !important;
   }
-  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb {
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb:horizontal {
     background: linear-gradient(90deg, #38bdf8 0%, #6366f1 55%, #a855f7 100%) !important;
     border-radius: 999px !important;
     border: 2px solid rgba(15, 23, 42, 0.6) !important;
     min-width: 48px !important;
   }
-  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb:hover {
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb:horizontal:hover {
     background: linear-gradient(90deg, #0ea5e9 0%, #4f46e5 55%, #9333ea 100%) !important;
   }
   #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-corner {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
     background: transparent !important;
   }
-  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar {
+  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar:horizontal {
     background: #e2e8f0 !important;
   }
-  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-track {
+  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-track:horizontal {
     background: #e2e8f0 !important;
     border-color: #cbd5e1 !important;
   }
-  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb {
+  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb:horizontal {
     background: linear-gradient(90deg, #0284c7 0%, #4f46e5 55%, #7c3aed 100%) !important;
     border: 2px solid #e2e8f0 !important;
   }
@@ -13673,11 +13690,7 @@
                 </div>
               </div>
 
-              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08);">
-                <select id="adminNoticeTargetSelect" class="form-control" style="width:auto; flex:1 1 180px; padding:7px 10px; font-size:0.75rem;">
-                  <option value="ALL">All Renters &amp; Users in Selected Properties</option>
-                  <option value="RENTERS">Active Renters Only in Selected Properties</option>
-                </select>
+              <div style="display:flex; justify-content:flex-end; align-items:center; gap:8px; flex-wrap:wrap; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08);">
                 <div style="display:flex; align-items:center; gap:6px;">
                   <button type="button" id="btnCancelAdminNotice" class="btn-ledger-action" style="display:none; padding:7px 12px; font-size:0.75rem; color:#ef4444;" onclick="cancelEditingAdminNotice()">
                     <i class="fa-solid fa-xmark"></i> Cancel
@@ -20974,10 +20987,191 @@
       return Array.from(propsSet);
     }
 
+    function isUserBlockedForNotifications(userObj) {
+      if (!userObj) return true;
+      const uKeyLow = String(userObj.Username || "").trim().toLowerCase();
+      if (!uKeyLow) return true;
+
+      const st = String(userObj.Status || "").trim().toLowerCase();
+      const accSt = String(userObj.AccountStatus || "").trim().toLowerCase();
+      if (st === "blocked" || accSt === "blocked") return true;
+      if ((st && st !== "active") || (accSt && accSt !== "active")) return true;
+
+      try {
+        const blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+        if (Array.isArray(blockedList) && blockedList.some(b => String(b || "").trim().toLowerCase() === uKeyLow)) {
+          return true;
+        }
+      } catch (e) {}
+
+      const lockEntry = (DB && DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
+      const isPermLocked = Boolean(
+        userObj.PermanentlyLockedByAttempts === true ||
+        String(userObj.IsPermanentlyBlocked || "").trim().toLowerCase() === "true" ||
+        Number(userObj.LockoutStage || 0) >= 4 ||
+        (lockEntry && lockEntry.isPermanentlyBlocked)
+      );
+      if (isPermLocked && st !== "active") return true;
+
+      if (String(userObj.MovedOutAutoBlocked || "").trim().toLowerCase() === "true" && st !== "active") {
+        return true;
+      }
+
+      try {
+        const authMap = typeof getVerifiedAuthMap === "function" ? getVerifiedAuthMap() : {};
+        if (authMap && authMap[uKeyLow] && String(authMap[uKeyLow].status || "").trim().toLowerCase() === "blocked") {
+          return true;
+        }
+      } catch (e) {}
+
+      return false;
+    }
+
+    function isCurrentUserBlockedForNotifications() {
+      const userRole = String(activeRole || "").trim().toLowerCase();
+      if (userRole === "admin") return false;
+      const uKeyLow = String(activeUser || "").trim().toLowerCase();
+      if (!uKeyLow) return true;
+
+      const usersList = (Array.isArray(DB.users) && DB.users.length > 0)
+        ? DB.users
+        : (typeof loadLocalUsersMaster === "function" ? loadLocalUsersMaster() : []);
+      const me = (usersList || []).find(u => u && String(u.Username || "").trim().toLowerCase() === uKeyLow);
+      if (me) {
+        return isUserBlockedForNotifications(me);
+      }
+
+      try {
+        const blockedList = JSON.parse(localStorage.getItem("portal_blocked_users") || "[]");
+        if (Array.isArray(blockedList) && blockedList.some(b => String(b || "").trim().toLowerCase() === uKeyLow)) {
+          return true;
+        }
+      } catch (e) {}
+
+      const lockEntry = (DB && DB.globalConfig && DB.globalConfig.loginLockouts && DB.globalConfig.loginLockouts[uKeyLow]) || null;
+      if (lockEntry && lockEntry.isPermanentlyBlocked) return true;
+
+      try {
+        const authMap = typeof getVerifiedAuthMap === "function" ? getVerifiedAuthMap() : {};
+        if (authMap && authMap[uKeyLow] && String(authMap[uKeyLow].status || "").trim().toLowerCase() === "blocked") {
+          return true;
+        }
+      } catch (e) {}
+
+      return false;
+    }
+
+    function getUserAssociatedPropertiesForNotice(userObj) {
+      if (!userObj) return [];
+      const uRole = String(userObj.Role || "").trim().toLowerCase();
+      if (uRole === "admin") return ["ALL"];
+
+      const propsSet = new Set();
+      const rawAssignedProp = String(userObj.AssignedProperty || "").trim();
+      if (rawAssignedProp.toUpperCase() === "ALL") {
+        return ["ALL"];
+      }
+      if (rawAssignedProp) {
+        rawAssignedProp.split(",").forEach(p => {
+          const cleanP = p.trim().toLowerCase();
+          if (cleanP) propsSet.add(cleanP);
+        });
+      }
+
+      if (uRole === "renter") {
+        const uAadh = typeof normalizeAadhaar12 === "function"
+          ? normalizeAadhaar12(userObj.AssignedAadhaar || userObj.AadhaarNumber || "")
+          : String(userObj.AssignedAadhaar || userObj.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+        const renters = Array.isArray(DB.renters) ? DB.renters : [];
+        if (uAadh.length === 12) {
+          const matched = renters.filter(r => {
+            const rAadh = typeof normalizeAadhaar12 === "function"
+              ? normalizeAadhaar12(r.IdentityDocNumber || r.AadhaarNumber || "")
+              : String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+            return rAadh === uAadh;
+          });
+          const activeMatched = matched.filter(r => String(r.Status || "").trim().toLowerCase() === "active");
+          const sourceMatched = activeMatched.length > 0 ? activeMatched : matched;
+          sourceMatched.forEach(r => {
+            if (r && r.PropertyName) propsSet.add(String(r.PropertyName).trim().toLowerCase());
+          });
+        }
+      }
+
+      return Array.from(propsSet);
+    }
+
+    function resolveNoticeRecipientsByStatus(targetProperties, targetScope = "ALL") {
+      const usersList = (Array.isArray(DB.users) && DB.users.length > 0)
+        ? DB.users
+        : (typeof loadLocalUsersMaster === "function" ? loadLocalUsersMaster() : []);
+      const targetProps = Array.isArray(targetProperties) && targetProperties.length > 0 ? targetProperties : ["ALL"];
+      const isAllProps = targetProps.includes("ALL") || targetProps.some(p => String(p || "").trim().toUpperCase() === "ALL");
+      const targetPropsLow = targetProps.map(p => String(p || "").trim().toLowerCase()).filter(Boolean);
+
+      const activeSet = new Set();
+      const blockedSet = new Set();
+
+      (usersList || []).forEach(u => {
+        if (!u) return;
+        const unameLow = String(u.Username || "").trim().toLowerCase();
+        if (!unameLow) return;
+        const uRole = String(u.Role || "").trim().toLowerCase();
+        if (uRole === "admin") return;
+        if (targetScope === "RENTERS" && uRole !== "renter") return;
+
+        let matchesProperty = isAllProps;
+        if (!matchesProperty) {
+          const uProps = getUserAssociatedPropertiesForNotice(u);
+          if (uProps.includes("ALL") || uProps.includes("all")) {
+            matchesProperty = true;
+          } else {
+            matchesProperty = targetPropsLow.some(tp => uProps.includes(tp));
+          }
+        }
+        if (!matchesProperty) return;
+
+        if (isUserBlockedForNotifications(u)) {
+          blockedSet.add(unameLow);
+        } else {
+          activeSet.add(unameLow);
+        }
+      });
+
+      return {
+        activeRecipientUsernames: Array.from(activeSet),
+        excludedBlockedUsernames: Array.from(blockedSet)
+      };
+    }
+
     function isNoticeVisibleToCurrentUser(n) {
       if (!n || !n.id) return false;
       const userRole = String(activeRole || "").trim().toLowerCase();
       if (userRole === "admin") return true;
+
+      // Strictly block notifications for blocked / inactive users
+      if (isCurrentUserBlockedForNotifications()) return false;
+
+      const currentUserLow = String(activeUser || "").trim().toLowerCase();
+      const isOwnSentNotice = Boolean(
+        currentUserLow &&
+        n.senderUsername &&
+        String(n.senderUsername).trim().toLowerCase() === currentUserLow &&
+        typeof canCurrentUserManageNotifications === "function" &&
+        canCurrentUserManageNotifications()
+      );
+
+      if (!isOwnSentNotice) {
+        if (Array.isArray(n.excludedBlockedUsernames) && currentUserLow) {
+          const excludedList = n.excludedBlockedUsernames.map(u => String(u || "").trim().toLowerCase()).filter(Boolean);
+          if (excludedList.includes(currentUserLow)) return false;
+        }
+        if (n.activeUsersOnly === true && Array.isArray(n.recipientUsernames)) {
+          const allowedList = n.recipientUsernames.map(u => String(u || "").trim().toLowerCase()).filter(Boolean);
+          if (!currentUserLow || !allowedList.includes(currentUserLow)) return false;
+        }
+      }
+
       if (n.target === "RENTERS" && userRole !== "renter") return false;
 
       const targetProps = Array.isArray(n.targetProperties) ? n.targetProperties : ["ALL"];
@@ -21764,10 +21958,23 @@
         return triggerSideToast("Select Target Property", "Please select at least one property for the target audience.", false);
       }
 
+      const recipientAudit = resolveNoticeRecipientsByStatus(targetProperties, target);
+      const activeRecipientUsernames = recipientAudit.activeRecipientUsernames;
+      const excludedBlockedUsernames = recipientAudit.excludedBlockedUsernames;
+
+      if (activeRecipientUsernames.length === 0 && excludedBlockedUsernames.length > 0) {
+        return triggerSideToast(
+          "No Active Users",
+          "All users in the selected audience are currently blocked. Notifications can only be sent to active users.",
+          false
+        );
+      }
+
       const existing = getStoredBroadcastNotifications().slice();
+      const senderUsername = String(activeUser || "").trim().toLowerCase();
 
       if (currentEditingNoticeId) {
-        // Edit existing notification
+        // Edit existing notification (active users only, excluding blocked users)
         const idx = existing.findIndex(n => n.id === currentEditingNoticeId);
         if (idx !== -1) {
           existing[idx] = {
@@ -21776,7 +21983,13 @@
             body,
             target,
             targetProperties,
+            activeUsersOnly: true,
+            recipientUsernames: activeRecipientUsernames,
+            excludedBlockedUsernames: excludedBlockedUsernames,
+            activeRecipientCount: activeRecipientUsernames.length,
+            excludedBlockedCount: excludedBlockedUsernames.length,
             sender: activeUserFullName || activeUser || "Admin",
+            senderUsername,
             updatedAt: Date.now()
           };
         }
@@ -21785,16 +21998,25 @@
         DB.globalConfig.broadcastNotices = existing;
         syncNotificationsBadgeUI();
         renderNotificationsListUI();
-        triggerSideToast("Notice Updated", `Notice "${title}" updated live!`, true);
+        const blockedNote = excludedBlockedUsernames.length > 0
+          ? ` (${excludedBlockedUsernames.length} blocked user${excludedBlockedUsernames.length === 1 ? "" : "s"} excluded)`
+          : "";
+        triggerSideToast("Notice Updated", `Notice "${title}" updated for active users only${blockedNote}!`, true);
       } else {
-        // Add new notification
+        // Add new notification (active users only, excluding blocked users)
         const newNotice = {
           id: "notice_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6),
           title,
           body,
           target,
           targetProperties,
+          activeUsersOnly: true,
+          recipientUsernames: activeRecipientUsernames,
+          excludedBlockedUsernames: excludedBlockedUsernames,
+          activeRecipientCount: activeRecipientUsernames.length,
+          excludedBlockedCount: excludedBlockedUsernames.length,
           sender: activeUserFullName || activeUser || "Admin",
+          senderUsername,
           timestamp: Date.now()
         };
         existing.unshift(newNotice);
@@ -21810,7 +22032,13 @@
         renderNotificationsListUI();
         notifyCrossTabSync("notices", existing);
         const audienceDesc = targetProperties.includes("ALL") ? "all properties" : targetProperties.join(", ");
-        triggerSideToast("Broadcast Sent", `Notice "${title}" sent to ${audienceDesc}!`, true);
+        const activeLabel = activeRecipientUsernames.length > 0
+          ? `${activeRecipientUsernames.length} active user${activeRecipientUsernames.length === 1 ? "" : "s"}`
+          : "active users";
+        const blockedNote = excludedBlockedUsernames.length > 0
+          ? ` (${excludedBlockedUsernames.length} blocked excluded)`
+          : "";
+        triggerSideToast("Broadcast Sent", `Notice "${title}" sent to ${activeLabel} in ${audienceDesc}${blockedNote}!`, true);
       }
 
       // Sync immediately to Google Apps Script so all connected devices update live
@@ -21878,15 +22106,93 @@
       }
     }
 
+    function buildNpciUpiParamString(rawUpiId, rawUpiName, rawAmount, rawNote, defaultPayeeName = "Rent Payment") {
+      // 1. Keep '@' intact in pa (username@bank); remove spaces/quotes and invalid VPA chars
+      const cleanPa = String(rawUpiId || "")
+        .replace(/\s+/g, "")
+        .replace(/[^a-zA-Z0-9._@-]/g, "")
+        .trim();
+      if (!cleanPa || !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/.test(cleanPa)) {
+        return { valid: false, pa: "", pn: "", am: "", tn: "", paramStr: "" };
+      }
+
+      // 2. Remove all special characters from payee name (pn); allow only letters, numbers, and single spaces
+      const rawNameStr = String(rawUpiName || "").trim();
+      const sanitizedName = (rawNameStr && rawNameStr.toUpperCase() !== "N/A")
+        ? rawNameStr.replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, " ").trim()
+        : "";
+      const cleanPn = (sanitizedName || String(defaultPayeeName || "Rent Payment").replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, " ").trim() || "Rent Payment").slice(0, 50).trim();
+
+      // 3. Parse amount strictly as positive number formatted to 2 decimal places (e.g., 500.00)
+      let numericAmt = 0;
+      if (rawAmount !== undefined && rawAmount !== null && rawAmount !== "") {
+        const cleanedAmtStr = String(rawAmount).replace(/[^0-9.]/g, "");
+        const firstDotIdx = cleanedAmtStr.indexOf(".");
+        const normalizedAmtStr = firstDotIdx === -1
+          ? cleanedAmtStr
+          : cleanedAmtStr.slice(0, firstDotIdx + 1) + cleanedAmtStr.slice(firstDotIdx + 1).replace(/\./g, "");
+        const parsed = parseFloat(normalizedAmtStr);
+        if (Number.isFinite(parsed) && parsed > 0) {
+          numericAmt = parsed;
+        }
+      }
+      const formattedAm = numericAmt > 0 ? numericAmt.toFixed(2) : "";
+
+      // 4. Remove all special characters from transaction note (tn); allow only letters, numbers, and single spaces
+      const cleanTn = String(rawNote || "")
+        .replace(/[^a-zA-Z0-9 ]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 50)
+        .trim();
+
+      // 5. Build NPCI-compliant query string with encodeURIComponent (%20 for spaces, never '+' from URLSearchParams) and literal '@' in pa
+      const parts = [
+        `pa=${cleanPa}`,
+        `pn=${encodeURIComponent(cleanPn)}`
+      ];
+      if (formattedAm) {
+        parts.push(`am=${formattedAm}`);
+      }
+      parts.push("cu=INR");
+      if (cleanTn) {
+        parts.push(`tn=${encodeURIComponent(cleanTn)}`);
+      }
+
+      return {
+        valid: true,
+        pa: cleanPa,
+        pn: cleanPn,
+        am: formattedAm,
+        numericAmt,
+        tn: cleanTn,
+        paramStr: parts.join("&")
+      };
+    }
+
     function launchMobileUpiApp(appType, upiIdRaw, upiNameRaw, amountRaw, noteRaw) {
-      const cleanUpi = String(upiIdRaw || "").trim();
-      if (!cleanUpi || cleanUpi === "N/A" || cleanUpi === "Not Configured") {
+      const cleanUpiRaw = String(upiIdRaw || "").trim();
+      if (!cleanUpiRaw || cleanUpiRaw === "N/A" || cleanUpiRaw === "Not Configured") {
         triggerSideToast("UPI ID Not Configured", "Property Admin has not configured an official UPI ID yet.", false);
         return;
       }
-      const cleanName = String(upiNameRaw && upiNameRaw !== "N/A" ? upiNameRaw : "Property Rent Receiver").trim();
-      const numericAmt = parseFloat(amountRaw) || 0;
-      const cleanNote = String(noteRaw || "Monthly Rent Payment").trim();
+
+      const upiData = buildNpciUpiParamString(
+        cleanUpiRaw,
+        upiNameRaw,
+        amountRaw,
+        noteRaw || "Monthly Rent Payment",
+        "Property Rent Receiver"
+      );
+
+      if (!upiData.valid) {
+        triggerSideToast("Invalid UPI ID", "Configured UPI ID is not in a valid username@bank format.", false);
+        return;
+      }
+
+      const cleanUpi = upiData.pa;
+      const numericAmt = upiData.numericAmt;
+      const paramStr = upiData.paramStr;
 
       // Copy UPI ID to clipboard automatically as a fallback convenience
       try {
@@ -21894,16 +22200,6 @@
           navigator.clipboard.writeText(cleanUpi).catch(() => {});
         }
       } catch (e) {}
-
-      const queryParams = new URLSearchParams();
-      queryParams.set("pa", cleanUpi);
-      queryParams.set("pn", cleanName);
-      if (numericAmt > 0) {
-        queryParams.set("am", numericAmt.toFixed(2));
-      }
-      queryParams.set("cu", "INR");
-      queryParams.set("tn", cleanNote);
-      const paramStr = queryParams.toString();
 
       let targetUri = `upi://pay?${paramStr}`;
       let appLabel = "Installed UPI App";
@@ -34905,27 +35201,17 @@
     let lastQrFetchToken = 0;
 
     function buildValidUpiUri(rawUpiId, rawUpiName, exactAmount, rawTransactionNote) {
-      const cleanPa = String(rawUpiId || "").replace(/['"\s]/g, "").trim();
-      if (!cleanPa || !cleanPa.includes("@")) return "";
+      const upiData = buildNpciUpiParamString(
+        rawUpiId,
+        rawUpiName,
+        exactAmount,
+        rawTransactionNote,
+        "Rent Payment"
+      );
+      if (!upiData.valid) return "";
 
-      const cleanPnRaw = String(rawUpiName || "Rent Payment")
-        .replace(/[^a-zA-Z0-9 .&-]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim() || "Rent Payment";
-      const encodedPn = encodeURIComponent(cleanPnRaw);
-      const hasExplicitAmount = exactAmount !== undefined && exactAmount !== null && exactAmount !== "" && Number.isFinite(Number(exactAmount));
-      const cleanAmt = Math.max(0, Number(exactAmount) || 0);
-      const cleanTnRaw = String(rawTransactionNote || "")
-        .replace(/[^a-zA-Z0-9 .,#&-]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-      const tnParam = cleanTnRaw ? `&tn=${encodeURIComponent(cleanTnRaw.slice(0, 48))}` : "";
-
-      // CRITICAL: Keep literal '@' in pa= parameter per NPCI UPI Linking Spec so GPay, PhonePe, Paytm & BHIM never say "Invalid QR Code"
-      if (hasExplicitAmount) {
-        return `upi://pay?pa=${cleanPa}&pn=${encodedPn}&am=${cleanAmt.toFixed(2)}&cu=INR${tnParam}`;
-      }
-      return `upi://pay?pa=${cleanPa}&pn=${encodedPn}&cu=INR${tnParam}`;
+      // CRITICAL: Keep literal '@' in pa= and use encodeURIComponent (%20, never '+') per NPCI UPI Linking Spec
+      return `upi://pay?${upiData.paramStr}`;
     }
 
     /**
