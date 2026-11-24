@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="UTF-8">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
@@ -16508,7 +16508,7 @@
               DeviceInfo: loginPayloadObj.deviceInfo,
               Status: "Success",
               SessionToken: sessionToken,
-              UpdatedAt: new Date().toISOString()
+              UpdatedAt: getIstNowIsoTimestamp()
             },
             ...(loadLocalLoginHistoryMaster() || [])
           ].slice(0, 30);
@@ -16646,7 +16646,7 @@
               ManagerPermissions: roleVal === "Manager" ? managerPerms : [],
               Status: "Active",
               AccountStatus: "Active",
-              CreatedAt: new Date().toISOString(),
+              CreatedAt: getIstNowIsoTimestamp(),
               BgLogin: "",
               BgDashboard: "",
               ActiveSessionToken: ""
@@ -16709,7 +16709,7 @@
               AssignedAadhaar: normalizedUserAadhaar,
               AadhaarNumber: normalizedUserAadhaar,
               ManagerPermissions: roleVal === "Manager" ? managerPerms : [],
-              UpdatedAt: new Date().toISOString()
+              UpdatedAt: getIstNowIsoTimestamp()
             };
             if (data.newPassword !== undefined && String(data.newPassword).trim() !== "") {
               updateFields.Password = String(data.newPassword).trim();
@@ -16760,7 +16760,7 @@
                   Status: newStatus,
                   AccountStatus: newStatus,
                   ActiveSessionToken: !isActivating ? "" : (u.ActiveSessionToken || ""),
-                  UpdatedAt: new Date().toISOString()
+                  UpdatedAt: getIstNowIsoTimestamp()
                 };
                 if (isActivating) {
                   updated.LockoutStage = 0;
@@ -16821,7 +16821,7 @@
                 globalConfig = {
                   ...globalConfig,
                   maintenanceTickets: filteredTickets,
-                  updatedAt: new Date().toISOString()
+                  updatedAt: getIstNowIsoTimestamp()
                 };
                 saveLocalGlobalConfigMaster(globalConfig);
               }
@@ -16835,7 +16835,7 @@
               globalConfig = {
                 ...loadLocalGlobalConfigMaster(),
                 maintenanceTickets: delRes.maintenanceTickets,
-                updatedAt: new Date().toISOString()
+                updatedAt: getIstNowIsoTimestamp()
               };
               saveLocalGlobalConfigMaster(globalConfig);
             }
@@ -16861,7 +16861,7 @@
                 ...usersList[idx],
                 Password: newPasswordClean,
                 ActiveSessionToken: "",
-                UpdatedAt: new Date().toISOString()
+                UpdatedAt: getIstNowIsoTimestamp()
               };
             } else {
               usersList.push({
@@ -16872,7 +16872,7 @@
                 Status: "Active",
                 AccountStatus: "Active",
                 ActiveSessionToken: "",
-                UpdatedAt: new Date().toISOString()
+                UpdatedAt: getIstNowIsoTimestamp()
               });
             }
             try {
@@ -16912,7 +16912,7 @@
                 ...usersList[idx],
                 Username: newU,
                 AutoSeededDefault: false,
-                UpdatedAt: new Date().toISOString()
+                UpdatedAt: getIstNowIsoTimestamp()
               };
             } else {
               usersList.push({
@@ -16923,7 +16923,7 @@
                 Status: "Active",
                 AccountStatus: "Active",
                 AutoSeededDefault: false,
-                UpdatedAt: new Date().toISOString()
+                UpdatedAt: getIstNowIsoTimestamp()
               });
             }
             saveLocalUsersMaster(usersList);
@@ -16948,7 +16948,7 @@
                   FullName: String(data.newFullName || u.FullName || "").trim(),
                   MobileNumber: hasNewMobile ? (rawNewMobile ? cleanPhoneStr(rawNewMobile) : "") : cleanPhoneStr(u.MobileNumber || ""),
                   Email: hasNewEmail ? cleanEmail : (u.Email || ""),
-                  UpdatedAt: new Date().toISOString()
+                  UpdatedAt: getIstNowIsoTimestamp()
                 };
               }
               return u;
@@ -16965,7 +16965,7 @@
               const lowerU = rawUser.toLowerCase();
               usersList = usersList.map(function(u) {
                 if (String(u.Username || "").trim().toLowerCase() === lowerU) {
-                  return { ...u, Theme: data.theme || "dark", UpdatedAt: new Date().toISOString() };
+                  return { ...u, Theme: data.theme || "dark", UpdatedAt: getIstNowIsoTimestamp() };
                 }
                 return u;
               });
@@ -16987,7 +16987,7 @@
               bgCleared: isExplicitClear,
               bgClearedAt: isExplicitClear ? Date.now() : 0,
               customBackgrounds: [],
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
 
@@ -17020,7 +17020,7 @@
               backgroundUrl: resolvedDriveLink,
               bgCleared: false,
               customBackgrounds: [],
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             return {
@@ -17046,7 +17046,7 @@
             }
             if (action === "closeMonthlyPhotoRequest" && data.monthYear) {
               const targetMonth = normalizeMonthYear(data.monthYear);
-              const nowIso = new Date().toISOString();
+              const nowIso = getIstNowIsoTimestamp();
               Object.keys(existingReqs).forEach(function(k) {
                 const entry = existingReqs[k];
                 if (entry && normalizeMonthYear(entry.monthYear) === targetMonth) {
@@ -17065,12 +17065,12 @@
                 updatedAt: nowIso
               };
             } else if (data.requestKey && data.requestEntry && typeof data.requestEntry === "object") {
-              existingReqs[String(data.requestKey)] = { ...data.requestEntry, updatedAt: new Date().toISOString() };
+              existingReqs[String(data.requestKey)] = { ...data.requestEntry, updatedAt: getIstNowIsoTimestamp() };
             }
             globalConfig = {
               ...globalConfig,
               screenshotRequests: existingReqs,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             const reqRes = await sendGasSheetAction({ ...data, screenshotRequests: existingReqs, globalConfig: globalConfig });
@@ -17086,7 +17086,7 @@
             globalConfig = {
               ...globalConfig,
               contactConfig: contactCfg,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
@@ -17098,7 +17098,7 @@
             globalConfig = {
               ...globalConfig,
               broadcastNotices: notices,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
@@ -17110,7 +17110,7 @@
             globalConfig = {
               ...globalConfig,
               privateChats: privateChats,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
@@ -17122,7 +17122,7 @@
             globalConfig = {
               ...globalConfig,
               paymentProofs: proofs,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
@@ -17137,7 +17137,7 @@
             globalConfig = {
               ...globalConfig,
               paymentProofs: updatedProofs,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             return await sendGasSheetAction({ ...data, updatedPaymentProofs: updatedProofs, globalConfig: globalConfig });
@@ -17147,12 +17147,12 @@
             const nextLinks = {
               androidApkUrl: String(data.androidApkUrl || "").trim(),
               iosAppUrl: String(data.iosAppUrl || "").trim(),
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             globalConfig = {
               ...globalConfig,
               appDownloadLinks: nextLinks,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             return await sendGasSheetAction({ ...data, appDownloadLinks: nextLinks, globalConfig: globalConfig });
@@ -17163,7 +17163,7 @@
             globalConfig = {
               ...globalConfig,
               maintenanceTickets: tickets,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
@@ -17175,7 +17175,7 @@
             globalConfig = {
               ...globalConfig,
               auditLogs: logs,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
@@ -17188,7 +17188,7 @@
             globalConfig = {
               ...globalConfig,
               flatChecklists: checklists,
-              updatedAt: new Date().toISOString()
+              updatedAt: getIstNowIsoTimestamp()
             };
             saveLocalGlobalConfigMaster(globalConfig);
             await sendGasSheetAction({ ...data, globalConfig: globalConfig });
@@ -17899,7 +17899,7 @@
           u.AadhaarNumber = cleanAadhaar;
         }
         if (renterName) u.FullName = renterName;
-        u.UpdatedAt = new Date().toISOString();
+        u.UpdatedAt = getIstNowIsoTimestamp();
 
         const uClean = String(u.Username || "").trim().toLowerCase();
         if (uClean) {
@@ -18264,7 +18264,7 @@
           changed = true;
         }
         if (changed) {
-          u.UpdatedAt = new Date().toISOString();
+          u.UpdatedAt = getIstNowIsoTimestamp();
           updatedUsers.push(u);
           if (activeUser && String(u.Username || "").trim().toLowerCase() === String(activeUser).trim().toLowerCase()) {
             activeAssignedAadhaar = nextDigits;
@@ -18294,7 +18294,7 @@
 
       if (targetDigits.length !== 12 && prevDigits.length !== 12) return [];
 
-      const nowIso = new Date().toISOString();
+      const nowIso = getIstNowIsoTimestamp();
       const formattedAadhaar = targetDigits.length === 12 ? formatAadhaarWithHyphens(targetDigits) : "";
       const syncedStays = [];
       const syncedRenterIds = new Set();
@@ -18820,7 +18820,7 @@
         JoinDate: joinDate,
         EndDate: "",
         RentAmount: rentAmt,
-        UpdatedAt: new Date().toISOString()
+        UpdatedAt: getIstNowIsoTimestamp()
       };
 
       DB.renters.push(newActiveRenterRecord);
@@ -19083,7 +19083,7 @@
         UPIName: targetPropObj?.UPIName || targetFlatObj?.UPIName || merged.UPIName || "",
         UPIID: targetPropObj?.UPIID || targetFlatObj?.UPIID || merged.UPIID || "",
         ContractMobile: targetPropObj?.ContractNumber || targetFlatObj?.ContractMobile || merged.ContractMobile || "",
-        UpdatedAt: new Date().toISOString()
+        UpdatedAt: getIstNowIsoTimestamp()
       };
 
       DB.renters.push(shiftedRenterRecord);
@@ -19199,79 +19199,237 @@
 
     /**
      * ============================================================================
-     * STRICT MONTH NORMALIZER & FORMATTER (NO BRACKETS AROUND MONTH)
-     * Requirement 4: Removes brackets around month and formats month name cleanly
+     * STRICT IST (Asia/Kolkata, UTC+5:30) & INDIAN CALENDAR (en-IN, DD/MM/YYYY)
+     * Centralized date, time, month, and year helpers across the entire frontend.
      * ============================================================================
      */
+    var IST_TIMEZONE = "Asia/Kolkata";
+    var IST_LOCALE = "en-IN";
+
+    function getIstDateParts(inputDate) {
+      const dt = inputDate instanceof Date ? inputDate : (inputDate !== undefined && inputDate !== null && inputDate !== "" ? new Date(inputDate) : new Date());
+      if (!(dt instanceof Date) || isNaN(dt.getTime())) return null;
+      try {
+        const parts = new Intl.DateTimeFormat("en-IN", {
+          timeZone: "Asia/Kolkata",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false
+        }).formatToParts(dt);
+        const year = Number(parts.find(p => p.type === "year")?.value);
+        const month = Number(parts.find(p => p.type === "month")?.value);
+        const day = Number(parts.find(p => p.type === "day")?.value);
+        let hours = Number(parts.find(p => p.type === "hour")?.value || 0);
+        if (hours === 24) hours = 0;
+        const minutes = Number(parts.find(p => p.type === "minute")?.value || 0);
+        const seconds = Number(parts.find(p => p.type === "second")?.value || 0);
+        if (year >= 1900 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+          return {
+            year,
+            month,
+            day,
+            hours,
+            minutes,
+            seconds,
+            yyyy: String(year).padStart(4, "0"),
+            mm: String(month).padStart(2, "0"),
+            dd: String(day).padStart(2, "0"),
+            hh: String(hours).padStart(2, "0"),
+            mi: String(minutes).padStart(2, "0"),
+            ss: String(seconds).padStart(2, "0")
+          };
+        }
+      } catch (_) {}
+      // Mathematical UTC+05:30 fallback
+      const istMs = dt.getTime() + (330 * 60 * 1000);
+      const shifted = new Date(istMs);
+      const year = shifted.getUTCFullYear();
+      const month = shifted.getUTCMonth() + 1;
+      const day = shifted.getUTCDate();
+      const hours = shifted.getUTCHours();
+      const minutes = shifted.getUTCMinutes();
+      const seconds = shifted.getUTCSeconds();
+      return {
+        year,
+        month,
+        day,
+        hours,
+        minutes,
+        seconds,
+        yyyy: String(year).padStart(4, "0"),
+        mm: String(month).padStart(2, "0"),
+        dd: String(day).padStart(2, "0"),
+        hh: String(hours).padStart(2, "0"),
+        mi: String(minutes).padStart(2, "0"),
+        ss: String(seconds).padStart(2, "0")
+      };
+    }
+
+    function getIstNowIsoTimestamp(inputDate) {
+      const p = getIstDateParts(inputDate || new Date());
+      if (!p) return new Date().toISOString();
+      return `${p.yyyy}-${p.mm}-${p.dd}T${p.hh}:${p.mi}:${p.ss}+05:30`;
+    }
+
+    function getLocalTodayIsoDate(inputDate) {
+      const p = getIstDateParts(inputDate || new Date());
+      if (!p) return "";
+      return `${p.yyyy}-${p.mm}-${p.dd}`;
+    }
+
+    function getCurrentIstYear(inputDate) {
+      const p = getIstDateParts(inputDate || new Date());
+      return p ? p.year : new Date().getUTCFullYear();
+    }
+
     function normalizeMonthYear(rawVal) {
       if (!rawVal) return "";
+      if (rawVal instanceof Date) {
+        const p = getIstDateParts(rawVal);
+        return p ? `${p.yyyy}-${p.mm}` : "";
+      }
       const str = String(rawVal).replace(/^'+/, "").trim();
+      if (!str || str === "undefined" || str === "null" || str === "Invalid Date" || str === "--") return "";
       if (/^\d{4}-\d{2}$/.test(str)) return str;
+
+      // ISO 8601 timestamp with time & explicit UTC/timezone offset -> convert in IST (Asia/Kolkata)
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})$/i.test(str)) {
+        const pIso = getIstDateParts(new Date(str));
+        if (pIso && pIso.year >= 2000) return `${pIso.yyyy}-${pIso.mm}`;
+      }
+
+      // Pure YYYY-MM-DD or YYYY/MM/DD
+      const ymd = str.match(/^(\d{4})[-/](\d{1,2})(?:[-/]\d{1,2})?(?:\b|T|,|\s|$)/);
+      if (ymd) {
+        const yr = Number(ymd[1]), mo = Number(ymd[2]);
+        if (yr >= 2000 && mo >= 1 && mo <= 12) return `${String(yr).padStart(4, "0")}-${String(mo).padStart(2, "0")}`;
+      }
+
+      // DD/MM/YYYY or DD-MM-YYYY (Indian format)
+      const dmy = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:\b|,|\s|$)/);
+      if (dmy) {
+        const p1 = Number(dmy[1]), p2 = Number(dmy[2]), yr = Number(dmy[3]);
+        const mo = (p2 > 12 && p1 <= 12) ? p1 : p2;
+        if (yr >= 2000 && mo >= 1 && mo <= 12) return `${String(yr).padStart(4, "0")}-${String(mo).padStart(2, "0")}`;
+      }
+
+      // MM/YYYY or MM-YYYY
+      const my = str.match(/^(\d{1,2})[-/](\d{4})$/);
+      if (my) {
+        const mo = Number(my[1]), yr = Number(my[2]);
+        if (yr >= 2000 && mo >= 1 && mo <= 12) return `${String(yr).padStart(4, "0")}-${String(mo).padStart(2, "0")}`;
+      }
+
+      // Month Name + Year (e.g. "November 2026" or "Nov 2026")
+      const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+      const monYr = str.match(/^([A-Za-z]{3,9})[\s,-]+(\d{4})$/);
+      if (monYr) {
+        const mIdx = monthsShort.indexOf(monYr[1].slice(0, 3).toLowerCase());
+        if (mIdx !== -1) return `${monYr[2]}-${String(mIdx + 1).padStart(2, "0")}`;
+      }
 
       const parsed = new Date(str);
       if (!isNaN(parsed.getTime())) {
-        const y = parsed.getFullYear();
-        const m = String(parsed.getMonth() + 1).padStart(2, "0");
-        return `${y}-${m}`;
-      }
-
-      if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
-        return str.substring(0, 7);
+        const p = getIstDateParts(parsed);
+        if (p && p.year >= 2000) return `${p.yyyy}-${p.mm}`;
       }
       return str;
     }
 
-    
-    function getLocalTodayIsoDate() {
-      const d = new Date();
-      const yr = d.getFullYear();
-      const mo = String(d.getMonth() + 1).padStart(2, "0");
-      const da = String(d.getDate()).padStart(2, "0");
-      return `${yr}-${mo}-${da}`;
-    }
-
     /**
-     * Requirement 7 & 8: Display Date, Month, and Year ONLY in DD MMM YYYY order (strictly NO time, never year-first)
+     * Strict Indian Calendar Date Formatter: DD/MM/YYYY in IST (Asia/Kolkata, UTC+5:30)
      */
     function formatDateOnly(rawDate) {
-      if (!rawDate) return "--";
+      if (rawDate === undefined || rawDate === null || rawDate === "") return "--";
+      const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+      const formatDMY = (da, moNum, yr) => {
+        const dNum = Number(da), mNum = Number(moNum), yNum = Number(yr);
+        if (!yNum || yNum < 2000 || mNum < 1 || mNum > 12 || dNum < 1 || dNum > 31) return "";
+        return `${String(dNum).padStart(2, "0")}/${String(mNum).padStart(2, "0")}/${String(yNum).padStart(4, "0")}`;
+      };
+      const formatInstantInIST = (dt) => {
+        const p = getIstDateParts(dt);
+        if (!p || p.year < 2000) return "";
+        return formatDMY(p.day, p.month, p.year);
+      };
+
+      if (rawDate instanceof Date) {
+        return formatInstantInIST(rawDate) || "--";
+      }
+      if (typeof rawDate === "number" && Number.isFinite(rawDate) && rawDate > 1e9) {
+        const ms = rawDate < 1e12 ? rawDate * 1000 : rawDate;
+        return formatInstantInIST(new Date(ms)) || "--";
+      }
+
       const s = String(rawDate).trim().replace(/^'+/, "");
       if (!s || s === "undefined" || s === "null" || s === "Invalid Date" || s === "--") return "--";
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const formatDMY = (da, moIdx, yr) => {
-        const dNum = Number(da), mIdx = Number(moIdx), yNum = Number(yr);
-        if (!yNum || mIdx < 0 || mIdx > 11 || dNum < 1 || dNum > 31) return "";
-        return `${String(dNum).padStart(2, "0")} ${months[mIdx]} ${yNum}`;
-      };
-      // Handle YYYY-MM-DD or YYYY/MM/DD (with optional ISO/time suffix)
+
+      if (/^\d{10,13}$/.test(s)) {
+        const num = Number(s);
+        const ms = s.length <= 10 ? num * 1000 : num;
+        return formatInstantInIST(new Date(ms)) || "--";
+      }
+
+      // ISO 8601 timestamp with time & explicit UTC/timezone offset -> convert strictly in IST (Asia/Kolkata)
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})$/i.test(s)) {
+        const parsedIso = new Date(s);
+        if (!isNaN(parsedIso.getTime())) {
+          return formatInstantInIST(parsedIso) || "--";
+        }
+      }
+
+      // Pure YYYY-MM-DD or YYYY/MM/DD (calendar date without timezone offset)
       const ymdMatch = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\b|T|,|\s|$)/);
       if (ymdMatch) {
-        return formatDMY(ymdMatch[3], Number(ymdMatch[2]) - 1, ymdMatch[1]) || "--";
+        return formatDMY(ymdMatch[3], Number(ymdMatch[2]), ymdMatch[1]) || "--";
       }
-      // Handle D/M/YYYY or DD-MM-YYYY (with optional ", time" or " time")
+
+      // DD/MM/YYYY or DD-MM-YYYY (with MM/DD/YYYY auto-correction when second part > 12)
       const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:\b|,|\s|$)/);
       if (dmyMatch) {
-        return formatDMY(dmyMatch[1], Number(dmyMatch[2]) - 1, dmyMatch[3]) || "--";
+        const p1 = Number(dmyMatch[1]);
+        const p2 = Number(dmyMatch[2]);
+        const yr = Number(dmyMatch[3]);
+        if (p2 > 12 && p1 <= 12) {
+          return formatDMY(p2, p1, yr) || "--";
+        }
+        return formatDMY(p1, p2, yr) || "--";
       }
-      // Handle "16 Nov 2026, ..." or "16-Nov-2026 ..."
+
+      // Legacy "24 Nov 2026" or "24-Nov-2026"
       const dMonYMatch = s.match(/^(\d{1,2})[\s-]+([A-Za-z]{3,9})[\s-,]+(\d{4})/);
       if (dMonYMatch) {
-        const mKey = dMonYMatch[2].slice(0, 3).toLowerCase();
-        const mIdx = months.findIndex(m => m.toLowerCase() === mKey);
-        if (mIdx !== -1) return formatDMY(dMonYMatch[1], mIdx, dMonYMatch[3]) || "--";
+        const mIdx = monthsShort.indexOf(dMonYMatch[2].slice(0, 3).toLowerCase());
+        if (mIdx !== -1) return formatDMY(dMonYMatch[1], mIdx + 1, dMonYMatch[3]) || "--";
       }
-      // Handle "Nov 16, 2026 ..."
+
+      // Legacy "Nov 24, 2026"
       const monDYMatch = s.match(/^([A-Za-z]{3,9})[\s-]+(\d{1,2})[\s,]+(\d{4})/);
       if (monDYMatch) {
-        const mKey = monDYMatch[1].slice(0, 3).toLowerCase();
-        const mIdx = months.findIndex(m => m.toLowerCase() === mKey);
-        if (mIdx !== -1) return formatDMY(monDYMatch[2], mIdx, monDYMatch[3]) || "--";
+        const mIdx = monthsShort.indexOf(monDYMatch[1].slice(0, 3).toLowerCase());
+        if (mIdx !== -1) return formatDMY(monDYMatch[2], mIdx + 1, monDYMatch[3]) || "--";
       }
-      const parsed = rawDate instanceof Date ? rawDate : new Date(s);
+
+      const parsed = new Date(s);
       if (!isNaN(parsed.getTime())) {
-        return formatDMY(parsed.getDate(), parsed.getMonth(), parsed.getFullYear()) || "--";
+        return formatInstantInIST(parsed) || "--";
       }
       return "--";
+    }
+
+    function formatIstDateTime(rawDate) {
+      if (rawDate === undefined || rawDate === null || rawDate === "") return "--";
+      const dt = rawDate instanceof Date ? rawDate : new Date(rawDate);
+      if (isNaN(dt.getTime())) return formatDateOnly(rawDate);
+      const p = getIstDateParts(dt);
+      if (!p || p.year < 2000) return "--";
+      const hr12 = (p.hours % 12) || 12;
+      const ampm = p.hours >= 12 ? "PM" : "AM";
+      return `${p.dd}/${p.mm}/${p.yyyy}, ${String(hr12).padStart(2, "0")}:${p.mi} ${ampm} IST`;
     }
 
     function formatUtrDateOnly(rawDate) {
@@ -19279,9 +19437,7 @@
       return formatted === "--" ? "" : formatted;
     }
 
-    
-
-function formatMonthLabel(rawVal) {
+    function formatMonthLabel(rawVal) {
       const clean = normalizeMonthYear(rawVal);
       if (!/^\d{4}-\d{2}$/.test(clean)) return String(clean || "--").replace(/[()[\]]/g, "").trim();
       const [year, month] = clean.split("-");
@@ -19289,7 +19445,6 @@ function formatMonthLabel(rawVal) {
       const mIdx = parseInt(month, 10) - 1;
       return `${monthNames[mIdx] || month} ${year}`;
     }
-
 
     function sanitizeAllBillsMonths(billsArray) {
       return (billsArray || []).map(b => {
@@ -20537,10 +20692,10 @@ function formatMonthLabel(rawVal) {
       return String(viewerScope.prop || "").trim().toLowerCase() === target;
     }
 
-    // Requirement 1 & Bug 5 Helper: Get current active month in YYYY-MM format and compute strictly that month's standalone Advance or Due
-    function getCurrentCalendarYearMonth() {
-      const now = new Date();
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    // Requirement 1 & Bug 5 Helper: Get current active month in YYYY-MM format strictly in IST (Asia/Kolkata)
+    function getCurrentCalendarYearMonth(inputDate) {
+      const p = getIstDateParts(inputDate || new Date());
+      return p ? `${p.yyyy}-${p.mm}` : "";
     }
 
     function computeCurrentMonthStandaloneAdvanceAndDue(billObj) {
@@ -21810,7 +21965,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function changeRenterMonthlyUploadMonth(newMonthStr) {
-      const cleanMonth = normalizeMonthYear(newMonthStr) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(newMonthStr) || getCurrentCalendarYearMonth();
       window.selectedRenterMonthlyUploadMonth = cleanMonth;
       renderAllDashboardUI();
     }
@@ -22050,7 +22205,7 @@ function formatMonthLabel(rawVal) {
     }
 
     function openRenterLiveCameraCapture(categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName) {
-      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || getCurrentCalendarYearMonth();
       liveCameraContext = {
         categoryKey: String(categoryKey || "").trim().toLowerCase(),
         categoryLabel: String(categoryLabel || "Photo"),
@@ -22172,7 +22327,7 @@ function formatMonthLabel(rawVal) {
     }
 
     async function uploadRenterMonthlyPhotoDataUrl(compressedDataUrl, fileName, categoryKey, categoryLabel, monthYear, propName, flatName, renterId, aadhaarNum, renterName, explicitMimeType = "") {
-      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || getCurrentCalendarYearMonth();
       const cleanCat = String(categoryKey || "").trim().toLowerCase();
       const btnEl = document.getElementById("btnRenterMonthlyUpload_" + cleanCat);
 
@@ -22223,7 +22378,7 @@ function formatMonthLabel(rawVal) {
           renterId: renterId,
           aadhaar: normAadhaar,
           identityDocNumber: normAadhaar,
-          uploadedAt: new Date().toISOString()
+          uploadedAt: getIstNowIsoTimestamp()
         };
 
         window.__recentMonthlyPhotoUploads = window.__recentMonthlyPhotoUploads || {};
@@ -22276,7 +22431,7 @@ function formatMonthLabel(rawVal) {
                             (isSamePropAndFlat(req.propertyName, req.flatName, propName, flatName));
               if (sameR) {
                 req.status = "submitted";
-                req.submittedAt = new Date().toISOString();
+                req.submittedAt = getIstNowIsoTimestamp();
                 didUpdateRequestStatus = true;
               }
             }
@@ -22437,7 +22592,7 @@ function formatMonthLabel(rawVal) {
       if (String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Permission Denied", "Only the Admin has permission to delete uploaded photos.", false);
       }
-      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedRenterMonthlyUploadMonth) || getCurrentCalendarYearMonth();
       const cleanCat = canonicalMonthlyPhotoCategory(categoryKey);
       const normProp = String(propName || "").trim().toLowerCase();
       const normFlat = String(flatName || "").trim().toLowerCase();
@@ -22666,7 +22821,7 @@ function formatMonthLabel(rawVal) {
       const renterId = String(primaryRenter.RenterID || "").trim();
       const aadhaarNum = normalizeAadhaar12(primaryRenter.IdentityDocNumber || primaryRenter.AadhaarNumber || getNormalizedActiveRenterAadhaar());
       const renterName = String(primaryRenter.RenterName || activeUserFullName || activeUser || "Resident").trim();
-      const targetMonth = normalizeMonthYear(window.selectedRenterMonthlyUploadMonth || window.selectedRenterHomeBillMonth) || new Date().toISOString().slice(0, 7);
+      const targetMonth = normalizeMonthYear(window.selectedRenterMonthlyUploadMonth || window.selectedRenterHomeBillMonth) || getCurrentCalendarYearMonth();
       const pendingPhoto = window.pendingRenterInlinePaymentPhotoDataUrl || "";
       const pendingPhotoName = window.pendingRenterInlinePaymentPhotoName || `PaymentProof_${propName}_Flat_${flatName}_${utr}.jpg`;
 
@@ -23448,8 +23603,8 @@ function formatMonthLabel(rawVal) {
           preferredMonth ||
           (currentMonthBill && currentMonthBill.MonthYear) ||
           (latestBill && latestBill.MonthYear) ||
-          new Date().toISOString().slice(0, 7)
-        ) || new Date().toISOString().slice(0, 7);
+          getCurrentCalendarYearMonth()
+        ) || getCurrentCalendarYearMonth();
         window.selectedRenterMonthlyUploadMonth = defaultMonthlyUploadMonth;
         const activeUploadMonthLabel = formatMonthLabel(defaultMonthlyUploadMonth);
         const renterMonthReqStatus = getMatchingScreenshotRequestsForRenter(defaultMonthlyUploadMonth, targetProp, targetFlat, primaryRenter.RenterID, effectiveAadhaar);
@@ -29926,7 +30081,7 @@ function formatMonthLabel(rawVal) {
           : `Only <strong>Active Renters</strong> are shown. Select a month and send a request so renters can capture &amp; upload live camera photos. Click <strong>Close</strong> anytime to stop uploads for that month.`;
       }
 
-      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const currentMonthDefault = getCurrentCalendarYearMonth();
       const monthInput = document.getElementById("screenshotVerifyMonthInput");
       let selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
       if (monthInput && monthInput.value !== selectedMonth) {
@@ -30386,7 +30541,7 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Admin Only", "Only the Admin can send monthly photo requests.", false);
       }
       const monthInput = document.getElementById("screenshotVerifyMonthInput");
-      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const currentMonthDefault = getCurrentCalendarYearMonth();
       const selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
       if (monthInput) monthInput.value = selectedMonth;
       window.selectedAdminScreenshotVerifyMonth = selectedMonth;
@@ -30464,7 +30619,7 @@ function formatMonthLabel(rawVal) {
         renterName: targetName || "",
         targetRenters: isSingleRenter ? undefined : targetRentersSnapshot,
         requestedBy: activeUser || "Admin",
-        requestedAt: new Date().toISOString()
+        requestedAt: getIstNowIsoTimestamp()
       };
 
       DB.globalConfig.screenshotRequests[reqKey] = reqEntry;
@@ -30511,7 +30666,7 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Admin Only", "Only the Admin can close monthly photo requests.", false);
       }
       const monthInput = document.getElementById("screenshotVerifyMonthInput");
-      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const currentMonthDefault = getCurrentCalendarYearMonth();
       const selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
       if (monthInput) monthInput.value = selectedMonth;
       window.selectedAdminScreenshotVerifyMonth = selectedMonth;
@@ -30522,7 +30677,7 @@ function formatMonthLabel(rawVal) {
         DB.globalConfig.screenshotRequests = {};
       }
 
-      const closedIso = new Date().toISOString();
+      const closedIso = getIstNowIsoTimestamp();
       const closedBy = activeUser || "Admin";
       Object.keys(DB.globalConfig.screenshotRequests).forEach(k => {
         const entry = DB.globalConfig.screenshotRequests[k];
@@ -30570,7 +30725,7 @@ function formatMonthLabel(rawVal) {
         return triggerSideToast("Admin Only", "Only the Admin can close monthly photo requests.", false);
       }
       const monthInput = document.getElementById("screenshotVerifyMonthInput");
-      const currentMonthDefault = new Date().toISOString().slice(0, 7);
+      const currentMonthDefault = getCurrentCalendarYearMonth();
       const selectedMonth = normalizeMonthYear(monthInput?.value || window.selectedAdminScreenshotVerifyMonth || currentMonthDefault) || currentMonthDefault;
       if (monthInput) monthInput.value = selectedMonth;
       window.selectedAdminScreenshotVerifyMonth = selectedMonth;
@@ -30588,7 +30743,7 @@ function formatMonthLabel(rawVal) {
       const cleanRenterId = String(targetRenterId || "").trim();
       const normRenterId = cleanRenterId.toLowerCase();
       const cleanAadh = String(targetAadhaar || "").replace(/\D/g, "").slice(0, 12);
-      const closedIso = new Date().toISOString();
+      const closedIso = getIstNowIsoTimestamp();
       const closedBy = activeUser || "Admin";
       const targetDescriptor = {
         renterId: cleanRenterId,
@@ -30700,7 +30855,7 @@ function formatMonthLabel(rawVal) {
       if (String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Admin Only", "Only the Admin can send a photo re-request.", false);
       }
-      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || getCurrentCalendarYearMonth();
       const cleanCat = String(categoryKey || "").trim().toLowerCase();
       const normProp = String(propName || "").trim().toLowerCase();
       const normFlat = String(flatName || "").trim().toLowerCase();
@@ -30727,7 +30882,7 @@ function formatMonthLabel(rawVal) {
         aadhaar: normAadh,
         renterName: renterName || "",
         requestedBy: activeUser || "Admin",
-        requestedAt: new Date().toISOString()
+        requestedAt: getIstNowIsoTimestamp()
       };
 
       DB.globalConfig.screenshotRequests[reReqKey] = reReqEntry;
@@ -30764,7 +30919,7 @@ function formatMonthLabel(rawVal) {
       if (String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Admin Only", "Only the Admin can send a photo upload request.", false);
       }
-      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || getCurrentCalendarYearMonth();
       const cleanCat = canonicalMonthlyPhotoCategory(categoryKey);
       const normProp = String(propName || "").trim().toLowerCase();
       const normFlat = String(flatName || "").trim().toLowerCase();
@@ -30791,7 +30946,7 @@ function formatMonthLabel(rawVal) {
         aadhaar: normAadh,
         renterName: renterName || "",
         requestedBy: activeUser || "Admin",
-        requestedAt: new Date().toISOString()
+        requestedAt: getIstNowIsoTimestamp()
       };
 
       DB.globalConfig.screenshotRequests[slotReqKey] = slotReqEntry;
@@ -30829,7 +30984,7 @@ function formatMonthLabel(rawVal) {
       if (String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Permission Denied", "Only the Admin has permission to delete uploaded photos.", false);
       }
-      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(monthYear || window.selectedAdminScreenshotVerifyMonth) || getCurrentCalendarYearMonth();
       const monthLabel = typeof formatMonthLabel === "function" ? formatMonthLabel(cleanMonth) : cleanMonth;
       openCenteredConfirmModal(
         "Delete Uploaded Photo?",
@@ -32656,7 +32811,7 @@ function formatMonthLabel(rawVal) {
       targetRenter.ProfileImageURL = isPlaceholderImageUrl(leftProfSrc) ? (targetRenter.ProfileImageURL || "") : leftProfSrc;
       targetRenter.IdentityImageURL = isPlaceholderImageUrl(leftIdSrc) ? (targetRenter.IdentityImageURL || "") : leftIdSrc;
       targetRenter.IdentityBackImageURL = isPlaceholderImageUrl(leftIdBackSrc) ? (targetRenter.IdentityBackImageURL || "") : leftIdBackSrc;
-      targetRenter.UpdatedAt = new Date().toISOString();
+      targetRenter.UpdatedAt = getIstNowIsoTimestamp();
 
       // Synchronize updated personal/KYC details across ALL historical and active stays sharing this Aadhaar
       const syncedStays = syncRenterIdentityAcrossAllStays(
@@ -32764,39 +32919,49 @@ function formatMonthLabel(rawVal) {
     }
 
 
-    // Requirement 6 Helpers: Clean YYYY-MM-DD formatter & Local Persistence Fallback for Utility Numbers + Join/End Dates
+    // Requirement 6 Helpers: Clean YYYY-MM-DD formatter strictly in IST (Asia/Kolkata) for HTML <input type="date"> & sortable comparisons
     function toInputDateValue(rawDate) {
       if (!rawDate) return "";
+      if (rawDate instanceof Date) {
+        const p = getIstDateParts(rawDate);
+        return (p && p.year >= 2000) ? `${p.yyyy}-${p.mm}-${p.dd}` : "";
+      }
       const s = String(rawDate).trim().replace(/^'+/, "");
       if (!s || s === "Present" || s === "Departed" || s === "Active" || s === "Left" || s === "--" || s === "undefined" || s === "null" || s === "Invalid Date") return "";
-      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-      const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+        return Number(s.slice(0, 4)) >= 2000 ? s : "";
+      }
+      const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:\b|,|\s|$)/);
       if (dmyMatch) {
-        const d = dmyMatch[1].padStart(2, "0");
-        const m = dmyMatch[2].padStart(2, "0");
-        const y = dmyMatch[3];
-        return `${y}-${m}-${d}`;
-      }
-      if (s.includes("T")) {
-        const parsedT = new Date(s);
-        if (!isNaN(parsedT.getTime())) {
-          const y = parsedT.getFullYear();
-          const m = String(parsedT.getMonth() + 1).padStart(2, "0");
-          const d = String(parsedT.getDate()).padStart(2, "0");
-          const resT = y + "-" + m + "-" + d;
-          if (/^\d{4}-\d{2}-\d{2}$/.test(resT)) return resT;
+        const p1 = Number(dmyMatch[1]), p2 = Number(dmyMatch[2]), yr = Number(dmyMatch[3]);
+        if (yr < 2000) return "";
+        const dNum = (p2 > 12 && p1 <= 12) ? p2 : p1;
+        const mNum = (p2 > 12 && p1 <= 12) ? p1 : p2;
+        if (mNum >= 1 && mNum <= 12 && dNum >= 1 && dNum <= 31) {
+          return `${String(yr).padStart(4, "0")}-${String(mNum).padStart(2, "0")}-${String(dNum).padStart(2, "0")}`;
         }
-        const part = s.split("T")[0];
-        if (/^\d{4}-\d{2}-\d{2}$/.test(part)) return part;
       }
-      if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.substring(0, 10);
+      const monthsShort = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+      const dMonY = s.match(/^(\d{1,2})[\s-]+([A-Za-z]{3,9})[\s-,]+(\d{4})/);
+      if (dMonY) {
+        const mIdx = monthsShort.indexOf(dMonY[2].slice(0, 3).toLowerCase());
+        const yr = Number(dMonY[3]), da = Number(dMonY[1]);
+        if (mIdx !== -1 && yr >= 2000 && da >= 1 && da <= 31) {
+          return `${String(yr).padStart(4, "0")}-${String(mIdx + 1).padStart(2, "0")}-${String(da).padStart(2, "0")}`;
+        }
+      }
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})$/i.test(s)) {
+        const pT = getIstDateParts(new Date(s));
+        if (pT && pT.year >= 2000) return `${pT.yyyy}-${pT.mm}-${pT.dd}`;
+      }
+      if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+        const part = s.substring(0, 10);
+        return Number(part.slice(0, 4)) >= 2000 ? part : "";
+      }
       const parsed = new Date(s);
       if (!isNaN(parsed.getTime())) {
-        const y = parsed.getFullYear();
-        const m = String(parsed.getMonth() + 1).padStart(2, "0");
-        const d = String(parsed.getDate()).padStart(2, "0");
-        const res = y + "-" + m + "-" + d;
-        if (/^\d{4}-\d{2}-\d{2}$/.test(res)) return res;
+        const p = getIstDateParts(parsed);
+        if (p && p.year >= 2000) return `${p.yyyy}-${p.mm}-${p.dd}`;
       }
       return "";
     }
@@ -32969,7 +33134,7 @@ function formatMonthLabel(rawVal) {
       const pillOnText = isLightTheme ? "#0f172a" : "#ffffff";
       const pillOffBg = isLightTheme ? "#f1f5f9" : "rgba(255, 255, 255, 0.03)";
 
-      const currentYear = new Date().getFullYear();
+      const currentYear = getCurrentIstYear();
       const yearsSet = new Set([currentYear, currentYear - 1, currentYear - 2]);
       (allFlatBills || []).forEach(b => {
         const normM = normalizeMonthYear(b.MonthYear);
@@ -33154,7 +33319,7 @@ function formatMonthLabel(rawVal) {
       const chartBoxBorder = isLightTheme ? "1.5px dashed rgba(79, 70, 229, 0.35)" : "1px dashed rgba(99, 102, 241, 0.28)";
       const inactiveBtnBg = isLightTheme ? "#f1f5f9" : "rgba(255, 255, 255, 0.06)";
 
-      const currentYear = new Date().getFullYear();
+      const currentYear = getCurrentIstYear();
 
       // Dynamically extract all available years from records + currentYear & past 2 years
       const yearsSet = new Set([currentYear, currentYear - 1, currentYear - 2]);
@@ -33606,8 +33771,7 @@ function formatMonthLabel(rawVal) {
       updateFlatModalHeaderTitle(flat, renter);
       document.getElementById("modalFlatTag").innerText = `Flat ${flat.FlatName}`;
 
-      const now = new Date();
-      const currentYearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+      const currentYearMonth = getCurrentCalendarYearMonth();
       document.getElementById("calcMonthPicker").value = currentYearMonth;
 
       const resolvedContact = resolveFlatUpiAndContact(flat.PropertyName, flat, renter);
@@ -34135,8 +34299,7 @@ function formatMonthLabel(rawVal) {
         try { await window.waterProofUploadPromise; } catch (e) {}
       }
 
-      const now = new Date();
-      const fallbackMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+      const fallbackMonth = getCurrentCalendarYearMonth();
       const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker").value || fallbackMonth);
 
       const billDateInputVal = toInputDateValue(document.getElementById("calcBillDatePicker")?.value || "");
@@ -34467,7 +34630,7 @@ function formatMonthLabel(rawVal) {
     let isDueEmailAutoCheckInFlight = false;
     async function triggerDailyApproachingDueEmailCheck() {
       if (isDueEmailAutoCheckInFlight || !activeUser) return;
-      const todayKey = typeof getLocalTodayIsoDate === "function" ? getLocalTodayIsoDate() : new Date().toISOString().split("T")[0];
+      const todayKey = typeof getLocalTodayIsoDate === "function" ? getLocalTodayIsoDate() : getLocalTodayIsoDate();
       const storageKey = "portal_due_email_autocheck_ymd_v1";
       try {
         if (localStorage.getItem(storageKey) === todayKey) return;
@@ -37012,7 +37175,7 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
-      const startStr = document.getElementById("fdUsageDate")?.value || new Date().toISOString().split("T")[0];
+      const startStr = document.getElementById("fdUsageDate")?.value || getLocalTodayIsoDate();
       const matStr = document.getElementById("fdMaturityDate")?.value || "";
       let years = 1;
       if (matStr) {
@@ -37062,8 +37225,7 @@ function formatMonthLabel(rawVal) {
       const banner = document.getElementById("fdMaturityAlertBanner");
       if (!banner) return;
       const list = getStoredFdRecords();
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
+      const now = new Date(getLocalTodayIsoDate() + "T00:00:00+05:30");
       const alerts = [];
 
       list.forEach(item => {
@@ -37073,7 +37235,7 @@ function formatMonthLabel(rawVal) {
         const rawMat = item.maturity || item.MaturityDate || "";
         const cleanIso = toInputDateValue(rawMat);
         if (!cleanIso) return;
-        const matDate = new Date(cleanIso + "T00:00:00");
+        const matDate = new Date(cleanIso + "T00:00:00+05:30");
         if (isNaN(matDate.getTime())) return;
         const diffDays = Math.ceil((matDate - now) / (1000 * 60 * 60 * 24));
         if (diffDays <= 30) {
@@ -37126,10 +37288,11 @@ function formatMonthLabel(rawVal) {
       const target = list[idx];
       const oldMatAmt = Number(target.maturityAmount || target.MaturityAmount || target.amount || target.PrincipalAmount || 0);
       const rate = parseFloat(target.rate || target.InterestRate || 7) || 7;
-      const todayIso = new Date().toISOString().split("T")[0];
-      const nextYearDate = new Date();
-      nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
-      const nextMatIso = nextYearDate.toISOString().split("T")[0];
+      const istParts = getIstDateParts(new Date());
+      const todayIso = getLocalTodayIsoDate();
+      const nextYr = istParts.year + 1;
+      const maxDayNextYr = new Date(Date.UTC(nextYr, istParts.month, 0)).getUTCDate();
+      const nextMatIso = `${String(nextYr).padStart(4, "0")}-${istParts.mm}-${String(Math.min(istParts.day, maxDayNextYr)).padStart(2, "0")}`;
       const newMatAmt = Math.round(oldMatAmt * Math.pow(1 + (rate / 400), 4));
 
       const updated = {
@@ -37142,9 +37305,9 @@ function formatMonthLabel(rawVal) {
         UsageDate: todayIso,
         maturity: nextMatIso,
         MaturityDate: nextMatIso,
-        notes: ((target.notes || target.Notes || "") + " | Auto-Renewed on " + todayIso).trim(),
-        Notes: ((target.notes || target.Notes || "") + " | Auto-Renewed on " + todayIso).trim(),
-        updatedAt: new Date().toISOString()
+        notes: ((target.notes || target.Notes || "") + " | Auto-Renewed on " + formatDateOnly(todayIso)).trim(),
+        Notes: ((target.notes || target.Notes || "") + " | Auto-Renewed on " + formatDateOnly(todayIso)).trim(),
+        updatedAt: getIstNowIsoTimestamp()
       };
       list[idx] = updated;
       saveStoredFdRecords(list);
@@ -37204,7 +37367,7 @@ function formatMonthLabel(rawVal) {
         const netAfterTds = Math.round(compValue - (totalTdsAnnual * yr));
         return (
           '<tr style="border-bottom:1px solid var(--glass-border); font-size:0.76rem;">' +
-            '<td style="padding:8px 10px; font-weight:800; color:var(--text-main);">Year ' + yr + ' (' + (new Date().getFullYear() + yr) + ')</td>' +
+            '<td style="padding:8px 10px; font-weight:800; color:var(--text-main);">Year ' + yr + ' (' + (getCurrentIstYear() + yr) + ')</td>' +
             '<td style="padding:8px 10px; text-align:right; color:#0ea5e9; font-weight:700;">₹' + totalPrincipal.toLocaleString("en-IN") + '</td>' +
             '<td style="padding:8px 10px; text-align:right; color:#10b981; font-weight:800;">₹' + compValue.toLocaleString("en-IN") + ' <span style="font-size:0.66rem;">(+₹' + compGain.toLocaleString("en-IN") + ')</span></td>' +
             '<td style="padding:8px 10px; text-align:right; color:#f59e0b; font-weight:800;">₹' + Math.round(totalAnnualInterest / 12).toLocaleString("en-IN") + '/mo (₹' + payoutCum.toLocaleString("en-IN") + ')</td>' +
@@ -37326,7 +37489,7 @@ function formatMonthLabel(rawVal) {
       const rawMat = target.maturity || target.MaturityDate || "";
       const cleanMat = formatDateOnly(rawMat);
       const rawUsage = target.usageDate || target.UsageDate || target.createdAt || target.CreatedAt || "";
-      const cleanUsage = toInputDateValue(rawUsage) || new Date().toISOString().split("T")[0];
+      const cleanUsage = toInputDateValue(rawUsage) || getLocalTodayIsoDate();
 
       const pTypeEl = document.getElementById("fdPurposeType");
       if (pTypeEl) {
@@ -37409,7 +37572,7 @@ function formatMonthLabel(rawVal) {
         delete matAmtEl.dataset.userEdited;
       }
       if (matEl) matEl.value = "";
-      if (usageEl) usageEl.value = new Date().toISOString().split("T")[0];
+      if (usageEl) usageEl.value = getLocalTodayIsoDate();
       if (payoutEl) payoutEl.value = "Cumulative";
       if (f15gEl) f15gEl.value = "Not Submitted (10% TDS if >40k)";
       if (notesEl) notesEl.value = "";
@@ -37436,7 +37599,7 @@ function formatMonthLabel(rawVal) {
       const rate = document.getElementById("fdRate")?.value.trim() || "";
       const maturityAmount = parseFloat(document.getElementById("fdMaturityAmount")?.value) || (isSaving ? amount : 0);
       const maturity = document.getElementById("fdMaturityDate")?.value || "";
-      const usageDate = document.getElementById("fdUsageDate")?.value || new Date().toISOString().split("T")[0];
+      const usageDate = document.getElementById("fdUsageDate")?.value || getLocalTodayIsoDate();
       const payoutType = document.getElementById("fdPayoutType")?.value || "Cumulative";
       const form15gStatus = document.getElementById("fd15gStatus")?.value || "Not Submitted (10% TDS if >40k)";
       const notes = document.getElementById("fdNotes")?.value.trim() || "";
@@ -37455,7 +37618,7 @@ function formatMonthLabel(rawVal) {
       }
 
       const list = [...getStoredFdRecords()];
-      const nowDate = new Date().toISOString().split("T")[0];
+      const nowDate = getLocalTodayIsoDate();
       let savedRecord = null;
       const isEditing = Boolean(editingFdRecordId);
 
@@ -37493,7 +37656,7 @@ function formatMonthLabel(rawVal) {
             PayoutType: payoutType,
             form15gStatus,
             Form15GStatus: form15gStatus,
-            updatedAt: new Date().toISOString()
+            updatedAt: getIstNowIsoTimestamp()
           };
           list[idx] = savedRecord;
         }
@@ -37531,7 +37694,7 @@ function formatMonthLabel(rawVal) {
           form15gStatus,
           Form15GStatus: form15gStatus,
           createdAt: nowDate,
-          updatedAt: new Date().toISOString()
+          updatedAt: getIstNowIsoTimestamp()
         };
         list.unshift(savedRecord);
       }
@@ -37616,8 +37779,7 @@ function formatMonthLabel(rawVal) {
         return;
       }
 
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
+      const now = new Date(getLocalTodayIsoDate() + "T00:00:00+05:30");
 
       container.innerHTML = filtered.map(item => {
         const recId = item.id || item.FDID || "";
@@ -37643,7 +37805,7 @@ function formatMonthLabel(rawVal) {
         if (isSaving && rawMat) {
           const cleanIso = toInputDateValue(rawMat);
           if (cleanIso) {
-            const mDate = new Date(cleanIso + "T00:00:00");
+            const mDate = new Date(cleanIso + "T00:00:00+05:30");
             if (!isNaN(mDate.getTime())) {
               const diffDays = Math.ceil((mDate - now) / (1000 * 60 * 60 * 24));
               if (diffDays <= 30) {
@@ -37768,24 +37930,26 @@ function formatMonthLabel(rawVal) {
       } else if (pEl && !pEl.value && DB.properties && DB.properties.length > 0) {
         pEl.value = DB.properties[0].PropertyName;
       }
-      if (dEl) dEl.value = new Date().toISOString().split("T")[0];
+      if (dEl) dEl.value = getLocalTodayIsoDate();
       triggerSideToast("Recurring Template Applied", `Pre-filled "${title}" (₹${Number(defaultAmt || 0).toLocaleString('en-IN')}). Click Save to record!`, true);
     }
 
     function isDateInFinancialYear(dateOrMonthStr, fyCode) {
       if (!fyCode || fyCode === "ALL") return true;
-      const s = String(dateOrMonthStr || "").trim();
+      const s = String(dateOrMonthStr || "").trim().replace(/^'+/, "");
       if (!s) return true;
       let year = 0, month = 0;
-      const ymMatch = s.match(/^(\d{4})-(\d{2})/);
+      const normYm = normalizeMonthYear(s);
+      const ymMatch = normYm.match(/^(\d{4})-(\d{2})$/);
       if (ymMatch) {
         year = parseInt(ymMatch[1], 10);
         month = parseInt(ymMatch[2], 10);
       } else {
-        const d = new Date(s);
-        if (!isNaN(d.getTime())) {
-          year = d.getFullYear();
-          month = d.getMonth() + 1;
+        const ymd = toInputDateValue(s);
+        const dMatch = ymd.match(/^(\d{4})-(\d{2})-/);
+        if (dMatch) {
+          year = parseInt(dMatch[1], 10);
+          month = parseInt(dMatch[2], 10);
         }
       }
       if (!year || !month) return true;
@@ -38253,7 +38417,7 @@ function formatMonthLabel(rawVal) {
       if (aEl) aEl.value = "";
       if (pEl) pEl.value = (selectedKharchCalcProperty && selectedKharchCalcProperty !== "ALL") ? selectedKharchCalcProperty : "";
       if (mEl) mEl.value = "Cash";
-      if (dEl) dEl.value = new Date().toISOString().split("T")[0];
+      if (dEl) dEl.value = getLocalTodayIsoDate();
       if (nEl) nEl.value = "";
 
       const formTitle = document.getElementById("kharchFormTitle");
@@ -38285,7 +38449,7 @@ function formatMonthLabel(rawVal) {
         propSel.value = recProp;
       }
       document.getElementById("kharchPaymentMode").value = target.paymentMode || target.PaymentMode || "Cash";
-      document.getElementById("kharchExpenseDate").value = toInputDateValue(target.expenseDate || target.ExpenseDate) || new Date().toISOString().split("T")[0];
+      document.getElementById("kharchExpenseDate").value = toInputDateValue(target.expenseDate || target.ExpenseDate) || getLocalTodayIsoDate();
       document.getElementById("kharchNotes").value = target.notes || target.Notes || "";
 
       const formTitle = document.getElementById("kharchFormTitle");
@@ -38303,7 +38467,7 @@ function formatMonthLabel(rawVal) {
       const amount = parseFloat(document.getElementById("kharchAmount")?.value) || 0;
       const propertyName = (document.getElementById("kharchPropertyName")?.value || "").trim();
       const paymentMode = document.getElementById("kharchPaymentMode")?.value || "Cash";
-      const expenseDate = document.getElementById("kharchExpenseDate")?.value || new Date().toISOString().split("T")[0];
+      const expenseDate = document.getElementById("kharchExpenseDate")?.value || getLocalTodayIsoDate();
       const notes = document.getElementById("kharchNotes")?.value.trim() || "";
 
       if (!title) {
@@ -38319,7 +38483,7 @@ function formatMonthLabel(rawVal) {
       const list = [...getStoredKharchRecords()];
       const isEditing = Boolean(editingKharchRecordId);
       const recId = editingKharchRecordId || ("KHARCH-" + Date.now());
-      const nowDate = new Date().toISOString().split("T")[0];
+      const nowDate = getLocalTodayIsoDate();
 
       const recordObj = {
         id: recId,
@@ -38648,7 +38812,7 @@ function formatMonthLabel(rawVal) {
       const banner = document.getElementById("khetMalguzariAlertBanner");
       if (!banner) return;
       const list = getStoredKhetRecords();
-      const curYear = new Date().getFullYear();
+      const curYear = getCurrentIstYear();
       const overduePlots = [];
 
       list.forEach(item => {
@@ -38760,7 +38924,7 @@ function formatMonthLabel(rawVal) {
 
       const rawPayDate = target.paymentDate || target.PaymentDate || target.createdAt || target.CreatedAt || "";
       const payDateEl = document.getElementById("khetPaymentDate");
-      if (payDateEl) payDateEl.value = toInputDateValue(rawPayDate) || new Date().toISOString().split("T")[0];
+      if (payDateEl) payDateEl.value = toInputDateValue(rawPayDate) || getLocalTodayIsoDate();
       setVal("khetNotes", f.notes);
 
       runKhetLiveValuationMath(true);
@@ -38792,7 +38956,7 @@ function formatMonthLabel(rawVal) {
       const mutEl = document.getElementById("khetMutationStatus");
       if (mutEl) mutEl.value = "Completed (Mutated)";
       const payDateEl = document.getElementById("khetPaymentDate");
-      if (payDateEl) payDateEl.value = new Date().toISOString().split("T")[0];
+      if (payDateEl) payDateEl.value = getLocalTodayIsoDate();
       runKhetLiveValuationMath(true);
 
       const titleEl = document.getElementById("khetFormTitle");
@@ -38822,7 +38986,7 @@ function formatMonthLabel(rawVal) {
 
       const amountPaid = parseFloat(document.getElementById("khetAmountPaid")?.value) || 0;
       const adjustedAmount = parseFloat(document.getElementById("khetAdjustedAmount")?.value) || 0;
-      const paymentDate = document.getElementById("khetPaymentDate")?.value || new Date().toISOString().split("T")[0];
+      const paymentDate = document.getElementById("khetPaymentDate")?.value || getLocalTodayIsoDate();
       const notes = document.getElementById("khetNotes")?.value.trim() || "";
 
       const cropSeason = document.getElementById("khetCropSeason")?.value || "Kharif (Paddy / Dhan)";
@@ -38856,7 +39020,7 @@ function formatMonthLabel(rawVal) {
       const holderName = partnerName;
 
       const list = [...getStoredKhetRecords()];
-      const nowDate = new Date().toISOString().split("T")[0];
+      const nowDate = getLocalTodayIsoDate();
       let savedRecord = null;
       const isEditing = Boolean(editingKhetRecordId);
 
@@ -38931,7 +39095,7 @@ function formatMonthLabel(rawVal) {
         DocRasid: docRasid,
         docPlotMap,
         DocPlotMap: docPlotMap,
-        updatedAt: new Date().toISOString()
+        updatedAt: getIstNowIsoTimestamp()
       };
 
       if (isEditing) {
@@ -39635,7 +39799,7 @@ function formatMonthLabel(rawVal) {
       }
       if (famEl && mergedRenter.TotalFamilyMembers) famEl.value = mergedRenter.TotalFamilyMembers;
       if (statusEl) statusEl.value = "Active";
-      if (joinEl && !joinEl.value) joinEl.value = new Date().toISOString().split("T")[0];
+      if (joinEl && !joinEl.value) joinEl.value = getLocalTodayIsoDate();
 
       if (Array.isArray(mergedRenter.FamilyMembersList) && typeof renderRenterFamilyMembersRows === "function") {
         renderRenterFamilyMembersRows(mergedRenter.FamilyMembersList);
@@ -40105,7 +40269,7 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.ToiletCount = bhkDataRight.toiletCount;
           existingRenterRecord.PropertyAddress = propAddrRight;
           existingRenterRecord.PropertyLocationAddress = propAddrRight;
-          existingRenterRecord.UpdatedAt = new Date().toISOString();
+          existingRenterRecord.UpdatedAt = getIstNowIsoTimestamp();
 
           stampUnassignedFlatBillsToDepartingRenter(selectedFlat.PropertyName, selectedFlat.FlatName, existingRenterRecord);
         }
@@ -40188,7 +40352,7 @@ function formatMonthLabel(rawVal) {
           existingRenterRecord.ToiletCount = bhkDataRight.toiletCount;
           existingRenterRecord.PropertyAddress = propAddrRight;
           existingRenterRecord.PropertyLocationAddress = propAddrRight;
-          existingRenterRecord.UpdatedAt = new Date().toISOString();
+          existingRenterRecord.UpdatedAt = getIstNowIsoTimestamp();
           activeFlatRenterObj = existingRenterRecord;
         } else {
           const createdRenter = {
@@ -40229,7 +40393,7 @@ function formatMonthLabel(rawVal) {
             UPIID: payload.upiId,
             ContractMobile: payload.contractMobile,
             Status: "Active",
-            UpdatedAt: new Date().toISOString()
+            UpdatedAt: getIstNowIsoTimestamp()
           };
           DB.renters.push(createdRenter);
           activeFlatRenterObj = createdRenter;
@@ -40557,7 +40721,7 @@ function formatMonthLabel(rawVal) {
           r.KitchenCount = bhkData.kitchenCount;
           r.BathroomCount = bhkData.bathroomCount;
           r.ToiletCount = bhkData.toiletCount;
-          r.UpdatedAt = new Date().toISOString();
+          r.UpdatedAt = getIstNowIsoTimestamp();
           if (!activeFlatRenterObj || matchesId) activeFlatRenterObj = r;
         }
       });
@@ -40750,7 +40914,7 @@ function formatMonthLabel(rawVal) {
       if (altMobEl) altMobEl.value = "";
       if (addrEl) addrEl.value = "";
       if (famEl) famEl.value = "1";
-      if (joinEl) joinEl.value = new Date().toISOString().split("T")[0];
+      if (joinEl) joinEl.value = getLocalTodayIsoDate();
       if (statEl) statEl.value = "Active";
       if (profImg) profImg.src = EMPTY_PROFILE_PLACEHOLDER;
       if (idImg) idImg.src = EMPTY_IDENTITY_PLACEHOLDER;
@@ -41028,7 +41192,7 @@ function formatMonthLabel(rawVal) {
       if (altMobEl) altMobEl.value = rec.AltMobileNumber || "";
       if (addrEl) addrEl.value = rec.Address || "";
       if (famEl) famEl.value = rec.TotalFamilyMembers || 1;
-      if (joinEl) joinEl.value = new Date().toISOString().split("T")[0];
+      if (joinEl) joinEl.value = getLocalTodayIsoDate();
       if (statEl) statEl.value = "Active";
 
       addRenterModalProfUrl = (!isPlaceholderImageUrl(rec.ProfileImageURL)) ? rec.ProfileImageURL : "";
@@ -41111,7 +41275,7 @@ function formatMonthLabel(rawVal) {
           : (parseInt(consolidatedRec?.TotalFamilyMembers || "1", 10) || 1);
         const joinDate = (isExpandedVisible && document.getElementById("addRenterJoinDateInput")?.value)
           ? document.getElementById("addRenterJoinDateInput").value
-          : new Date().toISOString().split("T")[0];
+          : getLocalTodayIsoDate();
         const statusVal = "Active";
 
         const profUrl = addRenterModalProfUrl || (consolidatedRec && !isPlaceholderImageUrl(consolidatedRec.ProfileImageURL) ? consolidatedRec.ProfileImageURL : "");
@@ -41143,7 +41307,7 @@ function formatMonthLabel(rawVal) {
         (DB.renters || []).forEach(r => {
           if (isSamePropAndFlat(r.PropertyName, r.FlatName, targetProp, targetFlat) && String(r.Status || "").trim().toLowerCase() === "active") {
             r.Status = "Inactive";
-            if (!r.EndDate) r.EndDate = new Date().toISOString().split("T")[0];
+            if (!r.EndDate) r.EndDate = getLocalTodayIsoDate();
             if (typeof stampUnassignedFlatBillsToDepartingRenter === "function") {
               stampUnassignedFlatBillsToDepartingRenter(targetProp, targetFlat, r);
             }
@@ -43911,7 +44075,7 @@ function formatMonthLabel(rawVal) {
 
       const proofId = "PROOF-" + Date.now();
       let finalScreenshotUrl = attachedScreenshot;
-      const cleanMonth = normalizeMonthYear(monthYear) || new Date().toISOString().slice(0, 7);
+      const cleanMonth = normalizeMonthYear(monthYear) || getCurrentCalendarYearMonth();
       const resolvedProofAadhaar = normalizeAadhaar12(
         (typeof getNormalizedActiveRenterAadhaar === "function" ? getNormalizedActiveRenterAadhaar() : "") ||
         activeAssignedAadhaar ||
@@ -43968,7 +44132,7 @@ function formatMonthLabel(rawVal) {
         mode: mode,
         screenshotUrl: finalScreenshotUrl,
         status: "Pending",
-        submittedAt: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+        submittedAt: formatDateOnly(new Date())
       };
       list.unshift(newProof);
       saveStoredPaymentProofs(list);
@@ -44007,7 +44171,12 @@ function formatMonthLabel(rawVal) {
         const propNameDisplay = String(p.propertyName || p.PropertyName || "").trim();
         const flatNameDisplay = String(p.flatName || p.FlatName || "").trim();
         const headerDetailsDisplay = [renterNameDisplay !== "--" ? renterNameDisplay : "", propNameDisplay, flatNameDisplay ? `Flat ${flatNameDisplay}` : ""].filter(Boolean).join(", ") || "--";
-        const submittedDateDisplay = formatUtrDateOnly(p.submittedAt || p.SubmittedAt || "") || formatMonthLabel(p.monthYear || p.MonthYear);
+        const proofIdTsMatch = proofId.match(/^PROOF-(\d{12,14})$/i);
+        const submittedDateDisplay =
+          formatUtrDateOnly(p.submittedAt || p.SubmittedAt || "") ||
+          (proofIdTsMatch ? formatUtrDateOnly(Number(proofIdTsMatch[1])) : "") ||
+          formatUtrDateOnly(p.updatedAt || p.UpdatedAt || "") ||
+          formatMonthLabel(p.monthYear || p.MonthYear);
         return `
           <div class="utr-proof-row">
             <div style="min-width:0; flex:1 1 220px;">
@@ -44043,7 +44212,7 @@ function formatMonthLabel(rawVal) {
       if (!proof) return;
       proof.status = "Approved";
       proof.verifiedBy = activeUser || "Admin";
-      proof.verifiedAt = new Date().toISOString();
+      proof.verifiedAt = getIstNowIsoTimestamp();
       saveStoredPaymentProofs(list);
 
       let targetBill = (DB.bills || []).find(b =>
@@ -44054,7 +44223,7 @@ function formatMonthLabel(rawVal) {
       if (targetBill) {
         targetBill.PaidAmount = (parseFloat(targetBill.PaidAmount) || 0) + (parseFloat(proof.amount) || 0);
         targetBill.PaymentMode = proof.mode || targetBill.PaymentMode || "UPI";
-        targetBill.PaymentDate = new Date().toISOString().split("T")[0];
+        targetBill.PaymentDate = getLocalTodayIsoDate();
         const rawNetPayable = typeof getBillRawNetPayable === "function"
           ? getBillRawNetPayable(targetBill)
           : (parseFloat(targetBill.TotalBilled) || 0);
@@ -44357,9 +44526,10 @@ function formatMonthLabel(rawVal) {
       const overdueInput = document.getElementById("lateFeeOverdueDays");
       if (chosenMonth && /^\d{4}-\d{2}$/.test(chosenMonth)) {
         const [y, m] = chosenMonth.split("-").map(Number);
-        const dueDate = new Date(y, m - 1, dueDay, 23, 59, 59);
-        const payStr = document.getElementById("calcPaymentDate")?.value || new Date().toISOString().split("T")[0];
-        const refDate = new Date(payStr + "T12:00:00");
+        const dueDateIso = `${String(y).padStart(4, "0")}-${String(m).padStart(2, "0")}-${String(dueDay).padStart(2, "0")}`;
+        const dueDate = new Date(dueDateIso + "T23:59:59+05:30");
+        const payStr = toInputDateValue(document.getElementById("calcPaymentDate")?.value || "") || getLocalTodayIsoDate();
+        const refDate = new Date(payStr + "T12:00:00+05:30");
         if (refDate > dueDate) {
           overdueDays = Math.max(0, Math.floor((refDate - dueDate) / (1000 * 60 * 60 * 24)));
         }
@@ -44415,7 +44585,7 @@ function formatMonthLabel(rawVal) {
       box.style.display = box.style.display === "none" ? "block" : "none";
       const dateInput = document.getElementById("splitInstDate");
       if (dateInput && !dateInput.value) {
-        dateInput.value = new Date().toISOString().split("T")[0];
+        dateInput.value = getLocalTodayIsoDate();
       }
     }
 
@@ -44433,7 +44603,7 @@ function formatMonthLabel(rawVal) {
         const noteEl = document.getElementById("splitInstNote");
         const enteredAmt = parseFloat(amtEl?.value || "0") || 0;
         d = {
-          date: dateEl?.value || new Date().toISOString().split("T")[0],
+          date: dateEl?.value || getLocalTodayIsoDate(),
           amount: enteredAmt > 0 ? enteredAmt : "",
           mode: modeEl?.value || "UPI",
           utr: (noteEl?.value || "").trim()
@@ -44445,7 +44615,7 @@ function formatMonthLabel(rawVal) {
       row.className = "split-payment-row";
       row.style.cssText = "display:grid; grid-template-columns:1.1fr 0.9fr 0.9fr 1.1fr auto; gap:5px; align-items:center;";
       row.innerHTML = `
-        <input type="date" class="form-control split-pay-date" value="${toInputDateValue(d.date) || new Date().toISOString().split('T')[0]}" onchange="syncSplitPaymentsTotalToPaidNow()" style="padding:5px 7px; font-size:0.73rem;">
+        <input type="date" class="form-control split-pay-date" value="${toInputDateValue(d.date) || getLocalTodayIsoDate()}" onchange="syncSplitPaymentsTotalToPaidNow()" style="padding:5px 7px; font-size:0.73rem;">
         <input type="number" class="form-control split-pay-amt" placeholder="₹ Amt" value="${d.amount ?? ''}" oninput="syncSplitPaymentsTotalToPaidNow()" style="padding:5px 7px; font-size:0.73rem;">
         <select class="form-control split-pay-mode" onchange="syncSplitPaymentsTotalToPaidNow()" style="padding:5px 7px; font-size:0.73rem;">
           <option value="UPI" ${d.mode === 'UPI' ? 'selected' : ''}>UPI</option>
@@ -44573,7 +44743,7 @@ function formatMonthLabel(rawVal) {
       const { deposit, unpaidDues, damageDeduct, netRefund } = computeMoveOutSettlementPreview();
       const tenantName = document.getElementById("renterName")?.value || activeFlatRenterObj?.RenterName || "Tenant";
       const joinDate = document.getElementById("renterJoinDate")?.value || activeFlatRenterObj?.JoinDate || "--";
-      const endDate = document.getElementById("renterEndDate")?.value || new Date().toISOString().split("T")[0];
+      const endDate = document.getElementById("renterEndDate")?.value || getLocalTodayIsoDate();
 
       let overlay = document.getElementById("moveOutSettlementModalOverlay");
       if (!overlay) {
@@ -44627,12 +44797,18 @@ function formatMonthLabel(rawVal) {
       const escalatedRent = Math.round(baseRent * (1 + pct / 100));
       let nextRenewalText = "11 months from Join Date";
       if (joinStr) {
-        const jd = new Date(joinStr + "T00:00:00");
-        if (!isNaN(jd.getTime())) {
-          const renewalDate = new Date(jd);
-          renewalDate.setMonth(renewalDate.getMonth() + 11);
-          const diffDays = Math.ceil((renewalDate - new Date()) / (1000 * 60 * 60 * 24));
-          nextRenewalText = `${formatDateOnly(renewalDate)} (${diffDays >= 0 ? `in ${diffDays} days` : `${Math.abs(diffDays)} days overdue`})`;
+        const jm = joinStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (jm) {
+          const totalMonths = (Number(jm[1]) * 12 + (Number(jm[2]) - 1)) + 11;
+          const renYr = Math.floor(totalMonths / 12);
+          const renMo = (totalMonths % 12) + 1;
+          const maxRenDay = new Date(Date.UTC(renYr, renMo, 0)).getUTCDate();
+          const renDay = Math.min(Number(jm[3]), maxRenDay);
+          const renIso = `${String(renYr).padStart(4, "0")}-${String(renMo).padStart(2, "0")}-${String(renDay).padStart(2, "0")}`;
+          const renewalDate = new Date(renIso + "T00:00:00+05:30");
+          const todayIst = new Date(getLocalTodayIsoDate() + "T00:00:00+05:30");
+          const diffDays = Math.ceil((renewalDate - todayIst) / (1000 * 60 * 60 * 24));
+          nextRenewalText = `${formatDateOnly(renIso)} (${diffDays >= 0 ? `in ${diffDays} days` : `${Math.abs(diffDays)} days overdue`})`;
         }
       }
       box.innerHTML = `Current: <strong>₹${baseRent.toLocaleString("en-IN")}</strong> → After +${pct}%: <strong style="color:#10b981;">₹${escalatedRent.toLocaleString("en-IN")}/mo</strong> | Next 11-Mo Renewal: <strong>${nextRenewalText}</strong>`;
@@ -44699,7 +44875,7 @@ function formatMonthLabel(rawVal) {
         meter: document.getElementById("invMeterCondition")?.value || "",
         paint: paintEl?.value || "",
         notes: (notesEl?.value || "").trim(),
-        updatedAt: new Date().toISOString()
+        updatedAt: getIstNowIsoTimestamp()
       };
       selectedFlat.ApplianceChecklist = checklist;
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
@@ -44848,7 +45024,7 @@ function formatMonthLabel(rawVal) {
           syncUtilityProofButtonsVisibility(utilType);
           triggerSideToast("Uploading...", "Uploading...", "warning");
           if (selectedFlat) {
-            const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "") || new Date().toISOString().slice(0, 7);
+            const chosenMonth = normalizeMonthYear(document.getElementById("calcMonthPicker")?.value || "") || getCurrentCalendarYearMonth();
             // IMPORTANT: Use uploadPhotoToDriveOnly so Admin calculation photos NEVER enter Screenshot Verification
             const res = await sendFirebaseAction({
               action: "uploadPhotoToDriveOnly",
@@ -45217,8 +45393,7 @@ function formatMonthLabel(rawVal) {
     function getUnpaidBillsForBroadcastMonth() {
       const monthInput = document.getElementById("bulkBroadcastMonthInput") || document.getElementById("bulkBroadcastMonthPicker");
       if (monthInput && !monthInput.value) {
-        const now = new Date();
-        monthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+        monthInput.value = getCurrentCalendarYearMonth();
       }
       const targetMonth = normalizeMonthYear(monthInput?.value || "");
       return (DB.bills || []).filter(b => {
@@ -45439,7 +45614,7 @@ function formatMonthLabel(rawVal) {
           y += rowH;
         });
 
-        doc.save(`Admin_Audit_Trail_${new Date().toISOString().split("T")[0]}.pdf`);
+        doc.save(`Admin_Audit_Trail_${getLocalTodayIsoDate()}.pdf`);
         triggerSideToast("Audit PDF Downloaded", "Admin audit trail downloaded as PDF.", true);
       } catch (err) {
         console.error("Audit PDF error:", err);
