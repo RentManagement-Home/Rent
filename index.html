@@ -6,10 +6,11 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> KirayaHub </title>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>KirayaHub</title>
   <link rel="icon" type="image/png" href="./favicon.png">
   <meta name="description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
-  <meta property="og:title" content="Home Management Portal" />
+  <meta property="og:title" content="KirayaHub" />
   <meta property="og:description" content="Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -6056,7 +6057,7 @@
     box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05) !important;
   }
 
-  /* Module Accent Variables (Order: Create User ID -> Register User -> Background Photo -> Last Login -> Audit Trail Log -> Edit Everything -> Delete Center -> Sheet Setup -> Notifications) */
+  /* Module Accent Variables (Order: Create User ID -> Register User -> Background Photo -> Last Login -> Edit Everything -> Delete Center -> Sheet Setup -> Notifications) */
   #settingsModal .settings-nav-card.nav-create {
     --nav-accent: #10b981;
     --nav-accent-rgb: 16, 185, 129;
@@ -6076,11 +6077,6 @@
     --nav-accent: #14b8a6;
     --nav-accent-rgb: 20, 184, 166;
     --nav-icon-grad: linear-gradient(135deg, #0d9488, #2dd4bf);
-  }
-  #settingsModal .settings-nav-card.nav-audit {
-    --nav-accent: #f59e0b;
-    --nav-accent-rgb: 245, 158, 11;
-    --nav-icon-grad: linear-gradient(135deg, #d97706, #fbbf24);
   }
   #settingsModal .settings-nav-card.nav-edit {
     --nav-accent: #8b5cf6;
@@ -6225,8 +6221,7 @@
     color: #0f172a !important;
   }
   #settingsModal table,
-  #settingsModal .history-table,
-  #settingsModal .audit-log-time {
+  #settingsModal .history-table {
     font-variant-numeric: tabular-nums;
   }
 
@@ -8503,18 +8498,18 @@
     box-shadow: none !important;
   }
 
-  /* Focused 25% Transparency (75% Opacity) for #adminPaymentProofQueueList > div:nth-of-type(1) ONLY */
-  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div:nth-of-type(1) {
-    background: rgba(15, 23, 42, 0.75) !important;
-    background-color: rgba(15, 23, 42, 0.75) !important;
+  /* Focused 10% Transparency (90% Opacity) for all UTR Verification boxes inside #adminPaymentProofQueueList */
+  section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div {
+    background: rgba(15, 23, 42, 0.90) !important;
+    background-color: rgba(15, 23, 42, 0.90) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
     border-radius: 12px;
   }
-  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div:nth-of-type(1) {
-    background: rgba(255, 255, 255, 0.75) !important;
-    background-color: rgba(255, 255, 255, 0.75) !important;
+  body.theme-white section#dashboardScreen > section#adminResidentOpsHubSection > div > div#adminOpsHubBody > div#adminOpsHubPanelSlot_utr > div:first-of-type > div#adminPaymentProofQueueList > div {
+    background: rgba(255, 255, 255, 0.90) !important;
+    background-color: rgba(255, 255, 255, 0.90) !important;
     background-image: none !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
@@ -10369,7 +10364,7 @@
     background: transparent !important;
   }
 
-  /* Focused Colorful & Stylish Theme Button inside #profileModal ONLY (matched to Password box style) */
+  /* Focused Theme Button inside #profileModal ONLY: transparent by default, colorful gradient when clicked/active */
   div#profileModal .profile-action-switch > button#btnShowChangeTheme {
     position: relative;
     overflow: hidden;
@@ -10384,7 +10379,9 @@
     font-weight: 700;
     line-height: 1.2;
     border: 1px solid rgba(168, 85, 247, 0.38);
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(139, 92, 246, 0.12) 50%, rgba(236, 72, 153, 0.12) 100%);
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
     color: #c4b5fd;
     box-shadow: none;
     text-shadow: none;
@@ -10409,8 +10406,10 @@
     -webkit-text-fill-color: transparent;
     transition: transform 0.2s ease;
   }
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover {
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(139, 92, 246, 0.22) 50%, rgba(236, 72, 153, 0.2) 100%);
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover:not(.active) {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
     border-color: rgba(192, 132, 252, 0.72);
     color: #e9d5ff;
     box-shadow: 0 4px 12px rgba(168, 85, 247, 0.22);
@@ -10418,22 +10417,27 @@
   div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover > i {
     transform: scale(1.1) rotate(-8deg);
   }
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active {
-    transform: scale(0.98);
-  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active,
   div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
-    background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 52%, #ec4899 100%);
+    background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 52%, #ec4899 100%) !important;
+    background-image: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 52%, #ec4899 100%) !important;
     border-color: rgba(255, 255, 255, 0.45);
     color: #ffffff;
     box-shadow: 0 4px 14px rgba(139, 92, 246, 0.38);
   }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active {
+    transform: scale(0.98);
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active > i,
   div#profileModal .profile-action-switch > button#btnShowChangeTheme.active > i {
     background: none;
     -webkit-text-fill-color: #ffffff;
     color: #ffffff;
   }
   body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme {
-    background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 52%, #fce7f3 100%) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
     color: #6d28d9 !important;
     border-color: #a855f7 !important;
     box-shadow: none !important;
@@ -10444,17 +10448,22 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover {
-    background: linear-gradient(135deg, #bae6fd 0%, #ddd6fe 52%, #fbcfe8 100%) !important;
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover:not(.active) {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
     border-color: #7c3aed !important;
     color: #5b21b6 !important;
   }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:active,
   body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
     background: linear-gradient(135deg, #0284c7 0%, #7c3aed 52%, #db2777 100%) !important;
+    background-image: linear-gradient(135deg, #0284c7 0%, #7c3aed 52%, #db2777 100%) !important;
     border-color: #6d28d9 !important;
     color: #ffffff !important;
     box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
   }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:active > i,
   body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme.active > i {
     background: none;
     -webkit-text-fill-color: #ffffff;
@@ -10482,13 +10491,8 @@
   div#profileModal #drawerChangeTheme #themeCardBlack::before,
   div#profileModal #drawerChangeTheme #themeCardWhite::before,
   div#profileModal #drawerChangeTheme #themeCardSystem::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(125deg, rgba(255, 255, 255, 0.22) 0%, transparent 46%, transparent 100%);
-    pointer-events: none;
-    opacity: 0.7;
-    transition: opacity 0.25s ease;
+    content: none;
+    display: none;
   }
   div#profileModal #drawerChangeTheme #themeCardBlack::after,
   div#profileModal #drawerChangeTheme #themeCardWhite::after,
@@ -10544,6 +10548,7 @@
     letter-spacing: 0.015em;
     line-height: 1.15;
     display: block;
+    color: var(--text-main);
   }
   div#profileModal #drawerChangeTheme #themeCardBlack .kh-theme-mini-bar,
   div#profileModal #drawerChangeTheme #themeCardWhite .kh-theme-mini-bar,
@@ -10556,11 +10561,13 @@
     opacity: 0.9;
   }
 
-  /* 1. Black Theme Card — Light Black Charcoal */
+  /* 1. Black Theme Card — Transparent Background */
   div#profileModal #drawerChangeTheme #themeCardBlack {
-    background: linear-gradient(155deg, #2e2e33 0%, #232327 55%, #1a1a1e 100%);
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
     border: 1.5px solid rgba(96, 165, 250, 0.34);
-    box-shadow: 0 8px 18px rgba(2, 6, 23, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    box-shadow: none;
   }
   div#profileModal #drawerChangeTheme #themeCardBlack::after {
     background: #38bdf8;
@@ -10572,7 +10579,7 @@
     box-shadow: 0 6px 14px rgba(15, 23, 42, 0.65), 0 0 14px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   }
   div#profileModal #drawerChangeTheme #themeCardBlack strong {
-    color: #f8fafc;
+    color: var(--text-main);
   }
   div#profileModal #drawerChangeTheme #themeCardBlack .kh-theme-mini-bar {
     background: linear-gradient(90deg, #38bdf8, #818cf8);
@@ -10580,7 +10587,7 @@
   div#profileModal #drawerChangeTheme #themeCardBlack:hover {
     transform: translateY(-3px);
     border-color: rgba(56, 189, 248, 0.78);
-    box-shadow: 0 12px 24px rgba(2, 6, 23, 0.58), 0 0 18px rgba(56, 189, 248, 0.28);
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
   }
   div#profileModal #drawerChangeTheme #themeCardBlack:hover .kh-theme-icon-orb {
     transform: scale(1.08);
@@ -10594,12 +10601,13 @@
     box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35), 0 10px 22px rgba(56, 189, 248, 0.28);
   }
 
-  /* 2. White Theme Card — Daylight Pearl */
+  /* 2. White Theme Card — Transparent Background */
   div#profileModal #drawerChangeTheme #themeCardWhite {
-    background: radial-gradient(circle at 82% 16%, rgba(251, 191, 36, 0.28), transparent 55%),
-                linear-gradient(155deg, #ffffff 0%, #fefce8 58%, #ffedd5 100%);
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
     border: 1.5px solid rgba(245, 158, 11, 0.44);
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    box-shadow: none;
   }
   div#profileModal #drawerChangeTheme #themeCardWhite::after {
     background: #f59e0b;
@@ -10611,7 +10619,7 @@
     box-shadow: 0 6px 14px rgba(245, 158, 11, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
   div#profileModal #drawerChangeTheme #themeCardWhite strong {
-    color: #0f172a;
+    color: var(--text-main);
   }
   div#profileModal #drawerChangeTheme #themeCardWhite .kh-theme-mini-bar {
     background: linear-gradient(90deg, #f59e0b, #fb7185);
@@ -10619,7 +10627,7 @@
   div#profileModal #drawerChangeTheme #themeCardWhite:hover {
     transform: translateY(-3px);
     border-color: #f59e0b;
-    box-shadow: 0 12px 24px rgba(245, 158, 11, 0.26), 0 4px 12px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.26);
   }
   div#profileModal #drawerChangeTheme #themeCardWhite:hover .kh-theme-icon-orb {
     transform: scale(1.08);
@@ -10633,15 +10641,17 @@
     box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.38), 0 10px 22px rgba(245, 158, 11, 0.3);
   }
 
-  /* 3. System Auto Theme Card — Pure White & Black Mixed Gradient */
+  /* 3. System Auto Theme Card — Transparent Background */
   div#profileModal #drawerChangeTheme #themeCardSystem {
-    background: linear-gradient(145deg, #ffffff 0%, #e4e4e7 32%, #52525b 54%, #18181b 74%, #050507 100%);
-    border: 1.5px solid rgba(255, 255, 255, 0.42);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 1.5px solid rgba(148, 163, 184, 0.45);
+    box-shadow: none;
   }
   div#profileModal #drawerChangeTheme #themeCardSystem::after {
-    background: #ffffff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 3px rgba(0, 0, 0, 0.6);
+    background: #818cf8;
+    box-shadow: 0 0 10px rgba(129, 140, 248, 0.9);
   }
   div#profileModal #drawerChangeTheme #themeCardSystem .kh-theme-icon-orb {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(15, 23, 42, 0.72) 100%);
@@ -10649,8 +10659,7 @@
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   }
   div#profileModal #drawerChangeTheme #themeCardSystem strong {
-    color: #ffffff;
-    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.85);
+    color: var(--text-main);
   }
   div#profileModal #drawerChangeTheme #themeCardSystem .kh-theme-mini-bar {
     background: linear-gradient(90deg, #ffffff 0%, #9ca3af 50%, #111827 100%);
@@ -10658,8 +10667,8 @@
   }
   div#profileModal #drawerChangeTheme #themeCardSystem:hover {
     transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, 0.82);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.46), 0 0 14px rgba(255, 255, 255, 0.22);
+    border-color: rgba(129, 140, 248, 0.82);
+    box-shadow: 0 0 14px rgba(129, 140, 248, 0.25);
   }
   div#profileModal #drawerChangeTheme #themeCardSystem:hover .kh-theme-icon-orb {
     transform: scale(1.08);
@@ -10669,8 +10678,8 @@
     transform: rotate(18deg) scale(1.06);
   }
   div#profileModal #drawerChangeTheme #themeCardSystem.active {
-    border-color: #ffffff;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.42), 0 10px 22px rgba(0, 0, 0, 0.44);
+    border-color: #818cf8;
+    box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.42), 0 10px 22px rgba(129, 140, 248, 0.28);
   }
 
   div#profileModal #drawerChangeTheme #themeCardBlack:active,
@@ -11253,6 +11262,24 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Accessibility, Keyboard Focus Rings & Mobile Touch Ergonomics */
+  html, body {
+    overflow-x: clip;
+  }
+  :is(button, a, input, select, textarea, [role="button"], .theme-card, .settings-nav-card):focus-visible {
+    outline: 2px solid #38bdf8 !important;
+    outline-offset: 2px !important;
+  }
+  @media (pointer: coarse) {
+    .modal-close-btn,
+    .btn-ledger-action,
+    .settings-nav-card,
+    .theme-card {
+      min-height: 40px;
+      min-width: 40px;
     }
   }
 
@@ -13410,7 +13437,7 @@
             <i class="fa-solid fa-palette"></i> Select Portal Visual Theme
           </h4>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:8px;">
-            <div id="themeCardBlack" class="theme-card active" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardBlack')); selectAndSaveTheme('black')">
+            <div id="themeCardBlack" class="theme-card active" role="button" tabindex="0" aria-label="Black theme" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardBlack')); selectAndSaveTheme('black')">
               <span class="kh-theme-icon-orb" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
@@ -13428,7 +13455,7 @@
               <strong>Black</strong>
               <span class="kh-theme-mini-bar" aria-hidden="true"></span>
             </div>
-            <div id="themeCardWhite" class="theme-card" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardWhite')); selectAndSaveTheme('white')">
+            <div id="themeCardWhite" class="theme-card" role="button" tabindex="0" aria-label="White theme" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardWhite')); selectAndSaveTheme('white')">
               <span class="kh-theme-icon-orb" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
@@ -13445,7 +13472,7 @@
               <strong>White</strong>
               <span class="kh-theme-mini-bar" aria-hidden="true"></span>
             </div>
-            <div id="themeCardSystem" class="theme-card" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardSystem')); selectAndSaveTheme('system')">
+            <div id="themeCardSystem" class="theme-card" role="button" tabindex="0" aria-label="System theme" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardSystem')); selectAndSaveTheme('system')">
               <span class="kh-theme-icon-orb" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
@@ -13952,7 +13979,11 @@
               <div class="admin-only" style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                   <label style="font-size:0.74rem; font-weight:700; color:var(--text-main); margin:0; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-cloud-arrow-up" style="color:#ec4899;"></i> Upload Photo</label>
-                  <input type="file" id="bgDirectUploadFileInput" accept="image/*" class="form-control" style="padding:5px 8px; font-size:0.74rem; max-width:260px;" onchange="handleDirectBgUpload(this)">
+                  <div class="form-control" style="display:inline-flex; align-items:center; gap:8px; padding:4px 8px; font-size:0.74rem; max-width:280px; width:auto; min-width:210px;">
+                    <input type="file" id="bgDirectUploadFileInput" accept="image/*" style="display:none;" onchange="handleDirectBgUpload(this)">
+                    <label for="bgDirectUploadFileInput" style="margin:0; padding:3px 9px; border-radius:6px; background:rgba(236,72,153,0.18); border:1px solid rgba(236,72,153,0.45); color:var(--text-main); font-size:0.72rem; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0;">Choose File</label>
+                    <span id="bgDirectUploadFileNameText" style="font-size:0.72rem; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:165px;">No file chosen</span>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -13974,15 +14005,6 @@
             </div>
 
             <div class="admin-only" style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; margin-top:4px;">
-              <button
-                type="button"
-                id="btnResetDefaultBgPhoto"
-                class="btn-ledger-action admin-only"
-                style="padding:8px 16px; font-size:0.78rem; font-weight:700;"
-                onclick="resetDefaultBackgrounds()"
-              >
-                <i class="fa-solid fa-rotate-left"></i> Reset to Default Photo
-              </button>
               <button
                 type="button"
                 id="btnSaveCustomBgPhoto"
@@ -15585,7 +15607,7 @@
      * Handles ALL Collections:
      * - Properties, Flats, Renters & Docs, Bills, Farms (Khet), Fixed Deposits (FDs), Expenses (Kharch)
      * - Registered Users, Login History, Live Chat, Live Notifications, Contact Config, Themes & Backgrounds
-     * - Maintenance Tickets, Payment Proofs, Appliance Checklists, Master Meter Logs & Admin Audit Logs
+     * - Maintenance Tickets, Payment Proofs, Appliance Checklists & Master Meter Logs
      * ============================================================================
      */
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8WgnMCZPLIprncnWEXnN501O-kiAvwsAd7FV6fZhar8pDbUoq6N_jO_JcJXcnU8Gh/exec";
@@ -15749,7 +15771,6 @@
           "portal_maintenance_tickets_v1",
           "portal_payment_proofs_v1",
           "portal_utr_payment_proofs_v1",
-          "portal_admin_audit_logs_v1",
           "portal_admin_contact_cfg",
           "portal_blocked_users",
           "portal_full_db_backup",
@@ -15777,7 +15798,13 @@
     }
 
     function saveLocalUsersMaster(usersArr) {
-      const clean = Array.isArray(usersArr) ? usersArr : [];
+      const clean = (Array.isArray(usersArr) ? usersArr : []).map(function(u) {
+        if (!u || typeof u !== "object") return u;
+        const copy = Object.assign({}, u);
+        delete copy.Password;
+        delete copy.password;
+        return copy;
+      });
       if (typeof DB !== "undefined" && DB) {
         DB.users = clean;
       }
@@ -15826,6 +15853,46 @@
 
     let lastLoginCompletedAt = 0;
 
+    async function fetchWithTimeout(url, options, timeoutMs = 25000) {
+      if (typeof AbortController === "undefined") {
+        return fetch(url, options);
+      }
+      const controller = new AbortController();
+      const timerId = setTimeout(() => {
+        try { controller.abort(); } catch (e) {}
+      }, timeoutMs);
+      try {
+        return await fetch(url, { ...(options || {}), signal: controller.signal });
+      } finally {
+        clearTimeout(timerId);
+      }
+    }
+
+    function sanitizeSafeUrl(rawUrl) {
+      const s = String(rawUrl || "").trim();
+      if (!s) return "";
+      if (s.startsWith("./") || s.startsWith("/") || s.startsWith("data:image/")) return s;
+      try {
+        const parsed = new URL(s, window.location.origin);
+        if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+          return parsed.href;
+        }
+      } catch (e) {}
+      return "";
+    }
+
+    function purgeLegacyPlaintextPasswordKeys() {
+      try {
+        sessionStorage.removeItem("active_session_password");
+        const keysToDrop = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith("portal_session_pass_")) keysToDrop.push(k);
+        }
+        keysToDrop.forEach(k => localStorage.removeItem(k));
+      } catch (e) {}
+    }
+
     async function fetchGasSheetData(forceRefresh = false, bypassPendingGuard = false) {
       if (inFlightGasFetchPromise) {
         return inFlightGasFetchPromise;
@@ -15834,29 +15901,47 @@
       const fetchEpochAtStart = gasWriteEpoch;
       inFlightGasFetchPromise = (async function() {
         try {
-          const sep = GAS_WEB_APP_URL.indexOf("?") === -1 ? "?" : "&";
-          const sessionQuery = activeUser
-            ? "&username=" + encodeURIComponent(activeUser) + "&sessionToken=" + encodeURIComponent(activeSessionToken || "")
-            : "";
-          const url = GAS_WEB_APP_URL + sep + "action=getInitialData" + sessionQuery + "&t=" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
-          let response = await fetch(url, {
-            method: "GET",
-            cache: "no-store",
-            redirect: "follow"
-          });
-          if (!response.ok) {
-            response = await fetch(GAS_WEB_APP_URL, {
+          let response;
+          if (activeUser && activeSessionToken) {
+            // Send session credentials in POST body instead of URL query string
+            response = await fetchWithTimeout(GAS_WEB_APP_URL, {
               method: "POST",
               cache: "no-store",
               headers: { "Content-Type": "text/plain;charset=utf-8" },
               body: JSON.stringify({
                 action: "getInitialData",
+                authUsername: activeUser,
+                authSessionToken: activeSessionToken,
+                username: activeUser,
+                sessionToken: activeSessionToken,
+                t: Date.now()
+              }),
+              redirect: "follow"
+            }, 25000);
+          } else {
+            const sep = GAS_WEB_APP_URL.indexOf("?") === -1 ? "?" : "&";
+            const url = GAS_WEB_APP_URL + sep + "action=getInitialData&t=" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+            response = await fetchWithTimeout(url, {
+              method: "GET",
+              cache: "no-store",
+              redirect: "follow"
+            }, 20000);
+          }
+          if (!response.ok) {
+            response = await fetchWithTimeout(GAS_WEB_APP_URL, {
+              method: "POST",
+              cache: "no-store",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify({
+                action: "getInitialData",
+                authUsername: activeUser || "",
+                authSessionToken: activeSessionToken || "",
                 username: activeUser || "",
                 sessionToken: activeSessionToken || "",
                 t: Date.now()
               }),
               redirect: "follow"
-            });
+            }, 25000);
           }
           const json = await response.json();
           if (!bypassPendingGuard && (fetchEpochAtStart !== gasWriteEpoch || pendingWriteCount > 0)) {
@@ -15940,8 +16025,7 @@
                 broadcastNotices: Array.isArray(incCfg.broadcastNotices) ? incCfg.broadcastNotices : [],
                 paymentProofs: Array.isArray(incCfg.paymentProofs) ? incCfg.paymentProofs : [],
                 maintenanceTickets: Array.isArray(incCfg.maintenanceTickets) ? incCfg.maintenanceTickets : [],
-                appDownloadLinks: (incCfg.appDownloadLinks && typeof incCfg.appDownloadLinks === "object") ? incCfg.appDownloadLinks : { androidApkUrl: "", iosAppUrl: "" },
-                auditLogs: Array.isArray(incCfg.auditLogs) ? incCfg.auditLogs.slice(0, 30) : []
+                appDownloadLinks: (incCfg.appDownloadLinks && typeof incCfg.appDownloadLinks === "object") ? incCfg.appDownloadLinks : { androidApkUrl: "", iosAppUrl: "" }
               };
               saveLocalGlobalConfigMaster(mergedCfg);
             }
@@ -16004,7 +16088,7 @@
       // Replace older queued entry for the same singleton config/sync action to avoid redundant writes
       const singletonActions = new Set([
         "saveConfig", "saveContactConfig", "saveBroadcastNotices", "savePrivateChats",
-        "savePaymentProofs", "saveMaintenanceTickets", "saveAuditLogs", "saveFlatChecklist",
+        "savePaymentProofs", "saveMaintenanceTickets", "saveFlatChecklist",
         "saveAppDownloadLinks", "saveBackgrounds", "saveGlobalAppConfig", "saveTheme", "updateTheme"
       ]);
       if (singletonActions.has(act)) {
@@ -16106,29 +16190,36 @@
       gasWriteEpoch++;
       inFlightGasFetchPromise = null;
       updateLocalGasSheetCacheFromDB();
-      const bodyStr = JSON.stringify(data);
-      const actName = String(data?.action || "").trim();
+      const authenticatedPayload = Object.assign({}, data || {});
+      if (activeUser && !authenticatedPayload.authUsername) {
+        authenticatedPayload.authUsername = activeUser;
+      }
+      if (activeSessionToken && !authenticatedPayload.authSessionToken) {
+        authenticatedPayload.authSessionToken = activeSessionToken;
+      }
+      const bodyStr = JSON.stringify(authenticatedPayload);
+      const actName = String(authenticatedPayload?.action || "").trim();
       const isDrivePhotoUpload = [
         "uploadRenterMonthlyPhoto",
         "uploadRenterDocument",
         "uploadBackgroundPhoto",
         "uploadPhotoToDriveOnly"
       ].includes(actName) || (actName === "recordBill" && (
-        String(data?.meterProofBase64 || "").startsWith("data:") ||
-        String(data?.pngProofBase64 || "").startsWith("data:") ||
-        String(data?.waterProofBase64 || "").startsWith("data:")
+        String(authenticatedPayload?.meterProofBase64 || "").startsWith("data:") ||
+        String(authenticatedPayload?.pngProofBase64 || "").startsWith("data:") ||
+        String(authenticatedPayload?.waterProofBase64 || "").startsWith("data:")
       ));
       const requiresStrictJson = isDrivePhotoUpload || actName === "sendProfileEmailOtp" || actName === "verifyProfileEmailOtp" || actName === "sendForgotPasswordOtp" || actName === "verifyForgotPasswordOtp";
 
       // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
       const runSheetPost = async function() {
         try {
-          const response = await fetch(GAS_WEB_APP_URL, {
+          const response = await fetchWithTimeout(GAS_WEB_APP_URL, {
             method: "POST",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: bodyStr,
             redirect: "follow"
-          });
+          }, isDrivePhotoUpload ? 45000 : 25000);
           const rawText = await response.text();
           let result = null;
           try {
@@ -16145,6 +16236,16 @@
             }
             notifySyncStatusToast("Sheet Sync Error", `Google Sheet returned HTTP ${response.status}. Changes may not have been saved.`, true);
             return { status: "error", message: `Server returned HTTP ${response.status}.` };
+          }
+          if (result.retryable && !opts._lockRetried) {
+            await new Promise(r => setTimeout(r, 1200));
+            return await sendGasSheetAction(data, { ...opts, _lockRetried: true });
+          }
+          if (result.authError && result.sessionExpired && activeUser && activeSessionToken) {
+            setTimeout(() => {
+              if (typeof triggerSingleDeviceSessionConflict === "function") triggerSingleDeviceSessionConflict();
+            }, 0);
+            return result;
           }
           gasCacheNeedsRefresh = true;
           lastGasFetchTimestamp = Date.now();
@@ -16471,219 +16572,146 @@
         return { status: "error", message: "Username and password are required." };
       }
 
-      // STEP 1: Fetch Google Sheet data directly from Google Apps Script
-      const liveGasPromise = fetchGasSheetData(true, true);
-      const mirrorSnapshot = null;
-
-      const hasFallbackUsers =
-        (mirrorSnapshot && Array.isArray(mirrorSnapshot.users) && mirrorSnapshot.users.length > 0) ||
-        (lastGasSheetDataCache && Array.isArray(lastGasSheetDataCache.users) && lastGasSheetDataCache.users.length > 0) ||
-        (getKnownUsersList().length > 0);
-
-      let liveSheetData = null;
-      if (hasFallbackUsers) {
-        const isRecentlyVerified = lastGasSheetDataCache && (Date.now() - lastGasFetchTimestamp) < 10000 && !gasCacheNeedsRefresh;
-        const maxGasWaitMs = isRecentlyVerified ? 250 : 1800;
-        liveSheetData = await Promise.race([
-          liveGasPromise,
-          new Promise(function(resolve) {
-            setTimeout(function() {
-              resolve(mirrorSnapshot || lastGasSheetDataCache || {
-                properties: DB.properties || [],
-                flats: DB.flats || [],
-                renters: DB.renters || [],
-                bills: DB.bills || [],
-                fdRecords: DB.fdRecords || [],
-                khetRecords: DB.khetRecords || [],
-                kharchRecords: DB.kharchRecords || [],
-                users: getKnownUsersList(),
-                loginHistory: loadLocalLoginHistoryMaster(),
-                globalConfig: loadLocalGlobalConfigMaster()
-              });
-            }, maxGasWaitMs);
-          })
-        ]);
-      } else {
-        liveSheetData = await liveGasPromise;
-      }
-
-      let liveUsers = Array.isArray(liveSheetData?.users) ? liveSheetData.users : [];
-
-      // STEP 2: Verify the user exists in the live Google Sheet
-      let liveMatch = liveUsers.find(function(u) {
-        return String(u.Username || "").trim().toLowerCase() === cleanUKey;
-      });
-
-      if (!liveMatch && hasFallbackUsers) {
-        const freshGasData = await Promise.race([
-          liveGasPromise,
-          new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 6000); })
-        ]);
-        if (freshGasData && Array.isArray(freshGasData.users)) {
-          liveSheetData = freshGasData;
-          liveUsers = freshGasData.users;
-          liveMatch = liveUsers.find(function(u) {
-            return String(u.Username || "").trim().toLowerCase() === cleanUKey;
-          });
-        }
-      }
-
-      if (!liveMatch) {
-        // User does NOT exist in the live Google Sheet -> purge any stale browser cache and deny access immediately!
-        try {
-          localStorage.removeItem("portal_session_pass_" + cleanUKey);
-          localStorage.removeItem("portal_device_session_" + cleanUKey);
-        } catch (e) {}
-        return {
-          status: "error",
-          userExists: false,
-          userNotFound: true,
-          message: "This username does not exist."
-        };
-      }
-
-      // STEP 3: Check if the valid user is blocked in the live Google Sheet or Lockout Registry
-      const liveStatus = String(liveMatch.Status || liveMatch.AccountStatus || "Active").trim().toLowerCase();
-      if (liveStatus === "blocked" || liveStatus === "suspended" || liveStatus === "inactive") {
-        return {
-          status: "blocked",
-          userExists: true,
-          isPermanentlyBlocked: true,
-          message: "This user account (@" + liveMatch.Username + ") has been blocked. Login access is strictly denied."
-        };
-      }
-
-      // Also check lockout from the live Google Sheet's globalConfig.loginLockouts
-      const sheetLockouts = (liveSheetData && liveSheetData.globalConfig && liveSheetData.globalConfig.loginLockouts) || {};
-      const sheetLock = sheetLockouts[cleanUKey];
-      if (sheetLock) {
-        if (sheetLock.isPermanentlyBlocked) {
-          return {
-            status: "blocked",
-            userExists: true,
-            isPermanentlyBlocked: true,
-            message: "This user account (@" + liveMatch.Username + ") has been permanently blocked due to repeated failed login attempts."
-          };
-        }
-        if (sheetLock.lockedUntil && Number(sheetLock.lockedUntil) > Date.now()) {
-          const remMs = Number(sheetLock.lockedUntil) - Date.now();
-          return {
-            status: "locked",
-            userExists: true,
-            locked: true,
-            username: liveMatch.Username,
-            lockedUntil: Number(sheetLock.lockedUntil),
-            remainingMinutes: Math.ceil(remMs / 60000),
-            remainingSeconds: Math.ceil(remMs / 1000),
-            tier: Number(sheetLock.tier) || 1,
-            tierLabel: sheetLock.tierLabel || "1 minute",
-            message: "Username @" + liveMatch.Username + " is locked for " + (sheetLock.tierLabel || "1 minute") + "."
-          };
-        }
-      }
-
-      // STEP 4: Verify password directly against the live Google Sheet user record
-      const rawLivePass = liveMatch.Password !== undefined && liveMatch.Password !== null
-        ? liveMatch.Password
-        : (liveMatch.password !== undefined && liveMatch.password !== null ? liveMatch.password : "");
-      const livePassword = String(rawLivePass).trim();
-      if (livePassword !== cleanPass) {
-        return {
-          status: "wrong_password",
-          userExists: true,
-          username: liveMatch.Username,
-          message: "Invalid password."
-        };
-      }
-
-      // STEP 5: Password matches live Google Sheet!
-      // Immediately stamp sessionToken onto liveSheetData & cache so post-login sync never sees a stale token
-      const userDocData = Object.assign({}, liveMatch, {
-        Username: liveMatch.Username,
-        Password: cleanPass,
-        FullName: liveMatch.FullName || liveMatch.Username,
-        Role: liveMatch.Role || "Admin",
-        Status: "Active",
-        AccountStatus: "Active",
-        ActiveSessionToken: sessionToken
-      });
-
-      if (Array.isArray(liveSheetData?.users)) {
-        liveSheetData.users = liveSheetData.users.map(function(u) {
-          if (String(u.Username || "").trim().toLowerCase() === cleanUKey) {
-            return Object.assign({}, u, { ActiveSessionToken: sessionToken, Status: "Active", AccountStatus: "Active" });
-          }
-          return u;
-        });
-      }
-      if (liveSheetData?.globalConfig?.loginLockouts && liveSheetData.globalConfig.loginLockouts[cleanUKey]) {
-        delete liveSheetData.globalConfig.loginLockouts[cleanUKey];
-      }
-      if (lastGasSheetDataCache && Array.isArray(lastGasSheetDataCache.users)) {
-        lastGasSheetDataCache.users = liveSheetData.users;
-      }
-
-      try {
-        sessionStorage.setItem("active_session_password", cleanPass);
-        localStorage.setItem("portal_session_pass_" + cleanUKey, cleanPass);
-        localStorage.setItem("portal_device_session_" + cleanUKey, sessionToken);
-        localStorage.setItem(getRoleSessionStorageKey(liveMatch.Role), sessionToken);
-      } catch (e) {}
-
-      notifyCrossTabSync("session_login", { username: cleanUKey, sessionToken: sessionToken });
-
+      purgeLegacyPlaintextPasswordKeys();
       lastWriteCompletedAt = Date.now();
       lastLoginCompletedAt = Date.now();
       isLoginWriteInFlight = true;
 
-      // Record login session & reset lockout in Google Apps Script and wait up to 10s so sheet sync reflects ActiveSessionToken immediately
       const loginPayloadObj = {
         action: "loginUser",
-        username: liveMatch.Username,
+        username: cleanUser,
         password: cleanPass,
         sessionToken: sessionToken,
         deviceId: getOrCreatePortalDeviceId(),
         loginTime: formatDateOnly(new Date()),
         deviceInfo: navigator.userAgent || "Web Browser"
       };
-      const bodyStr = JSON.stringify(loginPayloadObj);
 
-      const gasLoginPromise = fetch(GAS_WEB_APP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: bodyStr,
-        redirect: "follow"
-      }).then(function(r) { return r.ok ? r.json() : null; }).then(function(gasRes) {
-        if (gasRes && Array.isArray(gasRes.loginHistory) && gasRes.loginHistory.length > 0) {
-          saveLocalLoginHistoryMaster(gasRes.loginHistory.slice(0, 30));
-        } else {
-          const fallbackHist = [
-            {
-              HistoryID: "LH-" + Date.now(),
-              Username: liveMatch.Username,
-              Role: liveMatch.Role,
-              LoginTime: loginPayloadObj.loginTime,
-              DeviceInfo: loginPayloadObj.deviceInfo,
-              Status: "Success",
-              SessionToken: sessionToken,
-              UpdatedAt: getIstNowIsoTimestamp()
-            },
-            ...(loadLocalLoginHistoryMaster() || [])
-          ].slice(0, 30);
-          saveLocalLoginHistoryMaster(fallbackHist);
+      let gasRes = null;
+      try {
+        const resp = await fetchWithTimeout(GAS_WEB_APP_URL, {
+          method: "POST",
+          cache: "no-store",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(loginPayloadObj),
+          redirect: "follow"
+        }, 25000);
+        if (resp && resp.ok) {
+          gasRes = await resp.json();
         }
-        return gasRes;
-      }).catch(function() { return null; }).finally(function() {
+      } catch (err) {
+        console.warn("Server login request failed:", err);
+      } finally {
         isLoginWriteInFlight = false;
         lastLoginCompletedAt = Date.now();
+      }
+
+      if (!gasRes || typeof gasRes !== "object") {
+        return {
+          status: "error",
+          message: "Could not reach the authentication server. Please check your internet connection and try again."
+        };
+      }
+
+      if (gasRes.status === "blocked") {
+        return {
+          status: "blocked",
+          userExists: true,
+          isPermanentlyBlocked: Boolean(gasRes.isPermanentlyBlocked),
+          permanentlyLockedByAttempts: Boolean(gasRes.permanentlyLockedByAttempts),
+          message: gasRes.message || "This user account has been blocked. Login access is strictly denied."
+        };
+      }
+
+      if (gasRes.status === "locked") {
+        return {
+          status: "locked",
+          userExists: true,
+          locked: true,
+          username: gasRes.username || cleanUser,
+          lockedUntil: Number(gasRes.lockedUntil) || 0,
+          remainingMinutes: Number(gasRes.remainingMinutes) || 1,
+          remainingSeconds: Number(gasRes.remainingSeconds) || 60,
+          tier: Number(gasRes.tier) || 1,
+          tierLabel: gasRes.tierLabel || "1 Minute",
+          message: gasRes.message || "This account is temporarily locked."
+        };
+      }
+
+      if (gasRes.status !== "success") {
+        if (gasRes.userNotFound || gasRes.userExists === false) {
+          try {
+            localStorage.removeItem("portal_device_session_" + cleanUKey);
+          } catch (e) {}
+          return {
+            status: "error",
+            userExists: false,
+            userNotFound: true,
+            message: "This username does not exist."
+          };
+        }
+        return {
+          status: "wrong_password",
+          userExists: true,
+          username: cleanUser,
+          message: gasRes.message || "Invalid password."
+        };
+      }
+
+      const confirmedSessionToken = String(gasRes.sessionToken || sessionToken).trim();
+      const matchedUserDoc = Object.assign({}, gasRes.user || {}, {
+        Username: gasRes.username || (gasRes.user && gasRes.user.Username) || cleanUser,
+        FullName: gasRes.fullName || (gasRes.user && gasRes.user.FullName) || cleanUser,
+        Email: gasRes.email || (gasRes.user && gasRes.user.Email) || "",
+        MobileNumber: gasRes.mobile || (gasRes.user && gasRes.user.MobileNumber) || "",
+        Role: gasRes.role || (gasRes.user && gasRes.user.Role) || "Viewer",
+        Status: "Active",
+        AccountStatus: "Active",
+        AssignedProperty: gasRes.assignedProperty || (gasRes.user && gasRes.user.AssignedProperty) || "",
+        AssignedFlat: gasRes.assignedFlat || (gasRes.user && gasRes.user.AssignedFlat) || "",
+        AssignedAadhaar: gasRes.assignedAadhaar || (gasRes.user && gasRes.user.AssignedAadhaar) || "",
+        ManagerPermissions: gasRes.managerPermissions || (gasRes.user && gasRes.user.ManagerPermissions) || "[]",
+        Theme: gasRes.theme || (gasRes.user && gasRes.user.Theme) || "system",
+        ActiveSessionToken: confirmedSessionToken
       });
+      delete matchedUserDoc.Password;
+      delete matchedUserDoc.password;
 
-      await Promise.race([
-        gasLoginPromise,
-        new Promise(function(resolve) { setTimeout(resolve, 10000); })
-      ]);
+      const serverDbPayload = (gasRes.dbPayload && typeof gasRes.dbPayload === "object")
+        ? gasRes.dbPayload
+        : {
+            properties: Array.isArray(gasRes.properties) ? gasRes.properties : [],
+            flats: Array.isArray(gasRes.flats) ? gasRes.flats : [],
+            renters: Array.isArray(gasRes.renters) ? gasRes.renters : [],
+            bills: Array.isArray(gasRes.bills) ? gasRes.bills : [],
+            fdRecords: Array.isArray(gasRes.fdRecords) ? gasRes.fdRecords : [],
+            khetRecords: Array.isArray(gasRes.khetRecords) ? gasRes.khetRecords : [],
+            kharchRecords: Array.isArray(gasRes.kharchRecords) ? gasRes.kharchRecords : [],
+            users: Array.isArray(gasRes.users) ? gasRes.users : [],
+            loginHistory: Array.isArray(gasRes.loginHistory) ? gasRes.loginHistory : [],
+            globalConfig: (gasRes.globalConfig && typeof gasRes.globalConfig === "object") ? gasRes.globalConfig : {}
+          };
 
-      return await buildCompleteLoginSuccessPayload(userDocData, sessionToken, liveSheetData);
+      if (Array.isArray(serverDbPayload.users) && serverDbPayload.users.length > 0) {
+        saveLocalUsersMaster(serverDbPayload.users);
+      }
+      if (Array.isArray(serverDbPayload.loginHistory) && serverDbPayload.loginHistory.length > 0) {
+        saveLocalLoginHistoryMaster(serverDbPayload.loginHistory.slice(0, 30));
+      }
+      if (serverDbPayload.globalConfig && typeof serverDbPayload.globalConfig === "object") {
+        saveLocalGlobalConfigMaster(serverDbPayload.globalConfig);
+      }
+
+      try {
+        localStorage.setItem("portal_device_session_" + matchedUserDoc.Username.toLowerCase(), confirmedSessionToken);
+        localStorage.setItem(getRoleSessionStorageKey(matchedUserDoc.Role), confirmedSessionToken);
+      } catch (e) {}
+
+      notifyCrossTabSync("session_login", { username: matchedUserDoc.Username.toLowerCase(), sessionToken: confirmedSessionToken });
+      lastGasFetchTimestamp = Date.now();
+      gasCacheNeedsRefresh = false;
+
+      return await buildCompleteLoginSuccessPayload(matchedUserDoc, confirmedSessionToken, serverDbPayload);
     }
     const firebaseLogin = portalLogin;
 
@@ -16701,8 +16729,7 @@
         mobile: localMatch?.MobileNumber || activeUserMobile || "",
         email: localMatch?.Email || localMatch?.email || activeUserEmail || "",
         role: localMatch?.Role || activeRole || "Admin",
-        theme: localMatch?.Theme || activeThemePref || "system",
-        password: localMatch?.Password || ""
+        theme: localMatch?.Theme || activeThemePref || "system"
       };
     }
 
@@ -16816,9 +16843,6 @@
             }
             usersList = Array.isArray(gasCreateRes?.users) && gasCreateRes.users.length > 0 ? gasCreateRes.users : nextUsersPreview;
             saveLocalUsersMaster(usersList);
-            if (typeof recordAdminAuditLog === "function") {
-              recordAdminAuditLog("CREATE_USER", `Created user @${uName} (${roleVal})`, activeUser || "Admin");
-            }
             return { status: "success", user: userDoc, message: "User Created Successfully" };
           }
 
@@ -16896,9 +16920,6 @@
             }
             saveLocalUsersMaster(usersList);
             const updUserRes = await sendGasSheetAction({ ...data, updatedUser: updateFields, users: usersList });
-            if (typeof recordAdminAuditLog === "function") {
-              recordAdminAuditLog("UPDATE_USER", `Updated user @${rawTarget} -> @${newUsernameClean} (${roleVal}, ${nextStatus})`, activeUser || "Admin");
-            }
             return finalizeGasSyncResponse(updUserRes, "User details updated in Google Sheet.", { newUsername: newUsernameClean });
           }
 
@@ -16997,9 +17018,6 @@
               };
               saveLocalGlobalConfigMaster(globalConfig);
             }
-            if (typeof recordAdminAuditLog === "function") {
-              recordAdminAuditLog("DELETE_USER", `Deleted user account @${rawTarget}`, activeUser || "Admin");
-            }
             return finalizeGasSyncResponse(delRes, "User account deleted from Google Sheet.");
           }
 
@@ -17009,39 +17027,28 @@
             const idx = usersList.findIndex(function(u) {
               return String(u.Username || "").trim().toLowerCase() === lowerU;
             });
-            const currentPass = idx !== -1 ? String(usersList[idx].Password || "") : "";
-            if (data.oldPassword && currentPass && String(data.oldPassword) !== currentPass) {
-              return { status: "error", message: "Current password does not match." };
-            }
             const newPasswordClean = String(data.newPassword || "").trim();
+            if (!newPasswordClean) {
+              return { status: "error", message: "New password is required." };
+            }
+            const pwdRes = await sendGasSheetAction({
+              ...data,
+              username: rawUser,
+              oldPassword: String(data.oldPassword || ""),
+              newPassword: newPasswordClean
+            });
+            if (!pwdRes || pwdRes.status !== "success") {
+              return pwdRes || { status: "error", message: "Unable to verify current password with Google Sheet." };
+            }
             if (idx !== -1) {
               usersList[idx] = {
                 ...usersList[idx],
-                Password: newPasswordClean,
                 ActiveSessionToken: "",
                 UpdatedAt: getIstNowIsoTimestamp()
               };
-            } else {
-              usersList.push({
-                Username: rawUser,
-                Password: newPasswordClean,
-                FullName: activeUserFullName || rawUser,
-                Role: activeRole || "Admin",
-                Status: "Active",
-                AccountStatus: "Active",
-                ActiveSessionToken: "",
-                UpdatedAt: getIstNowIsoTimestamp()
-              });
             }
-            try {
-              sessionStorage.removeItem("active_session_password");
-              localStorage.removeItem("portal_session_pass_" + lowerU);
-            } catch (e) {}
+            purgeLegacyPlaintextPasswordKeys();
             saveLocalUsersMaster(usersList);
-            const pwdRes = await sendGasSheetAction({ ...data, users: usersList });
-            if (typeof recordAdminAuditLog === "function") {
-              recordAdminAuditLog("CHANGE_PASSWORD", `Password changed for @${rawUser}`, activeUser || rawUser);
-            }
             return finalizeGasSyncResponse(pwdRes, "Password updated in Google Sheet. Old password is no longer valid.");
           }
 
@@ -17086,9 +17093,6 @@
             }
             saveLocalUsersMaster(usersList);
             const chgUnameRes = await sendGasSheetAction({ ...data, users: usersList });
-            if (typeof recordAdminAuditLog === "function") {
-              recordAdminAuditLog("CHANGE_USERNAME", `Username changed from @${rawOld} to @${newU}`, newU);
-            }
             return finalizeGasSyncResponse(chgUnameRes, "Username updated in Google Sheet. Old username is permanently removed.", { newUsername: newU });
           }
 
@@ -17350,18 +17354,6 @@
             return finalizeGasSyncResponse(ticketsRes, "Maintenance tickets synced to Google Sheet.");
           }
 
-          case "saveAuditLogs": {
-            const logs = (Array.isArray(data.auditLogs) ? data.auditLogs : []).slice(0, 30);
-            globalConfig = {
-              ...globalConfig,
-              auditLogs: logs,
-              updatedAt: getIstNowIsoTimestamp()
-            };
-            saveLocalGlobalConfigMaster(globalConfig);
-            const auditRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
-            return finalizeGasSyncResponse(auditRes, "Audit logs synced to Google Sheet.");
-          }
-
           case "saveFlatChecklist": {
             const key = String(data.propertyName || "").trim().toLowerCase() + "::" + String(data.flatName || "").trim().toLowerCase();
             const checklists = { ...(globalConfig.flatChecklists || {}), [key]: data.checklist || [] };
@@ -17539,27 +17531,11 @@
       return r === "viewer" || r === "renter";
     }
 
-    // Universal Google Drive Shared Link -> Direct Image Display URL Converter (Works Across All Devices)
-    function extractGoogleDriveFileId(rawUrl) {
-      if (!rawUrl) return "";
-      const str = String(rawUrl).trim();
-      if (!str || str.startsWith("data:image/")) return "";
-      const fileDMatch = str.match(/\/file\/d\/([a-zA-Z0-9_-]{10,})/);
-      const lh3Match = str.match(/googleusercontent\.com\/d\/([a-zA-Z0-9_-]{10,})/);
-      const idParamMatch = str.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
-      const dMatch = str.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
-      if (fileDMatch && fileDMatch[1]) return fileDMatch[1];
-      if (lh3Match && lh3Match[1]) return lh3Match[1];
-      if (idParamMatch && idParamMatch[1]) return idParamMatch[1];
-      if (dMatch && dMatch[1]) return dMatch[1];
-      return "";
-    }
-
+    // Google Drive URL Normalizers (reusing head extractGoogleDriveFileId & handleDriveImgFallback)
     function normalizeGoogleDriveImageUrl(rawUrl) {
       if (!rawUrl) return "";
       const str = String(rawUrl).trim();
       if (!str || str.startsWith("data:image/")) return str;
-      // Avoid converting Google Drive folder links into image links
       if (str.includes("/folders/")) return str;
       const driveId = extractGoogleDriveFileId(str);
       if (driveId) {
@@ -17579,35 +17555,6 @@
         return "https://lh3.googleusercontent.com/d/" + driveId + "=s0";
       }
       return str;
-    }
-
-    function handleDriveImgFallback(imgEl) {
-      if (!imgEl) return;
-      const src = imgEl.getAttribute("src") || "";
-      const driveId = extractGoogleDriveFileId(src);
-      if (!driveId) {
-        imgEl.onerror = null;
-        return;
-      }
-      const fallbacks = [
-        "https://drive.google.com/thumbnail?id=" + driveId + "&sz=w1600",
-        "https://drive.google.com/uc?export=view&id=" + driveId,
-        "https://lh3.googleusercontent.com/d/" + driveId + "=w1200"
-      ];
-      const idx = parseInt(imgEl.dataset.driveFallbackIdx || "0", 10);
-      if (idx < fallbacks.length) {
-        imgEl.dataset.driveFallbackIdx = String(idx + 1);
-        if (imgEl.src !== fallbacks[idx]) {
-          imgEl.src = fallbacks[idx];
-        } else if (idx + 1 < fallbacks.length) {
-          imgEl.dataset.driveFallbackIdx = String(idx + 2);
-          imgEl.src = fallbacks[idx + 1];
-        } else {
-          imgEl.onerror = null;
-        }
-      } else {
-        imgEl.onerror = null;
-      }
     }
 
     // Ultra-High-Definition (4K / Full HD 3840px @ 0.98 quality) reader for background photos — crystal clear HD
@@ -17670,13 +17617,14 @@
       const isAdminUser = String(activeRole || "").trim().toLowerCase() === "admin";
 
       const deleteBtn = document.getElementById("btnDeleteCustomBgPhoto");
-      const resetBtn = document.getElementById("btnResetDefaultBgPhoto");
       const saveBtn = document.getElementById("btnSaveCustomBgPhoto");
-      if (deleteBtn) deleteBtn.style.display = isAdminUser ? "inline-flex" : "none";
-      if (resetBtn) resetBtn.style.display = isAdminUser ? "inline-flex" : "none";
-      if (saveBtn) saveBtn.style.display = isAdminUser ? "inline-flex" : "none";
-
       const hasCustom = Boolean(dashBg && dashBg.trim() && dashBg.trim() !== DEFAULT_PORTAL_BACKGROUND_IMAGE);
+      if (deleteBtn) {
+        deleteBtn.style.display = isAdminUser ? "inline-flex" : "none";
+        deleteBtn.style.opacity = hasCustom ? "1" : "0.55";
+        deleteBtn.title = hasCustom ? "Delete uploaded custom background photo" : "No custom background photo uploaded";
+      }
+      if (saveBtn) saveBtn.style.display = isAdminUser ? "inline-flex" : "none";
       if (inputLogin) {
         inputLogin.value = (loginBg && !loginBg.startsWith("data:image/") && loginBg !== DEFAULT_PORTAL_BACKGROUND_IMAGE)
           ? loginBg
@@ -17689,6 +17637,23 @@
           ? normalizeGoogleDriveBgUrl(dashBg.trim())
           : DEFAULT_PORTAL_BACKGROUND_IMAGE;
         previewWrap.style.display = "block";
+      }
+
+      const fileNameLabel = document.getElementById("bgDirectUploadFileNameText");
+      if (fileNameLabel) {
+        if (hasCustom) {
+          let savedName = "";
+          try { savedName = localStorage.getItem("portal_custom_bg_filename") || ""; } catch (e) {}
+          fileNameLabel.textContent = savedName || "Photo Uploaded";
+          fileNameLabel.title = savedName || "Custom background photo uploaded";
+          fileNameLabel.style.color = "#10b981";
+          fileNameLabel.style.fontWeight = "700";
+        } else {
+          fileNameLabel.textContent = "No file chosen";
+          fileNameLabel.title = "No file chosen";
+          fileNameLabel.style.color = "var(--text-muted)";
+          fileNameLabel.style.fontWeight = "500";
+        }
       }
     }
 
@@ -17744,6 +17709,7 @@
         localStorage.removeItem("portal_custom_bg_login");
         localStorage.removeItem("portal_custom_bg_hd_cache");
         localStorage.removeItem("portal_custom_bg_sheet_safe");
+        localStorage.removeItem("portal_custom_bg_filename");
         if (hadCustom) {
           applyCustomBackgrounds();
           initCustomBgInputs();
@@ -17814,9 +17780,9 @@
       applyCustomBackgrounds();
       initCustomBgInputs();
       triggerSideToast(
-        globalVal ? "Global Background Saved" : "Default Placeholder Photo Restored",
+        globalVal ? "Background Saved" : "Default Placeholder Photo Restored",
         globalVal
-          ? "Background photo synced to Google Sheets & applied across all screens!"
+          ? "Background photo applied across all screens!"
           : "Custom background deleted by Admin — default placeholder photo restored across all locations.",
         true
       );
@@ -17843,10 +17809,19 @@
       if (String(activeRole || "").trim().toLowerCase() !== "admin") {
         return triggerSideToast("Admin Permission Required", "Only an Admin can delete the background photo.", false);
       }
+      const { loginBg, dashBg } = getCustomBackgrounds();
+      const hasCustom = Boolean(
+        (dashBg && dashBg.trim() && dashBg.trim() !== DEFAULT_PORTAL_BACKGROUND_IMAGE) ||
+        (loginBg && loginBg.trim() && loginBg.trim() !== DEFAULT_PORTAL_BACKGROUND_IMAGE)
+      );
+      if (!hasCustom) {
+        return triggerSideToast("No Photo Uploaded", "No custom background photo is currently uploaded to delete.", "warning");
+      }
       localStorage.removeItem("portal_custom_bg_login");
       localStorage.removeItem("portal_custom_bg_dashboard");
       localStorage.removeItem("portal_custom_bg_hd_cache");
       localStorage.removeItem("portal_custom_bg_sheet_safe");
+      localStorage.removeItem("portal_custom_bg_filename");
       const input = document.getElementById("bgUrlLoginScreen");
       if (input) input.value = "";
       applyCustomBackgrounds();
@@ -17861,7 +17836,13 @@
       const file = inputEl.files && inputEl.files[0];
       if (!file) return;
       const saveBtn = document.getElementById("btnSaveCustomBgPhoto");
+      const fileNameLabel = document.getElementById("bgDirectUploadFileNameText");
       if (saveBtn) saveBtn.disabled = true;
+      if (fileNameLabel) {
+        fileNameLabel.textContent = "Uploading " + file.name + "...";
+        fileNameLabel.title = file.name;
+        fileNameLabel.style.color = "#f59e0b";
+      }
       triggerSideToast("Uploading...", "Uploading...", "warning");
       try {
         const hdDataUrl = await readHdBackgroundFileToDataUrl(file, 1600, 0.85);
@@ -17887,6 +17868,7 @@
           localStorage.removeItem("portal_custom_bg_sheet_safe");
           localStorage.setItem("portal_custom_bg_dashboard", driveBgUrl);
           localStorage.setItem("portal_custom_bg_login", driveBgUrl);
+          localStorage.setItem("portal_custom_bg_filename", file.name);
         } catch (e) {}
         if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
         DB.globalConfig.bgLoginUrl = driveBgUrl;
@@ -17899,15 +17881,12 @@
         if (el) el.value = driveBgUrl;
         triggerSideToast("Upload successfully", "Upload successfully", true);
       } catch (err) {
+        initCustomBgInputs();
         triggerSideToast("Upload Failed", err?.message || "Could not upload photo.", false);
       } finally {
         if (saveBtn) saveBtn.disabled = false;
         if (inputEl) inputEl.value = "";
       }
-    }
-
-    function resetDefaultBackgrounds() {
-      deleteCustomBgImage();
     }
 
     
@@ -18006,13 +17985,6 @@
             block: true,
             movedOutAutoBlocked: true
           }).catch(() => {});
-          if (typeof recordAdminAuditLog === "function") {
-            recordAdminAuditLog(
-              "AUTO_BLOCK_MOVEOUT",
-              `@${u.Username}`,
-              `Renter ${renterName || u.FullName || u.Username} moved out (${propertyName || ""} Flat ${flatName || ""}) — account automatically blocked. Only Admin can unblock.`
-            );
-          }
         });
       }
     }
@@ -18103,13 +18075,6 @@
               assignedAadhaar: cleanAadhaar || u.AssignedAadhaar || ""
             }).catch(() => {});
           }
-          if (typeof recordAdminAuditLog === "function") {
-            recordAdminAuditLog(
-              "AUTO_UNBLOCK_REACTIVATE",
-              `@${u.Username}`,
-              `Renter ${renterName || u.FullName || u.Username} became Active (${propertyName || ""} Flat ${flatName || ""}) — account automatically unblocked.`
-            );
-          }
         });
       }
       return unblockedUsers;
@@ -18175,14 +18140,6 @@
             }
           }
           localStorage.setItem("portal_blocked_users", JSON.stringify(blockedList));
-
-          if (typeof recordAdminAuditLog === "function") {
-            recordAdminAuditLog(
-              isBlocking ? "USER_BLOCKED" : "USER_UNBLOCKED",
-              `@${targetUsername}`,
-              `Account status set to ${newStatus} by @${activeUser || "admin"}`
-            );
-          }
 
           saveDbSnapshotToCache();
           renderRegisteredUsersList();
@@ -20203,11 +20160,14 @@
             e.preventDefault();
           }
         }
-      });
-
-      document.addEventListener("visibilitychange", () => {
-        if (!document.hidden && activeUser) {
-          syncDataLive(false);
+        if (e.key === "Escape") {
+          const blockingIds = new Set(["accountBlockedModal", "sessionConflictModal"]);
+          const activeModals = Array.from(document.querySelectorAll(".modal-overlay.active")).filter(m => !blockingIds.has(m.id));
+          if (activeModals.length > 0) {
+            const topModal = activeModals[activeModals.length - 1];
+            if (typeof closeModal === "function") closeModal(topModal);
+            else topModal.classList.remove("active");
+          }
         }
       });
 
@@ -20219,6 +20179,7 @@
       applyVisualTheme(savedTheme);
 
       // Purge legacy local DB & credential caches so Google Sheets is always the single source of truth for data
+      purgeLegacyPlaintextPasswordKeys();
       try {
         localStorage.removeItem("portal_full_db_backup");
         localStorage.removeItem("portal_verified_auth_map");
@@ -20407,8 +20368,8 @@
         if (prevUser) {
           const cleanPrev = String(prevUser).trim().toLowerCase();
           localStorage.removeItem("portal_device_session_" + cleanPrev);
-          localStorage.removeItem("portal_session_pass_" + cleanPrev);
         }
+        purgeLegacyPlaintextPasswordKeys();
       } catch (e) {}
 
       if (syncTimer) {
@@ -22223,7 +22184,7 @@
         .replace(/\s+/g, "")
         .replace(/[^a-zA-Z0-9._@-]/g, "")
         .trim();
-      if (!cleanPa || !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/.test(cleanPa)) {
+      if (!cleanPa || !/^[a-zA-Z0-9._-]{2,64}@[a-zA-Z0-9.-]{2,32}$/.test(cleanPa)) {
         return { valid: false, pa: "", pn: "", am: "", tn: "", tr: "", paramStr: "" };
       }
 
@@ -22234,7 +22195,7 @@
         : "";
       const cleanPn = (sanitizedName || String(defaultPayeeName || "Rent Payment").replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, " ").trim() || "Rent Payment").slice(0, 50).trim();
 
-      // 3. Parse amount strictly as positive number formatted to 2 decimal places (e.g., 100.00)
+      // 3. Parse amount strictly as positive number rounded to 2 decimal places (e.g., 100.00)
       let numericAmt = 0;
       if (rawAmount !== undefined && rawAmount !== null && rawAmount !== "") {
         const cleanedAmtStr = String(rawAmount).replace(/[^0-9.]/g, "");
@@ -22244,9 +22205,10 @@
           : cleanedAmtStr.slice(0, firstDotIdx + 1) + cleanedAmtStr.slice(firstDotIdx + 1).replace(/\./g, "");
         const parsed = parseFloat(normalizedAmtStr);
         if (Number.isFinite(parsed) && parsed > 0) {
-          numericAmt = parsed;
+          numericAmt = Math.round(parsed * 100) / 100;
         }
       }
+      const exceedsUpiCap = numericAmt > 100000;
       const formattedAm = numericAmt > 0 ? numericAmt.toFixed(2) : "";
 
       // 4. Remove all special characters from transaction note (tn) and guarantee a clean non-empty note
@@ -22278,6 +22240,7 @@
         pn: cleanPn,
         am: formattedAm,
         numericAmt,
+        exceedsUpiCap,
         tn: cleanTn,
         tr: dynamicTr,
         paramStr: parts.join("&")
@@ -25799,14 +25762,19 @@
       } catch (e) {}
 
       if (syncTimer) clearInterval(syncTimer);
-      // Poll every 10 seconds to keep live sync & session conflict checks responsive without main-thread stutter
+      // Adaptive 15s background polling that pauses when hidden or offline
       syncTimer = setInterval(() => {
-        if (!document.hidden && typeof syncDataLive === "function") syncDataLive(false);
-      }, 10000);
+        if (!document.hidden && navigator.onLine !== false && pendingWriteCount === 0 && typeof syncDataLive === "function") {
+          syncDataLive(false);
+        }
+      }, 15000);
       if (!window.__visibilitySyncListenerBound) {
         window.__visibilitySyncListenerBound = true;
+        let lastVisibilitySyncAt = 0;
         document.addEventListener("visibilitychange", () => {
-          if (!document.hidden && activeUser && typeof syncDataLive === "function") {
+          const now = Date.now();
+          if (!document.hidden && activeUser && navigator.onLine !== false && (now - lastVisibilitySyncAt > 5000) && typeof syncDataLive === "function") {
+            lastVisibilitySyncAt = now;
             syncDataLive(false);
           }
         });
@@ -26092,8 +26060,7 @@
           maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
           appDownloadLinks: (res.globalConfig.appDownloadLinks && typeof res.globalConfig.appDownloadLinks === "object")
             ? res.globalConfig.appDownloadLinks
-            : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" }),
-          auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
+            : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" })
         };
         try {
           if (typeof initAdminContactSettingsInputs === "function") initAdminContactSettingsInputs();
@@ -26618,8 +26585,8 @@
         localStorage.removeItem("active_session_token");
         if (prevUserKey) {
           localStorage.removeItem("portal_device_session_" + prevUserKey);
-          localStorage.removeItem("portal_session_pass_" + prevUserKey);
         }
+        purgeLegacyPlaintextPasswordKeys();
       } catch (scrubErr) {}
 
       try {
@@ -26885,15 +26852,6 @@
             return;
           }
 
-          const savedSessionPass = sessionStorage.getItem("active_session_password") || localStorage.getItem("portal_session_pass_" + String(activeUser || "").trim().toLowerCase()) || "";
-          if (isVerifiedSheetUsers && matchedServerUser && savedSessionPass && String(matchedServerUser.Password || "").trim() && String(matchedServerUser.Password || "").trim() !== savedSessionPass) {
-            performConfirmedLogout();
-            setTimeout(() => {
-              triggerSideToast("Password Changed", "Your account password was changed. Please log in with your new password.", false);
-            }, 120);
-            return;
-          }
-
           const incomingProperties = Array.isArray(res.properties) ? res.properties : [];
           const incomingFlats = Array.isArray(res.flats) ? res.flats : [];
           const prevRentersSnapshot = Array.isArray(DB.renters) ? DB.renters : [];
@@ -27069,8 +27027,7 @@
                 maintenanceTickets: Array.isArray(res.globalConfig.maintenanceTickets) ? res.globalConfig.maintenanceTickets : [],
                 appDownloadLinks: (res.globalConfig.appDownloadLinks && typeof res.globalConfig.appDownloadLinks === "object")
                   ? res.globalConfig.appDownloadLinks
-                  : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" }),
-                auditLogs: Array.isArray(res.globalConfig.auditLogs) ? res.globalConfig.auditLogs.slice(0, 30) : []
+                  : (DB.globalConfig.appDownloadLinks || { androidApkUrl: "", iosAppUrl: "" })
               };
               if (typeof initAdminAppDownloadLinksForm === "function" && document.body.classList.contains("admin-ops-hub-open") && window.activeAdminOpsHubTab === "applinks") {
                 initAdminAppDownloadLinksForm();
@@ -28177,8 +28134,8 @@
       const eyeIcon = document.getElementById("profPassEyeIcon");
       passInput.type = "password";
       if (eyeIcon) eyeIcon.className = "fa-solid fa-eye";
-      passInput.value = (matchedLocalUser && matchedLocalUser.Password) ? String(matchedLocalUser.Password) : "";
-      passInput.placeholder = passInput.value ? "" : "Fetching live from Google Sheets...";
+      passInput.value = "";
+      passInput.placeholder = "Protected (hashed on server)";
 
       document.getElementById("passChangeBottomMsg").className = "bottom-status-msg";
       document.getElementById("userChangeBottomMsg").className = "bottom-status-msg";
@@ -28247,14 +28204,12 @@
           if (modalEmailIn && !modalEmailIn.value.trim() && activeUserEmail) {
             modalEmailIn.value = activeUserEmail;
           }
-          passInput.value = res.password || (matchedLocalUser && matchedLocalUser.Password) || "";
-          passInput.placeholder = passInput.value ? "" : "Password not set";
+          passInput.value = "";
+          passInput.placeholder = "Protected (hashed on server)";
         }
       } catch (e) {
-        if (!passInput.value && matchedLocalUser && matchedLocalUser.Password) {
-          passInput.value = String(matchedLocalUser.Password);
-        }
-        passInput.placeholder = "Unable to load password offline";
+        passInput.value = "";
+        passInput.placeholder = "Protected (hashed on server)";
       }
     }
     function toggleProfileDrawer(drawerId, btnId) {
@@ -28793,13 +28748,11 @@
       });
 
       if (res && res.status === "success") {
-        (DB.users || []).forEach(u => {
-          if (String(u.Username || "").trim().toLowerCase() === String(activeUser || "").trim().toLowerCase()) {
-            u.Password = newP;
-          }
-        });
         const passInput = document.getElementById("profViewPassword");
-        if (passInput) passInput.value = newP;
+        if (passInput) {
+          passInput.value = "";
+          passInput.placeholder = "Protected (hashed on server)";
+        }
         msgBox.innerText = "Password updated successfully! Logging out for security...";
         msgBox.className = "bottom-status-msg success";
         triggerSideToast("Password Updated", "Logging out for security...", true);
@@ -29411,19 +29364,27 @@
       const bill = (DB.bills || []).find(b => String(b.BillID || "").trim() === String(billId).trim());
       if (!bill) return triggerSideToast("Error", "Bill record not found.", false);
 
+      const r2 = (v) => { const n = parseFloat(v); return Number.isFinite(n) ? Math.round(n * 100) / 100 : 0; };
+      const nextBaseRent = r2(document.getElementById("eeBaseRent").value);
+      const nextPaidAmt = r2(document.getElementById("eePaidAmount").value);
+      const nextTotalBilled = r2(document.getElementById("eeTotalBilled").value);
+      if (nextBaseRent < 0 || nextPaidAmt < 0 || nextTotalBilled < 0) {
+        return triggerSideToast("Invalid Amount", "Rent, Total Billed, and Paid Amount cannot be negative.", false);
+      }
+
       bill.PropertyName = document.getElementById("eePropName").value.trim() || bill.PropertyName;
       bill.FlatName = document.getElementById("eeFlatName").value.trim() || bill.FlatName;
       bill.MonthYear = normalizeMonthYear(document.getElementById("eeMonthYear").value) || bill.MonthYear;
       bill.TenantName = document.getElementById("eeTenantName").value.trim() || bill.TenantName;
-      bill.BaseRent = parseFloat(document.getElementById("eeBaseRent").value) || 0;
-      bill.PrevCarryBalance = parseFloat(document.getElementById("eeCarryBalance").value) || 0;
-      bill.ElecTotal = parseFloat(document.getElementById("eeElecTotal").value) || 0;
-      bill.PNGTotal = parseFloat(document.getElementById("eePngTotal").value) || 0;
-      bill.WaterTotal = parseFloat(document.getElementById("eeWaterTotal").value) || 0;
+      bill.BaseRent = nextBaseRent;
+      bill.PrevCarryBalance = r2(document.getElementById("eeCarryBalance").value);
+      bill.ElecTotal = Math.max(0, r2(document.getElementById("eeElecTotal").value));
+      bill.PNGTotal = Math.max(0, r2(document.getElementById("eePngTotal").value));
+      bill.WaterTotal = Math.max(0, r2(document.getElementById("eeWaterTotal").value));
       bill.AdditionalName = document.getElementById("eeAddName").value.trim();
-      bill.AdditionalAmount = parseFloat(document.getElementById("eeAddAmount").value) || 0;
-      bill.TotalBilled = parseFloat(document.getElementById("eeTotalBilled").value) || 0;
-      bill.PaidAmount = parseFloat(document.getElementById("eePaidAmount").value) || 0;
+      bill.AdditionalAmount = r2(document.getElementById("eeAddAmount").value);
+      bill.TotalBilled = nextTotalBilled;
+      bill.PaidAmount = nextPaidAmt;
       bill.PaymentDate = document.getElementById("eePaymentDate")?.value || bill.PaymentDate || "";
       bill.PaymentMode = document.getElementById("eePaymentMode").value;
       bill.Status = document.getElementById("eeStatus").value;
@@ -29450,8 +29411,12 @@
         billId: bill.BillID,
         propertyName: bill.PropertyName,
         flatName: bill.FlatName,
+        snapshotPropertyName: bill.SnapshotPropertyName || bill.PropertyName,
+        snapshotFlatName: bill.SnapshotFlatName || bill.FlatName,
         monthYear: bill.MonthYear,
         tenantName: bill.TenantName,
+        snapshotTenantName: bill.SnapshotTenantName || bill.TenantName,
+        tenantAadhaar: bill.TenantAadhaar || "",
         baseRent: bill.BaseRent,
         elecPrev: bill.ElecPrev || 0,
         elecCurr: bill.ElecCurr || 0,
@@ -29462,16 +29427,19 @@
         pngCurr: bill.PNGCurr || 0,
         pngUnits: bill.PNGUnits || 0,
         pngRate: bill.PNGRate || 0,
+        pngAdditionalCharge: bill.PNGAdditionalCharge || 0,
         pngTotal: bill.PNGTotal,
         waterPrev: bill.WaterPrev || 0,
         waterCurr: bill.WaterCurr || 0,
         waterUnits: bill.WaterUnits || 0,
         waterRate: bill.WaterRate || 0,
+        waterAdditionalCharge: bill.WaterAdditionalCharge || 0,
         waterTotal: bill.WaterTotal,
         additionalName: bill.AdditionalName,
         additionalAmount: bill.AdditionalAmount,
         totalBilled: bill.TotalBilled,
         paidAmount: bill.PaidAmount,
+        billDate: bill.BillDate || "",
         paymentDate: bill.PaymentDate || "",
         paymentMode: bill.PaymentMode,
         status: bill.Status,
@@ -29481,7 +29449,11 @@
         upiName: bill.UPIName || "",
         upiId: bill.UPIID || "",
         contractMobile: bill.ContractMobile || "",
-        tenantMobile: bill.TenantMobile || ""
+        tenantMobile: bill.TenantMobile || "",
+        meterProofUrl: bill.MeterProofUrl || "",
+        pngProofUrl: bill.PNGProofUrl || "",
+        waterProofUrl: bill.WaterProofUrl || "",
+        splitPayments: Array.isArray(bill.SplitPayments) ? bill.SplitPayments : []
       });
     }
 
@@ -29668,7 +29640,7 @@
       const isSelfEdit = String(activeUser || "").trim().toLowerCase() === targetUser.toLowerCase();
       const rawEnteredUsername = targetUser.toLowerCase();
       const isRenaming = false;
-      const newPasswordRaw = String(u.Password || "").trim();
+      const newPasswordRaw = "";
       const newFullNameRaw = String(document.getElementById("editAssignFullName")?.value || "").trim() || rawEnteredUsername;
       const uKeyLow = targetUser.toLowerCase();
       const newStatusRaw = String(document.getElementById("editAssignStatus")?.value || "Active").trim() === "Blocked" ? "Blocked" : "Active";
@@ -29721,11 +29693,9 @@
         }
       }
 
-      const oldPasswordBeforeEdit = String(u.Password || "").trim();
-      const didPasswordChange = oldPasswordBeforeEdit !== newPasswordRaw;
+      const didPasswordChange = false;
 
       u.Username = rawEnteredUsername;
-      u.Password = newPasswordRaw;
       u.FullName = newFullNameRaw;
       u.Status = newStatusRaw;
       u.AccountStatus = newStatusRaw;
@@ -29776,8 +29746,6 @@
         sessionStorage.setItem("active_session_assigned_flat", assignedFlat);
         sessionStorage.setItem("active_session_assigned_aadhaar", assignedAadhaar);
         sessionStorage.setItem("active_session_manager_perms", JSON.stringify(managerPermissions));
-        sessionStorage.setItem("active_session_password", newPasswordRaw);
-        localStorage.setItem("portal_session_pass_" + rawEnteredUsername.toLowerCase(), newPasswordRaw);
         if (localStorage.getItem("remembered_user")) {
           localStorage.setItem("remembered_user", rawEnteredUsername);
         }
@@ -32326,11 +32294,12 @@
     });
 
     function openPhotoZoomModal(imgSrc, titleText = "Document Photo Preview") {
-      if (!imgSrc || isPlaceholderImageUrl(imgSrc)) {
+      const safeSrc = sanitizeSafeUrl(normalizeGoogleDriveImageUrl(imgSrc) || imgSrc);
+      if (!safeSrc || isPlaceholderImageUrl(safeSrc)) {
         return triggerSideToast("No Photo Uploaded", "Please upload a photo first before zooming in.", false);
       }
       currentZoomLevel = 1;
-      currentZoomedImageSrc = imgSrc;
+      currentZoomedImageSrc = safeSrc;
       currentZoomedImageTitle = titleText || "Document Photo Preview";
 
       const isAdminUser = isPhotoDownloadAllowedForCurrentUser();
@@ -32343,7 +32312,7 @@
       }
       if (titleEl) {
         titleEl.style.color = "#0f172a";
-        titleEl.innerHTML = `<i class="fa-solid fa-magnifying-glass-plus" style="color:#2563eb;"></i> <span style="color:#0f172a; font-weight:800;">${currentZoomedImageTitle}</span>`;
+        titleEl.innerHTML = `<i class="fa-solid fa-magnifying-glass-plus" style="color:#2563eb;"></i> <span style="color:#0f172a; font-weight:800;">${escapeHtml(currentZoomedImageTitle)}</span>`;
       }
       if (scaleLabelEl) {
         scaleLabelEl.style.color = "#0f172a";
@@ -32352,7 +32321,7 @@
       if (imgEl) {
         imgEl.dataset.driveFallbackIdx = "0";
         imgEl.onerror = function() { handleDriveImgFallback(this); };
-        imgEl.src = normalizeGoogleDriveImageUrl(imgSrc) || imgSrc;
+        imgEl.src = safeSrc;
         imgEl.style.transform = "scale(1)";
         imgEl.style.cursor = "zoom-in";
         imgEl.setAttribute("draggable", isAdminUser ? "true" : "false");
@@ -34373,34 +34342,35 @@
       const carryAmtBadge = document.getElementById("calcCarryAmountBadge");
       const carryHint = document.getElementById("carryForwardHint");
 
+      const fmtMoney = (n) => Number(n || 0).toFixed(2).replace(/\.00$/, "");
       if (prevCarry > 0) {
         if (carryTypeBadge) { carryTypeBadge.innerText = "Pending Due (+)"; carryTypeBadge.style.color = "var(--accent-red)"; }
-        if (carryAmtBadge) { carryAmtBadge.innerText = `+ ₹ ${prevCarry.toFixed(0)}`; carryAmtBadge.style.color = "var(--accent-red)"; }
-        if (carryHint) { carryHint.innerText = `Auto-added ₹${prevCarry.toFixed(0)} pending due from previous month(s)`; carryHint.style.color = "var(--accent-red)"; }
+        if (carryAmtBadge) { carryAmtBadge.innerText = `+ ₹ ${fmtMoney(prevCarry)}`; carryAmtBadge.style.color = "var(--accent-red)"; }
+        if (carryHint) { carryHint.innerText = `Auto-added ₹${fmtMoney(prevCarry)} pending due from previous month(s)`; carryHint.style.color = "var(--accent-red)"; }
       } else if (prevCarry < 0) {
         if (carryTypeBadge) { carryTypeBadge.innerText = "Advance Credit (-)"; carryTypeBadge.style.color = "var(--accent-green)"; }
-        if (carryAmtBadge) { carryAmtBadge.innerText = `- ₹ ${Math.abs(prevCarry).toFixed(0)}`; carryAmtBadge.style.color = "var(--accent-green)"; }
-        if (carryHint) { carryHint.innerText = `Auto-deducted ₹${Math.abs(prevCarry).toFixed(0)} advance payment from previous month(s)`; carryHint.style.color = "var(--accent-green)"; }
+        if (carryAmtBadge) { carryAmtBadge.innerText = `- ₹ ${fmtMoney(Math.abs(prevCarry))}`; carryAmtBadge.style.color = "var(--accent-green)"; }
+        if (carryHint) { carryHint.innerText = `Auto-deducted ₹${fmtMoney(Math.abs(prevCarry))} advance payment from previous month(s)`; carryHint.style.color = "var(--accent-green)"; }
       } else {
         if (carryTypeBadge) { carryTypeBadge.innerText = "Settled (₹0)"; carryTypeBadge.style.color = "var(--text-muted)"; }
         if (carryAmtBadge) { carryAmtBadge.innerText = `₹ 0`; carryAmtBadge.style.color = "var(--primary)"; }
         if (carryHint) { carryHint.innerText = "No pending due or advance from prior months"; carryHint.style.color = "var(--text-muted)"; }
       }
 
-      const rawGrand = rent + elecTotal + pngTotal + waterTotal + addCalculated + prevCarry;
+      const rawGrand = Math.round((rent + elecTotal + pngTotal + waterTotal + addCalculated + prevCarry) * 100) / 100;
       const grand = Math.max(0, rawGrand);
       const grandTotalEl = document.getElementById("calcGrandTotal");
       if (grandTotalEl) grandTotalEl.innerText = `₹ ${grand.toFixed(2)}`;
 
       const paidNow = parseFloat(document.getElementById("calcPaidNow")?.value) || 0;
-      const netClosing = rawGrand - paidNow;
+      const netClosing = Math.round((rawGrand - paidNow) * 100) / 100;
       const dueBadge = document.getElementById("calcDueBadge");
       if (dueBadge) {
         if (netClosing > 0) {
-          dueBadge.innerText = `Due: ₹ ${netClosing.toFixed(0)}`;
+          dueBadge.innerText = `Due: ₹ ${fmtMoney(netClosing)}`;
           dueBadge.style.color = "var(--accent-red)";
         } else if (netClosing < 0) {
-          dueBadge.innerText = `Advance: ₹ ${Math.abs(netClosing).toFixed(0)}`;
+          dueBadge.innerText = `Advance: ₹ ${fmtMoney(Math.abs(netClosing))}`;
           dueBadge.style.color = "var(--accent-green)";
         } else {
           dueBadge.innerText = `Fully Paid (₹0)`;
@@ -34483,37 +34453,50 @@
       }
 
       const elecPrev = parseFloat(document.getElementById("calcElecPrev").value) || 0;
-      const elecCurr = parseFloat(document.getElementById("calcElecCurr").value) || elecPrev;
+      const elecCurrRaw = document.getElementById("calcElecCurr").value;
+      const elecCurr = elecCurrRaw !== "" ? (parseFloat(elecCurrRaw) || 0) : elecPrev;
       const elecRate = parseFloat(document.getElementById("calcElecRate").value) || 0;
-      const elecUnits = Math.max(0, elecCurr - elecPrev);
 
       const pngPrev = parseFloat(document.getElementById("calcPngPrev").value) || 0;
-      const pngCurr = parseFloat(document.getElementById("calcPngCurr").value) || pngPrev;
+      const pngCurrRaw = document.getElementById("calcPngCurr").value;
+      const pngCurr = pngCurrRaw !== "" ? (parseFloat(pngCurrRaw) || 0) : pngPrev;
       const pngRate = parseFloat(document.getElementById("calcPngRate").value) || 0;
-      const pngAddCharge = parseFloat(document.getElementById("calcPngAdditionalCharge")?.value) || 0;
-      const pngUnits = Math.max(0, pngCurr - pngPrev);
-      const pngTotalComputed = Math.round(((pngUnits * pngRate) + pngAddCharge) * 100) / 100;
+      const pngAddCharge = Math.round((parseFloat(document.getElementById("calcPngAdditionalCharge")?.value) || 0) * 100) / 100;
 
       const waterPrev = parseFloat(document.getElementById("calcWaterPrev").value) || 0;
-      const waterCurr = parseFloat(document.getElementById("calcWaterCurr").value) || waterPrev;
+      const waterCurrRaw = document.getElementById("calcWaterCurr").value;
+      const waterCurr = waterCurrRaw !== "" ? (parseFloat(waterCurrRaw) || 0) : waterPrev;
       const waterRate = parseFloat(document.getElementById("calcWaterRate").value) || 0;
-      const waterAddCharge = parseFloat(document.getElementById("calcWaterAdditionalCharge")?.value) || 0;
-      const waterUnits = Math.max(0, waterCurr - waterPrev);
-      const waterTotalComputed = Math.round(((waterUnits * waterRate) + waterAddCharge) * 100) / 100;
+      const waterAddCharge = Math.round((parseFloat(document.getElementById("calcWaterAdditionalCharge")?.value) || 0) * 100) / 100;
 
       const addToggle = document.getElementById("calcAddToggle").value;
-      const addAmt = parseFloat(document.getElementById("calcAddAmount").value) || 0;
+      const addAmt = Math.round((parseFloat(document.getElementById("calcAddAmount").value) || 0) * 100) / 100;
       const netAddAmt = addToggle === "+" ? addAmt : -addAmt;
 
-      const prevCarryBalance = parseFloat(document.getElementById("calcPrevCarryBalance").value) || 0;
-      const baseRentNum = parseFloat(document.getElementById("calcRent").value) || 0;
-      const totalBilled = parseFloat(document.getElementById("calcGrandTotal").innerText.replace("₹ ","")) || 0;
-      const paidAmount = parseFloat(document.getElementById("calcPaidNow").value) || 0;
+      const prevCarryBalance = Math.round((parseFloat(document.getElementById("calcPrevCarryBalance").value) || 0) * 100) / 100;
+      const baseRentNum = Math.round((parseFloat(document.getElementById("calcRent").value) || 0) * 100) / 100;
+      const paidAmount = Math.round((parseFloat(document.getElementById("calcPaidNow").value) || 0) * 100) / 100;
 
-      const rawGrandForStatus = Math.round((baseRentNum + (elecUnits * elecRate) + pngTotalComputed + waterTotalComputed + netAddAmt + prevCarryBalance) * 100) / 100;
+      if (baseRentNum < 0 || paidAmount < 0 || elecRate < 0 || pngRate < 0 || waterRate < 0) {
+        return triggerSideToast("Invalid Negative Value", "Rent, utility rates, and paid amount must be 0 or greater.", false);
+      }
+      if ((elecCurrRaw !== "" && elecCurr < elecPrev) || (pngCurrRaw !== "" && pngCurr < pngPrev) || (waterCurrRaw !== "" && waterCurr < waterPrev)) {
+        return triggerSideToast("Meter Reading Reversal", "Current meter reading cannot be lower than Previous reading. Please verify before saving.", false);
+      }
+
+      const elecUnits = Math.round(Math.max(0, elecCurr - elecPrev) * 100) / 100;
+      const elecTotalComputed = Math.round((elecUnits * elecRate) * 100) / 100;
+      const pngUnits = Math.round(Math.max(0, pngCurr - pngPrev) * 100) / 100;
+      const pngTotalComputed = Math.round(((pngUnits * pngRate) + pngAddCharge) * 100) / 100;
+      const waterUnits = Math.round(Math.max(0, waterCurr - waterPrev) * 100) / 100;
+      const waterTotalComputed = Math.round(((waterUnits * waterRate) + waterAddCharge) * 100) / 100;
+
+      // Always compute financial total mathematically (never scrape formatted DOM innerText)
+      const rawGrandForStatus = Math.round((baseRentNum + elecTotalComputed + pngTotalComputed + waterTotalComputed + netAddAmt + prevCarryBalance) * 100) / 100;
+      const totalBilled = Math.max(0, rawGrandForStatus);
       const diffPayment = Math.round((paidAmount - rawGrandForStatus) * 100) / 100;
       let billStatus = "Fully Paid";
-      if (diffPayment < 0) billStatus = "Due";
+      if (diffPayment < 0) billStatus = paidAmount > 0 ? "Partial Paid" : "Due";
       else if (diffPayment > 0) billStatus = "Overpaid (Advance)";
       else billStatus = "Fully Paid";
 
@@ -34553,12 +34536,12 @@
         TenantName: existingBillRecord?.SnapshotTenantName || resolvedTenantName,
         SnapshotTenantName: existingBillRecord?.SnapshotTenantName || resolvedTenantName,
         TenantAadhaar: existingBillRecord?.TenantAadhaar || resolvedTenantAadhaar,
-        BaseRent: parseFloat(document.getElementById("calcRent").value) || 0,
+        BaseRent: baseRentNum,
         ElecPrev: elecPrev,
         ElecCurr: elecCurr,
         ElecUnits: elecUnits,
         ElecRate: elecRate,
-        ElecTotal: elecUnits * elecRate,
+        ElecTotal: elecTotalComputed,
         PNGPrev: pngPrev,
         PNGCurr: pngCurr,
         PNGUnits: pngUnits,
@@ -34605,14 +34588,6 @@
 
       if (periodRenter && typeof recalculateSequentialCarryForRenterBills === "function") {
         recalculateSequentialCarryForRenterBills(newBillObj.PropertyName, newBillObj.FlatName, periodRenter);
-      }
-
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog(
-          existingBillIdx !== -1 ? "UPDATE_BILL" : "CREATE_BILL",
-          `${newBillObj.PropertyName} - Flat ${newBillObj.FlatName} (${formatMonthLabel(chosenMonth)})`,
-          `Total: ₹${newBillObj.TotalBilled}, Paid: ₹${newBillObj.PaidAmount} (${newBillObj.Status})`
-        );
       }
 
       // Only update flat's Last*Reading if this bill is at or after the flat's latest recorded bill month
@@ -35471,7 +35446,8 @@
     }
 
     async function fetchQrCodeAsDataUrl(upiUri) {
-      if (window.QRious) {
+      // Strictly local client-side QR generation via QRious — never leak UPI IDs or amounts to external QR APIs
+      if (window.QRious && upiUri) {
         try {
           const qr = new window.QRious({
             value: String(upiUri || ""),
@@ -35485,21 +35461,11 @@
           if (dataUrl && dataUrl.startsWith("data:image/")) {
             return dataUrl;
           }
-        } catch (qrErr) {}
+        } catch (qrErr) {
+          console.warn("Local QRious generation warning:", qrErr);
+        }
       }
-      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=${encodeURIComponent(upiUri)}`;
-      try {
-        const resp = await fetch(qrApiUrl, { mode: "cors", cache: "force-cache" });
-        const blob = await resp.blob();
-        return await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result || qrApiUrl);
-          reader.onerror = () => resolve(qrApiUrl);
-          reader.readAsDataURL(blob);
-        });
-      } catch (e) {
-        return qrApiUrl;
-      }
+      return "";
     }
 
     function openBillReceiptModal(billId, monthYear) {
@@ -37424,9 +37390,6 @@
       updateFdTotalCollectionsDisplay();
       renderFdMaturityAlerts();
       renderFdRecordsList();
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("FD_RENEWED", "Renewed FD " + (updated.bank || updated.id) + " with new principal ₹" + oldMatAmt.toLocaleString("en-IN") + " maturing on " + nextMatIso);
-      }
       triggerSideToast("FD Auto-Renewed (+1 Year)", "Reinvested ₹" + oldMatAmt.toLocaleString("en-IN") + " at " + rate + "% p.a. → New Maturity ₹" + newMatAmt.toLocaleString("en-IN") + " on " + formatDateOnly(nextMatIso), true);
       await sendFirebaseAction({
         action: "saveFdRecord",
@@ -37815,10 +37778,6 @@
       renderFdMaturityAlerts();
       renderFdRecordsList();
 
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog(isEditing ? "FD_UPDATED" : "FD_ADDED", (isEditing ? "Updated " : "Added ") + usedPurpose + " (₹" + amount.toLocaleString("en-IN") + ")");
-      }
-
       triggerSideToast(
         isEditing ? "Portfolio Entry Updated" : "Portfolio Entry Saved",
         `${isEditing ? "Updated" : "Saved"} ${usedPurpose} (₹${amount.toLocaleString('en-IN')}) under ${sourceProperty}!`,
@@ -37855,9 +37814,6 @@
       updateFdTotalCollectionsDisplay();
       renderFdMaturityAlerts();
       renderFdRecordsList();
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("FD_DELETED", "Deleted FD/Portfolio record " + id);
-      }
       triggerSideToast("Portfolio Record Removed", "Portfolio/FD record deleted from app & Google Sheet.", "warning");
 
       await sendFirebaseAction({
@@ -39223,10 +39179,6 @@
       renderKhetRecordsList();
       renderHomeKhetSection();
 
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog(isEditing ? "KHET_UPDATED" : "KHET_ADDED", (isEditing ? "Updated " : "Added ") + place + " (Partner: " + partnerName + ")");
-      }
-
       triggerSideToast(
         isEditing ? "Khet Record Updated" : "Khet Record Saved",
         `${isEditing ? "Updated" : "Saved"} ${place} (Partner: ${partnerName}) to Google Sheet!`,
@@ -39250,9 +39202,6 @@
       renderKhetMalguzariAlertBanner();
       renderKhetRecordsList();
       renderHomeKhetSection();
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("KHET_DELETED", "Deleted Khet record " + id);
-      }
       triggerSideToast("Khet Record Removed", "Khet record deleted from app & Google Sheet.", "warning");
 
       await sendFirebaseAction({
@@ -39849,9 +39798,6 @@
       populateIsolatedRenterHistoryDropdown(selectedFlat.PropertyName, selectedFlat.FlatName, true);
       if (typeof refreshRentEscalationTrackerUI === "function") refreshRentEscalationTrackerUI();
       if (typeof computeMoveOutSettlementPreview === "function") computeMoveOutSettlementPreview();
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("UPDATE_FLAT_UTILITIES", `${selectedFlat.PropertyName} - Flat ${newFlatName}`, `Rent: ₹${payload.rentAmount}, Deposit: ₹${payload.securityDeposit}, Escalation: +${payload.escalationPct}%`);
-      }
 
       saveDbSnapshotToCache();
       renderAllDashboardUI();
@@ -40817,9 +40763,6 @@
         }
       });
 
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("UPDATE_FLAT_LOCATION_BHK", `${selectedFlat.PropertyName} - Flat ${selectedFlat.FlatName}`, `Location: ${flatLocation || "--"}, BHK: ${bhkData.bhkDetails || "--"}`);
-      }
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       triggerSideToast("Flat Location & BHK Details Saved", "Flat Location and BHK / Room Details saved to the database.", true);
@@ -40878,6 +40821,12 @@
         }
       }
       if (el) {
+        if (document.activeElement && document.activeElement instanceof HTMLElement && !el.contains(document.activeElement)) {
+          el._previousFocusEl = document.activeElement;
+        }
+        if (!el.getAttribute("role")) el.setAttribute("role", "dialog");
+        el.setAttribute("aria-modal", "true");
+        el.setAttribute("aria-hidden", "false");
         if (el.id === "receiptViewModal") {
           el.style.zIndex = "20050";
         }
@@ -40894,6 +40843,7 @@
       const el = typeof id === "string" ? document.getElementById(id) : id;
       if (el) {
         el.classList.remove("active");
+        el.setAttribute("aria-hidden", "true");
         if (el.id === "flatDetailsModal") {
           document.body.classList.remove("flat-details-open");
           if (document.body.classList.contains("admin-flat-hub-open") && typeof closeInlineFlatWorkspace === "function") {
@@ -40924,6 +40874,10 @@
         }
         if (el.id === "settingsModal" && document.body.classList.contains("admin-ops-hub-open")) {
           switchAdminOpsHubTab(window.activeAdminOpsHubTab || "notifications");
+        }
+        if (el._previousFocusEl && typeof el._previousFocusEl.focus === "function" && document.body.contains(el._previousFocusEl)) {
+          try { el._previousFocusEl.focus(); } catch (e) {}
+          el._previousFocusEl = null;
         }
       }
     }
@@ -41671,9 +41625,6 @@
       };
 
       DB.properties.push(newPropObj);
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("ADD_PROPERTY", name, `UPI: ${upiIdVal || "N/A"} (${upiNameVal || "N/A"})`);
-      }
       saveDbSnapshotToCache();
       renderAllDashboardUI();
       closeModal("addPropertyModal");
@@ -41750,9 +41701,6 @@
       if (selectedProperty && String(selectedProperty).trim().toLowerCase() === oldName.toLowerCase()) {
         selectedProperty = newName;
         sessionStorage.setItem("active_selected_property", newName);
-      }
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("EDIT_PROPERTY", `${oldName} -> ${newName}`, `UPI: ${upiId || "N/A"} (${upiName || "N/A"}), Contact: ${contractNumber || "N/A"}`);
       }
       saveDbSnapshotToCache();
       renderAllDashboardUI();
@@ -42030,8 +41978,8 @@
         localStorage.removeItem("active_session_token");
         if (prevUser) {
           localStorage.removeItem("portal_device_session_" + prevUser);
-          localStorage.removeItem("portal_session_pass_" + prevUser);
         }
+        purgeLegacyPlaintextPasswordKeys();
         if (prevRole) {
           localStorage.removeItem(getRoleSessionStorageKey(prevRole));
         }
@@ -42456,9 +42404,11 @@
       ].includes(actName);
       try {
         const result = await handleFirebaseAction(data);
-        setTimeout(() => {
+        if (window.__postWriteSyncTimer) clearTimeout(window.__postWriteSyncTimer);
+        window.__postWriteSyncTimer = setTimeout(() => {
+          window.__postWriteSyncTimer = null;
           if (typeof syncDataLive === "function") syncDataLive(true);
-        }, isGasWrite ? 2200 : 120);
+        }, isGasWrite ? 2200 : 250);
         return result || { status: "success", message: "Saved in Google Sheets." };
       } catch (err) {
         console.warn("Dual-server action warning:", err);
@@ -42765,10 +42715,6 @@
       DB.globalConfig.contactConfig = cfg;
       window.isContactSettingsDirty = false;
       window.contactSettingsLastSavedAt = Date.now();
-
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("SAVE_CONTACT_INFO", chosenProp === "ALL" ? "All Properties" : chosenProp, `Contact: ${name || "N/A"}, Phone: ${phone || mobile || "N/A"}`);
-      }
 
       notifyCrossTabSync("contact", cfg);
       renderContactUsDynamicBody();
@@ -44146,13 +44092,24 @@
       const monthYear = document.getElementById("proofTargetMonth")?.value || "";
       const tenantName = document.getElementById("proofTargetTenant")?.value || "";
       const amount = parseFloat(document.getElementById("proofPaidAmount")?.value) || 0;
-      const utr = (document.getElementById("proofUtrNumber")?.value || "").trim();
+      const utr = (document.getElementById("proofUtrNumber")?.value || "").trim().toUpperCase();
       const mode = document.getElementById("proofPaymentMode")?.value || "UPI";
       const attachedScreenshot = window.pendingPaymentProofDataUrl || (document.getElementById("proofScreenshotUrl")?.value || "").trim();
       window.pendingPaymentProofDataUrl = "";
 
-      if (amount <= 0 || !utr) {
-        return triggerSideToast("Details Required", "Please enter both Paid Amount and UTR / Transaction ID.", false);
+      if (!Number.isFinite(amount) || amount <= 0 || !utr) {
+        return triggerSideToast("Details Required", "Please enter both a valid Paid Amount and UTR / Transaction ID.", false);
+      }
+      if (!/^[A-Z0-9_-]{6,32}$/.test(utr)) {
+        return triggerSideToast("Invalid UTR Format", "UTR / Transaction ID must be 6–32 letters or digits (no spaces).", false);
+      }
+      const existingProofsCheck = getStoredPaymentProofs();
+      const duplicateUtr = existingProofsCheck.find(p =>
+        String(p.utr || p.UTRNumber || "").trim().toUpperCase() === utr &&
+        ["pending", "approved"].includes(String(p.status || p.Status || "Pending").trim().toLowerCase())
+      );
+      if (duplicateUtr) {
+        return triggerSideToast("Duplicate UTR Detected", `UTR ${utr} has already been submitted (${duplicateUtr.status || "Pending"}).`, false);
       }
 
       const proofId = "PROOF-" + Date.now();
@@ -44289,89 +44246,125 @@
     }
 
     async function approvePaymentProof(proofId) {
+      if (activeRole === "Viewer" || activeRole === "Renter") {
+        return triggerSideToast("Permission Denied", "Only Admin or authorized Manager can approve payment proofs.", false);
+      }
+      if (activeRole === "Manager" && !hasManagerPermission("billing")) {
+        return triggerSideToast("Permission Required", "You do not have Bill & Payment Control permission.", false);
+      }
+      if (!window.__approvingProofIds) window.__approvingProofIds = new Set();
+      const lockKey = String(proofId || "").trim();
+      if (!lockKey || window.__approvingProofIds.has(lockKey)) return;
+
       const list = getStoredPaymentProofs();
-      const proof = list.find(p => String(p.id || p.ProofID || "") === String(proofId));
+      const proof = list.find(p => String(p.id || p.ProofID || "") === lockKey);
       if (!proof) return;
-      proof.status = "Approved";
-      proof.verifiedBy = activeUser || "Admin";
-      proof.verifiedAt = getIstNowIsoTimestamp();
-      saveStoredPaymentProofs(list);
-
-      let targetBill = (DB.bills || []).find(b =>
-        (proof.billId && String(b.BillID || "") === String(proof.billId)) ||
-        (isSamePropAndFlat(b.PropertyName, b.FlatName, proof.propertyName, proof.flatName) && normalizeMonthYear(b.MonthYear) === normalizeMonthYear(proof.monthYear))
-      );
-
-      if (targetBill) {
-        targetBill.PaidAmount = (parseFloat(targetBill.PaidAmount) || 0) + (parseFloat(proof.amount) || 0);
-        targetBill.PaymentMode = proof.mode || targetBill.PaymentMode || "UPI";
-        targetBill.PaymentDate = getLocalTodayIsoDate();
-        const rawNetPayable = typeof getBillRawNetPayable === "function"
-          ? getBillRawNetPayable(targetBill)
-          : (parseFloat(targetBill.TotalBilled) || 0);
-        const diffUtr = Math.round(((parseFloat(targetBill.PaidAmount) || 0) - rawNetPayable) * 100) / 100;
-        targetBill.Status = diffUtr > 0 ? "Overpaid (Advance)" : (diffUtr === 0 ? "Fully Paid" : "Partial Paid");
-        if (!Array.isArray(targetBill.SplitPayments)) targetBill.SplitPayments = [];
-        targetBill.SplitPayments.push({
-          date: targetBill.PaymentDate,
-          amount: parseFloat(proof.amount) || 0,
-          mode: proof.mode || "UPI",
-          utr: proof.utr
-        });
-        const proofRenterObj = (typeof findRenterForBill === "function" ? findRenterForBill(targetBill) : null) ||
-          (DB.renters || []).find(r => targetBill.RenterID && String(r.RenterID || "") === String(targetBill.RenterID || ""));
-        if (proofRenterObj && typeof recalculateSequentialCarryForRenterBills === "function") {
-          recalculateSequentialCarryForRenterBills(targetBill.PropertyName, targetBill.FlatName, proofRenterObj);
-        }
-        saveDbSnapshotToCache();
-        renderAllDashboardUI();
-        if (selectedFlat && isSamePropAndFlat(selectedFlat.PropertyName, selectedFlat.FlatName, targetBill.PropertyName, targetBill.FlatName)) {
-          populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
-          handleBillingMonthChange();
-        }
-        await sendFirebaseAction({
-          action: "recordBill",
-          billId: targetBill.BillID,
-          propertyName: targetBill.PropertyName,
-          flatName: targetBill.FlatName,
-          monthYear: normalizeMonthYear(targetBill.MonthYear),
-          tenantName: targetBill.TenantName,
-          baseRent: targetBill.BaseRent,
-          elecPrev: targetBill.ElecPrev,
-          elecCurr: targetBill.ElecCurr,
-          elecUnits: targetBill.ElecUnits,
-          elecRate: targetBill.ElecRate,
-          elecTotal: targetBill.ElecTotal,
-          pngPrev: targetBill.PNGPrev,
-          pngCurr: targetBill.PNGCurr,
-          pngUnits: targetBill.PNGUnits,
-          pngRate: targetBill.PNGRate,
-          pngTotal: targetBill.PNGTotal,
-          waterPrev: targetBill.WaterPrev,
-          waterCurr: targetBill.WaterCurr,
-          waterUnits: targetBill.WaterUnits,
-          waterRate: targetBill.WaterRate,
-          waterTotal: targetBill.WaterTotal,
-          additionalName: targetBill.AdditionalName,
-          additionalAmount: targetBill.AdditionalAmount,
-          totalBilled: targetBill.TotalBilled,
-          paidAmount: targetBill.PaidAmount,
-          paymentDate: targetBill.PaymentDate,
-          billDate: targetBill.BillDate,
-          paymentMode: targetBill.PaymentMode,
-          status: targetBill.Status,
-          notes: targetBill.Notes,
-          renterId: targetBill.RenterID,
-          prevCarryBalance: targetBill.PrevCarryBalance || 0
-        });
+      if (String(proof.status || proof.Status || "").trim().toLowerCase() === "approved") {
+        return triggerSideToast("Already Approved", `UTR ${proof.utr || proof.UTRNumber || ""} was already approved.`, "warning");
       }
 
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("APPROVE_PAYMENT_PROOF", `${proof.propertyName} Flat ${proof.flatName}`, `Approved UTR ${proof.utr} for ₹${proof.amount}`);
+      window.__approvingProofIds.add(lockKey);
+      try {
+        proof.status = "Approved";
+        proof.verifiedBy = activeUser || "Admin";
+        proof.verifiedAt = getIstNowIsoTimestamp();
+        saveStoredPaymentProofs(list);
+
+        let targetBill = (DB.bills || []).find(b =>
+          (proof.billId && String(b.BillID || "") === String(proof.billId)) ||
+          (isSamePropAndFlat(b.PropertyName, b.FlatName, proof.propertyName, proof.flatName) && normalizeMonthYear(b.MonthYear) === normalizeMonthYear(proof.monthYear))
+        );
+
+        if (targetBill) {
+          const proofAmt = Math.max(0, Math.round((parseFloat(proof.amount) || 0) * 100) / 100);
+          if (!Array.isArray(targetBill.SplitPayments)) targetBill.SplitPayments = [];
+          const cleanProofUtr = String(proof.utr || proof.UTRNumber || "").trim().toUpperCase();
+          const alreadyCredited = cleanProofUtr && targetBill.SplitPayments.some(sp => String(sp.utr || "").trim().toUpperCase() === cleanProofUtr);
+
+          if (!alreadyCredited) {
+            targetBill.PaidAmount = Math.round(((parseFloat(targetBill.PaidAmount) || 0) + proofAmt) * 100) / 100;
+            targetBill.PaymentMode = proof.mode || targetBill.PaymentMode || "UPI";
+            targetBill.PaymentDate = getLocalTodayIsoDate();
+            const rawNetPayable = typeof getBillRawNetPayable === "function"
+              ? getBillRawNetPayable(targetBill)
+              : (parseFloat(targetBill.TotalBilled) || 0);
+            const diffUtr = Math.round(((parseFloat(targetBill.PaidAmount) || 0) - rawNetPayable) * 100) / 100;
+            targetBill.Status = diffUtr > 0 ? "Overpaid (Advance)" : (diffUtr === 0 ? "Fully Paid" : "Partial Paid");
+            targetBill.SplitPayments.push({
+              date: targetBill.PaymentDate,
+              amount: proofAmt,
+              mode: proof.mode || "UPI",
+              utr: proof.utr || proof.UTRNumber || ""
+            });
+          }
+          const proofRenterObj = (typeof findRenterForBill === "function" ? findRenterForBill(targetBill) : null) ||
+            (DB.renters || []).find(r => targetBill.RenterID && String(r.RenterID || "") === String(targetBill.RenterID || ""));
+          if (proofRenterObj && typeof recalculateSequentialCarryForRenterBills === "function") {
+            recalculateSequentialCarryForRenterBills(targetBill.PropertyName, targetBill.FlatName, proofRenterObj);
+          }
+          saveDbSnapshotToCache();
+          renderAllDashboardUI();
+          if (selectedFlat && isSamePropAndFlat(selectedFlat.PropertyName, selectedFlat.FlatName, targetBill.PropertyName, targetBill.FlatName)) {
+            populateHistoryLedger(selectedFlat.PropertyName, selectedFlat.FlatName);
+            handleBillingMonthChange();
+          }
+          await sendFirebaseAction({
+            action: "recordBill",
+            billId: targetBill.BillID,
+            propertyName: targetBill.PropertyName,
+            flatName: targetBill.FlatName,
+            snapshotPropertyName: targetBill.SnapshotPropertyName || targetBill.PropertyName,
+            snapshotFlatName: targetBill.SnapshotFlatName || targetBill.FlatName,
+            monthYear: normalizeMonthYear(targetBill.MonthYear),
+            tenantName: targetBill.TenantName,
+            snapshotTenantName: targetBill.SnapshotTenantName || targetBill.TenantName,
+            tenantAadhaar: targetBill.TenantAadhaar || "",
+            baseRent: targetBill.BaseRent,
+            elecPrev: targetBill.ElecPrev,
+            elecCurr: targetBill.ElecCurr,
+            elecUnits: targetBill.ElecUnits,
+            elecRate: targetBill.ElecRate,
+            elecTotal: targetBill.ElecTotal,
+            pngPrev: targetBill.PNGPrev,
+            pngCurr: targetBill.PNGCurr,
+            pngUnits: targetBill.PNGUnits,
+            pngRate: targetBill.PNGRate,
+            pngAdditionalCharge: targetBill.PNGAdditionalCharge || 0,
+            pngTotal: targetBill.PNGTotal,
+            waterPrev: targetBill.WaterPrev,
+            waterCurr: targetBill.WaterCurr,
+            waterUnits: targetBill.WaterUnits,
+            waterRate: targetBill.WaterRate,
+            waterAdditionalCharge: targetBill.WaterAdditionalCharge || 0,
+            waterTotal: targetBill.WaterTotal,
+            additionalName: targetBill.AdditionalName,
+            additionalAmount: targetBill.AdditionalAmount,
+            totalBilled: targetBill.TotalBilled,
+            paidAmount: targetBill.PaidAmount,
+            paymentDate: targetBill.PaymentDate,
+            billDate: targetBill.BillDate,
+            paymentMode: targetBill.PaymentMode,
+            status: targetBill.Status,
+            notes: targetBill.Notes,
+            renterId: targetBill.RenterID,
+            prevCarryBalance: targetBill.PrevCarryBalance || 0,
+            upiName: targetBill.UPIName || "",
+            upiId: targetBill.UPIID || "",
+            contractMobile: targetBill.ContractMobile || "",
+            tenantMobile: targetBill.TenantMobile || "",
+            meterProofUrl: targetBill.MeterProofUrl || "",
+            pngProofUrl: targetBill.PNGProofUrl || "",
+            waterProofUrl: targetBill.WaterProofUrl || "",
+            splitPayments: targetBill.SplitPayments
+          });
+        }
+
+        renderAdminPaymentProofQueue();
+        if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
+        triggerSideToast("Proof Approved & Bill Updated", `Marked ₹${Number(proof.amount || 0).toLocaleString("en-IN")} paid (UTR: ${proof.utr}).`, true);
+      } finally {
+        window.__approvingProofIds.delete(lockKey);
       }
-      renderAdminPaymentProofQueue();
-      if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
-      triggerSideToast("Proof Approved & Bill Updated", `Marked ₹${Number(proof.amount || 0).toLocaleString("en-IN")} paid (UTR: ${proof.utr}).`, true);
     }
 
     function openUtrRejectionReasonModal(proofId) {
@@ -44463,9 +44456,6 @@
       proof.rejectedBy = activeUser || "Admin";
       proof.rejectedAt = formatDateOnly(new Date());
       saveStoredPaymentProofs(list);
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("REJECT_PAYMENT_PROOF", `${proof.propertyName || ""} Flat ${proof.flatName || ""}`, `Rejected UTR ${proof.utr} — Reason: ${reason}`);
-      }
       closeUtrRejectionReasonModal();
       renderAdminPaymentProofQueue();
       renderAllDashboardUI();
@@ -44541,9 +44531,6 @@
         saveLocalGlobalConfigMaster(DB.globalConfig);
         saveDbSnapshotToCache();
 
-        if (typeof recordAdminAuditLog === "function") {
-          recordAdminAuditLog("DELETE_PAYMENT_PROOF", `${proof.propertyName || ""} Flat ${proof.flatName || ""}`, `Deleted UTR ${utrLabel} (${amtLabel}) & Drive Screenshot`);
-        }
         renderAdminPaymentProofQueue();
         if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
         if (typeof syncAdminOpsHubBadges === "function") syncAdminOpsHubBadges();
@@ -44903,9 +44890,6 @@
       DB.globalConfig.flatChecklists[clKey] = checklist;
       if (typeof saveLocalGlobalConfigMaster === "function") saveLocalGlobalConfigMaster(DB.globalConfig);
       saveDbSnapshotToCache();
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("SAVE_INVENTORY_CHECKLIST", `${selectedFlat.PropertyName} Flat ${selectedFlat.FlatName}`, `Fans:${checklist.fans}, Bulbs:${checklist.bulbs}, Keys:${checklist.keys}, Paint:${checklist.paint || "Not Set"}`);
-      }
       const saveRes = await sendFirebaseAction({
         action: "saveFlatChecklist",
         propertyName: selectedFlat.PropertyName,
@@ -45376,9 +45360,6 @@
       if (!t) return;
       t.status = newStatus;
       saveStoredMaintenanceTickets(list);
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("UPDATE_TICKET_STATUS", `${t.propertyName} Flat ${t.flatName}`, `Ticket ${t.id} marked ${newStatus}`);
-      }
       renderAdminMaintenanceTickets();
       triggerSideToast("Ticket Status Updated", `Ticket ${t.id} updated to ${newStatus}.`, true);
     }
@@ -45459,158 +45440,8 @@
       } else if (typeof sendAdminBroadcastNotification === "function") {
         await sendAdminBroadcastNotification();
       }
-      if (typeof recordAdminAuditLog === "function") {
-        recordAdminAuditLog("BULK_BILL_BROADCAST", `Month: ${monthLabel}`, `Broadcasted reminder for ${unpaid.length} unpaid bills`);
-      }
       triggerSideToast("Bulk Broadcast Dispatched", `Live bill reminder sent for ${unpaid.length} unpaid flats (${monthLabel})!`, true);
     }
-
-    // --- GROUP G3: DETAILED ADMIN AUDIT TRAIL & ACTIVITY LOG (MAX 30 RECORDS, AUTO-DELETES 31ST) ---
-    function getStoredAdminAuditLogs() {
-      if (Array.isArray(DB.globalConfig?.auditLogs)) return DB.globalConfig.auditLogs.slice(0, 30);
-      return [];
-    }
-
-    function recordAdminAuditLog(actionType, targetLabel, detailsText) {
-      const list = getStoredAdminAuditLogs().slice();
-      const entry = {
-        id: "AUD-" + Date.now() + "-" + Math.random().toString(36).substring(2, 5),
-        timestamp: formatDateOnly(new Date()),
-        actor: activeUser || "admin",
-        role: activeRole || "Admin",
-        actionType: String(actionType || "ACTION"),
-        target: String(targetLabel || ""),
-        details: String(detailsText || "")
-      };
-      list.unshift(entry);
-      const trimmed = list.slice(0, 30);
-      if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
-      DB.globalConfig.auditLogs = trimmed;
-      if (window._auditLogSyncDebounceTimer) {
-        clearTimeout(window._auditLogSyncDebounceTimer);
-      }
-      window._auditLogSyncDebounceTimer = setTimeout(() => {
-        sendFirebaseAction({ action: "saveAuditLogs", auditLogs: getStoredAdminAuditLogs() }).catch(() => {});
-      }, 650);
-    }
-
-    function renderAdminAuditTrailList(optionalQuery = "") {
-      const box = document.getElementById("adminAuditTrailList");
-      if (!box) return;
-      const q = String(optionalQuery || "").trim().toLowerCase();
-      const all = getStoredAdminAuditLogs();
-      const filtered = q
-        ? all.filter(a =>
-            String(a.actionType || "").toLowerCase().includes(q) ||
-            String(a.target || "").toLowerCase().includes(q) ||
-            String(a.details || "").toLowerCase().includes(q) ||
-            String(a.actor || "").toLowerCase().includes(q)
-          )
-        : all;
-
-      if (filtered.length === 0) {
-        box.innerHTML = `<div style="text-align:center; padding:22px; color:var(--text-muted); font-size:0.8rem;">No audit trail activity logs recorded yet.</div>`;
-        return;
-      }
-
-      box.innerHTML = filtered.map(a => `
-        <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:10px; padding:9px 12px; font-size:0.76rem; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-          <div>
-            <span style="font-size:0.68rem; font-weight:800; padding:2px 7px; border-radius:6px; background:rgba(168,85,247,0.16); color:#c084fc; margin-right:6px;">${a.actionType}</span>
-            <strong>${a.target}</strong> — <span style="color:var(--text-muted);">${a.details}</span>
-          </div>
-          <div style="font-size:0.68rem; color:var(--text-muted);">
-            <i class="fa-solid fa-user-shield"></i> @${a.actor} (${a.role}) • ${formatDateOnly(a.timestamp)}
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function downloadAdminAuditLogPdf() {
-      const logs = getStoredAdminAuditLogs();
-      if (logs.length === 0) {
-        return triggerSideToast("No Audit Logs", "No audit trail entries available to download.", "warning");
-      }
-      try {
-        if (!window.jspdf || !window.jspdf.jsPDF) {
-          return triggerSideToast("PDF Engine Loading", "Please wait a moment and click Download PDF again.", false);
-        }
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
-        const pageW = doc.internal.pageSize.getWidth();
-        const pageH = doc.internal.pageSize.getHeight();
-
-        doc.setFillColor(15, 23, 42);
-        doc.rect(0, 0, pageW, 64, "F");
-        doc.setTextColor(56, 189, 248);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.text("EXECUTIVE PORTAL - ADMIN AUDIT TRAIL LOG", 32, 34);
-        doc.setTextColor(203, 213, 225);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9.5);
-        doc.text(`Generated: ${formatDateOnly(new Date())}   |   Total Entries: ${logs.length}`, 32, 50);
-
-        let y = 88;
-        const colX = [32, 165, 255, 330, 445, 575];
-        const drawHeader = () => {
-          doc.setFillColor(30, 41, 59);
-          doc.rect(24, y - 14, pageW - 48, 22, "F");
-          doc.setTextColor(248, 250, 252);
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(9);
-          doc.text("Date", colX[0], y);
-          doc.text("Actor", colX[1], y);
-          doc.text("Role", colX[2], y);
-          doc.text("Action Type", colX[3], y);
-          doc.text("Target", colX[4], y);
-          doc.text("Details", colX[5], y);
-          y += 18;
-        };
-
-        drawHeader();
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8.5);
-
-        logs.forEach((l, idx) => {
-          const detailsLines = doc.splitTextToSize(String(l.details || "-"), pageW - colX[5] - 32);
-          const targetLines = doc.splitTextToSize(String(l.target || "-"), 120);
-          const rowLines = Math.max(detailsLines.length, targetLines.length, 1);
-          const rowH = Math.max(20, rowLines * 11 + 8);
-
-          if (y + rowH > pageH - 36) {
-            doc.addPage();
-            y = 44;
-            drawHeader();
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(8.5);
-          }
-
-          if (idx % 2 === 0) {
-            doc.setFillColor(241, 245, 249);
-            doc.rect(24, y - 11, pageW - 48, rowH, "F");
-          }
-
-          doc.setTextColor(15, 23, 42);
-          doc.text(String(formatDateOnly(l.timestamp) || "-").slice(0, 24), colX[0], y);
-          doc.text("@" + String(l.actor || "-").slice(0, 16), colX[1], y);
-          doc.text(String(l.role || "-").slice(0, 12), colX[2], y);
-          doc.setFont("helvetica", "bold");
-          doc.text(String(l.actionType || "-").slice(0, 20), colX[3], y);
-          doc.setFont("helvetica", "normal");
-          doc.text(targetLines, colX[4], y);
-          doc.text(detailsLines, colX[5], y);
-          y += rowH;
-        });
-
-        doc.save(`Admin_Audit_Trail_${getLocalTodayIsoDate()}.pdf`);
-        triggerSideToast("Audit PDF Downloaded", "Admin audit trail downloaded as PDF.", true);
-      } catch (err) {
-        console.error("Audit PDF error:", err);
-        triggerSideToast("PDF Export Failed", "Could not generate Audit Trail PDF.", false);
-      }
-    }
-    const exportAdminAuditLogCsv = downloadAdminAuditLogPdf;
 
     function initAntiScreenCaptureProtection() {
       if (window.__antiScreenCaptureInitialized) return;
