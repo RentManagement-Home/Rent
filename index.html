@@ -11124,6 +11124,79 @@
     line-height: 1.25 !important;
   }
 
+  /* Focused Horizontal Scrollbar for #tabHistory inside #adminFlatDetailsHubSection */
+  #adminFlatDetailsHubSection .admin-ops-hub-shell,
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost,
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace,
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory {
+    width: 100% !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: scroll !important;
+    overflow-y: auto !important;
+    padding-bottom: 6px !important;
+    box-sizing: border-box !important;
+    -webkit-overflow-scrolling: touch !important;
+    -ms-overflow-style: auto !important;
+    scrollbar-width: auto !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table {
+    width: max-content !important;
+    min-width: 100% !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar {
+    display: block !important;
+    -webkit-appearance: none !important;
+    width: 10px !important;
+    height: 12px !important;
+    background: rgba(15, 23, 42, 0.45) !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.45) !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #38bdf8 0%, #6366f1 55%, #a855f7 100%) !important;
+    border-radius: 999px !important;
+    border: 2px solid rgba(15, 23, 42, 0.6) !important;
+    min-width: 48px !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #0ea5e9 0%, #4f46e5 55%, #9333ea 100%) !important;
+  }
+  #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-corner {
+    background: transparent !important;
+  }
+  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar {
+    background: #e2e8f0 !important;
+  }
+  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-track {
+    background: #e2e8f0 !important;
+    border-color: #cbd5e1 !important;
+  }
+  body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #0284c7 0%, #4f46e5 55%, #7c3aed 100%) !important;
+    border: 2px solid #e2e8f0 !important;
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap {
+      scrollbar-color: rgba(99, 102, 241, 0.85) rgba(15, 23, 42, 0.45) !important;
+    }
+    body.theme-white #adminFlatDetailsHubSection #adminFlatDetailsWorkspaceHost #sharedFlatDetailsWorkspace #tabHistory .ledger-table-wrap {
+      scrollbar-color: #4f46e5 #e2e8f0 !important;
+    }
+  }
+
   /* Convert CPU-repainting infinite box-shadow/position keyframes to pure GPU transform/opacity */
   @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 0.95; }
