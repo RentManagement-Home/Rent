@@ -1,0 +1,6 @@
+{
+  "name": "KirayaHub",
+  "description": "Unified rental property, tenant billing, utility calculation, FD portfolio, khet farmland, expense voucher, and live chat portal powered by Google Sheets with automatic sheet, column, and row creation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
