@@ -16651,9 +16651,14 @@
           };
         }
         return {
-          status: "wrong_password",
+          status: gasRes.status === "attempt_counted" ? "attempt_counted" : "wrong_password",
           userExists: true,
-          username: cleanUser,
+          username: gasRes.username || cleanUser,
+          tier: gasRes.tier,
+          attempts: gasRes.attempts,
+          attemptsLeft: gasRes.attemptsLeft !== undefined ? gasRes.attemptsLeft : gasRes.attemptsRemaining,
+          attemptsRemaining: gasRes.attemptsRemaining !== undefined ? gasRes.attemptsRemaining : gasRes.attemptsLeft,
+          nextTierLabel: gasRes.nextTierLabel || "",
           message: gasRes.message || "Invalid password."
         };
       }
@@ -16677,20 +16682,59 @@
       delete matchedUserDoc.Password;
       delete matchedUserDoc.password;
 
-      const serverDbPayload = (gasRes.dbPayload && typeof gasRes.dbPayload === "object")
+      let serverDbPayload = (gasRes.dbPayload && typeof gasRes.dbPayload === "object")
         ? gasRes.dbPayload
-        : {
-            properties: Array.isArray(gasRes.properties) ? gasRes.properties : [],
-            flats: Array.isArray(gasRes.flats) ? gasRes.flats : [],
-            renters: Array.isArray(gasRes.renters) ? gasRes.renters : [],
-            bills: Array.isArray(gasRes.bills) ? gasRes.bills : [],
-            fdRecords: Array.isArray(gasRes.fdRecords) ? gasRes.fdRecords : [],
-            khetRecords: Array.isArray(gasRes.khetRecords) ? gasRes.khetRecords : [],
-            kharchRecords: Array.isArray(gasRes.kharchRecords) ? gasRes.kharchRecords : [],
-            users: Array.isArray(gasRes.users) ? gasRes.users : [],
-            loginHistory: Array.isArray(gasRes.loginHistory) ? gasRes.loginHistory : [],
-            globalConfig: (gasRes.globalConfig && typeof gasRes.globalConfig === "object") ? gasRes.globalConfig : {}
-          };
+        : null;
+
+      if (!serverDbPayload && (Array.isArray(gasRes.properties) || Array.isArray(gasRes.users))) {
+        serverDbPayload = {
+          properties: Array.isArray(gasRes.properties) ? gasRes.properties : [],
+          flats: Array.isArray(gasRes.flats) ? gasRes.flats : [],
+          renters: Array.isArray(gasRes.renters) ? gasRes.renters : [],
+          bills: Array.isArray(gasRes.bills) ? gasRes.bills : [],
+          fdRecords: Array.isArray(gasRes.fdRecords) ? gasRes.fdRecords : [],
+          khetRecords: Array.isArray(gasRes.khetRecords) ? gasRes.khetRecords : [],
+          kharchRecords: Array.isArray(gasRes.kharchRecords) ? gasRes.kharchRecords : [],
+          users: Array.isArray(gasRes.users) ? gasRes.users : [],
+          loginHistory: Array.isArray(gasRes.loginHistory) ? gasRes.loginHistory : [],
+          globalConfig: (gasRes.globalConfig && typeof gasRes.globalConfig === "object") ? gasRes.globalConfig : {}
+        };
+      }
+
+      if (!serverDbPayload) {
+        try {
+          const initResp = await fetchWithTimeout(GAS_WEB_APP_URL, {
+            method: "POST",
+            cache: "no-store",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+              action: "getInitialData",
+              authUsername: matchedUserDoc.Username,
+              authSessionToken: confirmedSessionToken,
+              username: matchedUserDoc.Username,
+              sessionToken: confirmedSessionToken,
+              t: Date.now()
+            }),
+            redirect: "follow"
+          }, 25000);
+          if (initResp && initResp.ok) {
+            const initJson = await initResp.json();
+            if (initJson && initJson.status === "success") {
+              serverDbPayload = initJson;
+            }
+          }
+        } catch (initErr) {
+          console.warn("Post-login initial data fetch failed:", initErr);
+        }
+      }
+
+      serverDbPayload = serverDbPayload || {
+        properties: [], flats: [], renters: [], bills: [],
+        fdRecords: [], khetRecords: [], kharchRecords: [],
+        users: [], loginHistory: [], globalConfig: {}
+      };
+
+      lastGasSheetDataCache = serverDbPayload;
 
       if (Array.isArray(serverDbPayload.users) && serverDbPayload.users.length > 0) {
         saveLocalUsersMaster(serverDbPayload.users);
@@ -23814,10 +23858,10 @@
                   </div>
                   <div style="flex:1; min-width:165px;">
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
-                    <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${upiName || "N/A"}</div>
+                    <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${escapeHtml(upiName || "N/A")}</div>
                     <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
                     <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                      <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${upiId || "N/A"}</span>
+                      <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${escapeHtml(upiId || "N/A")}</span>
                       ${upiId ? `
                         <button
                           type="button"
@@ -23926,10 +23970,10 @@
                     </div>
                     <div style="flex:1; min-width:165px;">
                       <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">UPI Name</div>
-                      <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${fallbackUpiName || "N/A"}</div>
+                      <div style="font-size:0.95rem; font-weight:900; color:var(--text-main); margin-bottom:8px;">${escapeHtml(fallbackUpiName || "N/A")}</div>
                       <div style="font-size:0.68rem; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Official UPI ID</div>
                       <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${fallbackUpiId || "N/A"}</span>
+                        <span style="font-size:0.84rem; font-weight:800; color:var(--primary); word-break:break-all;">${escapeHtml(fallbackUpiId || "N/A")}</span>
                         ${fallbackUpiId ? `
                           <button
                             type="button"
@@ -26683,17 +26727,22 @@
           return;
         }
 
-        // Valid username with wrong password -> Record failed attempt directly on Google Apps Script (4-Stage Progressive Lockout)
-        const failBodyStr = JSON.stringify({ action: "recordFailedAttempt", username: cleanU });
-        const serverOutcome = await Promise.race([
-          fetch(GAS_WEB_APP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: failBodyStr,
-            redirect: "follow"
-          }).then(r => r.ok ? r.json() : null).catch(() => null),
-          new Promise(resolve => setTimeout(() => resolve(null), 5000))
-        ]);
+        // Failed login attempt: use server-returned lockout outcome from loginUser directly (prevents redundant unauthenticated lockout calls)
+        let serverOutcome = (res && (res.status === "attempt_counted" || res.status === "locked" || res.status === "blocked"))
+          ? res
+          : null;
+        if (!serverOutcome) {
+          const failBodyStr = JSON.stringify({ action: "recordFailedAttempt", username: cleanU });
+          serverOutcome = await Promise.race([
+            fetch(GAS_WEB_APP_URL, {
+              method: "POST",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: failBodyStr,
+              redirect: "follow"
+            }).then(r => r.ok ? r.json() : null).catch(() => null),
+            new Promise(resolve => setTimeout(() => resolve(null), 5000))
+          ]);
+        }
 
         if (serverOutcome && serverOutcome.userExists === false) {
           resetLoginLockoutState(cleanU);
@@ -26734,13 +26783,20 @@
 
         if (serverOutcome && serverOutcome.status === "attempt_counted") {
           const state = getLoginLockoutState(cleanU);
-          state.stage = Number(serverOutcome.tier !== undefined ? serverOutcome.tier : state.stage) || 0;
-          state.failedInStage = Number(serverOutcome.attempts) || (3 - Number(serverOutcome.attemptsLeft || 0));
+          const stageNum = Number(serverOutcome.tier !== undefined ? serverOutcome.tier : state.stage) || 0;
+          const attemptsLeftVal = Number(
+            serverOutcome.attemptsLeft !== undefined
+              ? serverOutcome.attemptsLeft
+              : (serverOutcome.attemptsRemaining !== undefined ? serverOutcome.attemptsRemaining : Math.max(0, 3 - (Number(serverOutcome.attempts) || 0)))
+          );
+          const nextTierStr = serverOutcome.nextTierLabel || (stageNum <= 0 ? "1 Minute" : stageNum === 1 ? "1 Hour" : stageNum === 2 ? "24 Hours" : "Permanent Block");
+          state.stage = stageNum;
+          state.failedInStage = Number(serverOutcome.attempts) || Math.max(0, 3 - attemptsLeftVal);
           saveLoginLockoutState(cleanU, state);
           updateLoginLockoutUI(cleanU);
           triggerSideToast(
             "Login Failed",
-            serverOutcome.message || `Invalid password. (${serverOutcome.attemptsLeft} attempt${serverOutcome.attemptsLeft === 1 ? "" : "s"} left before ${serverOutcome.nextTierLabel} lock).`,
+            serverOutcome.message || `Invalid password. (${attemptsLeftVal} attempt${attemptsLeftVal === 1 ? "" : "s"} left before ${nextTierStr} lock).`,
             false
           );
           return;
@@ -34894,9 +34950,9 @@
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><strong>${displayMonth}</strong></td>
-          <td>${bill.SnapshotTenantName || bill.TenantName || "--"}</td>
-          <td>₹${bill.BaseRent}</td>
+          <td><strong>${escapeHtml(displayMonth)}</strong></td>
+          <td>${escapeHtml(bill.SnapshotTenantName || bill.TenantName || "--")}</td>
+          <td>₹${Number(bill.BaseRent || 0)}</td>
           <td>
             <div style="line-height:1.35; font-size:0.76rem;">
               <div>Prev: <strong>${elecPrev}</strong> | Curr: <strong>${elecCurr}</strong></div>
@@ -35576,7 +35632,7 @@
         <div id="receiptItemsListContainer">
           <div class="receipt-line" id="row_rec_tenant">
             <span>Tenant Name:</span>
-            <strong>${snapTenantLabel}</strong>
+            <strong>${escapeHtml(snapTenantLabel)}</strong>
           </div>
 
           <div class="receipt-line" id="row_rec_billdate">
@@ -36498,8 +36554,18 @@
       );
     }
 
+    function safeAppPrint() {
+      window.__allowAuthorizedPrint = true;
+      document.body.classList.remove("screen-privacy-blur");
+      try {
+        window.print();
+      } finally {
+        setTimeout(() => { window.__allowAuthorizedPrint = false; }, 1500);
+      }
+    }
+
     function printCurrentReceipt() {
-      window.print();
+      safeAppPrint();
     }
 
     // Action Button 2: Edit Everything for That Month (Switches to Calculator & Unlocks All Details for Editing)
@@ -38188,7 +38254,16 @@
       getStoredFdRecords().forEach(fd => {
         rows.push(["Portfolio / FD", fd.bank || fd.BankName || "", fd.maturity || fd.MaturityDate || "", fd.usedPurpose || "", fd.maturityAmount || fd.amount || 0, fd.form15gStatus || ""]);
       });
-      const csvContent = rows.map(r => r.map(v => '"' + String(v ?? "").replace(/"/g, '""') + '"').join(",")).join("\n");
+      const csvSafeCell = (v) => {
+        if (typeof v === "number") return String(v);
+        let s = String(v ?? "");
+        const trimmed = s.trim();
+        if (trimmed && (/^[=+@\t\r]/.test(trimmed) || (trimmed.startsWith("-") && !/^-\d+(\.\d+)?$/.test(trimmed)))) {
+          s = "'" + s;
+        }
+        return '"' + s.replace(/"/g, '""') + '"';
+      };
+      const csvContent = rows.map(r => r.map(csvSafeCell).join(",")).join("\n");
       const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -38202,7 +38277,7 @@
     }
 
     function printFyTaxSummaryForCa() {
-      window.print();
+      safeAppPrint();
     }
 
     // Helper: Calculate Non-Rent Extra Funds, Pending/Outstanding Non-Rent Balance, Deducted Expenses, and Remaining Balance for a Property (or ALL)
@@ -40994,12 +41069,12 @@
       });
 
       if (vacantFlats.length === 0) {
-        flatSelect.innerHTML = `<option value="">No vacant flats in ${propName} (All ${matchingFlats.length} occupied)</option>`;
+        flatSelect.innerHTML = `<option value="">No vacant flats in ${escapeHtml(propName)} (All ${matchingFlats.length} occupied)</option>`;
         return;
       }
 
       flatSelect.innerHTML = ['<option value="">-- Select Vacant Flat Name / Number (*) --</option>'].concat(
-        vacantFlats.map(f => `<option value="${f.FlatName}">${f.FlatName} — Vacant</option>`)
+        vacantFlats.map(f => `<option value="${escapeHtml(f.FlatName)}">${escapeHtml(f.FlatName)} — Vacant</option>`)
       ).join("");
 
       if (desiredFlat) {
@@ -44028,13 +44103,13 @@
             <button class="modal-close-btn" onclick="document.getElementById('submitPaymentProofModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
           </div>
           <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:10px;">
-            <strong>${propName} — Flat ${flatName}</strong> • Billing Month: <strong>${formatMonthLabel(monthYear)}</strong>
+            <strong>${escapeHtml(propName)} — Flat ${escapeHtml(flatName)}</strong> • Billing Month: <strong>${escapeHtml(formatMonthLabel(monthYear))}</strong>
           </div>
-          <input type="hidden" id="proofTargetBillId" value="${bill ? bill.BillID : ''}">
-          <input type="hidden" id="proofTargetProp" value="${propName}">
-          <input type="hidden" id="proofTargetFlat" value="${flatName}">
-          <input type="hidden" id="proofTargetMonth" value="${monthYear}">
-          <input type="hidden" id="proofTargetTenant" value="${tenantName}">
+          <input type="hidden" id="proofTargetBillId" value="${escapeHtml(bill ? bill.BillID : '')}">
+          <input type="hidden" id="proofTargetProp" value="${escapeHtml(propName)}">
+          <input type="hidden" id="proofTargetFlat" value="${escapeHtml(flatName)}">
+          <input type="hidden" id="proofTargetMonth" value="${escapeHtml(monthYear)}">
+          <input type="hidden" id="proofTargetTenant" value="${escapeHtml(tenantName)}">
           <div class="form-group">
             <label>Amount Paid (₹) *</label>
             <input type="number" id="proofPaidAmount" class="form-control" value="${defaultAmt > 0 ? defaultAmt : ''}" placeholder="Enter amount paid">
@@ -44795,9 +44870,9 @@
             <button class="modal-close-btn" onclick="document.getElementById('moveOutSettlementModalOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></button>
           </div>
           <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:12px; padding:14px; font-size:0.82rem; display:flex; flex-direction:column; gap:8px;">
-            <div style="display:flex; justify-content:space-between;"><span>Property &amp; Flat:</span><strong>${selectedFlat.PropertyName} — Flat ${selectedFlat.FlatName}</strong></div>
-            <div style="display:flex; justify-content:space-between;"><span>Tenant Name:</span><strong>${tenantName}</strong></div>
-            <div style="display:flex; justify-content:space-between;"><span>Stay Period:</span><strong>${formatDateOnly(joinDate)} to ${formatDateOnly(endDate)}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>Property &amp; Flat:</span><strong>${escapeHtml(selectedFlat.PropertyName)} — Flat ${escapeHtml(selectedFlat.FlatName)}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>Tenant Name:</span><strong>${escapeHtml(tenantName)}</strong></div>
+            <div style="display:flex; justify-content:space-between;"><span>Stay Period:</span><strong>${escapeHtml(formatDateOnly(joinDate))} to ${escapeHtml(formatDateOnly(endDate))}</strong></div>
             <hr style="border:none; border-top:1px dashed var(--glass-border); margin:4px 0;">
             <div style="display:flex; justify-content:space-between;"><span>Security Deposit (Advance Held):</span><strong style="color:#10b981;">+ ₹ ${deposit.toLocaleString("en-IN")}</strong></div>
             <div style="display:flex; justify-content:space-between;"><span>Less: Unpaid Rent &amp; Utility Arrears:</span><strong style="color:#ef4444;">- ₹ ${unpaidDues.toLocaleString("en-IN")}</strong></div>
@@ -44809,7 +44884,7 @@
             </div>
           </div>
           <div style="display:flex; gap:8px; margin-top:12px;">
-            <button type="button" class="btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Settlement</button>
+            <button type="button" class="btn-primary" onclick="safeAppPrint()"><i class="fa-solid fa-print"></i> Print Settlement</button>
           </div>
         </div>
       `;
@@ -45515,10 +45590,12 @@
       document.addEventListener("cut", blockClipboardCopy, true);
 
       window.addEventListener("beforeprint", function() {
+        if (window.__allowAuthorizedPrint) return;
         document.body.classList.add("screen-privacy-blur");
         flashScreenCaptureShield("Printing and PDF capture of screens are disabled.", 2500);
       });
       window.addEventListener("afterprint", function() {
+        window.__allowAuthorizedPrint = false;
         if (!document.hidden && !shieldTimer) {
           document.body.classList.remove("screen-privacy-blur");
         }
