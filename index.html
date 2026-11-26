@@ -10667,110 +10667,65 @@
     background: transparent;
   }
 
-  /* Focused Theme Button inside #profileModal ONLY: transparent by default, colorful gradient when clicked/active */
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+  /* Focused Theme Button inside #profileModal ONLY: matches Name, Username & Password button styling without colorful click/focus state */
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:focus,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:focus-visible,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
+    border: 1px solid rgba(129, 140, 248, 0.45);
+    background: rgba(129, 140, 248, 0.12);
+    background-color: rgba(129, 140, 248, 0.12);
+    background-image: none;
+    color: #818cf8;
     border-radius: 12px;
     padding: 9px 6px;
     font-size: 0.75rem;
     font-weight: 700;
-    line-height: 1.2;
-    border: 1px solid rgba(168, 85, 247, 0.38);
-    background: transparent;
-    background-color: transparent;
-    background-image: none;
-    color: #c4b5fd;
     box-shadow: none;
     text-shadow: none;
+    transform: none;
+    outline: none;
     animation: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
   }
   div#profileModal .profile-action-switch > button#btnShowChangeTheme::before,
   div#profileModal .profile-action-switch > button#btnShowChangeTheme::after {
     display: none;
     content: none;
   }
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme > i {
-    font-size: 0.85rem;
-    line-height: 1;
-    margin: 0;
-    display: inline-block;
-    flex-shrink: 0;
-    background: linear-gradient(135deg, #22d3ee 0%, #a855f7 50%, #f472b6 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: transform 0.2s ease;
-  }
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover:not(.active) {
-    background: transparent;
-    background-color: transparent;
-    background-image: none;
-    border-color: rgba(192, 132, 252, 0.72);
-    color: #e9d5ff;
-    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.22);
-  }
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover > i {
-    transform: scale(1.1) rotate(-8deg);
-  }
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active,
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
-    background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 52%, #ec4899 100%);
-    background-image: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 52%, #ec4899 100%);
-    border-color: rgba(255, 255, 255, 0.45);
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.38);
-  }
-  div#profileModal .profile-action-switch > button#btnShowChangeTheme:active {
-    transform: scale(0.98);
-  }
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme > i,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover > i,
+  div#profileModal .profile-action-switch > button#btnShowChangeTheme:focus > i,
   div#profileModal .profile-action-switch > button#btnShowChangeTheme:active > i,
   div#profileModal .profile-action-switch > button#btnShowChangeTheme.active > i {
     background: none;
-    -webkit-text-fill-color: #ffffff;
-    color: #ffffff;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-text-fill-color: currentColor;
+    color: inherit;
+    transform: none;
   }
-  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme {
-    background: transparent;
-    background-color: transparent;
-    background-image: none;
-    color: #6d28d9;
-    border-color: #a855f7;
-    box-shadow: none;
-  }
-  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme > i {
-    background: linear-gradient(135deg, #0284c7 0%, #7c3aed 52%, #db2777 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover:not(.active) {
-    background: transparent;
-    background-color: transparent;
-    background-image: none;
-    border-color: #7c3aed;
-    color: #5b21b6;
-  }
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme,
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:hover,
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:focus,
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:focus-visible,
   body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:active,
   body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
-    background: linear-gradient(135deg, #0284c7 0%, #7c3aed 52%, #db2777 100%);
-    background-image: linear-gradient(135deg, #0284c7 0%, #7c3aed 52%, #db2777 100%);
-    border-color: #6d28d9;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    background: #e0e7ff;
+    background-color: #e0e7ff;
+    background-image: none;
+    color: #4338ca;
+    border-color: #6366f1;
+    box-shadow: none;
+    transform: none;
+    outline: none;
   }
-  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme:active > i,
-  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme.active > i {
-    background: none;
-    -webkit-text-fill-color: #ffffff;
-    color: #ffffff;
+  body.theme-white div#profileModal .profile-action-switch > button#btnShowChangeTheme.active {
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
   }
 
   /* Focused Stylish Design for Theme Cards (#themeCardBlack, #themeCardWhite, #themeCardSystem) ONLY */
@@ -14258,9 +14213,10 @@
               type="button"
               id="btnShowChangeTheme"
               class="btn-switch-option"
+              style="border-radius:12px; padding:9px 6px; font-size:0.75rem; font-weight:700;"
               onclick="toggleProfileDrawer('drawerChangeTheme', 'btnShowChangeTheme')"
             >
-              <i class="fa-solid fa-palette"></i>
+              <i class="fa-solid fa-palette" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
               Theme
             </button>
             <button
