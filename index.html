@@ -16298,22 +16298,6 @@
 
       <!-- TAB 4: RENTER HISTORY (Feature B2: Previous Tenant History Archive per Flat) -->
       <div id="tabRenterHistory" class="tab-content">
-        <!-- Feature B2: Previous Tenant Timeline Archive Summary Strip -->
-        <div id="rhArchiveSummaryBanner" style="margin-bottom:12px; padding:11px 14px; border-radius:14px; background:var(--bg-input); border:1.5px solid var(--glass-border); display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:10px;">
-          <div style="padding:8px 10px; border-radius:10px; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.35);">
-            <div style="font-size:0.68rem; font-weight:800; color:#818cf8; text-transform:uppercase;">Total Tenants Lived Here</div>
-            <div id="rhTotalTenantsStat" style="font-size:1.1rem; font-weight:900; color:var(--text-main);">0</div>
-          </div>
-          <div style="padding:8px 10px; border-radius:10px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.35);">
-            <div style="font-size:0.68rem; font-weight:800; color:#34d399; text-transform:uppercase;">Past Archived Tenants</div>
-            <div id="rhPastTenantsStat" style="font-size:1.1rem; font-weight:900; color:var(--text-main);">0</div>
-          </div>
-          <div style="padding:8px 10px; border-radius:10px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.35);">
-            <div style="font-size:0.68rem; font-weight:800; color:#f87171; text-transform:uppercase;">Unpaid Balance Archive</div>
-            <div id="rhPastUnpaidStat" style="font-size:1.1rem; font-weight:900; color:#f87171;">₹0</div>
-          </div>
-        </div>
-
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-left:auto;">
             <div style="position:relative; min-width:250px; flex:1;">
@@ -16327,14 +16311,6 @@
                 oninput="filterRenterHistoryRecords()"
               >
             </div>
-            <button
-              type="button"
-              class="btn-ledger-action"
-              style="height:35px; padding:0 11px; border-radius:12px; font-weight:700;"
-              onclick="clearRenterHistoryFilters()"
-            >
-              <i class="fa-solid fa-rotate-left"></i>
-            </button>
           </div>
         </div>
 
