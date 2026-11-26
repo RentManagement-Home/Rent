@@ -16891,13 +16891,13 @@
 
       return {
         status: "success",
-        username: userDocData.Username,
-        fullName: userDocData.FullName || userDocData.Username,
-        mobile: userDocData.MobileNumber || "",
-        role: userDocData.Role || "Admin",
-        theme: userDocData.Theme || "system",
-        assignedProperty: userDocData.AssignedProperty || "",
-        assignedFlat: userDocData.AssignedFlat || "",
+        username: String(userDocData.Username ?? "").trim(),
+        fullName: String(userDocData.FullName ?? userDocData.Username ?? "").trim(),
+        mobile: String(userDocData.MobileNumber ?? "").trim(),
+        role: String(userDocData.Role ?? "Admin").trim() || "Admin",
+        theme: String(userDocData.Theme ?? "system").trim() || "system",
+        assignedProperty: String(userDocData.AssignedProperty ?? "").trim(),
+        assignedFlat: String(userDocData.AssignedFlat ?? "").trim(),
         assignedAadhaar: normalizeAadhaar12(userDocData.AssignedAadhaar ?? userDocData.AadhaarNumber),
         managerPermissions: userDocData.ManagerPermissions || [],
         bgLoginUrl: globalConfig.bgLoginUrl || userDocData.BgLogin || "",
@@ -17047,19 +17047,32 @@
       }
 
       const confirmedSessionToken = String(gasRes.sessionToken || sessionToken).trim();
+      const rawMatchedUsername = (gasRes.username !== undefined && gasRes.username !== null && String(gasRes.username).trim() !== "")
+        ? gasRes.username
+        : ((gasRes.user && gasRes.user.Username !== undefined && gasRes.user.Username !== null && String(gasRes.user.Username).trim() !== "")
+          ? gasRes.user.Username
+          : cleanUser);
+      const safeUsernameStr = String(rawMatchedUsername ?? cleanUser).trim();
+      const safeFullNameStr = String(
+        (gasRes.fullName !== undefined && gasRes.fullName !== null && String(gasRes.fullName).trim() !== "")
+          ? gasRes.fullName
+          : ((gasRes.user && gasRes.user.FullName !== undefined && gasRes.user.FullName !== null && String(gasRes.user.FullName).trim() !== "")
+            ? gasRes.user.FullName
+            : safeUsernameStr)
+      ).trim();
       const matchedUserDoc = Object.assign({}, gasRes.user || {}, {
-        Username: gasRes.username || (gasRes.user && gasRes.user.Username) || cleanUser,
-        FullName: gasRes.fullName || (gasRes.user && gasRes.user.FullName) || cleanUser,
-        Email: gasRes.email || (gasRes.user && gasRes.user.Email) || "",
-        MobileNumber: gasRes.mobile || (gasRes.user && gasRes.user.MobileNumber) || "",
-        Role: gasRes.role || (gasRes.user && gasRes.user.Role) || "Viewer",
+        Username: safeUsernameStr,
+        FullName: safeFullNameStr,
+        Email: String(gasRes.email ?? (gasRes.user && gasRes.user.Email) ?? "").trim(),
+        MobileNumber: String(gasRes.mobile ?? (gasRes.user && gasRes.user.MobileNumber) ?? "").trim(),
+        Role: String(gasRes.role ?? (gasRes.user && gasRes.user.Role) ?? "Viewer").trim() || "Viewer",
         Status: "Active",
         AccountStatus: "Active",
-        AssignedProperty: gasRes.assignedProperty || (gasRes.user && gasRes.user.AssignedProperty) || "",
-        AssignedFlat: gasRes.assignedFlat || (gasRes.user && gasRes.user.AssignedFlat) || "",
-        AssignedAadhaar: gasRes.assignedAadhaar || (gasRes.user && gasRes.user.AssignedAadhaar) || "",
+        AssignedProperty: String(gasRes.assignedProperty ?? (gasRes.user && gasRes.user.AssignedProperty) ?? "").trim(),
+        AssignedFlat: String(gasRes.assignedFlat ?? (gasRes.user && gasRes.user.AssignedFlat) ?? "").trim(),
+        AssignedAadhaar: String(gasRes.assignedAadhaar ?? (gasRes.user && gasRes.user.AssignedAadhaar) ?? "").trim(),
         ManagerPermissions: gasRes.managerPermissions || (gasRes.user && gasRes.user.ManagerPermissions) || "[]",
-        Theme: gasRes.theme || (gasRes.user && gasRes.user.Theme) || "system",
+        Theme: String(gasRes.theme ?? (gasRes.user && gasRes.user.Theme) ?? "system").trim() || "system",
         ActiveSessionToken: confirmedSessionToken
       });
       delete matchedUserDoc.Password;
@@ -17129,12 +17142,15 @@
         saveLocalGlobalConfigMaster(serverDbPayload.globalConfig);
       }
 
+      const safeLowerUsername = String(matchedUserDoc.Username ?? cleanUser ?? "").trim().toLowerCase();
       try {
-        localStorage.setItem("portal_device_session_" + matchedUserDoc.Username.toLowerCase(), confirmedSessionToken);
+        localStorage.setItem("portal_device_session_" + safeLowerUsername, confirmedSessionToken);
         localStorage.setItem(getRoleSessionStorageKey(matchedUserDoc.Role), confirmedSessionToken);
       } catch (e) {}
 
-      notifyCrossTabSync("session_login", { username: matchedUserDoc.Username.toLowerCase(), sessionToken: confirmedSessionToken });
+      try {
+        notifyCrossTabSync("session_login", { username: safeLowerUsername, sessionToken: confirmedSessionToken });
+      } catch (e) {}
       lastGasFetchTimestamp = Date.now();
       gasCacheNeedsRefresh = false;
 
@@ -26797,12 +26813,12 @@
 
       const uObj = res.user || {};
       const dbObj = res.dbPayload || res;
-      activeUser = res.username || uObj.Username || activeUser || "admin";
-      activeUserFullName = res.fullName || uObj.FullName || activeUser;
+      activeUser = String(res.username ?? uObj.Username ?? activeUser ?? "admin").trim();
+      activeUserFullName = String(res.fullName ?? uObj.FullName ?? activeUser).trim();
       activeUserMobile = sanitizeContactPhoneDisplay(res.mobile || uObj.MobileNumber || "");
       activeUserEmail = String(res.userEmail || res.email || uObj.Email || uObj.email || activeUserEmail || "").trim();
-      activeRole = res.role || uObj.Role || "Admin";
-      const sheetTheme = res.theme || uObj.Theme || "black";
+      activeRole = String(res.role ?? uObj.Role ?? "Admin").trim() || "Admin";
+      const sheetTheme = String(res.theme ?? uObj.Theme ?? "black").trim() || "black";
 
       // Strictly use the live arrays from Google Sheets
       DB.properties = Array.isArray(res.properties) ? res.properties : (Array.isArray(dbObj.properties) ? dbObj.properties : []);
@@ -26857,7 +26873,9 @@
       DB.bills = sanitizeAllBillsMonths(rawBills);
       const rawUsers = Array.isArray(res.users) ? res.users : (Array.isArray(dbObj.users) ? dbObj.users : loadLocalUsersMaster());
       DB.users = rawUsers.map(u => {
-        if (u.MobileNumber !== undefined) u.MobileNumber = sanitizeContactPhoneDisplay(u.MobileNumber);
+        if (u && u.Username !== undefined && u.Username !== null) u.Username = String(u.Username).trim();
+        if (u && u.FullName !== undefined && u.FullName !== null) u.FullName = String(u.FullName).trim();
+        if (u && u.MobileNumber !== undefined) u.MobileNumber = sanitizeContactPhoneDisplay(u.MobileNumber);
         return u;
       });
       DB.fdRecords = Array.isArray(res.fdRecords) ? res.fdRecords : (Array.isArray(dbObj.fdRecords) ? dbObj.fdRecords : []);
@@ -44397,8 +44415,8 @@
         if (activeChatDirectoryFilter) {
           const q = activeChatDirectoryFilter;
           adminsList = adminsList.filter(a =>
-            a.fullName.toLowerCase().includes(q) ||
-            a.username.toLowerCase().includes(q)
+            String(a.fullName || "").toLowerCase().includes(q) ||
+            String(a.username || "").toLowerCase().includes(q)
           );
         }
 
