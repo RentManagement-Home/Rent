@@ -6565,32 +6565,14 @@
   body.role-renter header.top-nav {
     position: relative;
   }
+  body.role-renter #adminDashboardPnlSection,
   body.role-renter .pnl-tracker {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0 auto;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    border-radius: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    z-index: 4;
-    pointer-events: auto;
+    display: none !important;
   }
   @media (max-width: 900px) {
+    body.role-renter #adminDashboardPnlSection,
     body.role-renter .pnl-tracker {
-      position: static;
-      transform: none;
-      width: 100%;
-      order: -1;
-      justify-content: center;
-      margin: 4px auto;
+      display: none !important;
     }
     body.role-renter .nav-right {
       justify-content: center;
@@ -10219,17 +10201,33 @@
     -webkit-backdrop-filter: blur(8px);
   }
 
-  /* Focused Elements: 50% Transparent (0.50 Opacity) - Selected Receipt Row & Renter Quick Nav Buttons 1-6 */
+  /* Focused Element: 50% Transparent (0.50 Opacity) - Selected Receipt Row */
   section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1),
-  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover {
+    background: rgba(15, 23, 42, 0.50);
+    background-color: rgba(15, 23, 42, 0.50);
+    background-image: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover {
+    background: rgba(255, 255, 255, 0.50);
+    background-color: rgba(255, 255, 255, 0.50);
+    background-image: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Focused Elements: 25% Transparent (0.75 Opacity) - Renter Quick Nav Buttons 1-6 */
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(1),
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(2),
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(3),
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4),
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5),
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6) {
-    background: rgba(15, 23, 42, 0.50);
-    background-color: rgba(15, 23, 42, 0.50);
+    background: rgba(15, 23, 42, 0.75);
+    background-color: rgba(15, 23, 42, 0.75);
     background-image: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -10240,19 +10238,17 @@
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4).active,
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5).active,
   section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6).active {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.50) 0%, rgba(16, 185, 129, 0.50) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.75) 0%, rgba(16, 185, 129, 0.75) 100%);
     background-color: transparent;
   }
-  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1),
-  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover,
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(1),
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(2),
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(3),
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4),
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5),
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6) {
-    background: rgba(255, 255, 255, 0.50);
-    background-color: rgba(255, 255, 255, 0.50);
+    background: rgba(255, 255, 255, 0.75);
+    background-color: rgba(255, 255, 255, 0.75);
     background-image: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -10263,7 +10259,7 @@
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(4).active,
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5).active,
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6).active {
-    background: linear-gradient(135deg, rgba(224, 231, 255, 0.50) 0%, rgba(209, 250, 229, 0.50) 100%);
+    background: linear-gradient(135deg, rgba(224, 231, 255, 0.75) 0%, rgba(209, 250, 229, 0.75) 100%);
     background-color: transparent;
   }
 
@@ -11617,6 +11613,459 @@
     .theme-card {
       min-height: 40px;
       min-width: 40px;
+    }
+  }
+
+  /* Redesigned Contact Property Admin Modal (#contactUsModal > div:nth-of-type(1) ONLY) */
+  div#contactUsModal > div:nth-of-type(1) {
+    max-width: 480px;
+    width: min(94vw, 480px);
+    max-height: min(88vh, 88dvh);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0f172a 0%, #0b1120 100%);
+    border: 1px solid rgba(129, 140, 248, 0.28);
+    box-shadow: 0 28px 64px rgba(2, 6, 23, 0.68), 0 0 0 1px rgba(14, 165, 233, 0.12) inset;
+    color: #f8fafc;
+  }
+  body.theme-white div#contactUsModal > div:nth-of-type(1) {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    box-shadow: 0 24px 60px rgba(79, 70, 229, 0.16), 0 8px 24px rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+  }
+  div#contactUsModal .cu-modal-header {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 20px 22px 18px 22px;
+    background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 56%, #10b981 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    overflow: hidden;
+  }
+  div#contactUsModal .cu-modal-header::before {
+    content: "";
+    position: absolute;
+    top: -42px;
+    right: -28px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
+    pointer-events: none;
+  }
+  div#contactUsModal .cu-header-left {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  div#contactUsModal .cu-header-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.08rem;
+    flex-shrink: 0;
+  }
+  div#contactUsModal .cu-header-title-wrap {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  div#contactUsModal .cu-header-title {
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    color: #ffffff;
+    line-height: 1.25;
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.16);
+  }
+  div#contactUsModal .cu-header-subtitle {
+    margin: 0;
+    font-size: 0.77rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.35;
+  }
+  div#contactUsModal .cu-close-btn {
+    position: relative;
+    z-index: 1;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+    transition: background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease;
+  }
+  div#contactUsModal .cu-close-btn:hover {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.04);
+  }
+  div#contactUsModal #contactUsDynamicBody {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99, 102, 241, 0.55) transparent;
+  }
+  div#contactUsModal #contactUsDynamicBody::-webkit-scrollbar {
+    width: 6px;
+  }
+  div#contactUsModal #contactUsDynamicBody::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  div#contactUsModal #contactUsDynamicBody::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.65), rgba(14, 165, 233, 0.65));
+    border-radius: 999px;
+  }
+  body.theme-white div#contactUsModal #contactUsDynamicBody {
+    scrollbar-color: rgba(79, 70, 229, 0.38) transparent;
+  }
+  div#contactUsModal .cu-person-band {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.14) 0%, rgba(14, 165, 233, 0.08) 100%);
+    border-bottom: 1px solid rgba(129, 140, 248, 0.18);
+  }
+  body.theme-white div#contactUsModal .cu-person-band {
+    background: linear-gradient(135deg, #eef2ff 0%, #f0f9ff 100%);
+    border-bottom-color: #e0e7ff;
+  }
+  div#contactUsModal .cu-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.32);
+    color: #ffffff;
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  div#contactUsModal .cu-person-meta {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  div#contactUsModal .cu-person-name {
+    font-size: 1.03rem;
+    font-weight: 800;
+    color: #f8fafc;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  body.theme-white div#contactUsModal .cu-person-name {
+    color: #0f172a;
+  }
+  div#contactUsModal .cu-person-subline {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #a5b4fc;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  body.theme-white div#contactUsModal .cu-person-subline {
+    color: #4f46e5;
+  }
+  div#contactUsModal .cu-list {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 14px;
+  }
+  div#contactUsModal .cu-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 10px;
+    border-radius: 14px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    transition: background-color 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  div#contactUsModal .cu-row:hover {
+    background: rgba(99, 102, 241, 0.09);
+  }
+  body.theme-white div#contactUsModal .cu-row {
+    border-bottom-color: #f1f5f9;
+  }
+  body.theme-white div#contactUsModal .cu-row:hover {
+    background: #f8fafc;
+  }
+  div#contactUsModal .cu-row:last-child {
+    border-bottom: none;
+  }
+  div#contactUsModal .cu-row-main {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1 1 auto;
+  }
+  div#contactUsModal .cu-row-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.96rem;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.22);
+  }
+  div#contactUsModal .cu-row-icon.is-phone {
+    background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%);
+    box-shadow: 0 6px 14px rgba(59, 130, 246, 0.28);
+  }
+  div#contactUsModal .cu-row-icon.is-whatsapp {
+    background: linear-gradient(135deg, #22c55e 0%, #059669 100%);
+    box-shadow: 0 6px 14px rgba(16, 185, 129, 0.28);
+  }
+  div#contactUsModal .cu-row-icon.is-mobile {
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    box-shadow: 0 6px 14px rgba(168, 85, 247, 0.28);
+  }
+  div#contactUsModal .cu-row-icon.is-email {
+    background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+    box-shadow: 0 6px 14px rgba(6, 182, 212, 0.28);
+  }
+  div#contactUsModal .cu-row-icon.is-address {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    box-shadow: 0 6px 14px rgba(245, 158, 11, 0.28);
+  }
+  div#contactUsModal .cu-row-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  div#contactUsModal .cu-row-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #94a3b8;
+    line-height: 1.3;
+  }
+  body.theme-white div#contactUsModal .cu-row-label {
+    color: #64748b;
+  }
+  div#contactUsModal .cu-row-label.is-phone {
+    color: #93c5fd;
+  }
+  body.theme-white div#contactUsModal .cu-row-label.is-phone {
+    color: #2563eb;
+  }
+  div#contactUsModal .cu-row-label.is-whatsapp {
+    color: #6ee7b7;
+  }
+  body.theme-white div#contactUsModal .cu-row-label.is-whatsapp {
+    color: #059669;
+  }
+  div#contactUsModal .cu-row-label.is-mobile {
+    color: #d8b4fe;
+  }
+  body.theme-white div#contactUsModal .cu-row-label.is-mobile {
+    color: #7c3aed;
+  }
+  div#contactUsModal .cu-row-label.is-email {
+    color: #67e8f9;
+  }
+  body.theme-white div#contactUsModal .cu-row-label.is-email {
+    color: #0284c7;
+  }
+  div#contactUsModal .cu-row-label.is-address {
+    color: #fcd34d;
+  }
+  body.theme-white div#contactUsModal .cu-row-label.is-address {
+    color: #d97706;
+  }
+  div#contactUsModal .cu-row-value {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #f8fafc;
+    line-height: 1.35;
+    font-variant-numeric: tabular-nums;
+    word-break: break-word;
+  }
+  body.theme-white div#contactUsModal .cu-row-value {
+    color: #0f172a;
+  }
+  div#contactUsModal .cu-row-value.is-muted {
+    font-weight: 500;
+    color: #64748b;
+  }
+  div#contactUsModal .cu-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 7px 14px;
+    border-radius: 11px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), filter 0.16s ease, box-shadow 0.16s ease;
+  }
+  div#contactUsModal .cu-action-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.07);
+  }
+  div#contactUsModal .cu-action-phone {
+    background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%);
+    box-shadow: 0 6px 14px rgba(79, 70, 229, 0.32);
+  }
+  div#contactUsModal .cu-action-whatsapp {
+    background: linear-gradient(135deg, #22c55e 0%, #059669 100%);
+    box-shadow: 0 6px 14px rgba(16, 185, 129, 0.32);
+  }
+  div#contactUsModal .cu-action-mobile {
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    box-shadow: 0 6px 14px rgba(168, 85, 247, 0.32);
+  }
+  div#contactUsModal .cu-action-email {
+    background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+    box-shadow: 0 6px 14px rgba(2, 132, 199, 0.32);
+  }
+  div#contactUsModal .cu-address-band {
+    padding: 16px 22px 20px 22px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(244, 63, 94, 0.08) 100%);
+    border-top: 1px solid rgba(251, 191, 36, 0.2);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  body.theme-white div#contactUsModal .cu-address-band {
+    background: linear-gradient(135deg, #fffbeb 0%, #fff1f2 100%);
+    border-top-color: #fde68a;
+  }
+  div#contactUsModal .cu-address-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  div#contactUsModal .cu-address-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #e2e8f0;
+    word-break: break-word;
+  }
+  body.theme-white div#contactUsModal .cu-address-text {
+    color: #334155;
+  }
+  div#contactUsModal .cu-empty-state {
+    padding: 40px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  div#contactUsModal .cu-empty-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%);
+    box-shadow: 0 10px 22px rgba(79, 70, 229, 0.3);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.28rem;
+    margin-bottom: 4px;
+  }
+  div#contactUsModal .cu-empty-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #f8fafc;
+  }
+  body.theme-white div#contactUsModal .cu-empty-title {
+    color: #0f172a;
+  }
+  div#contactUsModal .cu-empty-desc {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #94a3b8;
+    max-width: 300px;
+    line-height: 1.48;
+  }
+  body.theme-white div#contactUsModal .cu-empty-desc {
+    color: #64748b;
+  }
+  @media (max-width: 480px) {
+    div#contactUsModal > div:nth-of-type(1) {
+      max-height: min(86vh, 86dvh);
+      border-radius: 20px;
+    }
+    div#contactUsModal .cu-modal-header,
+    div#contactUsModal .cu-person-band,
+    div#contactUsModal .cu-address-band {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    div#contactUsModal .cu-list {
+      padding: 6px 8px;
+    }
+    div#contactUsModal .cu-row {
+      padding: 11px 8px;
+      gap: 10px;
+    }
+    div#contactUsModal .cu-action-btn {
+      padding: 7px 11px;
+      font-size: 0.75rem;
     }
   }
 
@@ -13079,16 +13528,21 @@
   <!-- CONTACT US MODAL FOR RENTER & VIEWER ROLES (Requirement 6) -->
   <div id="contactUsModal" class="modal-overlay" style="z-index: 8950;" onclick="if(event.target===this) closeModal('contactUsModal')">
     <div class="modal-window mw-460">
-      <button class="modal-close-btn" onclick="closeModal('contactUsModal')"><i class="fa-solid fa-xmark"></i></button>
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--glass-border); padding-right:32px;">
-        <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, #ea580c, #f59e0b); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:1.25rem; flex-shrink:0;">
-          <i class="fa-solid fa-headset"></i>
+      <div class="cu-modal-header">
+        <div class="cu-header-left">
+          <div class="cu-header-icon" aria-hidden="true">
+            <i class="fa-solid fa-headset"></i>
+          </div>
+          <div class="cu-header-title-wrap">
+            <h3 class="cu-header-title">Contact Property Admin</h3>
+            <p class="cu-header-subtitle">Direct phone, WhatsApp, and email support channels</p>
+          </div>
         </div>
-        <div>
-          <h3 style="margin:0; font-size:1.1rem; font-weight:800; color:var(--text-main);">Contact Property Admin</h3>
-        </div>
+        <button type="button" class="cu-close-btn" onclick="closeModal('contactUsModal')" aria-label="Close Contact Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
-      <div id="contactUsDynamicBody" style="display:flex; flex-direction:column; gap:10px;"></div>
+      <div id="contactUsDynamicBody"></div>
     </div>
   </div>
 
@@ -21338,63 +21792,11 @@
     // Requirement 1: Top Dashboard for Renter displays centered Due and Advance text ONLY (no background boxes)
     function updateRenterTopDashboardBalance(currentMonthBillObj) {
       if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
-      const pnlTracker = document.querySelector(".pnl-tracker");
-      if (!pnlTracker) return;
-
-      const metrics = computeCurrentMonthStandaloneAdvanceAndDue(currentMonthBillObj);
-      const advanceAmt = metrics.advanceAmt;
-      const dueAmt = metrics.dueAmt;
-
-      let statusTextHtml = "";
-      if (advanceAmt > 0 && dueAmt > 0) {
-        statusTextHtml = `
-          <span class="renter-pnl-pill renter-pnl-loss" style="color:#f87171; background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Due: <strong>₹${dueAmt.toLocaleString("en-IN")}</strong></span>
-          </span>
-          <span style="color:var(--text-muted); font-weight:600;">•</span>
-          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Advance: <strong>₹${advanceAmt.toLocaleString("en-IN")}</strong></span>
-          </span>
-        `;
-      } else if (advanceAmt > 0) {
-        statusTextHtml = `
-          <span class="renter-pnl-pill renter-pnl-settled" style="color:var(--text-muted); background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Due: <strong>₹0</strong></span>
-          </span>
-          <span style="color:var(--text-muted); font-weight:600;">•</span>
-          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Advance: <strong>₹${advanceAmt.toLocaleString("en-IN")}</strong></span>
-          </span>
-        `;
-      } else if (dueAmt > 0) {
-        statusTextHtml = `
-          <span class="renter-pnl-pill renter-pnl-loss" style="color:#f87171; background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Due: <strong>₹${dueAmt.toLocaleString("en-IN")}</strong></span>
-          </span>
-          <span style="color:var(--text-muted); font-weight:600;">•</span>
-          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Advance: <strong>₹0</strong></span>
-          </span>
-        `;
-      } else {
-        statusTextHtml = `
-          <span class="renter-pnl-pill renter-pnl-settled" style="color:#34d399; background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Due: <strong>₹0</strong></span>
-          </span>
-          <span style="color:var(--text-muted); font-weight:600;">•</span>
-          <span class="renter-pnl-pill renter-pnl-advance" style="color:#34d399; background:transparent; border:none; padding:0; display:inline-flex; align-items:center; gap:5px; font-weight:800;">
-            <span>Advance: <strong>₹0</strong></span>
-          </span>
-        `;
+      const pnlTracker = document.getElementById("adminDashboardPnlSection") || document.querySelector(".pnl-tracker");
+      if (pnlTracker && activeRole === "Renter") {
+        pnlTracker.style.setProperty("display", "none", "important");
       }
-
-      pnlTracker.innerHTML = `
-        <div class="renter-pnl-balanced" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; background:transparent; border:none; box-shadow:none; padding:0;">
-          ${statusTextHtml}
-        </div>
-      `;
-      pnlTracker.style.display = "flex";
-      syncNotificationsBadgeUI();
+      if (typeof syncNotificationsBadgeUI === "function") syncNotificationsBadgeUI();
     }
 
     // ==========================================================================
@@ -26749,7 +27151,13 @@
           closeAdminPortfolioHub(true);
         }
       } else if (activeRole === "Renter" || activeRole === "Viewer") {
-        if (pnlTracker) pnlTracker.style.removeProperty("display");
+        if (pnlTracker) {
+          if (activeRole === "Renter") {
+            pnlTracker.style.setProperty("display", "none", "important");
+          } else {
+            pnlTracker.style.removeProperty("display");
+          }
+        }
         if (searchWrap) searchWrap.style.removeProperty("display");
         if (rNavChat) rNavChat.style.setProperty("display", "inline-flex");
         if (homePortfolioAnchor) homePortfolioAnchor.style.setProperty("display", "none");
@@ -43734,76 +44142,95 @@
 
       if (!hasAnyDetails) {
         body.innerHTML = `
-          <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:14px; padding:20px; text-align:center;">
-            <div style="width:48px; height:48px; border-radius:50%; background:rgba(245,158,11,0.15); color:#f59e0b; display:inline-flex; align-items:center; justify-content:center; font-size:1.3rem; margin-bottom:10px;">
-              <i class="fa-solid fa-address-book"></i>
-            </div>
-            <h4 style="font-size:0.95rem; font-weight:800; color:var(--text-main); margin-bottom:6px;">No Contact Info Configured</h4>
+          <div class="cu-empty-state">
+            <div class="cu-empty-icon"><i class="fa-solid fa-address-book"></i></div>
+            <h4 class="cu-empty-title">No Contact Details Yet</h4>
+            <p class="cu-empty-desc">Property administration has not published support contact details for this property yet.</p>
           </div>
         `;
         return;
       }
 
-      const supportPersonName = cfg.name || "N/A";
-      const supportPhone = cfg.phone || "N/A";
-      const whatsappPhone = cfg.whatsapp || "N/A";
-      const mobilePhone = cfg.mobile || "N/A";
-      const supportEmail = cfg.email || "N/A";
-      const officialAddress = cfg.address || "N/A";
+      const supportPersonName = cfg.name || "Property Administrator";
+      const supportPhone = cfg.phone || "";
+      const whatsappPhone = cfg.whatsapp || "";
+      const mobilePhone = cfg.mobile || "";
+      const supportEmail = cfg.email || "";
+      const officialAddress = cfg.address || "";
       const propLabel = cfg.propertyName || targetProp || "";
 
-      const rawWa = cfg.whatsapp ? String(cfg.whatsapp).replace(/[^0-9]/g, "") : "";
+      const nameParts = String(supportPersonName).trim().split(/\s+/).filter(Boolean);
+      const initials = nameParts.length >= 2
+        ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+        : String(supportPersonName).trim().slice(0, 2).toUpperCase() || "PA";
+
+      const rawWa = whatsappPhone ? String(whatsappPhone).replace(/[^0-9]/g, "") : "";
       const waNumber = rawWa.length === 10 ? "91" + rawWa : rawWa;
       const waUrl = waNumber ? `https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(cfg.name || "Admin")}%2C%20I%20am%20contacting%20regarding%20${encodeURIComponent(propLabel || "my flat")}.` : "";
 
       body.innerHTML = `
-        <div style="background:var(--bg-input); border:1px solid var(--glass-border); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:12px;">
-          ${propLabel ? `
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--glass-border);">
-              <span style="font-size:0.75rem; font-weight:800; color:#f59e0b;"><i class="fa-solid fa-building"></i> ${escapeHtml(propLabel)}</span>
-              <span style="font-size:0.68rem; font-weight:700; color:#10b981; background:rgba(16,185,129,0.12); padding:2px 8px; border-radius:6px;"><i class="fa-solid fa-shield-check"></i> Property Isolated</span>
+        <div class="cu-person-band">
+          <div class="cu-avatar" aria-hidden="true">${escapeHtml(initials)}</div>
+          <div class="cu-person-meta">
+            <div class="cu-person-name">${escapeHtml(supportPersonName)}</div>
+            <div class="cu-person-subline">
+              <span>Support Contact</span>
+              ${propLabel ? `<span aria-hidden="true">·</span><span>${escapeHtml(propLabel)}</span>` : ""}
             </div>
-          ` : ""}
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Contact Person</div>
-              <div style="font-size:0.95rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-user-shield" style="color:#10b981; margin-right:5px;"></i>${escapeHtml(supportPersonName)}</div>
+          </div>
+        </div>
+
+        <div class="cu-list">
+          <div class="cu-row">
+            <div class="cu-row-main">
+              <div class="cu-row-icon is-phone" aria-hidden="true"><i class="fa-solid fa-phone-volume"></i></div>
+              <div class="cu-row-info">
+                <div class="cu-row-label is-phone">Support Phone</div>
+                <div class="cu-row-value${supportPhone ? "" : " is-muted"}">${escapeHtml(supportPhone || "Not provided")}</div>
+              </div>
             </div>
-            <span class="badge-paid" style="font-size:0.68rem;">24/7 Help Center</span>
+            ${supportPhone ? `<a href="tel:${String(supportPhone).replace(/\s+/g, "")}" class="cu-action-btn cu-action-phone"><i class="fa-solid fa-phone"></i><span>Call</span></a>` : ""}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Phone Number</div>
-              <div style="font-size:0.95rem; font-weight:900; color:var(--text-main);"><i class="fa-solid fa-phone" style="color:#38bdf8; margin-right:5px;"></i>${escapeHtml(supportPhone)}</div>
+          <div class="cu-row">
+            <div class="cu-row-main">
+              <div class="cu-row-icon is-whatsapp" aria-hidden="true"><i class="fa-brands fa-whatsapp"></i></div>
+              <div class="cu-row-info">
+                <div class="cu-row-label is-whatsapp">WhatsApp Support</div>
+                <div class="cu-row-value${whatsappPhone ? "" : " is-muted"}">${escapeHtml(whatsappPhone || "Not provided")}</div>
+              </div>
             </div>
-            ${cfg.phone ? `<a href="tel:${String(cfg.phone).replace(/\s+/g, "")}" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none;"><i class="fa-solid fa-phone"></i> Call</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
+            ${waUrl ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="cu-action-btn cu-action-whatsapp"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>` : ""}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">WhatsApp Support Phone</div>
-              <div style="font-size:0.92rem; font-weight:800; color:#22c55e;"><i class="fa-brands fa-whatsapp"></i> ${escapeHtml(whatsappPhone)}</div>
+          <div class="cu-row">
+            <div class="cu-row-main">
+              <div class="cu-row-icon is-mobile" aria-hidden="true"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+              <div class="cu-row-info">
+                <div class="cu-row-label is-mobile">Site Maintenance Mobile</div>
+                <div class="cu-row-value${mobilePhone ? "" : " is-muted"}">${escapeHtml(mobilePhone || "Not provided")}</div>
+              </div>
             </div>
-            ${waUrl ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none; background:linear-gradient(135deg, #16a34a, #22c55e);"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
+            ${mobilePhone ? `<a href="tel:${String(mobilePhone).replace(/\s+/g, "")}" class="cu-action-btn cu-action-mobile"><i class="fa-solid fa-phone"></i><span>Call</span></a>` : ""}
           </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div>
-              <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Site Problem Mobile Number</div>
-              <div style="font-size:0.92rem; font-weight:800; color:var(--text-main);"><i class="fa-solid fa-mobile-screen-button" style="color:#a855f7; margin-right:5px;"></i>${escapeHtml(mobilePhone)}</div>
+          <div class="cu-row">
+            <div class="cu-row-main">
+              <div class="cu-row-icon is-email" aria-hidden="true"><i class="fa-solid fa-envelope-open-text"></i></div>
+              <div class="cu-row-info">
+                <div class="cu-row-label is-email">Support Email</div>
+                <div class="cu-row-value${supportEmail ? "" : " is-muted"}">${escapeHtml(supportEmail || "Not provided")}</div>
+              </div>
             </div>
-            ${cfg.mobile ? `<a href="tel:${String(cfg.mobile).replace(/\s+/g, "")}" class="btn-primary" style="width:auto; padding:7px 15px; font-size:0.75rem; text-decoration:none; background:linear-gradient(135deg, #8b5cf6, #6366f1);"><i class="fa-solid fa-phone"></i> Call</a>` : `<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">N/A</span>`}
+            ${supportEmail ? `<a href="mailto:${encodeURIComponent(supportEmail)}" class="cu-action-btn cu-action-email"><i class="fa-solid fa-envelope"></i><span>Email</span></a>` : ""}
           </div>
+        </div>
 
-          <div style="padding-bottom:10px; border-bottom:1px dashed var(--glass-border);">
-            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Support Email ID</div>
-            <div style="font-size:0.86rem; font-weight:700; color:var(--accent-cyan); margin-top:2px;"><i class="fa-solid fa-envelope"></i> ${escapeHtml(supportEmail)}</div>
-          </div>
-
-          <div>
-            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Official Property Address</div>
-            <div style="font-size:0.84rem; color:var(--text-main); margin-top:2px;"><i class="fa-solid fa-location-dot" style="color:#ef4444;"></i> ${escapeHtml(officialAddress)}</div>
+        <div class="cu-address-band">
+          <div class="cu-row-icon is-address" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="cu-address-body">
+            <div class="cu-row-label is-address">Official Property Address</div>
+            <div class="cu-address-text">${escapeHtml(officialAddress || "Address not provided")}</div>
           </div>
         </div>
       `;
