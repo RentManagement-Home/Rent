@@ -10201,19 +10201,19 @@
     -webkit-backdrop-filter: blur(8px);
   }
 
-  /* Focused Element: 50% Transparent (0.50 Opacity) - Selected Receipt Row */
-  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1),
-  section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover {
-    background: rgba(15, 23, 42, 0.50);
-    background-color: rgba(15, 23, 42, 0.50);
+  /* Focused Elements: 20% Transparent (0.80 Opacity) - All Receipt Boxes in Renter Side */
+  section#dashboardScreen > main#flatsList > .renter-modern-portal div#renterAadhaarLinkedReceiptsCard .renter-history-row-item,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal div#renterAadhaarLinkedReceiptsCard .renter-history-row-item:hover {
+    background: rgba(15, 23, 42, 0.80);
+    background-color: rgba(15, 23, 42, 0.80);
     background-image: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
-  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1),
-  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div:nth-of-type(1) > div#renterAadhaarLinkedReceiptsCard > div:nth-of-type(1) > div:nth-of-type(1):hover {
-    background: rgba(255, 255, 255, 0.50);
-    background-color: rgba(255, 255, 255, 0.50);
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal div#renterAadhaarLinkedReceiptsCard .renter-history-row-item,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal div#renterAadhaarLinkedReceiptsCard .renter-history-row-item:hover {
+    background: rgba(255, 255, 255, 0.80);
+    background-color: rgba(255, 255, 255, 0.80);
     background-image: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -10260,6 +10260,38 @@
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(5).active,
   body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(6).active {
     background: linear-gradient(135deg, rgba(224, 231, 255, 0.75) 0%, rgba(209, 250, 229, 0.75) 100%);
+    background-color: transparent;
+  }
+
+  /* Focused Elements: 20% Transparent (0.80 Opacity) - Renter Quick Nav Button 7 & Download App Boxes */
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(7),
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadAndroidBox,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadAndroidBox:hover,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadIosBox,
+  section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadIosBox:hover {
+    background: rgba(15, 23, 42, 0.80);
+    background-color: rgba(15, 23, 42, 0.80);
+    background-image: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(7).active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.80) 0%, rgba(16, 185, 129, 0.80) 100%);
+    background-color: transparent;
+  }
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(7),
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadAndroidBox,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadAndroidBox:hover,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadIosBox,
+  body.theme-white section#dashboardScreen > main#flatsList > .renter-modern-portal > div#renterDownloadAppCard > div:nth-of-type(1) > div#renterDownloadIosBox:hover {
+    background: rgba(255, 255, 255, 0.80);
+    background-color: rgba(255, 255, 255, 0.80);
+    background-image: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  body.theme-white section#dashboardScreen > section#renterQuickScrollNavBar > div#renterQuickScrollTrack > button:nth-of-type(7).active {
+    background: linear-gradient(135deg, rgba(224, 231, 255, 0.80) 0%, rgba(209, 250, 229, 0.80) 100%);
     background-color: transparent;
   }
 
@@ -14186,7 +14218,7 @@
           </div>
         </div>
 
-        <!-- 4 Vibrant Action Switch Buttons (Password, Username, Name & Mobile, Theme) -->
+        <!-- 4 Vibrant Action Switch Buttons (Name & Email, Username, Password, Theme) -->
         <div style="margin: 16px 0 12px 0;">
           <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.6px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
             <i class="fa-solid fa-sliders" style="color:var(--primary);"></i> Account Security &amp; Quick Updates
@@ -14194,13 +14226,13 @@
           <div class="profile-action-switch" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px;">
             <button
               type="button"
-              id="btnShowChangePass"
+              id="btnShowChangeName"
               class="btn-switch-option"
               style="border-radius:12px; padding:9px 6px; font-size:0.75rem; font-weight:700;"
-              onclick="toggleProfileDrawer('drawerChangePass', 'btnShowChangePass')"
+              onclick="toggleProfileDrawer('drawerChangeName', 'btnShowChangeName')"
             >
-              <i class="fa-solid fa-lock" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
-              Password
+              <i class="fa-solid fa-user-pen" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
+              Name &amp; Mobile
             </button>
             <button
               type="button"
@@ -14214,13 +14246,13 @@
             </button>
             <button
               type="button"
-              id="btnShowChangeName"
+              id="btnShowChangePass"
               class="btn-switch-option"
               style="border-radius:12px; padding:9px 6px; font-size:0.75rem; font-weight:700;"
-              onclick="toggleProfileDrawer('drawerChangeName', 'btnShowChangeName')"
+              onclick="toggleProfileDrawer('drawerChangePass', 'btnShowChangePass')"
             >
-              <i class="fa-solid fa-user-pen" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
-              Name &amp; Mobile
+              <i class="fa-solid fa-lock" style="font-size:0.85rem; margin-bottom:3px; display:block;"></i>
+              Password
             </button>
             <button
               type="button"
@@ -24364,7 +24396,7 @@
                   return `
                     <div
                       class="renter-history-row-item"
-                      style="${isSelectedMonth ? "border-color:#6366f1; background:rgba(99,102,241,0.12);" : ""}"
+                      style="${isSelectedMonth ? "border-color:#6366f1;" : ""}"
                       onclick="selectRenterHomeAvailableReceipt('${itemBillId}', '${itemMonthYear}'); openBillReceiptModal('${itemBillId}', '${itemMonthYear}');"
                     >
                       <div style="display:flex; align-items:center; gap:10px;">
@@ -29457,10 +29489,6 @@
 
       document.querySelectorAll(".profile-sub-drawer").forEach(d => d.classList.remove("active"));
       document.querySelectorAll(".btn-switch-option").forEach(b => b.classList.remove("active"));
-      if (String(activeRole || "").trim().toLowerCase() === "renter") {
-        document.getElementById("drawerChangeName")?.classList.add("active");
-        document.getElementById("btnShowChangeName")?.classList.add("active");
-      }
 
       openModal("profileModal");
 
@@ -30021,7 +30049,7 @@
         triggerSideToast("Profile Updated", "Your Profile has been Successfully Updated.", true);
         syncDataLive(true);
       } else {
-        msgBox.innerText = (res && res.message) || "Could not update Name & Mobile No.";
+        msgBox.innerText = (res && res.message) || "Could not update Name & Email ID.";
         msgBox.className = "bottom-status-msg error";
         triggerSideToast("Error", (res && res.message) || "Update failed.", false);
       }
