@@ -16946,28 +16946,53 @@
       };
 
       let gasRes = null;
+      let lastNetErr = null;
+      const maxLoginAttempts = 2;
       try {
-        const resp = await fetchWithTimeout(GAS_WEB_APP_URL, {
-          method: "POST",
-          cache: "no-store",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(loginPayloadObj),
-          redirect: "follow"
-        }, 25000);
-        if (resp && resp.ok) {
-          gasRes = await resp.json();
+        for (let attempt = 1; attempt <= maxLoginAttempts; attempt++) {
+          gasRes = null;
+          lastNetErr = null;
+          try {
+            const resp = await fetchWithTimeout(GAS_WEB_APP_URL, {
+              method: "POST",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify(loginPayloadObj),
+              redirect: "follow"
+            }, 45000);
+            if (resp && resp.ok) {
+              const rawText = await resp.text();
+              try {
+                gasRes = rawText ? JSON.parse(rawText) : null;
+              } catch (parseErr) {
+                lastNetErr = parseErr;
+                gasRes = null;
+              }
+            }
+          } catch (err) {
+            lastNetErr = err;
+            console.warn(`Server login attempt ${attempt} failed:`, err);
+          }
+
+          if (gasRes && typeof gasRes === "object" && !gasRes.retryable) {
+            break;
+          }
+          if (attempt < maxLoginAttempts) {
+            await new Promise(resolve => setTimeout(resolve, 1200));
+          }
         }
-      } catch (err) {
-        console.warn("Server login request failed:", err);
       } finally {
         isLoginWriteInFlight = false;
         lastLoginCompletedAt = Date.now();
       }
 
-      if (!gasRes || typeof gasRes !== "object") {
+      if (!gasRes || typeof gasRes !== "object" || gasRes.retryable) {
         return {
-          status: "error",
-          message: "Could not reach the authentication server. Please check your internet connection and try again."
+          status: "network_error",
+          networkError: true,
+          retryable: true,
+          message: (gasRes && gasRes.message)
+            ? gasRes.message
+            : "Could not reach the authentication server. Please check your internet connection and try again."
         };
       }
 
@@ -27234,12 +27259,15 @@
       }
 
       try {
+        if (isSubmittingLogin || isLoginWriteInFlight) return;
         const localCachedState = getLoginLockoutState(cleanVal);
-        const needsLiveVerify = !Array.isArray(DB.users) || DB.users.length === 0 || localCachedState.isPermanentlyBlocked || localCachedState.lockedUntil > Date.now();
-        if (needsLiveVerify) {
-          inFlightGasFetchPromise = null;
-          await fetchGasSheetData(true, true).catch(() => {});
-        } else {
+        const hasRecentFetch = lastGasFetchTimestamp > 0 && (Date.now() - lastGasFetchTimestamp) < 20000;
+        const needsLiveVerify = localCachedState.isPermanentlyBlocked || localCachedState.lockedUntil > Date.now();
+        if (inFlightGasFetchPromise) {
+          await inFlightGasFetchPromise.catch(() => {});
+        } else if (needsLiveVerify && !hasRecentFetch) {
+          await fetchGasSheetData(false, true).catch(() => {});
+        } else if ((!Array.isArray(DB.users) || DB.users.length === 0) && !hasRecentFetch) {
           fetchGasSheetData(false).catch(() => {});
         }
 
@@ -27336,9 +27364,15 @@
       }, 250);
     });
 
+    let lastVerifiedLoginBlurKey = "";
+    let lastVerifiedLoginBlurAt = 0;
     document.getElementById("loginUsername")?.addEventListener("blur", (e) => {
       const cleanVal = String(e.target.value || "").trim().toLowerCase();
-      if (cleanVal) verifyLoginUsernameFromSheet(cleanVal);
+      if (!cleanVal || isSubmittingLogin || isLoginWriteInFlight) return;
+      if (cleanVal === lastVerifiedLoginBlurKey && (Date.now() - lastVerifiedLoginBlurAt) < 5000) return;
+      lastVerifiedLoginBlurKey = cleanVal;
+      lastVerifiedLoginBlurAt = Date.now();
+      verifyLoginUsernameFromSheet(cleanVal);
     });
 
     // 1. Live Server-Verified Login Every Time + Single-Device Session Token Generation (Strictly Verified Against Google Sheets)
@@ -27428,7 +27462,7 @@
         try {
           const loginPromise = firebaseLogin(user, pass, newSessionToken);
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Server connection timed out")), 60000)
+            setTimeout(() => reject(new Error("Server connection timed out")), 95000)
           );
           res = await Promise.race([loginPromise, timeoutPromise]);
         } catch (netErr) {
@@ -27510,8 +27544,12 @@
           return;
         }
 
-        if (!res) {
-          triggerSideToast("Connection Notice", "Server response timed out. Please try clicking Log In again.", false);
+        if (!res || res.networkError || res.status === "network_error" || res.retryable) {
+          triggerSideToast(
+            "Connection Error",
+            (res && res.message) ? res.message : "Server response timed out. Please try clicking Log In again.",
+            false
+          );
           return;
         }
 
