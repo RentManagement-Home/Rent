@@ -13028,8 +13028,12 @@
         </div>
 
         <div id="fpOtpStepBox" style="display:none;">
-          <div id="fpOtpSentHint" style="font-size:0.75rem; color:#e0f2fe; font-weight:700; margin-bottom:8px; text-shadow:0 1px 4px rgba(0,0,0,0.85);">
+          <div id="fpOtpSentHint" style="font-size:0.75rem; color:#e0f2fe; font-weight:700; margin-bottom:6px; text-shadow:0 1px 4px rgba(0,0,0,0.85);">
             <i class="fa-solid fa-envelope-circle-check"></i> Enter OTP sent to your Email ID.
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:8px; font-size:0.72rem; font-weight:700; text-shadow:0 1px 4px rgba(0,0,0,0.85);">
+            <span id="fpOtpCountdownText" style="color:#38bdf8;"><i class="fa-regular fa-clock"></i> OTP expires in <strong>05:00</strong></span>
+            <span id="fpResendMetaText" style="color:#cbd5e1;">OTP 0/5 today</span>
           </div>
           <div class="form-group" style="margin-bottom:12px;">
             <div id="fpOtpBoxesGroup" class="fp-otp-boxes-row" role="group" aria-label="4-digit OTP input">
@@ -26329,8 +26333,8 @@
     }
 
     // Inline Forgot Password Handlers — Global Backend Database Enforcement Across All Devices
-    // (No localStorage/sessionStorage rate-limit tracking; backend Google Sheets DB is the single source of truth)
-    const FP_OTP_MAX_PER_HOUR = 3;
+    // Strict policy: max 5 OTPs per email/Gmail address per 1-day (24h) window; each OTP valid for strictly 5 minutes
+    const FP_OTP_MAX_PER_DAY = 5;
     const FP_OTP_VALIDITY_MS = 5 * 60 * 1000; // 5 minutes per OTP
     let fpActiveTrackedEmail = "";
     let fpCountdownInterval = null;
@@ -26339,6 +26343,21 @@
 
     function normalizeFpEmail(raw) {
       return String(raw || "").trim().toLowerCase();
+    }
+
+    function canonicalFpLimitEmail(raw) {
+      const clean = normalizeFpEmail(raw);
+      const atIdx = clean.indexOf("@");
+      if (atIdx <= 0) return clean;
+      let local = clean.slice(0, atIdx);
+      let domain = clean.slice(atIdx + 1);
+      if (domain === "gmail.com" || domain === "googlemail.com") {
+        const plusIdx = local.indexOf("+");
+        if (plusIdx >= 0) local = local.slice(0, plusIdx);
+        local = local.replace(/\./g, "");
+        domain = "gmail.com";
+      }
+      return `${local}@${domain}`;
     }
 
     function isValidFpEmail(email) {
@@ -26352,10 +26371,23 @@
       return String(mins).padStart(2, "0") + ":" + String(rem).padStart(2, "0");
     }
 
+    function formatFpLockShort(totalSeconds) {
+      const sec = Math.max(0, Math.ceil(Number(totalSeconds) || 0));
+      if (sec >= 3600) {
+        const hrs = Math.floor(sec / 3600);
+        const mins = Math.floor((sec % 3600) / 60);
+        return mins > 0 ? `${hrs}h ${String(mins).padStart(2, "0")}m` : `${hrs}h`;
+      }
+      return formatFpMmSs(sec);
+    }
+
     function formatFpCooldownReadable(totalSeconds) {
       const sec = Math.max(0, Math.ceil(Number(totalSeconds) || 0));
-      const mins = Math.floor(sec / 60);
+      const hrs = Math.floor(sec / 3600);
+      const mins = Math.floor((sec % 3600) / 60);
       const rem = sec % 60;
+      if (hrs > 0 && mins > 0) return `${hrs}h ${mins}m`;
+      if (hrs > 0) return `${hrs}h`;
       if (mins > 0 && rem > 0) return `${mins}m ${rem}s`;
       if (mins > 0) return `${mins} min`;
       return `${rem} sec`;
@@ -26370,26 +26402,27 @@
     }
 
     function applyFpBackendState(email, res) {
-      const key = normalizeFpEmail(email || res?.email || fpActiveTrackedEmail || "");
-      if (!key || !res || typeof res !== "object") return null;
+      const rawKey = normalizeFpEmail(email || res?.email || fpActiveTrackedEmail || "");
+      const canonKey = canonicalFpLimitEmail(rawKey);
+      if (!canonKey || !res || typeof res !== "object") return null;
       const nowMs = Date.now();
-      const prev = (fpServerState && fpServerState.email === key) ? fpServerState : {};
+      const prev = (fpServerState && fpServerState.canonEmail === canonKey) ? fpServerState : {};
 
       const otpsSentCount = typeof res.otpsSentCount === "number"
         ? res.otpsSentCount
         : (typeof prev.otpsSentCount === "number" ? prev.otpsSentCount : 0);
-      const maxOtpsPerHour = typeof res.maxOtpsPerHour === "number"
-        ? res.maxOtpsPerHour
-        : FP_OTP_MAX_PER_HOUR;
+      const maxOtpsPerDay = typeof res.maxOtpsPerDay === "number"
+        ? res.maxOtpsPerDay
+        : (typeof res.maxOtpsPerHour === "number" ? res.maxOtpsPerHour : FP_OTP_MAX_PER_DAY);
       const otpsRemaining = typeof res.otpsRemaining === "number"
         ? res.otpsRemaining
-        : Math.max(0, maxOtpsPerHour - otpsSentCount);
+        : Math.max(0, maxOtpsPerDay - otpsSentCount);
       const wrongAttempts = typeof res.wrongAttempts === "number"
         ? res.wrongAttempts
         : (typeof prev.wrongAttempts === "number" ? prev.wrongAttempts : 0);
       const maxAttemptsForCurrentOtp = typeof res.maxAttemptsForCurrentOtp === "number"
         ? res.maxAttemptsForCurrentOtp
-        : (otpsSentCount >= maxOtpsPerHour ? 5 : 3);
+        : (otpsSentCount >= maxOtpsPerDay ? 5 : 3);
 
       const expiresInSec = Number(res.expiresInSeconds);
       let otpExpiresAt = 0;
@@ -26408,7 +26441,7 @@
       }
 
       const verifyLocked = Boolean(res.verifyLocked || res.finalLockout);
-      const requestLocked = Boolean(res.requestLocked || verifyLocked || otpsSentCount >= maxOtpsPerHour);
+      const requestLocked = Boolean(res.requestLocked || verifyLocked || otpsSentCount >= maxOtpsPerDay);
       let lockedUntilMs = 0;
       if ((requestLocked || verifyLocked) && Number(res.retryAfterSeconds) > 0) {
         lockedUntilMs = nowMs + Number(res.retryAfterSeconds) * 1000;
@@ -26420,9 +26453,10 @@
       }
 
       fpServerState = {
-        email: key,
+        email: rawKey,
+        canonEmail: canonKey,
         otpsSentCount,
-        maxOtpsPerHour,
+        maxOtpsPerDay,
         otpsRemaining,
         wrongAttempts,
         maxAttemptsForCurrentOtp,
@@ -26435,14 +26469,15 @@
     }
 
     function getFpViewState(targetEmail) {
-      const key = normalizeFpEmail(targetEmail || fpActiveTrackedEmail || "");
+      const rawKey = normalizeFpEmail(targetEmail || fpActiveTrackedEmail || "");
+      const canonKey = canonicalFpLimitEmail(rawKey);
       const nowMs = Date.now();
-      if (!key || !fpServerState || fpServerState.email !== key) {
+      if (!canonKey || !fpServerState || fpServerState.canonEmail !== canonKey) {
         return {
-          email: key,
+          email: rawKey,
           otpsSentCount: 0,
-          maxOtpsPerHour: FP_OTP_MAX_PER_HOUR,
-          otpsRemaining: FP_OTP_MAX_PER_HOUR,
+          maxOtpsPerDay: FP_OTP_MAX_PER_DAY,
+          otpsRemaining: FP_OTP_MAX_PER_DAY,
           wrongAttempts: 0,
           maxAttemptsForCurrentOtp: 3,
           otpExpiresAt: 0,
@@ -26459,10 +26494,10 @@
       const cooldownActive = Boolean(s.lockedUntilMs && nowMs < s.lockedUntilMs);
       const cooldownRemainingSec = cooldownActive ? Math.max(0, Math.ceil((s.lockedUntilMs - nowMs) / 1000)) : 0;
 
-      // Once 1-hour server lock/window has elapsed, unlock UI so next request re-checks backend cleanly
+      // Once 1-day server lock/window has elapsed, unlock UI so next request re-checks backend cleanly
       if ((s.verifyLocked || s.requestLocked) && s.lockedUntilMs && nowMs >= s.lockedUntilMs) {
         resetFpInMemoryState();
-        return getFpViewState(key);
+        return getFpViewState(rawKey);
       }
 
       const verifyLocked = Boolean(s.verifyLocked && cooldownActive);
@@ -26472,9 +26507,9 @@
       const otpRemainingSec = otpActive ? Math.max(0, Math.ceil((s.otpExpiresAt - nowMs) / 1000)) : 0;
 
       return {
-        email: key,
+        email: rawKey,
         otpsSentCount: s.otpsSentCount,
-        maxOtpsPerHour: s.maxOtpsPerHour,
+        maxOtpsPerDay: s.maxOtpsPerDay,
         otpsRemaining: s.otpsRemaining,
         wrongAttempts: s.wrongAttempts,
         maxAttemptsForCurrentOtp: s.maxAttemptsForCurrentOtp,
@@ -26516,11 +26551,11 @@
 
       const state = getFpViewState(activeEmail);
 
-      // Step 1 Submit button reflects server-reported lock status for the currently typed email
+      // Step 1 Submit button reflects server-reported 1-day limit/lock status for the currently typed email
       if (sendBtn) {
         if (state.verifyLocked || state.requestLocked) {
           sendBtn.disabled = true;
-          sendBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> <span>Locked (${formatFpMmSs(state.cooldownRemainingSec)})</span>`;
+          sendBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> <span>Limit Reached (${formatFpLockShort(state.cooldownRemainingSec)})</span>`;
         } else {
           sendBtn.disabled = false;
           sendBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Submit</span>`;
@@ -26528,11 +26563,11 @@
       }
 
       if (isOtpStepVisible && activeEmail) {
-        // 5-Minute OTP Validity Countdown / Full Lockout Indicator
+        // 5-Minute OTP Validity Countdown / Lockout Indicator
         if (countdownEl) {
           if (state.verifyLocked) {
             countdownEl.style.color = "#f87171";
-            countdownEl.innerHTML = `<i class="fa-solid fa-lock"></i> Locked for <strong>${formatFpMmSs(state.cooldownRemainingSec)}</strong>`;
+            countdownEl.innerHTML = `<i class="fa-solid fa-lock"></i> Locked for <strong>${formatFpLockShort(state.cooldownRemainingSec)}</strong>`;
           } else if (state.otpActive) {
             countdownEl.style.color = state.otpRemainingSec <= 60 ? "#fbbf24" : "#38bdf8";
             countdownEl.innerHTML = `<i class="fa-regular fa-clock"></i> OTP expires in <strong>${formatFpMmSs(state.otpRemainingSec)}</strong>`;
@@ -26542,13 +26577,13 @@
           }
         }
 
-        // Disable OTP boxes & Verify button only if locked or genuinely expired
+        // Automatically disable OTP boxes & Verify button once locked or 5 minutes elapse
         setFpOtpInputsDisabled(state.verifyLocked || state.otpExpired);
 
         if (verifyBtn) {
           if (state.verifyLocked) {
             verifyBtn.disabled = true;
-            verifyBtn.innerHTML = `<i class="fa-solid fa-lock"></i> <span>Locked (${formatFpMmSs(state.cooldownRemainingSec)})</span>`;
+            verifyBtn.innerHTML = `<i class="fa-solid fa-lock"></i> <span>Locked (${formatFpLockShort(state.cooldownRemainingSec)})</span>`;
           } else if (state.otpExpired) {
             verifyBtn.disabled = true;
             verifyBtn.innerHTML = `<i class="fa-solid fa-clock"></i> <span>OTP Expired</span>`;
@@ -26558,17 +26593,17 @@
           }
         }
 
-        // Global hourly OTP quota & attempt status
+        // Global daily OTP quota & attempt status
         if (metaEl) {
           if (state.verifyLocked) {
             metaEl.style.color = "#fca5a5";
-            metaEl.textContent = `1h Lockout: ${formatFpMmSs(state.cooldownRemainingSec)}`;
+            metaEl.textContent = `Blocked: ${formatFpLockShort(state.cooldownRemainingSec)}`;
           } else if (state.requestLocked) {
             metaEl.style.color = "#fbbf24";
-            metaEl.textContent = `OTP ${state.otpsSentCount}/${state.maxOtpsPerHour} • Attempts: ${state.wrongAttempts}/${state.maxAttemptsForCurrentOtp}`;
+            metaEl.textContent = `OTP ${state.otpsSentCount}/${state.maxOtpsPerDay} today • Limit reached`;
           } else {
             metaEl.style.color = "#cbd5e1";
-            metaEl.textContent = `OTP ${state.otpsSentCount}/${state.maxOtpsPerHour} • Attempts: ${state.wrongAttempts}/${state.maxAttemptsForCurrentOtp}`;
+            metaEl.textContent = `OTP ${state.otpsSentCount}/${state.maxOtpsPerDay} today • Attempts: ${state.wrongAttempts}/${state.maxAttemptsForCurrentOtp}`;
           }
         }
 
@@ -26587,8 +26622,8 @@
           otpBox.dataset.expiredNotified = String(state.otpExpiresAt);
           setInlineForgotPasswordStatus(
             state.requestLocked
-              ? `Your 5-minute OTP for ${activeEmail} has expired, and the global limit of 3 OTPs/hour has been reached. Please wait ${formatFpCooldownReadable(state.cooldownRemainingSec)} before requesting a new OTP.`
-              : `Your OTP for ${activeEmail} has expired after 5 minutes. Click Resend to receive a new 4-digit OTP.`,
+              ? `Your 5-minute OTP for ${activeEmail} has automatically expired, and the daily limit of ${state.maxOtpsPerDay} OTPs per day has been reached. Please try again in ${formatFpCooldownReadable(state.cooldownRemainingSec)}.`
+              : `Your OTP for ${activeEmail} has automatically expired after 5 minutes. Click Resend to request a new 4-digit OTP.`,
             "error"
           );
         }
@@ -26619,7 +26654,7 @@
       fpActiveTrackedEmail = typedEmail;
 
       // Clear any previous email's in-memory UI state so another email is never blocked in the UI
-      if (fpServerState && fpServerState.email !== typedEmail) {
+      if (fpServerState && fpServerState.canonEmail !== canonicalFpLimitEmail(typedEmail)) {
         resetFpInMemoryState();
         stopFpCountdownTimer();
         setInlineForgotPasswordStatus("", "info");
@@ -26876,7 +26911,7 @@
         resendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending...</span>`;
       }
       setInlineForgotPasswordStatus(
-        isResend ? `Checking global OTP limit & resending to ${cleanEmail}...` : "Verifying registered Email ID...",
+        isResend ? `Checking daily OTP limit & resending to ${cleanEmail}...` : "Verifying registered Email ID...",
         "info"
       );
 
@@ -26891,7 +26926,7 @@
           if (res && (res.rateLimited || res.locked || res.requestLocked || res.verifyLocked)) {
             fpActiveTrackedEmail = cleanEmail;
             applyFpBackendState(cleanEmail, res);
-            // If 3 OTPs were sent but the 3rd OTP is still active & valid, allow entering it on the OTP step
+            // If 5 OTPs were sent today but the 5th OTP is still active & within 5 minutes, allow entering it on the OTP step
             if (res.hasActiveOtp && !res.verifyLocked && res.otpExpiresAt) {
               if (credBox) credBox.style.display = "none";
               if (otpBox) {
@@ -26899,7 +26934,7 @@
                 delete otpBox.dataset.expiredNotified;
               }
               if (otpHint) {
-                otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter your active 3rd OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
+                otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter your active 5th OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
               }
               initForgotPasswordOtpBoxes();
             }
@@ -26907,7 +26942,7 @@
           }
           const errMsg = res?.message || "Email ID is not registered in our records.";
           setInlineForgotPasswordStatus(errMsg, "error");
-          triggerSideToast(res?.rateLimited || res?.locked ? "1-Hour OTP Limit" : "Verification Failed", errMsg, false);
+          triggerSideToast(res?.rateLimited || res?.locked ? "Daily OTP Limit Reached" : "Verification Failed", errMsg, false);
           return;
         }
 
@@ -26960,6 +26995,17 @@
         return;
       }
 
+      const localViewState = getFpViewState(cleanEmail);
+      if (localViewState.otpExpired) {
+        const expMsg = localViewState.requestLocked
+          ? `Your OTP for ${cleanEmail} has automatically expired after 5 minutes, and the daily limit of ${localViewState.maxOtpsPerDay} OTPs per day has been reached. Please try again in ${formatFpCooldownReadable(localViewState.cooldownRemainingSec)}.`
+          : `Your OTP for ${cleanEmail} has automatically expired after 5 minutes. Click Resend to request a new 4-digit OTP.`;
+        setInlineForgotPasswordStatus(expMsg, "error");
+        triggerSideToast("OTP Expired", expMsg, false);
+        refreshFpPerEmailUi(cleanEmail);
+        return;
+      }
+
       if (enteredOtp.length !== 4) {
         setInlineForgotPasswordStatus("Please enter the 4-digit OTP sent to your Email ID.", "error");
         return triggerSideToast("Invalid OTP", "Please enter the 4-digit OTP.", false);
@@ -26989,21 +27035,21 @@
             setFpOtpInputsDisabled(false);
             clearFpOtpBoxes();
             startFpCountdownTimer(cleanEmail);
-            const autoMsg = res.message || "3 wrong attempts entered. A new 4-digit OTP has been automatically sent to your email.";
+            const autoMsg = res.message || "3 wrong attempts entered. A new 4-digit OTP has been automatically sent to your email (valid for 5 minutes).";
             setInlineForgotPasswordStatus(autoMsg, "info");
             triggerSideToast("New OTP Sent", autoMsg, true);
             setTimeout(focusFirstFpOtpBox, 60);
             return;
           }
 
-          // Rule 3: Final 1-hour lockout after 5 failed attempts on the 3rd OTP
+          // Rule 3: Final lockout after 5 failed attempts on the 5th daily OTP
           if (res && (res.finalLockout || res.verifyLocked || res.locked)) {
             clearFpOtpBoxes();
             setFpOtpInputsDisabled(true);
             startFpCountdownTimer(cleanEmail);
-            const lockMsg = res.message || "Too many failed attempts. This email is locked from requesting or verifying OTPs for 1 hour.";
+            const lockMsg = res.message || "Too many failed attempts. This email is locked from requesting or verifying OTPs for the remainder of this 1-day window.";
             setInlineForgotPasswordStatus(lockMsg, "error");
-            triggerSideToast("Account Recovery Locked (1h)", lockMsg, false);
+            triggerSideToast("Daily OTP Limit Locked", lockMsg, false);
             return;
           }
 
