@@ -24091,13 +24091,23 @@
       const utrInput = document.getElementById("renterPayUtrInput");
       const amtInput = document.getElementById("renterPayAmountInput");
       const submitBtn = document.getElementById("btnSubmitRenterInlineUtrProof");
-      const utr = String(utrInput?.value || "").trim();
+      const utr = String(utrInput?.value || "").replace(/\D/g, "").slice(0, 22);
+      if (utrInput && utrInput.value !== utr) utrInput.value = utr;
       const amount = parseFloat(amtInput?.value || "0") || 0;
 
       if (!utr) {
         validateRenterInlineUtrDuplicateUI("", false);
         if (utrInput) utrInput.focus();
         return triggerSideToast("UTR Required", "Please enter your UTR / UPI Transaction Reference Number for verification.", false);
+      }
+
+      if (!/^\d{12,22}$/.test(utr)) {
+        validateRenterInlineUtrDuplicateUI("", false);
+        if (utrInput) {
+          utrInput.style.borderColor = "#ef4444";
+          utrInput.focus();
+        }
+        return triggerSideToast("Invalid UTR Number", "UTR must be between 12 and 22 digits long.", false);
       }
 
       const localDuplicate = findDuplicatePaymentProofByUtr(utr);
@@ -25741,10 +25751,14 @@
                     </label>
                     <input
                       type="text"
+                      inputmode="numeric"
                       id="renterPayUtrInput"
                       class="form-control"
-                      placeholder="Enter 12-digit UTR or Txn Ref No."
-                      oninput="validateRenterInlineUtrDuplicateUI('', false)"
+                      minlength="12"
+                      maxlength="22"
+                      pattern="[0-9]{12,22}"
+                      placeholder="Enter 12 to 22 digit UTR No."
+                      oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 22); validateRenterInlineUtrDuplicateUI('', false)"
                       style="padding:10px 12px; font-size:0.86rem;"
                     />
                   </div>
