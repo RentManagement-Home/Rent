@@ -18163,6 +18163,7 @@
           }
 
           case "savePaymentProofs": {
+            const prevProofs = Array.isArray(globalConfig.paymentProofs) ? globalConfig.paymentProofs : [];
             const proofs = Array.isArray(data.paymentProofs) ? data.paymentProofs : [];
             globalConfig = {
               ...globalConfig,
@@ -18171,6 +18172,18 @@
             };
             saveLocalGlobalConfigMaster(globalConfig);
             const proofsRes = await sendGasSheetAction({ ...data, globalConfig: globalConfig });
+            if (proofsRes && proofsRes.status === "error" && proofsRes.duplicateUtr) {
+              globalConfig = {
+                ...globalConfig,
+                paymentProofs: prevProofs,
+                updatedAt: getIstNowIsoTimestamp()
+              };
+              saveLocalGlobalConfigMaster(globalConfig);
+              return finalizeGasSyncResponse(proofsRes, "Duplicate UTR rejected.", {
+                duplicateUtr: true,
+                utr: proofsRes.utr || ""
+              });
+            }
             return finalizeGasSyncResponse(proofsRes, "Payment proofs synced to Google Sheet.");
           }
 
@@ -23726,28 +23739,33 @@
           }
         });
         if (inlineUtrVal && typeof saveStoredPaymentProofs === "function" && typeof getStoredPaymentProofs === "function") {
-          const inlineAmt = parseFloat(document.getElementById("renterPayAmountInput")?.value) || 0;
           const existingProofs = getStoredPaymentProofs();
-          const proofEntry = {
-            id: "PROOF-" + Date.now(),
-            billId: String(window.__activeRenterPaymentBillId || ""),
-            propertyName: propName,
-            flatName: flatName,
-            renterId: renterId,
-            aadhaar: normAadhaar,
-            monthYear: cleanMonth,
-            tenantName: renterName || activeUserFullName || activeUser || "Resident",
-            renterName: renterName || activeUserFullName || activeUser || "Resident",
-            username: activeUser || "",
-            submittedBy: activeUser || renterName || "Resident",
-            amount: inlineAmt,
-            utr: inlineUtrVal,
-            mode: "UPI",
-            screenshotUrl: driveUrl,
-            status: "Pending",
-            submittedAt: formatDateOnly(new Date())
-          };
-          saveStoredPaymentProofs([proofEntry, ...existingProofs]);
+          const duplicateInlineProof = typeof findDuplicatePaymentProofByUtr === "function"
+            ? findDuplicatePaymentProofByUtr(inlineUtrVal, existingProofs)
+            : null;
+          if (!duplicateInlineProof) {
+            const inlineAmt = parseFloat(document.getElementById("renterPayAmountInput")?.value) || 0;
+            const proofEntry = {
+              id: "PROOF-" + Date.now(),
+              billId: String(window.__activeRenterPaymentBillId || ""),
+              propertyName: propName,
+              flatName: flatName,
+              renterId: renterId,
+              aadhaar: normAadhaar,
+              monthYear: cleanMonth,
+              tenantName: renterName || activeUserFullName || activeUser || "Resident",
+              renterName: renterName || activeUserFullName || activeUser || "Resident",
+              username: activeUser || "",
+              submittedBy: activeUser || renterName || "Resident",
+              amount: inlineAmt,
+              utr: inlineUtrVal,
+              mode: "UPI",
+              screenshotUrl: driveUrl,
+              status: "Pending",
+              submittedAt: formatDateOnly(new Date())
+            };
+            saveStoredPaymentProofs([proofEntry, ...existingProofs]);
+          }
         }
         saveLocalGlobalConfigMaster(DB.globalConfig);
         saveDbSnapshotToCache();
@@ -24000,7 +24018,82 @@
       }
     }
 
+    function normalizeUtrNumber(rawUtr) {
+      return String(rawUtr || "").trim().replace(/\s+/g, "").toUpperCase();
+    }
+
+    function findDuplicatePaymentProofByUtr(rawUtr, proofsOverride = null) {
+      const normTarget = normalizeUtrNumber(rawUtr);
+      if (!normTarget) return null;
+      const sourceList = Array.isArray(proofsOverride)
+        ? proofsOverride
+        : (typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : []);
+      return sourceList.find(p => {
+        if (!p || typeof p !== "object") return false;
+        const existingNorm = normalizeUtrNumber(p.utr || p.UTRNumber || "");
+        return Boolean(existingNorm && existingNorm === normTarget);
+      }) || null;
+    }
+
+    function validateRenterInlineUtrDuplicateUI(customErrorMessage = "") {
+      const utrInput = document.getElementById("renterPayUtrInput");
+      const noticeEl = document.getElementById("renterInlineUtrDuplicateNotice");
+      const submitBtn = document.getElementById("btnSubmitRenterInlineUtrProof");
+      const rawVal = String(utrInput?.value || "").trim();
+      const dup = rawVal ? findDuplicatePaymentProofByUtr(rawVal) : null;
+
+      if (dup || customErrorMessage) {
+        if (noticeEl) {
+          const statusTxt = dup ? String(dup.status || dup.Status || "Submitted").trim() : "";
+          const msgText = customErrorMessage
+            ? escapeHtml(customErrorMessage)
+            : `Duplicate UTR <strong>${escapeHtml(rawVal)}</strong> has already been submitted${statusTxt ? ` (${escapeHtml(statusTxt)})` : ""}. Each UTR number can only be submitted once.`;
+          noticeEl.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="margin-right:5px;"></i>${msgText}`;
+          noticeEl.style.display = "block";
+        }
+        if (utrInput) {
+          utrInput.style.borderColor = "#ef4444";
+        }
+        if (submitBtn) {
+          submitBtn.dataset.duplicateUtrBlocked = "1";
+        }
+        return dup || { utr: rawVal };
+      }
+
+      if (noticeEl) {
+        noticeEl.innerHTML = "";
+        noticeEl.style.display = "none";
+      }
+      if (utrInput) {
+        utrInput.style.removeProperty("border-color");
+      }
+      if (submitBtn) {
+        delete submitBtn.dataset.duplicateUtrBlocked;
+      }
+      return null;
+    }
+
+    async function refreshLatestPaymentProofsBeforeSubmit() {
+      if (typeof fetchGasSheetData !== "function") return;
+      try {
+        const freshRes = await fetchGasSheetData(true, true);
+        if (freshRes && freshRes.globalConfig && Array.isArray(freshRes.globalConfig.paymentProofs)) {
+          const rawServerProofs = freshRes.globalConfig.paymentProofs;
+          const filteredServerProofs = window.__deletedPaymentProofIds
+            ? rawServerProofs.filter(p => {
+                const pid = String(p?.id || p?.ProofID || "");
+                return !(pid && window.__deletedPaymentProofIds[pid]);
+              })
+            : rawServerProofs;
+          if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+          DB.globalConfig.paymentProofs = filteredServerProofs;
+          saveDbSnapshotToCache();
+        }
+      } catch (e) {}
+    }
+
     async function submitRenterInlinePaymentUtrProof() {
+      if (window.__isSubmittingInlineUtrProof) return;
       const utrInput = document.getElementById("renterPayUtrInput");
       const amtInput = document.getElementById("renterPayAmountInput");
       const submitBtn = document.getElementById("btnSubmitRenterInlineUtrProof");
@@ -24008,8 +24101,21 @@
       const amount = parseFloat(amtInput?.value || "0") || 0;
 
       if (!utr) {
+        validateRenterInlineUtrDuplicateUI("");
         if (utrInput) utrInput.focus();
         return triggerSideToast("UTR Required", "Please enter your UTR / UPI Transaction Reference Number for verification.", false);
+      }
+
+      const localDuplicate = findDuplicatePaymentProofByUtr(utr);
+      if (localDuplicate) {
+        const dupStatus = String(localDuplicate.status || localDuplicate.Status || "Submitted").trim();
+        validateRenterInlineUtrDuplicateUI();
+        if (utrInput) utrInput.focus();
+        return triggerSideToast(
+          "Duplicate UTR Not Allowed",
+          `UTR ${utr} has already been submitted (${dupStatus}). Each UTR number can only be submitted once.`,
+          false
+        );
       }
 
       const matchedProfiles = getRenterProfilesForLoggedInAadhaar();
@@ -24023,12 +24129,26 @@
       const pendingPhoto = window.pendingRenterInlinePaymentPhotoDataUrl || "";
       const pendingPhotoName = window.pendingRenterInlinePaymentPhotoName || `PaymentProof_${propName}_Flat_${flatName}_${utr}.jpg`;
 
+      window.__isSubmittingInlineUtrProof = true;
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Submitting Payment Proof &amp; UTR...</span>`;
       }
 
       try {
+        await refreshLatestPaymentProofsBeforeSubmit();
+        const serverDuplicate = findDuplicatePaymentProofByUtr(utr);
+        if (serverDuplicate) {
+          const dupStatus = String(serverDuplicate.status || serverDuplicate.Status || "Submitted").trim();
+          validateRenterInlineUtrDuplicateUI();
+          if (utrInput) utrInput.focus();
+          return triggerSideToast(
+            "Duplicate UTR Not Allowed",
+            `UTR ${utr} has already been submitted (${dupStatus}). Each UTR number can only be submitted once.`,
+            false
+          );
+        }
+
         let finalPhotoUrl = "";
 
         if (pendingPhoto && pendingPhoto.startsWith("data:image")) {
@@ -24065,6 +24185,18 @@
         }
 
         const list = typeof getStoredPaymentProofs === "function" ? getStoredPaymentProofs() : [];
+        const preSaveDuplicate = findDuplicatePaymentProofByUtr(utr, list);
+        if (preSaveDuplicate) {
+          const dupStatus = String(preSaveDuplicate.status || preSaveDuplicate.Status || "Submitted").trim();
+          validateRenterInlineUtrDuplicateUI();
+          if (utrInput) utrInput.focus();
+          return triggerSideToast(
+            "Duplicate UTR Not Allowed",
+            `UTR ${utr} has already been submitted (${dupStatus}). Each UTR number can only be submitted once.`,
+            false
+          );
+        }
+
         const newProof = {
           id: "PROOF-" + Date.now(),
           billId: String(window.__activeRenterPaymentBillId || ""),
@@ -24085,10 +24217,22 @@
           submittedAt: formatDateOnly(new Date())
         };
         if (typeof saveStoredPaymentProofs === "function") {
-          saveStoredPaymentProofs([newProof, ...list]);
+          const saveRes = await saveStoredPaymentProofs([newProof, ...list]);
+          if (saveRes && saveRes.status === "error" && saveRes.duplicateUtr) {
+            if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+            DB.globalConfig.paymentProofs = list;
+            saveDbSnapshotToCache();
+            renderAllDashboardUI();
+            const errMsg = saveRes.message || `UTR ${utr} has already been submitted. Each UTR number can only be submitted once.`;
+            validateRenterInlineUtrDuplicateUI(errMsg);
+            const latestUtrInput = document.getElementById("renterPayUtrInput");
+            if (latestUtrInput) latestUtrInput.focus();
+            return triggerSideToast("Duplicate UTR Not Allowed", errMsg, false);
+          }
         }
         clearRenterPendingPaymentPhoto(true);
         if (utrInput) utrInput.value = "";
+        validateRenterInlineUtrDuplicateUI("");
         renderAllDashboardUI();
         if (typeof renderAdminPaymentProofQueue === "function") renderAdminPaymentProofQueue();
         if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
@@ -24102,6 +24246,7 @@
         console.error("Submit inline UTR proof error:", err);
         triggerSideToast("Submission Error", err?.message || "Could not submit payment proof. Please try again.", false);
       } finally {
+        window.__isSubmittingInlineUtrProof = false;
         const latestBtn = document.getElementById("btnSubmitRenterInlineUtrProof");
         if (latestBtn) {
           latestBtn.disabled = false;
@@ -25605,6 +25750,7 @@
                       id="renterPayUtrInput"
                       class="form-control"
                       placeholder="Enter 12-digit UTR or Txn Ref No."
+                      oninput="validateRenterInlineUtrDuplicateUI()"
                       style="padding:10px 12px; font-size:0.86rem;"
                     />
                   </div>
@@ -25622,6 +25768,11 @@
                     />
                   </div>
                 </div>
+                <div
+                  id="renterInlineUtrDuplicateNotice"
+                  role="alert"
+                  style="display:none; padding:9px 12px; border-radius:9px; border:1px solid rgba(248,113,113,0.75); background:rgba(127,29,29,0.78); color:#fef2f2; font-size:0.78rem; font-weight:700; line-height:1.4;"
+                ></div>
                 <button
                   type="button"
                   id="btnSubmitRenterInlineUtrProof"
@@ -25991,6 +26142,9 @@
               const restored = document.getElementById(fid);
               if (restored) restored.value = preservedValues[fid];
             });
+            if (typeof validateRenterInlineUtrDuplicateUI === "function") {
+              validateRenterInlineUtrDuplicateUI();
+            }
             if (activeElId && preservedFieldIds.includes(activeElId)) {
               const focusTarget = document.getElementById(activeElId);
               if (focusTarget) {
@@ -45301,7 +45455,7 @@
       if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
       DB.globalConfig.paymentProofs = clean;
       saveDbSnapshotToCache();
-      sendFirebaseAction({ action: "savePaymentProofs", paymentProofs: clean }).catch(() => {});
+      return sendFirebaseAction({ action: "savePaymentProofs", paymentProofs: clean }).catch(() => ({ status: "network_offline" }));
     }
 
     function openSubmitPaymentProofModalForCurrentFlat() {
@@ -45397,6 +45551,7 @@
     }
 
     async function submitRenterPaymentProofRecord() {
+      if (window.__isSubmittingModalUtrProof) return;
       if (activeRole === "Viewer") {
         return triggerSideToast("View-Only Mode", "Viewer accounts have read-only access.", false);
       }
@@ -45409,7 +45564,6 @@
       const utr = (document.getElementById("proofUtrNumber")?.value || "").trim().toUpperCase();
       const mode = document.getElementById("proofPaymentMode")?.value || "UPI";
       const attachedScreenshot = window.pendingPaymentProofDataUrl || (document.getElementById("proofScreenshotUrl")?.value || "").trim();
-      window.pendingPaymentProofDataUrl = "";
 
       if (!Number.isFinite(amount) || amount <= 0 || !utr) {
         return triggerSideToast("Details Required", "Please enter both a valid Paid Amount and UTR / Transaction ID.", false);
@@ -45417,84 +45571,103 @@
       if (!/^[A-Z0-9_-]{6,32}$/.test(utr)) {
         return triggerSideToast("Invalid UTR Format", "UTR / Transaction ID must be 6–32 letters or digits (no spaces).", false);
       }
-      const existingProofsCheck = getStoredPaymentProofs();
-      const duplicateUtr = existingProofsCheck.find(p =>
-        String(p.utr || p.UTRNumber || "").trim().toUpperCase() === utr &&
-        ["pending", "approved"].includes(String(p.status || p.Status || "Pending").trim().toLowerCase())
-      );
+      const duplicateUtr = findDuplicatePaymentProofByUtr(utr);
       if (duplicateUtr) {
-        return triggerSideToast("Duplicate UTR Detected", `UTR ${utr} has already been submitted (${duplicateUtr.status || "Pending"}).`, false);
+        return triggerSideToast("Duplicate UTR Not Allowed", `UTR ${utr} has already been submitted (${duplicateUtr.status || "Submitted"}). Each UTR number can only be submitted once.`, false);
       }
 
-      const proofId = "PROOF-" + Date.now();
-      let finalScreenshotUrl = attachedScreenshot;
-      const cleanMonth = normalizeMonthYear(monthYear) || getCurrentCalendarYearMonth();
-      const resolvedProofAadhaar = normalizeAadhaar12(
-        (typeof getNormalizedActiveRenterAadhaar === "function" ? getNormalizedActiveRenterAadhaar() : "") ||
-        activeAssignedAadhaar ||
-        activeFlatRenterObj?.IdentityDocNumber ||
-        ""
-      );
-      const resolvedProofRenterId = String(activeFlatRenterObj?.RenterID || "").trim();
+      window.__isSubmittingModalUtrProof = true;
+      try {
+        await refreshLatestPaymentProofsBeforeSubmit();
+        const serverDupUtr = findDuplicatePaymentProofByUtr(utr);
+        if (serverDupUtr) {
+          return triggerSideToast("Duplicate UTR Not Allowed", `UTR ${utr} has already been submitted (${serverDupUtr.status || "Submitted"}). Each UTR number can only be submitted once.`, false);
+        }
 
-      if (attachedScreenshot && attachedScreenshot.startsWith("data:image")) {
-        triggerSideToast("Uploading...", "Uploading...", "warning");
-        const mimeMatch = String(attachedScreenshot).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
-        const proofMime = mimeMatch ? mimeMatch[1].toLowerCase() : "image/jpeg";
-        const ext = proofMime === "image/png" ? "png" : (proofMime === "image/webp" ? "webp" : "jpg");
-        const upRes = await sendFirebaseAction({
-          action: "uploadRenterMonthlyPhoto",
-          username: activeUser || "",
+        window.pendingPaymentProofDataUrl = "";
+        const proofId = "PROOF-" + Date.now();
+        let finalScreenshotUrl = attachedScreenshot;
+        const cleanMonth = normalizeMonthYear(monthYear) || getCurrentCalendarYearMonth();
+        const resolvedProofAadhaar = normalizeAadhaar12(
+          (typeof getNormalizedActiveRenterAadhaar === "function" ? getNormalizedActiveRenterAadhaar() : "") ||
+          activeAssignedAadhaar ||
+          activeFlatRenterObj?.IdentityDocNumber ||
+          ""
+        );
+        const resolvedProofRenterId = String(activeFlatRenterObj?.RenterID || "").trim();
+
+        if (attachedScreenshot && attachedScreenshot.startsWith("data:image")) {
+          triggerSideToast("Uploading...", "Uploading...", "warning");
+          const mimeMatch = String(attachedScreenshot).match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,/i);
+          const proofMime = mimeMatch ? mimeMatch[1].toLowerCase() : "image/jpeg";
+          const ext = proofMime === "image/png" ? "png" : (proofMime === "image/webp" ? "webp" : "jpg");
+          const upRes = await sendFirebaseAction({
+            action: "uploadRenterMonthlyPhoto",
+            username: activeUser || "",
+            propertyName: propName,
+            flatName: flatName,
+            renterId: resolvedProofRenterId,
+            aadhaar: resolvedProofAadhaar,
+            identityDocNumber: resolvedProofAadhaar,
+            renterName: tenantName,
+            monthYear: cleanMonth,
+            category: "completed_payment",
+            fileName: `PaymentProof_${propName}_Flat_${flatName}_${utr}.${ext}`,
+            mimeType: proofMime,
+            base64Data: attachedScreenshot
+          });
+          if (!upRes || upRes.status === "error") {
+            return triggerSideToast("Upload Failed", upRes?.message || "Could not upload payment proof screenshot.", false);
+          }
+          const driveProofUrl = (upRes.imageUrl || upRes.previewUrl || upRes.shareableUrl || "").trim();
+          if (!driveProofUrl || driveProofUrl.startsWith("data:")) {
+            return triggerSideToast("Upload Failed", "Could not retrieve uploaded payment screenshot link.", false);
+          }
+          finalScreenshotUrl = normalizeGoogleDriveImageUrl(driveProofUrl);
+        }
+
+        const prevList = getStoredPaymentProofs();
+        const preSaveDup = findDuplicatePaymentProofByUtr(utr, prevList);
+        if (preSaveDup) {
+          return triggerSideToast("Duplicate UTR Not Allowed", `UTR ${utr} has already been submitted (${preSaveDup.status || "Submitted"}). Each UTR number can only be submitted once.`, false);
+        }
+
+        const newProof = {
+          id: proofId,
+          billId,
           propertyName: propName,
           flatName: flatName,
           renterId: resolvedProofRenterId,
           aadhaar: resolvedProofAadhaar,
-          identityDocNumber: resolvedProofAadhaar,
-          renterName: tenantName,
           monthYear: cleanMonth,
-          category: "completed_payment",
-          fileName: `PaymentProof_${propName}_Flat_${flatName}_${utr}.${ext}`,
-          mimeType: proofMime,
-          base64Data: attachedScreenshot
-        });
-        if (!upRes || upRes.status === "error") {
-          return triggerSideToast("Upload Failed", upRes?.message || "Could not upload payment proof screenshot.", false);
+          tenantName: tenantName,
+          renterName: tenantName,
+          username: activeUser || "",
+          submittedBy: activeUser || tenantName,
+          amount: amount,
+          utr: utr,
+          mode: mode,
+          screenshotUrl: finalScreenshotUrl,
+          status: "Pending",
+          submittedAt: formatDateOnly(new Date())
+        };
+        const nextList = [newProof, ...prevList];
+        const saveRes = await saveStoredPaymentProofs(nextList);
+        if (saveRes && saveRes.status === "error" && saveRes.duplicateUtr) {
+          if (!DB.globalConfig || typeof DB.globalConfig !== "object") DB.globalConfig = {};
+          DB.globalConfig.paymentProofs = prevList;
+          saveDbSnapshotToCache();
+          return triggerSideToast("Duplicate UTR Not Allowed", saveRes.message || `UTR ${utr} has already been submitted. Each UTR number can only be submitted once.`, false);
         }
-        const driveProofUrl = (upRes.imageUrl || upRes.previewUrl || upRes.shareableUrl || "").trim();
-        if (!driveProofUrl || driveProofUrl.startsWith("data:")) {
-          return triggerSideToast("Upload Failed", "Could not retrieve uploaded payment screenshot link.", false);
-        }
-        finalScreenshotUrl = normalizeGoogleDriveImageUrl(driveProofUrl);
+
+        const overlay = document.getElementById("submitPaymentProofModalOverlay");
+        if (overlay) overlay.classList.remove("active");
+        renderAdminPaymentProofQueue();
+        if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
+        triggerSideToast("Upload successfully", "Upload successfully", true);
+      } finally {
+        window.__isSubmittingModalUtrProof = false;
       }
-
-      const list = getStoredPaymentProofs();
-      const newProof = {
-        id: proofId,
-        billId,
-        propertyName: propName,
-        flatName: flatName,
-        renterId: resolvedProofRenterId,
-        aadhaar: resolvedProofAadhaar,
-        monthYear: cleanMonth,
-        tenantName: tenantName,
-        renterName: tenantName,
-        username: activeUser || "",
-        submittedBy: activeUser || tenantName,
-        amount: amount,
-        utr: utr,
-        mode: mode,
-        screenshotUrl: finalScreenshotUrl,
-        status: "Pending",
-        submittedAt: formatDateOnly(new Date())
-      };
-      list.unshift(newProof);
-      saveStoredPaymentProofs(list);
-
-      const overlay = document.getElementById("submitPaymentProofModalOverlay");
-      if (overlay) overlay.classList.remove("active");
-      renderAdminPaymentProofQueue();
-      if (typeof renderAdminScreenshotVerificationGrid === "function") renderAdminScreenshotVerificationGrid();
-      triggerSideToast("Upload successfully", "Upload successfully", true);
     }
 
     function renderAdminPaymentProofQueue() {
