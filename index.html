@@ -16989,7 +16989,7 @@
         String(authenticatedPayload?.pngProofBase64 || "").startsWith("data:") ||
         String(authenticatedPayload?.waterProofBase64 || "").startsWith("data:")
       ));
-      const requiresStrictJson = isDrivePhotoUpload || actName === "sendProfileEmailOtp" || actName === "verifyProfileEmailOtp" || actName === "sendForgotPasswordOtp" || actName === "verifyForgotPasswordOtp";
+      const requiresStrictJson = isDrivePhotoUpload || actName === "sendProfileEmailOtp" || actName === "verifyProfileEmailOtp" || actName === "sendForgotPasswordOtp" || actName === "verifyForgotPasswordOtp" || actName === "getGlobalOtpLimitStatus";
 
       // Serialize Google Apps Script POST calls so concurrent actions never collide on Sheet lock
       const runSheetPost = async function() {
@@ -17630,6 +17630,7 @@
       "verifyProfileEmailOtp",
       "sendForgotPasswordOtp",
       "verifyForgotPasswordOtp",
+      "getGlobalOtpLimitStatus",
       "recordBill",
       "updateSingleBill",
       "deleteBill",
@@ -26332,14 +26333,18 @@
       }
     }
 
-    // Inline Forgot Password Handlers — Global Backend Database Enforcement Across All Devices
-    // Strict policy: max 5 OTPs per email/Gmail address per 1-day (24h) window; each OTP valid for strictly 5 minutes
-    const FP_OTP_MAX_PER_DAY = 5;
-    const FP_OTP_VALIDITY_MS = 5 * 60 * 1000; // 5 minutes per OTP
+    // Unified Global OTP Limit & Expiry Engine — Shared Across ALL OTP Flows (Forgot Password + Profile Email) & All Devices
+    // Strict policy: max 5 OTPs per email/Gmail address per 1-day (24h) window globally; each OTP valid for strictly 5 minutes
+    const GLOBAL_OTP_MAX_PER_DAY = 5;
+    const GLOBAL_OTP_WINDOW_MS = 24 * 60 * 60 * 1000; // 1-day (24-hour) rolling window
+    const GLOBAL_OTP_VALIDITY_MS = 5 * 60 * 1000; // Strictly 5 minutes (300 seconds) per OTP
+    const GLOBAL_OTP_STORAGE_KEY = "kirayahub_global_otp_daily_limits_v2";
+    const FP_OTP_MAX_PER_DAY = GLOBAL_OTP_MAX_PER_DAY;
+    const FP_OTP_VALIDITY_MS = GLOBAL_OTP_VALIDITY_MS;
     let fpActiveTrackedEmail = "";
     let fpCountdownInterval = null;
     let fpRequestInFlight = false;
-    let fpServerState = null; // Ephemeral in-memory UI state mirrored strictly from backend responses
+    let fpRemoteStatusDebounce = null;
 
     function normalizeFpEmail(raw) {
       return String(raw || "").trim().toLowerCase();
@@ -26393,133 +26398,275 @@
       return `${rem} sec`;
     }
 
+    function loadGlobalOtpStore() {
+      try {
+        const raw = localStorage.getItem(GLOBAL_OTP_STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveGlobalOtpStore(store) {
+      try {
+        localStorage.setItem(GLOBAL_OTP_STORAGE_KEY, JSON.stringify(store || {}));
+      } catch (e) {}
+    }
+
     function purgeLegacyFpBrowserStorage() {
       try { localStorage.removeItem("kirayahub_fp_otp_email_limits_v1"); } catch (e) {}
     }
 
-    function resetFpInMemoryState() {
-      fpServerState = null;
+    function buildGlobalDailyLimitErrorMessage(rawEmail, cooldownSec, hasActiveFpOtp = false) {
+      const clean = normalizeFpEmail(rawEmail);
+      const waitText = formatFpCooldownReadable(Math.max(1, Number(cooldownSec) || 60));
+      if (hasActiveFpOtp) {
+        return `Daily OTP limit reached: Maximum ${GLOBAL_OTP_MAX_PER_DAY} OTPs per day allowed for ${clean}. Further OTP requests are blocked for this 1-day window (try again in ${waitText}). You can still verify your active 5th OTP below before it expires.`;
+      }
+      return `Daily OTP limit reached: Maximum ${GLOBAL_OTP_MAX_PER_DAY} OTPs per day allowed for ${clean}. Any further OTP requests within this 1-day window are blocked. Please try again in ${waitText}.`;
+    }
+
+    function getGlobalDailyOtpRecord(rawEmail, nowMs = Date.now()) {
+      const clean = normalizeFpEmail(rawEmail);
+      const canon = canonicalFpLimitEmail(clean);
+      const empty = {
+        email: clean,
+        canonEmail: canon,
+        windowStartMs: 0,
+        windowExpiresAt: 0,
+        otpsSentCount: 0,
+        maxOtpsPerDay: GLOBAL_OTP_MAX_PER_DAY,
+        otpsRemaining: GLOBAL_OTP_MAX_PER_DAY,
+        wrongAttempts: 0,
+        maxAttemptsForCurrentOtp: 3,
+        fpOtpExpiresAt: 0,
+        profileOtpExpiresAt: 0,
+        verifyLocked: false,
+        requestLocked: false,
+        lockedUntilMs: 0,
+        cooldownRemainingSec: 0
+      };
+      if (!canon) return empty;
+
+      const store = loadGlobalOtpStore();
+      const rec = store[canon];
+      if (!rec || typeof rec !== "object") return empty;
+
+      const windowStartMs = Number(rec.windowStartMs) || 0;
+      const windowExpiresAt = Number(rec.windowExpiresAt) || (windowStartMs > 0 ? windowStartMs + GLOBAL_OTP_WINDOW_MS : 0);
+      const lockedUntilMs = Number(rec.lockedUntilMs) || 0;
+      const lockExpired = !lockedUntilMs || nowMs >= lockedUntilMs;
+      const windowExpired = windowExpiresAt > 0 && nowMs >= windowExpiresAt;
+
+      // Auto-reset once the 1-day window & any 1-day lockout have both fully elapsed
+      if ((windowExpired && lockExpired) || (lockedUntilMs > 0 && nowMs >= lockedUntilMs && !windowExpiresAt)) {
+        delete store[canon];
+        saveGlobalOtpStore(store);
+        return empty;
+      }
+
+      const otpsSentCount = Math.max(0, parseInt(rec.otpsSentCount, 10) || 0);
+      const verifyLocked = Boolean(rec.verifyLocked && lockedUntilMs > nowMs);
+      const requestLocked = Boolean(verifyLocked || (otpsSentCount >= GLOBAL_OTP_MAX_PER_DAY && windowExpiresAt > nowMs));
+      const effectiveLockEnd = verifyLocked ? lockedUntilMs : (requestLocked ? Math.max(windowExpiresAt, lockedUntilMs) : 0);
+      const cooldownRemainingSec = effectiveLockEnd > nowMs ? Math.max(0, Math.ceil((effectiveLockEnd - nowMs) / 1000)) : 0;
+
+      return {
+        email: clean,
+        canonEmail: canon,
+        windowStartMs,
+        windowExpiresAt,
+        otpsSentCount,
+        maxOtpsPerDay: GLOBAL_OTP_MAX_PER_DAY,
+        otpsRemaining: Math.max(0, GLOBAL_OTP_MAX_PER_DAY - otpsSentCount),
+        wrongAttempts: Math.max(0, parseInt(rec.wrongAttempts, 10) || 0),
+        maxAttemptsForCurrentOtp: Number(rec.maxAttemptsForCurrentOtp) || (otpsSentCount >= GLOBAL_OTP_MAX_PER_DAY ? 5 : 3),
+        fpOtpExpiresAt: Number(rec.fpOtpExpiresAt) || 0,
+        profileOtpExpiresAt: Number(rec.profileOtpExpiresAt) || 0,
+        verifyLocked,
+        requestLocked,
+        lockedUntilMs: effectiveLockEnd,
+        cooldownRemainingSec
+      };
+    }
+
+    function syncGlobalDailyOtpFromResponse(rawEmail, res, flowType = "forgot") {
+      const clean = normalizeFpEmail(rawEmail || res?.email || fpActiveTrackedEmail || "");
+      const canon = canonicalFpLimitEmail(clean);
+      if (!canon || !res || typeof res !== "object") return null;
+
+      const nowMs = Date.now();
+      const prev = getGlobalDailyOtpRecord(clean, nowMs);
+      const store = loadGlobalOtpStore();
+
+      const isDelivered = Boolean((res.status === "success" && (res.otpDelivered === true || flowType === "forgot-sent")) || res.autoResent === true);
+      const isVerifiedSuccess = Boolean(res.status === "success" && res.verified === true);
+      const isStatusPoll = Boolean(flowType === "status");
+
+      // Determine authoritative daily OTP count (strictly monotonic within active 24h window)
+      const serverCount = typeof res.otpsSentCount === "number" && Number.isFinite(res.otpsSentCount)
+        ? Math.max(0, Math.floor(res.otpsSentCount))
+        : null;
+      let nextCount = prev.otpsSentCount;
+      if (isDelivered) {
+        nextCount = Math.max(prev.otpsSentCount + 1, serverCount !== null ? serverCount : 0);
+      } else if (serverCount !== null) {
+        nextCount = Math.max(prev.otpsSentCount, serverCount);
+      }
+
+      // Maintain 1-day (24-hour) rolling window
+      let nextWindowStart = prev.windowStartMs;
+      let nextWindowEnd = prev.windowExpiresAt;
+      if (nextCount > 0) {
+        if (!nextWindowStart || (nextWindowEnd > 0 && nowMs >= nextWindowEnd)) {
+          nextWindowStart = (typeof res.windowStart === "number" && res.windowStart > 0) ? res.windowStart : nowMs;
+        }
+        const serverWinEnd = typeof res.windowExpiresAt === "number" && res.windowExpiresAt > nowMs ? res.windowExpiresAt : 0;
+        const computedWinEnd = nextWindowStart + GLOBAL_OTP_WINDOW_MS;
+        nextWindowEnd = Math.max(nextWindowEnd || 0, serverWinEnd, computedWinEnd);
+      }
+
+      // Compute strict 5-minute OTP expiry (capped at 5 minutes even if an older backend returned longer)
+      let nextFpOtpExpiresAt = prev.fpOtpExpiresAt;
+      let nextProfileOtpExpiresAt = prev.profileOtpExpiresAt;
+      const rawExpSec = Number(res.expiresInSeconds);
+      const cappedServerExpAt = (() => {
+        if (Number.isFinite(rawExpSec) && rawExpSec > 0) {
+          return nowMs + Math.min(300, rawExpSec) * 1000;
+        }
+        if (typeof res.otpExpiresAt === "number" && res.otpExpiresAt > nowMs) {
+          return Math.min(res.otpExpiresAt, nowMs + GLOBAL_OTP_VALIDITY_MS);
+        }
+        return 0;
+      })();
+
+      if (flowType === "forgot" || flowType === "forgot-sent") {
+        if (isVerifiedSuccess) {
+          nextFpOtpExpiresAt = 0;
+        } else if (res.verifyLocked || res.finalLockout) {
+          nextFpOtpExpiresAt = 0;
+        } else if (res.expired) {
+          nextFpOtpExpiresAt = nowMs - 1;
+        } else if (isDelivered) {
+          nextFpOtpExpiresAt = cappedServerExpAt || (nowMs + GLOBAL_OTP_VALIDITY_MS);
+        } else if (cappedServerExpAt > 0) {
+          nextFpOtpExpiresAt = cappedServerExpAt;
+        }
+      } else if (flowType === "profile") {
+        if (isVerifiedSuccess) {
+          nextProfileOtpExpiresAt = 0;
+        } else if (res.expired) {
+          nextProfileOtpExpiresAt = nowMs - 1;
+        } else if (isDelivered) {
+          nextProfileOtpExpiresAt = cappedServerExpAt || (nowMs + GLOBAL_OTP_VALIDITY_MS);
+        } else if (cappedServerExpAt > 0) {
+          nextProfileOtpExpiresAt = cappedServerExpAt;
+        }
+      } else if (isStatusPoll && res.hasActiveOtp && cappedServerExpAt > 0) {
+        nextFpOtpExpiresAt = cappedServerExpAt;
+      }
+
+      const nextVerifyLocked = Boolean(
+        res.verifyLocked || res.finalLockout || (prev.verifyLocked && prev.lockedUntilMs > nowMs)
+      );
+      const nextRequestLocked = Boolean(
+        nextVerifyLocked ||
+        nextCount >= GLOBAL_OTP_MAX_PER_DAY ||
+        (res.requestLocked && nextCount >= GLOBAL_OTP_MAX_PER_DAY)
+      );
+
+      let nextLockedUntilMs = prev.lockedUntilMs > nowMs ? prev.lockedUntilMs : 0;
+      if (nextVerifyLocked || nextRequestLocked) {
+        const retrySec = Number(res.retryAfterSeconds);
+        const fromRetry = (Number.isFinite(retrySec) && retrySec > 0) ? (nowMs + retrySec * 1000) : 0;
+        const fromField = Number(res.lockedUntilMs || res.requestLockUntilMs || 0);
+        nextLockedUntilMs = Math.max(nextLockedUntilMs, fromRetry, fromField, nextWindowEnd || (nowMs + GLOBAL_OTP_WINDOW_MS));
+      }
+
+      const nextWrongAttempts = isVerifiedSuccess || isDelivered
+        ? 0
+        : (typeof res.wrongAttempts === "number" ? res.wrongAttempts : prev.wrongAttempts);
+      const nextMaxAttempts = typeof res.maxAttemptsForCurrentOtp === "number"
+        ? res.maxAttemptsForCurrentOtp
+        : (nextCount >= GLOBAL_OTP_MAX_PER_DAY ? 5 : 3);
+
+      if (nextCount > 0 || nextVerifyLocked || nextFpOtpExpiresAt > nowMs || nextProfileOtpExpiresAt > nowMs) {
+        store[canon] = {
+          email: clean,
+          canonEmail: canon,
+          windowStartMs: nextWindowStart,
+          windowExpiresAt: nextWindowEnd,
+          otpsSentCount: nextCount,
+          wrongAttempts: nextWrongAttempts,
+          maxAttemptsForCurrentOtp: nextMaxAttempts,
+          fpOtpExpiresAt: nextFpOtpExpiresAt,
+          profileOtpExpiresAt: nextProfileOtpExpiresAt,
+          verifyLocked: nextVerifyLocked,
+          lockedUntilMs: nextLockedUntilMs,
+          updatedAt: nowMs
+        };
+        saveGlobalOtpStore(store);
+      }
+
+      return getGlobalDailyOtpRecord(clean, nowMs);
     }
 
     function applyFpBackendState(email, res) {
-      const rawKey = normalizeFpEmail(email || res?.email || fpActiveTrackedEmail || "");
-      const canonKey = canonicalFpLimitEmail(rawKey);
-      if (!canonKey || !res || typeof res !== "object") return null;
-      const nowMs = Date.now();
-      const prev = (fpServerState && fpServerState.canonEmail === canonKey) ? fpServerState : {};
+      return syncGlobalDailyOtpFromResponse(email, res, "forgot");
+    }
 
-      const otpsSentCount = typeof res.otpsSentCount === "number"
-        ? res.otpsSentCount
-        : (typeof prev.otpsSentCount === "number" ? prev.otpsSentCount : 0);
-      const maxOtpsPerDay = typeof res.maxOtpsPerDay === "number"
-        ? res.maxOtpsPerDay
-        : (typeof res.maxOtpsPerHour === "number" ? res.maxOtpsPerHour : FP_OTP_MAX_PER_DAY);
-      const otpsRemaining = typeof res.otpsRemaining === "number"
-        ? res.otpsRemaining
-        : Math.max(0, maxOtpsPerDay - otpsSentCount);
-      const wrongAttempts = typeof res.wrongAttempts === "number"
-        ? res.wrongAttempts
-        : (typeof prev.wrongAttempts === "number" ? prev.wrongAttempts : 0);
-      const maxAttemptsForCurrentOtp = typeof res.maxAttemptsForCurrentOtp === "number"
-        ? res.maxAttemptsForCurrentOtp
-        : (otpsSentCount >= maxOtpsPerDay ? 5 : 3);
-
-      const expiresInSec = Number(res.expiresInSeconds);
-      let otpExpiresAt = 0;
-      if (res.verifyLocked || res.finalLockout) {
-        otpExpiresAt = 0;
-      } else if (res.expired) {
-        otpExpiresAt = nowMs - 1;
-      } else if (Number.isFinite(expiresInSec) && expiresInSec > 0) {
-        otpExpiresAt = nowMs + expiresInSec * 1000;
-      } else if (typeof res.otpExpiresAt === "number" && res.otpExpiresAt > nowMs) {
-        otpExpiresAt = res.otpExpiresAt;
-      } else if (res.status === "success" || res.otpDelivered || res.autoResent) {
-        otpExpiresAt = nowMs + FP_OTP_VALIDITY_MS;
-      } else if (typeof prev.otpExpiresAt === "number" && prev.otpExpiresAt > nowMs) {
-        otpExpiresAt = prev.otpExpiresAt;
-      }
-
-      const verifyLocked = Boolean(res.verifyLocked || res.finalLockout);
-      const requestLocked = Boolean(res.requestLocked || verifyLocked || otpsSentCount >= maxOtpsPerDay);
-      let lockedUntilMs = 0;
-      if ((requestLocked || verifyLocked) && Number(res.retryAfterSeconds) > 0) {
-        lockedUntilMs = nowMs + Number(res.retryAfterSeconds) * 1000;
-      } else {
-        lockedUntilMs = Number(res.lockedUntilMs || res.requestLockUntilMs || res.windowExpiresAt || 0);
-      }
-      if (!lockedUntilMs && prev.lockedUntilMs && prev.lockedUntilMs > nowMs) {
-        lockedUntilMs = prev.lockedUntilMs;
-      }
-
-      fpServerState = {
-        email: rawKey,
-        canonEmail: canonKey,
-        otpsSentCount,
-        maxOtpsPerDay,
-        otpsRemaining,
-        wrongAttempts,
-        maxAttemptsForCurrentOtp,
-        otpExpiresAt,
-        verifyLocked,
-        requestLocked,
-        lockedUntilMs
-      };
-      return fpServerState;
+    async function syncGlobalOtpStatusFromServer(rawEmail) {
+      const clean = normalizeFpEmail(rawEmail);
+      if (!isValidFpEmail(clean) || typeof sendFirebaseAction !== "function") return null;
+      try {
+        const res = await sendFirebaseAction({
+          action: "getGlobalOtpLimitStatus",
+          email: clean
+        });
+        if (res && res.status === "success" && typeof res.otpsSentCount === "number") {
+          const merged = syncGlobalDailyOtpFromResponse(clean, res, "status");
+          if (normalizeFpEmail(document.getElementById("fpEmailInput")?.value || fpActiveTrackedEmail || "") === clean) {
+            refreshFpPerEmailUi(clean);
+            if (merged && (merged.verifyLocked || merged.requestLocked)) {
+              const hasActiveFp = Boolean(!merged.verifyLocked && merged.fpOtpExpiresAt && Date.now() < merged.fpOtpExpiresAt);
+              setInlineForgotPasswordStatus(
+                buildGlobalDailyLimitErrorMessage(clean, merged.cooldownRemainingSec, hasActiveFp),
+                "error"
+              );
+              startFpCountdownTimer(clean);
+            }
+          }
+          return merged;
+        }
+      } catch (e) {}
+      return null;
     }
 
     function getFpViewState(targetEmail) {
       const rawKey = normalizeFpEmail(targetEmail || fpActiveTrackedEmail || "");
-      const canonKey = canonicalFpLimitEmail(rawKey);
       const nowMs = Date.now();
-      if (!canonKey || !fpServerState || fpServerState.canonEmail !== canonKey) {
-        return {
-          email: rawKey,
-          otpsSentCount: 0,
-          maxOtpsPerDay: FP_OTP_MAX_PER_DAY,
-          otpsRemaining: FP_OTP_MAX_PER_DAY,
-          wrongAttempts: 0,
-          maxAttemptsForCurrentOtp: 3,
-          otpExpiresAt: 0,
-          otpRemainingSec: 0,
-          otpActive: false,
-          otpExpired: false,
-          verifyLocked: false,
-          requestLocked: false,
-          cooldownRemainingSec: 0
-        };
-      }
+      const rec = getGlobalDailyOtpRecord(rawKey, nowMs);
 
-      const s = fpServerState;
-      const cooldownActive = Boolean(s.lockedUntilMs && nowMs < s.lockedUntilMs);
-      const cooldownRemainingSec = cooldownActive ? Math.max(0, Math.ceil((s.lockedUntilMs - nowMs) / 1000)) : 0;
-
-      // Once 1-day server lock/window has elapsed, unlock UI so next request re-checks backend cleanly
-      if ((s.verifyLocked || s.requestLocked) && s.lockedUntilMs && nowMs >= s.lockedUntilMs) {
-        resetFpInMemoryState();
-        return getFpViewState(rawKey);
-      }
-
-      const verifyLocked = Boolean(s.verifyLocked && cooldownActive);
-      const requestLocked = Boolean(verifyLocked || (s.requestLocked && cooldownActive));
-      const otpActive = Boolean(!verifyLocked && s.otpExpiresAt && nowMs < s.otpExpiresAt);
-      const otpExpired = Boolean(!verifyLocked && s.otpExpiresAt && nowMs >= s.otpExpiresAt);
-      const otpRemainingSec = otpActive ? Math.max(0, Math.ceil((s.otpExpiresAt - nowMs) / 1000)) : 0;
+      const otpActive = Boolean(!rec.verifyLocked && rec.fpOtpExpiresAt && nowMs < rec.fpOtpExpiresAt);
+      const otpExpired = Boolean(!rec.verifyLocked && rec.fpOtpExpiresAt && nowMs >= rec.fpOtpExpiresAt);
+      const otpRemainingSec = otpActive ? Math.max(0, Math.ceil((rec.fpOtpExpiresAt - nowMs) / 1000)) : 0;
 
       return {
         email: rawKey,
-        otpsSentCount: s.otpsSentCount,
-        maxOtpsPerDay: s.maxOtpsPerDay,
-        otpsRemaining: s.otpsRemaining,
-        wrongAttempts: s.wrongAttempts,
-        maxAttemptsForCurrentOtp: s.maxAttemptsForCurrentOtp,
-        otpExpiresAt: s.otpExpiresAt,
+        otpsSentCount: rec.otpsSentCount,
+        maxOtpsPerDay: GLOBAL_OTP_MAX_PER_DAY,
+        otpsRemaining: rec.otpsRemaining,
+        wrongAttempts: rec.wrongAttempts,
+        maxAttemptsForCurrentOtp: rec.maxAttemptsForCurrentOtp,
+        otpExpiresAt: rec.fpOtpExpiresAt,
         otpRemainingSec,
         otpActive,
         otpExpired,
-        verifyLocked,
-        requestLocked,
-        cooldownRemainingSec
+        verifyLocked: rec.verifyLocked,
+        requestLocked: rec.requestLocked,
+        cooldownRemainingSec: rec.cooldownRemainingSec
       };
     }
 
@@ -26551,7 +26698,7 @@
 
       const state = getFpViewState(activeEmail);
 
-      // Step 1 Submit button reflects server-reported 1-day limit/lock status for the currently typed email
+      // Step 1 Submit button reflects global 1-day limit/lock status for the currently typed email (including Gmail aliases)
       if (sendBtn) {
         if (state.verifyLocked || state.requestLocked) {
           sendBtn.disabled = true;
@@ -26653,18 +26800,32 @@
       const typedEmail = normalizeFpEmail(emailIn?.value || "");
       fpActiveTrackedEmail = typedEmail;
 
-      // Clear any previous email's in-memory UI state so another email is never blocked in the UI
-      if (fpServerState && fpServerState.canonEmail !== canonicalFpLimitEmail(typedEmail)) {
-        resetFpInMemoryState();
+      const state = getFpViewState(typedEmail);
+      if (state.verifyLocked || state.requestLocked) {
+        setInlineForgotPasswordStatus(
+          buildGlobalDailyLimitErrorMessage(typedEmail, state.cooldownRemainingSec, state.otpActive),
+          "error"
+        );
+        startFpCountdownTimer(typedEmail);
+      } else {
         stopFpCountdownTimer();
         setInlineForgotPasswordStatus("", "info");
+        refreshFpPerEmailUi(typedEmail);
       }
-      refreshFpPerEmailUi(typedEmail);
+
+      if (fpRemoteStatusDebounce) {
+        clearTimeout(fpRemoteStatusDebounce);
+        fpRemoteStatusDebounce = null;
+      }
+      if (isValidFpEmail(typedEmail)) {
+        fpRemoteStatusDebounce = setTimeout(() => {
+          syncGlobalOtpStatusFromServer(typedEmail);
+        }, 450);
+      }
     }
 
     function switchForgotPasswordEmail() {
       stopFpCountdownTimer();
-      resetFpInMemoryState();
       fpActiveTrackedEmail = "";
       const credBox = document.getElementById("fpCredentialsStepBox");
       const otpBox = document.getElementById("fpOtpStepBox");
@@ -26694,25 +26855,25 @@
       }
       box.style.display = "block";
       box.innerText = msg;
+      box.style.backdropFilter = "blur(8px)";
       if (type === "success") {
-        box.style.background = "rgba(16,185,129,0.2)";
-        box.style.border = "1px solid rgba(16,185,129,0.55)";
-        box.style.color = "#6ee7b7";
+        box.style.background = "rgba(6,78,59,0.88)";
+        box.style.border = "1px solid rgba(52,211,153,0.7)";
+        box.style.color = "#ecfdf5";
       } else if (type === "error") {
-        box.style.background = "rgba(239,68,68,0.2)";
-        box.style.border = "1px solid rgba(239,68,68,0.55)";
-        box.style.color = "#fca5a5";
+        box.style.background = "rgba(127,29,29,0.9)";
+        box.style.border = "1px solid rgba(248,113,113,0.75)";
+        box.style.color = "#fef2f2";
       } else {
-        box.style.background = "rgba(56,189,248,0.18)";
-        box.style.border = "1px solid rgba(56,189,248,0.45)";
-        box.style.color = "#bae6fd";
+        box.style.background = "rgba(12,74,110,0.88)";
+        box.style.border = "1px solid rgba(56,189,248,0.65)";
+        box.style.color = "#f0f9ff";
       }
     }
 
     function showInlineForgotPasswordPanel() {
       purgeLegacyFpBrowserStorage();
       stopFpCountdownTimer();
-      resetFpInMemoryState();
       fpActiveTrackedEmail = "";
       const loginFormEl = document.getElementById("loginForm");
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
@@ -26866,7 +27027,6 @@
 
     function hideInlineForgotPasswordPanel() {
       stopFpCountdownTimer();
-      resetFpInMemoryState();
       fpActiveTrackedEmail = "";
       const loginFormEl = document.getElementById("loginForm");
       const panelEl = document.getElementById("forgotPasswordInlinePanel");
@@ -26901,6 +27061,30 @@
         return triggerSideToast("Invalid Email", "Please enter a valid registered Email ID.", false);
       }
 
+      // Immediate global daily limit gate (blocks 6th+ OTP within 1-day window across Forgot Password, Profile Email, Gmail aliases & reloads)
+      const preState = getFpViewState(cleanEmail);
+      if (preState.verifyLocked || preState.requestLocked) {
+        fpActiveTrackedEmail = cleanEmail;
+        const blockMsg = preState.verifyLocked
+          ? `This email (${cleanEmail}) is temporarily locked from requesting or verifying OTPs for this 1-day window. Please try again in ${formatFpCooldownReadable(preState.cooldownRemainingSec)}.`
+          : buildGlobalDailyLimitErrorMessage(cleanEmail, preState.cooldownRemainingSec, preState.otpActive);
+        if (preState.otpActive && !preState.verifyLocked) {
+          if (credBox) credBox.style.display = "none";
+          if (otpBox) {
+            otpBox.style.display = "block";
+            delete otpBox.dataset.expiredNotified;
+          }
+          if (otpHint) {
+            otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter your active 5th OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
+          }
+          initForgotPasswordOtpBoxes();
+        }
+        setInlineForgotPasswordStatus(blockMsg, "error");
+        triggerSideToast("Daily OTP Limit Reached", blockMsg, false);
+        startFpCountdownTimer(cleanEmail);
+        return;
+      }
+
       fpRequestInFlight = true;
       if (btn) {
         btn.disabled = true;
@@ -26922,11 +27106,10 @@
           isResend: Boolean(isResend)
         });
         if (!res || res.status !== "success") {
-          // Mirror authoritative global backend lock/quota state in memory
+          // Mirror authoritative global backend lock/quota state into persistent global tracker
           if (res && (res.rateLimited || res.locked || res.requestLocked || res.verifyLocked)) {
             fpActiveTrackedEmail = cleanEmail;
-            applyFpBackendState(cleanEmail, res);
-            // If 5 OTPs were sent today but the 5th OTP is still active & within 5 minutes, allow entering it on the OTP step
+            syncGlobalDailyOtpFromResponse(cleanEmail, res, "forgot");
             if (res.hasActiveOtp && !res.verifyLocked && res.otpExpiresAt) {
               if (credBox) credBox.style.display = "none";
               if (otpBox) {
@@ -26947,7 +27130,7 @@
         }
 
         fpActiveTrackedEmail = cleanEmail;
-        applyFpBackendState(cleanEmail, res);
+        const synced = syncGlobalDailyOtpFromResponse(cleanEmail, res, "forgot-sent");
 
         if (credBox) credBox.style.display = "none";
         if (otpBox) {
@@ -26958,9 +27141,13 @@
           otpHint.innerHTML = `<i class="fa-solid fa-envelope-circle-check"></i> Enter the 4-digit OTP sent to <strong>${escapeHtml(cleanEmail)}</strong>.`;
         }
 
-        const statusMsg = res.message || `OTP sent to ${cleanEmail} (valid for 5 minutes).`;
+        const sentNum = synced ? synced.otpsSentCount : 1;
+        const remToday = synced ? synced.otpsRemaining : Math.max(0, GLOBAL_OTP_MAX_PER_DAY - sentNum);
+        const statusMsg = synced && synced.requestLocked
+          ? `OTP ${sentNum} of ${GLOBAL_OTP_MAX_PER_DAY} sent to ${cleanEmail} (valid for 5 minutes only). Daily limit of ${GLOBAL_OTP_MAX_PER_DAY} OTPs reached — further requests are blocked for this 1-day window.`
+          : `OTP ${sentNum} of ${GLOBAL_OTP_MAX_PER_DAY} sent to ${cleanEmail} (valid for 5 minutes only). ${remToday} OTP request(s) remaining today.`;
         setInlineForgotPasswordStatus(statusMsg, "success");
-        triggerSideToast("OTP Sent", `4-digit OTP sent to ${cleanEmail} (valid 5 min).`, true);
+        triggerSideToast("OTP Sent", `4-digit OTP (${sentNum}/${GLOBAL_OTP_MAX_PER_DAY} today) sent to ${cleanEmail} — valid 5 min.`, true);
 
         initForgotPasswordOtpBoxes();
         setFpOtpInputsDisabled(false);
@@ -27024,7 +27211,7 @@
           otp: enteredOtp
         });
         if (!res || res.status !== "success") {
-          applyFpBackendState(cleanEmail, res || {});
+          syncGlobalDailyOtpFromResponse(cleanEmail, res || {}, "forgot");
 
           // Rule 2: Auto-resent new OTP after 3 consecutive failed attempts
           if (res && res.autoResent) {
@@ -27062,8 +27249,8 @@
           return;
         }
 
-        // Rule 4: Success — backend has reset all OTP counts, wrong attempts, and lock timers for this email
-        resetFpInMemoryState();
+        // Verification succeeded: clear active OTP while PRESERVING daily OTP count in global tracker
+        syncGlobalDailyOtpFromResponse(cleanEmail, res, "forgot");
         stopFpCountdownTimer();
         clearFpOtpBoxes();
         setFpOtpInputsDisabled(false);
@@ -29908,13 +30095,38 @@
 
     initProfileEmailOtpBoxes();
 
+    let profileEmailOtpCountdownInterval = null;
+
+    function stopProfileEmailOtpCountdown() {
+      if (profileEmailOtpCountdownInterval) {
+        clearInterval(profileEmailOtpCountdownInterval);
+        profileEmailOtpCountdownInterval = null;
+      }
+    }
+
+    function setProfileEmailOtpInputsDisabled(source, disabled) {
+      if (source === "inline") {
+        const inp = document.getElementById("renterInlineEmailOtpInput");
+        if (inp) inp.disabled = Boolean(disabled);
+      } else {
+        getProfileEmailOtpDigitBoxes().forEach((box) => {
+          box.disabled = Boolean(disabled);
+        });
+      }
+    }
+
     function resetPendingProfileEmailOtpState(source) {
+      stopProfileEmailOtpCountdown();
       if (!source || (window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.source === source)) {
         window.__pendingProfileEmailOtp = null;
       }
       if (!source || source === "modal") {
         const otpBox = document.getElementById("profileEmailOtpVerifyBox");
-        if (otpBox) otpBox.style.display = "none";
+        if (otpBox) {
+          otpBox.style.display = "none";
+          delete otpBox.dataset.expiredNotified;
+        }
+        setProfileEmailOtpInputsDisabled("modal", false);
         clearProfileEmailOtpBoxes();
       }
     }
@@ -29927,39 +30139,143 @@
         otpInfo: document.getElementById(isInline ? "renterInlineEmailOtpSentInfo" : "profileEmailOtpSentInfo"),
         otpInput: document.getElementById(isInline ? "renterInlineEmailOtpInput" : "profileEmailOtpInput"),
         saveBtn: document.getElementById(isInline ? "btnRenterInlineProfileSave" : "btnSaveNameMobileEmail"),
-        verifyBtn: document.getElementById(isInline ? "btnVerifyRenterInlineEmailOtp" : "btnVerifyProfileEmailOtp")
+        verifyBtn: document.getElementById(isInline ? "btnVerifyRenterInlineEmailOtp" : "btnVerifyProfileEmailOtp"),
+        resendBtn: document.getElementById(isInline ? "btnResendRenterInlineEmailOtp" : "btnResendProfileEmailOtp")
       };
+    }
+
+    function refreshProfileEmailOtpUi(source) {
+      const ui = getProfileEmailUiEls(source);
+      const pending = window.__pendingProfileEmailOtp;
+      if (!pending || !pending.email) {
+        stopProfileEmailOtpCountdown();
+        return;
+      }
+      const nowMs = Date.now();
+      const globalRec = getGlobalDailyOtpRecord(pending.email, nowMs);
+      const expiresAt = Number(pending.expiresAt) || 0;
+      const remSec = expiresAt > nowMs ? Math.max(0, Math.ceil((expiresAt - nowMs) / 1000)) : 0;
+      const isExpired = expiresAt > 0 && nowMs >= expiresAt;
+      const isDailyBlocked = Boolean(globalRec.verifyLocked || globalRec.requestLocked);
+
+      if (ui.otpInfo) {
+        if (isExpired) {
+          ui.otpInfo.innerHTML = `<span style="color:#f87171; font-weight:700;"><i class="fa-solid fa-circle-exclamation"></i> OTP Expired (5 min elapsed)</span> • OTP ${globalRec.otpsSentCount}/${GLOBAL_OTP_MAX_PER_DAY} today`;
+        } else {
+          const timerColor = remSec <= 60 ? "#fbbf24" : "#38bdf8";
+          ui.otpInfo.innerHTML = `A 4-digit OTP was sent to <strong>${escapeHtml(pending.email)}</strong>. <span style="color:${timerColor}; font-weight:700;">Expires in ${formatFpMmSs(remSec)}</span> • OTP ${globalRec.otpsSentCount}/${GLOBAL_OTP_MAX_PER_DAY} today.`;
+        }
+      }
+
+      setProfileEmailOtpInputsDisabled(source, isExpired);
+
+      if (ui.verifyBtn) {
+        if (isExpired) {
+          ui.verifyBtn.disabled = true;
+          ui.verifyBtn.innerHTML = `<i class="fa-solid fa-clock"></i> OTP Expired`;
+        } else {
+          ui.verifyBtn.disabled = false;
+          ui.verifyBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Verify OTP &amp; Save`;
+        }
+      }
+
+      if (ui.resendBtn) {
+        if (isDailyBlocked) {
+          ui.resendBtn.disabled = true;
+          ui.resendBtn.innerHTML = `<i class="fa-solid fa-lock"></i> Limit (${formatFpLockShort(globalRec.cooldownRemainingSec)})`;
+        } else {
+          ui.resendBtn.disabled = false;
+          ui.resendBtn.innerHTML = `<i class="fa-solid fa-rotate"></i> Resend`;
+        }
+      }
+
+      if (isExpired && ui.otpBox && ui.otpBox.dataset.expiredNotified !== String(expiresAt)) {
+        ui.otpBox.dataset.expiredNotified = String(expiresAt);
+        const expMsg = isDailyBlocked
+          ? `This OTP for ${pending.email} has automatically expired after 5 minutes, and the daily limit of ${GLOBAL_OTP_MAX_PER_DAY} OTPs per day has been reached. Please try again in ${formatFpCooldownReadable(globalRec.cooldownRemainingSec)}.`
+          : `This OTP for ${pending.email} has automatically expired after 5 minutes. Click Resend to request a new 4-digit OTP.`;
+        if (ui.msgBox) {
+          ui.msgBox.innerText = expMsg;
+          ui.msgBox.className = "bottom-status-msg error";
+        }
+        stopProfileEmailOtpCountdown();
+      }
+    }
+
+    function startProfileEmailOtpCountdown(source) {
+      stopProfileEmailOtpCountdown();
+      refreshProfileEmailOtpUi(source);
+      profileEmailOtpCountdownInterval = setInterval(() => {
+        const pending = window.__pendingProfileEmailOtp;
+        if (!pending || !pending.awaitingVerify) {
+          stopProfileEmailOtpCountdown();
+          return;
+        }
+        refreshProfileEmailOtpUi(source);
+      }, 1000);
     }
 
     async function requestProfileEmailOtpAndShowBox(source, newFullName, newMobile, cleanEmail) {
       const ui = getProfileEmailUiEls(source);
+      const normEmail = normalizeFpEmail(cleanEmail);
+
+      // Enforce the unified global 5 OTPs/day limit before sending any request (shared with Forgot Password & Gmail aliases)
+      const preRec = getGlobalDailyOtpRecord(normEmail);
+      if (preRec.verifyLocked || preRec.requestLocked) {
+        const blockMsg = preRec.verifyLocked
+          ? `This email (${normEmail}) is temporarily locked from requesting OTPs for this 1-day window. Please try again in ${formatFpCooldownReadable(preRec.cooldownRemainingSec)}.`
+          : buildGlobalDailyLimitErrorMessage(normEmail, preRec.cooldownRemainingSec, false);
+        if (ui.msgBox) {
+          ui.msgBox.innerText = blockMsg;
+          ui.msgBox.className = "bottom-status-msg error";
+        }
+        if (ui.resendBtn) {
+          ui.resendBtn.disabled = true;
+          ui.resendBtn.innerHTML = `<i class="fa-solid fa-lock"></i> Limit (${formatFpLockShort(preRec.cooldownRemainingSec)})`;
+        }
+        triggerSideToast("Daily OTP Limit Reached", blockMsg, false);
+        return;
+      }
+
       if (ui.msgBox) ui.msgBox.className = "bottom-status-msg";
       if (ui.saveBtn) {
         ui.saveBtn.disabled = true;
         ui.saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending 4-Digit OTP...</span>`;
       }
+      if (ui.resendBtn) {
+        ui.resendBtn.disabled = true;
+        ui.resendBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sending...`;
+      }
       try {
         const res = await sendFirebaseAction({
           action: "sendProfileEmailOtp",
           username: activeUser,
-          email: cleanEmail,
+          email: normEmail,
           fullName: newFullName
         });
 
         if (res && res.status === "success" && res.otpDelivered === true) {
+          const synced = syncGlobalDailyOtpFromResponse(normEmail, res, "profile");
+          const nowMs = Date.now();
+          const otpExpiresAt = (synced && synced.profileOtpExpiresAt > nowMs)
+            ? synced.profileOtpExpiresAt
+            : (nowMs + GLOBAL_OTP_VALIDITY_MS);
+
           window.__pendingProfileEmailOtp = {
             source,
             username: activeUser,
             fullName: newFullName,
             mobile: newMobile,
-            email: cleanEmail,
+            email: normEmail,
             awaitingVerify: true,
-            requestedAt: Date.now()
+            requestedAt: nowMs,
+            expiresAt: otpExpiresAt
           };
-          if (ui.otpBox) ui.otpBox.style.display = "block";
-          if (ui.otpInfo) {
-            ui.otpInfo.innerHTML = `A 4-digit OTP was sent to <strong>${escapeHtml(cleanEmail)}</strong>. Enter it below to verify &amp; save your profile.`;
+          if (ui.otpBox) {
+            ui.otpBox.style.display = "block";
+            delete ui.otpBox.dataset.expiredNotified;
           }
+          setProfileEmailOtpInputsDisabled(source, false);
           if (source === "inline") {
             if (ui.otpInput) {
               ui.otpInput.value = "";
@@ -29970,12 +30286,21 @@
             clearProfileEmailOtpBoxes();
             setTimeout(() => focusFirstProfileEmailOtpBox(), 60);
           }
+          const sentCount = synced ? synced.otpsSentCount : 1;
+          const remToday = synced ? synced.otpsRemaining : Math.max(0, GLOBAL_OTP_MAX_PER_DAY - sentCount);
+          const infoStatus = (synced && synced.requestLocked)
+            ? `OTP ${sentCount} of ${GLOBAL_OTP_MAX_PER_DAY} sent to ${normEmail} (valid for 5 minutes only). Daily limit reached for this 1-day window.`
+            : `OTP ${sentCount} of ${GLOBAL_OTP_MAX_PER_DAY} sent to ${normEmail} (valid for 5 minutes only). ${remToday} OTP request(s) remaining today.`;
           if (ui.msgBox) {
-            ui.msgBox.innerText = `4-digit OTP sent to ${cleanEmail}. Enter the OTP above to save your profile.`;
+            ui.msgBox.innerText = infoStatus;
             ui.msgBox.className = "bottom-status-msg success";
           }
-          triggerSideToast("4-Digit OTP Sent", `Check ${cleanEmail} for your 4-digit verification OTP.`, true);
+          startProfileEmailOtpCountdown(source);
+          triggerSideToast("4-Digit OTP Sent", `OTP (${sentCount}/${GLOBAL_OTP_MAX_PER_DAY} today) sent to ${normEmail} — valid 5 min.`, true);
         } else {
+          if (res && (res.rateLimited || res.locked || res.requestLocked || res.verifyLocked)) {
+            syncGlobalDailyOtpFromResponse(normEmail, res, "profile");
+          }
           const errMsg = (res && res.message)
             ? res.message
             : "Could not send 4-digit OTP to your Email ID. Ensure the latest Code.gs is deployed to Google Apps Script (Settings → Sheet Auto-Create & Code.gs).";
@@ -29983,7 +30308,7 @@
             ui.msgBox.innerText = errMsg;
             ui.msgBox.className = "bottom-status-msg error";
           }
-          triggerSideToast("OTP Delivery Failed", errMsg, false);
+          triggerSideToast(res?.rateLimited || res?.locked ? "Daily OTP Limit Reached" : "OTP Delivery Failed", errMsg, false);
         }
       } catch (err) {
         const errMsg = err?.message || "Network error sending 4-digit OTP.";
@@ -29997,6 +30322,18 @@
           ui.saveBtn.disabled = false;
           ui.saveBtn.innerHTML = `<i class="fa-solid fa-check-circle"></i> Save`;
         }
+        if (window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.awaitingVerify) {
+          refreshProfileEmailOtpUi(source);
+        } else if (ui.resendBtn) {
+          const postRec = getGlobalDailyOtpRecord(normEmail);
+          if (postRec.verifyLocked || postRec.requestLocked) {
+            ui.resendBtn.disabled = true;
+            ui.resendBtn.innerHTML = `<i class="fa-solid fa-lock"></i> Limit (${formatFpLockShort(postRec.cooldownRemainingSec)})`;
+          } else {
+            ui.resendBtn.disabled = false;
+            ui.resendBtn.innerHTML = `<i class="fa-solid fa-rotate"></i> Resend`;
+          }
+        }
       }
     }
 
@@ -30006,6 +30343,21 @@
       if (!pending || !pending.awaitingVerify || !pending.email) {
         return triggerSideToast("OTP Required", "Click Save first to send a 4-digit OTP to your Email ID.", false);
       }
+
+      // Enforce strict 5-minute automatic expiry before sending verification
+      if (pending.expiresAt && Date.now() >= Number(pending.expiresAt)) {
+        refreshProfileEmailOtpUi(source);
+        const postRec = getGlobalDailyOtpRecord(pending.email);
+        const expMsg = (postRec.verifyLocked || postRec.requestLocked)
+          ? `This OTP for ${pending.email} has automatically expired after 5 minutes, and the daily limit of ${GLOBAL_OTP_MAX_PER_DAY} OTPs per day has been reached. Please try again in ${formatFpCooldownReadable(postRec.cooldownRemainingSec)}.`
+          : `This OTP for ${pending.email} has automatically expired after 5 minutes. Click Resend to request a new 4-digit OTP.`;
+        if (ui.msgBox) {
+          ui.msgBox.innerText = expMsg;
+          ui.msgBox.className = "bottom-status-msg error";
+        }
+        return triggerSideToast("OTP Expired", expMsg, false);
+      }
+
       const enteredOtp = source === "inline"
         ? String(ui.otpInput?.value || "").replace(/\D/g, "").trim()
         : syncProfileEmailOtpHiddenInput();
@@ -30037,14 +30389,17 @@
         });
 
         if (res && res.status === "success" && res.verified === true) {
+          syncGlobalDailyOtpFromResponse(pending.email, res, "profile");
+          stopProfileEmailOtpCountdown();
           await finalizeVerifiedProfileSave(pending.fullName, pending.mobile, pending.email, source);
         } else {
+          if (res) syncGlobalDailyOtpFromResponse(pending.email, res, "profile");
           const failMsg = (res && res.message) || "Invalid or expired 4-digit OTP. Profile was not saved.";
           if (ui.msgBox) {
             ui.msgBox.innerText = failMsg;
             ui.msgBox.className = "bottom-status-msg error";
           }
-          triggerSideToast("OTP Verification Failed", failMsg, false);
+          triggerSideToast(res?.expired ? "OTP Expired" : "OTP Verification Failed", failMsg, false);
         }
       } catch (err) {
         const failMsg = err?.message || "Could not verify OTP. Profile was not saved.";
@@ -30054,7 +30409,9 @@
         }
         triggerSideToast("Verification Error", failMsg, false);
       } finally {
-        if (ui.verifyBtn) {
+        if (window.__pendingProfileEmailOtp && window.__pendingProfileEmailOtp.awaitingVerify) {
+          refreshProfileEmailOtpUi(source);
+        } else if (ui.verifyBtn) {
           ui.verifyBtn.disabled = false;
           ui.verifyBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Verify OTP &amp; Save`;
         }
