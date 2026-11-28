@@ -10953,7 +10953,11 @@
     display: none;
   }
 
-  /* Focused Aadhaar Back Download & Delete Buttons: strictly hidden whenever no photo is uploaded */
+  /* Focused Renter Profile, Aadhaar Front & Aadhaar Back Download & Delete Buttons: strictly hidden whenever no photo is uploaded */
+  button#btnDownloadProfilePic:not([data-has-photo="true"]),
+  button#btnDeleteProfilePic:not([data-has-photo="true"]),
+  button#btnDownloadIdentityPic:not([data-has-photo="true"]),
+  button#btnDeleteIdentityPic:not([data-has-photo="true"]),
   button#btnDownloadIdentityBackPic:not([data-has-photo="true"]),
   button#btnDeleteIdentityBackPic:not([data-has-photo="true"]) {
     display: none;
@@ -16515,7 +16519,8 @@
                   type="button"
                   id="btnDownloadProfilePic"
                   class="btn-ledger-action admin-only"
-                  style="background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  data-has-photo="false"
+                  style="display:none; background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="downloadRenterDocumentPhoto('profile')"
                 >
                   <i class="fa-solid fa-download"></i> Download Photo
@@ -16524,7 +16529,8 @@
                   type="button"
                   id="btnDeleteProfilePic"
                   class="btn-ledger-action admin-only"
-                  style="background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  data-has-photo="false"
+                  style="display:none; background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="deleteRenterDocumentFromCloud('profile')"
                 >
                   <i class="fa-solid fa-trash-can"></i> Delete
@@ -16559,7 +16565,8 @@
                   type="button"
                   id="btnDownloadIdentityPic"
                   class="btn-ledger-action admin-only"
-                  style="background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  data-has-photo="false"
+                  style="display:none; background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="downloadRenterDocumentPhoto('identity')"
                 >
                   <i class="fa-solid fa-download"></i> Download Front
@@ -16568,7 +16575,8 @@
                   type="button"
                   id="btnDeleteIdentityPic"
                   class="btn-ledger-action admin-only"
-                  style="background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
+                  data-has-photo="false"
+                  style="display:none; background: rgba(239, 68, 68, 0.16); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; font-size: 0.74rem; font-weight: 700;"
                   onclick="deleteRenterDocumentFromCloud('identity')"
                 >
                   <i class="fa-solid fa-trash-can"></i> Delete
@@ -36062,7 +36070,14 @@
           else btn.setAttribute("disabled", "disabled");
         });
         modal.querySelectorAll("#tabProfile .admin-only").forEach(el => {
-          if (el.id === "btnDownloadIdentityBackPic" || el.id === "btnDeleteIdentityBackPic") {
+          if (
+            el.id === "btnDownloadProfilePic" ||
+            el.id === "btnDeleteProfilePic" ||
+            el.id === "btnDownloadIdentityPic" ||
+            el.id === "btnDeleteIdentityPic" ||
+            el.id === "btnDownloadIdentityBackPic" ||
+            el.id === "btnDeleteIdentityBackPic"
+          ) {
             if (canEditProf && el.dataset.hasPhoto === "true") {
               el.style.display = "inline-flex";
             } else {
