@@ -43067,9 +43067,20 @@
         return;
       }
 
+      const activeAadhaarSet = new Set();
+      (DB.renters || []).forEach(r => {
+        if (String(r.Status || "").trim().toLowerCase() === "active") {
+          const a = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
+          if (a) activeAadhaarSet.add(a);
+        }
+      });
+
       const matchingRecords = (DB.renters || []).filter(r => {
+        const statusLow = String(r.Status || "").trim().toLowerCase();
+        if (statusLow === "active") return false;
         const rAadhaar = String(r.IdentityDocNumber || r.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
         if (!rAadhaar) return false;
+        if (activeAadhaarSet.has(rAadhaar)) return false;
         return digits.length === 12 ? (rAadhaar === digits) : rAadhaar.startsWith(digits);
       });
 
@@ -43099,16 +43110,26 @@
         if (seenAadhaarKeys.has(key)) return;
         seenAadhaarKeys.add(key);
         const merged = consolidateRenterHistoryDetailsByAadhaar(r)?.merged || r;
+        if (String(merged.Status || "").trim().toLowerCase() === "active") return;
         const staysList = matchingRecords
           .filter(m => {
             const md = String(m.IdentityDocNumber || m.AadhaarNumber || "").replace(/\D/g, "").slice(0, 12);
             return candDigits ? md === candDigits : m === r;
           })
-          .map(m => `${m.PropertyName || "--"} (Flat ${m.FlatName || "--"} • ${String(m.Status || "Active")})`)
+          .map(m => `${m.PropertyName || "--"} (Flat ${m.FlatName || "--"} • ${String(m.Status || "Inactive")})`)
           .filter((v, idx, arr) => arr.indexOf(v) === idx)
           .join(" | ");
         candidates.push({ record: merged, staysText: staysList, aadhaarDigits: candDigits });
       });
+
+      if (candidates.length === 0) {
+        addRenterModalMatchedRecord = null;
+        addRenterModalIsReactivating = false;
+        window.__addRenterAadhaarCandidates = [];
+        matchBox.style.display = "none";
+        matchBox.innerHTML = "";
+        return;
+      }
 
       window.__addRenterAadhaarCandidates = candidates;
       addRenterModalMatchedRecord = null;
@@ -43119,16 +43140,15 @@
         <div style="padding:12px; border-radius:12px; background:var(--bg-input); border:1.5px solid rgba(56,189,248,0.45);">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px;">
             <label for="addRenterAadhaarMatchDropdown" style="font-size:0.78rem; font-weight:800; color:#38bdf8; margin:0; display:flex; align-items:center; gap:6px;">
-              <i class="fa-solid fa-magnifying-glass"></i> Matching Record Found (${candidates.length}) — Select to Auto-Fill
+              <i class="fa-solid fa-magnifying-glass"></i> Past / Inactive Renter Found (${candidates.length}) — Select to Auto-Fill
             </label>
           </div>
           <select id="addRenterAadhaarMatchDropdown" class="form-control" style="font-size:0.84rem;" onchange="selectAddRenterAadhaarCandidate(this.value)">
-            <option value="">-- Select Matching Renter Record --</option>
+            <option value="">-- Select Past / Inactive Renter Record --</option>
             ${candidates.map((cand, idx) => {
               const rec = cand.record;
               const fmtA = cand.aadhaarDigits ? formatAadhaarWithHyphens(cand.aadhaarDigits) : "--";
-              const stLabel = String(rec.Status || "").trim().toLowerCase() === "active" ? "Active" : "Past";
-              return `<option value="${idx}">${escapeHtml(rec.RenterName || "Saved Renter")} • ${fmtA} (${escapeHtml(rec.PropertyName || "--")} Flat ${escapeHtml(rec.FlatName || "--")} • ${stLabel})</option>`;
+              return `<option value="${idx}">${escapeHtml(rec.RenterName || "Saved Renter")} • ${fmtA} (${escapeHtml(rec.PropertyName || "--")} Flat ${escapeHtml(rec.FlatName || "--")} • Past)</option>`;
             }).join("")}
           </select>
           <div id="addRenterAadhaarSelectedSummary" style="margin-top:8px;"></div>
