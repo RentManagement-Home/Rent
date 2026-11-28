@@ -5143,7 +5143,15 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     font-size: 0.78rem;
+  }
+  .utr-proof-info {
+    min-width: 0;
+    flex: 1 1 220px;
   }
   body.theme-white .utr-proof-row {
     background: rgba(255, 255, 255, 0.25);
@@ -7622,13 +7630,74 @@
     #adminPaymentProofQueueList {
       max-height: 60dvh;
     }
+    #adminPaymentProofQueueList > .utr-proof-row,
     .utr-proof-row {
       flex-direction: column;
       align-items: stretch;
-    }
-    .utr-proof-actions {
       justify-content: flex-start;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      gap: 10px;
+      padding: 12px 13px;
       width: 100%;
+      max-width: 100%;
+      height: auto;
+      box-sizing: border-box;
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+    #adminPaymentProofQueueList > .utr-proof-row > .utr-proof-info,
+    #adminPaymentProofQueueList > .utr-proof-row > div:first-child {
+      flex: 0 0 auto;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+    #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions,
+    .utr-proof-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 7px;
+      width: 100%;
+      padding-top: 9px;
+      border-top: 1px solid rgba(148, 163, 184, 0.18);
+      box-sizing: border-box;
+    }
+    body.theme-white #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions {
+      border-top-color: rgba(15, 23, 42, 0.12);
+    }
+    #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions > button {
+      min-height: 36px;
+      min-width: 0;
+      padding: 6px 11px !important;
+      font-size: 0.74rem !important;
+      border-radius: 9px;
+      line-height: 1.2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      box-sizing: border-box;
+      max-width: 100%;
+      white-space: nowrap;
+    }
+    #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions > button.btn-primary {
+      flex: 1 1 155px;
+    }
+    #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions > button.btn-ledger-action {
+      flex: 0 1 auto;
+    }
+    #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions > span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 4px 10px !important;
+      font-size: 0.74rem !important;
+      border-radius: 9px;
+      box-sizing: border-box;
     }
     .module-tabs-bar,
     .kharch-tabs-bar {
@@ -7655,6 +7724,18 @@
   }
 
   @media (max-width: 480px) {
+    #adminPaymentProofQueueList > .utr-proof-row {
+      padding: 11px 12px;
+      gap: 9px;
+    }
+    #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions > button.btn-primary {
+      order: -1;
+      flex: 1 1 100%;
+      width: 100%;
+    }
+    #adminPaymentProofQueueList > .utr-proof-row .utr-proof-actions > button.btn-ledger-action {
+      flex: 1 1 auto;
+    }
     .renter-kpi-card {
       padding: 14px;
     }
@@ -46320,7 +46401,7 @@
           formatMonthLabel(p.monthYear || p.MonthYear);
         return `
           <div class="utr-proof-row">
-            <div style="min-width:0; flex:1 1 220px;">
+            <div class="utr-proof-info">
               <div style="overflow-wrap:anywhere;">
                 <strong>${escapeHtml(headerDetailsDisplay)}</strong> •
                 <strong style="color:#10b981;">₹${Number(p.amount || 0).toLocaleString("en-IN")}</strong>
