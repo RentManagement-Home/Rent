@@ -14715,7 +14715,7 @@
             <i class="fa-solid fa-palette"></i> Select Portal Visual Theme
           </h4>
           <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:8px;">
-            <div id="themeCardBlack" class="theme-card active" role="button" tabindex="0" aria-label="Black theme" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardBlack')); selectAndSaveTheme('black')">
+            <div id="themeCardBlack" class="theme-card" role="button" tabindex="0" aria-label="Black theme" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="['themeCardBlack','themeCardWhite','themeCardSystem'].forEach(id=>document.getElementById(id)?.classList.toggle('active', id==='themeCardBlack')); selectAndSaveTheme('black')">
               <span class="kh-theme-icon-orb" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
@@ -30109,6 +30109,7 @@
 
       document.querySelectorAll(".profile-sub-drawer").forEach(d => d.classList.remove("active"));
       document.querySelectorAll(".btn-switch-option").forEach(b => b.classList.remove("active"));
+      if (typeof syncThemeCardsActiveUI === "function") syncThemeCardsActiveUI(activeThemePref);
 
       openModal("profileModal");
 
@@ -30180,6 +30181,9 @@
       if (!isAlreadyActive) {
         drawer.classList.add("active");
         btn.classList.add("active");
+        if (drawerId === "drawerChangeTheme" && typeof syncThemeCardsActiveUI === "function") {
+          syncThemeCardsActiveUI(activeThemePref);
+        }
       }
     }
 
@@ -33317,9 +33321,28 @@
       }
     }
 
+    function syncThemeCardsActiveUI(themePref) {
+      const raw = String(themePref || activeThemePref || localStorage.getItem("app_visual_theme") || "black").trim().toLowerCase();
+      const normalized = raw === "dark" ? "black" : (raw === "light" ? "white" : (raw === "white" || raw === "system" ? raw : "black"));
+      const cardMap = {
+        black: "themeCardBlack",
+        white: "themeCardWhite",
+        system: "themeCardSystem"
+      };
+      const activeCardId = cardMap[normalized] || "themeCardBlack";
+      Object.values(cardMap).forEach(cardId => {
+        const el = document.getElementById(cardId);
+        if (el) {
+          const isSelected = cardId === activeCardId;
+          el.classList.toggle("active", isSelected);
+          el.setAttribute("aria-pressed", isSelected ? "true" : "false");
+        }
+      });
+    }
+
     function applyVisualTheme(themePref) {
-      const rawPref = (themePref || "black").toLowerCase();
-      activeThemePref = rawPref === "dark" ? "black" : (rawPref === "light" ? "white" : rawPref);
+      const rawPref = String(themePref || "black").trim().toLowerCase();
+      activeThemePref = rawPref === "dark" ? "black" : (rawPref === "light" ? "white" : (rawPref === "white" || rawPref === "system" ? rawPref : "black"));
       localStorage.setItem("app_visual_theme", activeThemePref);
 
       let effectiveTheme = activeThemePref;
@@ -33330,7 +33353,7 @@
 
       document.body.classList.remove("theme-black", "theme-white");
       document.body.classList.add(effectiveTheme === "white" ? "theme-white" : "theme-black");
-
+      syncThemeCardsActiveUI(activeThemePref);
 
       // Dynamically re-render flat analytics graphs so their SVG theme colors adapt immediately
       if (typeof refreshAllAnalyticsGraphs === "function") {
