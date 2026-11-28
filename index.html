@@ -12543,19 +12543,45 @@
     color: #6b21a8 !important;
   }
 
-  /* Privacy Blur & Print Guard (placed last in cascade for highest precedence without) */
+  /* Anti-Screenshot, Anti-Drag, Privacy Blackout & Print Guard (placed last in cascade) */
+  body,
+  body img,
+  body canvas,
+  body svg {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  input,
+  textarea,
+  select,
+  [contenteditable="true"] {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-touch-callout: default !important;
+  }
+  body.screen-privacy-blur > *:not(#screenCaptureShieldOverlay),
   body.screen-privacy-blur #loginScreen,
   body.screen-privacy-blur #dashboardScreen,
   body.screen-privacy-blur .modal-overlay {
-    filter: blur(22px) brightness(0.22);
-    transition: filter 0.08s ease;
-    pointer-events: none;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    filter: blur(36px) brightness(0) !important;
+    transition: none !important;
+    pointer-events: none !important;
+  }
+  body.screen-privacy-blur #screenCaptureShieldOverlay {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: #020617 !important;
   }
   @media print {
     html, html body, html body * {
-      display: none;
-      visibility: hidden;
-      opacity: 0;
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
     }
   }
 
@@ -47524,24 +47550,61 @@
       window.__antiScreenCaptureInitialized = true;
 
       let shieldTimer = null;
-      const flashScreenCaptureShield = (msgText, durationMs = 2400) => {
-        document.body.classList.add("screen-privacy-blur");
-        const overlay = document.getElementById("screenCaptureShieldOverlay");
-        if (overlay) overlay.style.display = "flex";
+      let isHoldShieldActive = false;
+      const isEmbeddedPreview = (() => {
+        try { return window.self !== window.top; } catch (e) { return true; }
+      })();
+
+      const getShieldOverlay = () => document.getElementById("screenCaptureShieldOverlay");
+      const setShieldVisible = (visible, msgText = "") => {
+        const overlay = getShieldOverlay();
+        if (visible) {
+          document.body.classList.add("screen-privacy-blur");
+          if (overlay) {
+            if (msgText) {
+              const p = overlay.querySelector("p");
+              if (p) p.textContent = msgText;
+            }
+            overlay.classList.add("active");
+            overlay.style.display = "flex";
+          }
+        } else {
+          document.body.classList.remove("screen-privacy-blur");
+          if (overlay) {
+            overlay.classList.remove("active");
+            overlay.style.display = "none";
+          }
+        }
+      };
+
+      const flashScreenCaptureShield = (msgText, durationMs = 2800) => {
+        setShieldVisible(true, msgText || "Screenshots, screen recording, and printing are disabled across this platform.");
         if (shieldTimer) clearTimeout(shieldTimer);
         shieldTimer = setTimeout(() => {
           shieldTimer = null;
-          if (!document.hidden) {
-            document.body.classList.remove("screen-privacy-blur");
+          if (!document.hidden && !isHoldShieldActive) {
+            setShieldVisible(false);
           }
-          if (overlay) overlay.style.display = "none";
         }, durationMs);
       };
 
+      const enableHoldShield = (msgText) => {
+        isHoldShieldActive = true;
+        setShieldVisible(true, msgText || "Screen protected while unfocused or capturing.");
+      };
+
+      const releaseHoldShield = () => {
+        isHoldShieldActive = false;
+        if (!document.hidden && !shieldTimer) {
+          setShieldVisible(false);
+        }
+      };
+
+      // 1. Block browser screen recording (getDisplayMedia)
       try {
         if (navigator.mediaDevices && typeof navigator.mediaDevices.getDisplayMedia === "function") {
           const blockedDisplayMedia = () => {
-            flashScreenCaptureShield("Screen recording is disabled across this platform.", 2600);
+            flashScreenCaptureShield("Screen recording is disabled across this platform.", 3000);
             return Promise.reject(new DOMException("Screen recording is disabled on this platform.", "NotAllowedError"));
           };
           try {
@@ -47556,59 +47619,145 @@
         }
       } catch (e) {}
 
-      window.addEventListener("keydown", function(e) {
+      // 2. Block unauthorized window.print()
+      try {
+        const nativePrint = typeof window.print === "function" ? window.print.bind(window) : null;
+        window.print = function() {
+          if (window.__allowAuthorizedPrint && nativePrint) {
+            return nativePrint();
+          }
+          flashScreenCaptureShield("Printing and PDF capture of screens are disabled.", 2800);
+        };
+      } catch (e) {}
+
+      // 3. Desktop screenshot & capture shortcuts (both keydown & keyup, capture phase)
+      const handleCaptureKeyEvent = function(e, phase) {
         const keyLower = String(e.key || "").toLowerCase();
-        const isPrintScreen = e.key === "PrintScreen" || e.code === "PrintScreen" || e.keyCode === 44;
-        const isCaptureShortcut = (e.ctrlKey || e.metaKey) && e.shiftKey && ["s", "3", "4", "5", "i", "j", "c"].includes(keyLower);
+        const codeLower = String(e.code || "").toLowerCase();
+        const isPrintScreen =
+          keyLower === "printscreen" ||
+          codeLower === "printscreen" ||
+          e.keyCode === 44;
+        const isMetaShiftChord = Boolean(e.metaKey && e.shiftKey);
+        const isWinGameBarOrRecord = Boolean(e.metaKey && (keyLower === "g" || (e.altKey && keyLower === "r")));
+        const isCaptureShortcut =
+          (e.ctrlKey || e.metaKey) &&
+          e.shiftKey &&
+          ["s", "3", "4", "5", "6", "i", "j", "c", "p"].includes(keyLower);
         const isPrintOrSave = (e.ctrlKey || e.metaKey) && ["p", "s", "u"].includes(keyLower);
         const isDevToolsKey = e.key === "F12";
-        if (isPrintScreen || isCaptureShortcut || isPrintOrSave || isDevToolsKey) {
+
+        // Pre-emptive instant blackout the moment Win+Shift or Cmd+Shift is pressed (before OS Snipping/Screenshot grabs frame)
+        if (phase === "keydown" && isMetaShiftChord && !isCaptureShortcut) {
+          flashScreenCaptureShield("Screenshots and snipping tools are disabled on this platform.", 2600);
+          return;
+        }
+
+        if (isPrintScreen || isCaptureShortcut || isWinGameBarOrRecord || isPrintOrSave || isDevToolsKey) {
           e.preventDefault();
           e.stopPropagation();
           if (isPrintScreen && navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
             navigator.clipboard.writeText("").catch(() => {});
           }
-          flashScreenCaptureShield("Screenshots, screen recording, and printing are disabled across this platform.", 2400);
+          flashScreenCaptureShield("Screenshots, screen recording, and printing are disabled across this platform.", 3000);
+        }
+      };
+
+      window.addEventListener("keydown", function(e) { handleCaptureKeyEvent(e, "keydown"); }, true);
+      window.addEventListener("keyup", function(e) { handleCaptureKeyEvent(e, "keyup"); }, true);
+
+      // 4. Mobile 3-finger screenshot gesture guard (Android MIUI / OnePlus / Realme / Oppo / Vivo / Samsung)
+      const handleMultiTouchGuard = function(e) {
+        if (e.touches && e.touches.length >= 3) {
+          if (e.cancelable) e.preventDefault();
+          flashScreenCaptureShield("Screenshots are disabled on mobile devices.", 3000);
+        }
+      };
+      document.addEventListener("touchstart", handleMultiTouchGuard, { capture: true, passive: false });
+      document.addEventListener("touchmove", handleMultiTouchGuard, { capture: true, passive: false });
+
+      // 5. Block context menu, drag-saving images, text selection & clipboard copy outside form fields
+      const isEditableTarget = (target) => {
+        if (!target) return false;
+        const tag = String(target.tagName || "").toUpperCase();
+        return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || Boolean(target.isContentEditable);
+      };
+
+      document.addEventListener("contextmenu", function(e) {
+        if (!isEditableTarget(e.target)) {
+          e.preventDefault();
         }
       }, true);
 
-      document.addEventListener("contextmenu", function(e) {
-        const tag = String(e.target?.tagName || "").toUpperCase();
-        const isEditable = tag === "INPUT" || tag === "TEXTAREA" || Boolean(e.target?.isContentEditable);
-        if (!isEditable) {
+      document.addEventListener("dragstart", function(e) {
+        if (!isEditableTarget(e.target)) {
+          e.preventDefault();
+        }
+      }, true);
+
+      document.addEventListener("selectstart", function(e) {
+        if (!isEditableTarget(e.target)) {
           e.preventDefault();
         }
       }, true);
 
       const blockClipboardCopy = function(e) {
-        const tag = String(e.target?.tagName || "").toUpperCase();
-        const isEditable = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || Boolean(e.target?.isContentEditable);
-        if (!isEditable) {
+        if (!isEditableTarget(e.target)) {
           e.preventDefault();
         }
       };
       document.addEventListener("copy", blockClipboardCopy, true);
       document.addEventListener("cut", blockClipboardCopy, true);
 
+      // 6. Print event guards
       window.addEventListener("beforeprint", function() {
         if (window.__allowAuthorizedPrint) return;
-        document.body.classList.add("screen-privacy-blur");
-        flashScreenCaptureShield("Printing and PDF capture of screens are disabled.", 2500);
+        flashScreenCaptureShield("Printing and PDF capture of screens are disabled.", 2800);
       });
       window.addEventListener("afterprint", function() {
         window.__allowAuthorizedPrint = false;
-        if (!document.hidden && !shieldTimer) {
-          document.body.classList.remove("screen-privacy-blur");
+        if (!document.hidden && !shieldTimer && !isHoldShieldActive) {
+          setShieldVisible(false);
         }
       });
 
+      // 7. Visibility, app-switcher, Control Center / Notification shade, Snipping Tool & window focus guards
       document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
-          document.body.classList.add("screen-privacy-blur");
-        } else if (!shieldTimer) {
-          document.body.classList.remove("screen-privacy-blur");
+          enableHoldShield("Screen hidden to prevent screenshots and app-switcher previews.");
+        } else {
+          releaseHoldShield();
         }
       });
+      window.addEventListener("pagehide", function() {
+        enableHoldShield("Screen protected.");
+      });
+      window.addEventListener("pageshow", function() {
+        releaseHoldShield();
+      });
+      document.addEventListener("freeze", function() {
+        enableHoldShield("Screen protected.");
+      });
+      document.addEventListener("resume", function() {
+        releaseHoldShield();
+      });
+
+      // On standalone desktop & mobile windows, instantly shield when Snipping Tool / OS overlay / another app steals focus
+      if (!isEmbeddedPreview) {
+        window.addEventListener("blur", function() {
+          enableHoldShield("Screen hidden while window is unfocused to prevent screenshots.");
+        });
+        window.addEventListener("focus", function() {
+          releaseHoldShield();
+        });
+        window.addEventListener("pointerdown", function(e) {
+          if (isHoldShieldActive && !document.hidden && document.hasFocus()) {
+            if (!e.touches || e.touches.length < 3) {
+              releaseHoldShield();
+            }
+          }
+        }, true);
+      }
     }
 
     initAntiScreenCaptureProtection();
