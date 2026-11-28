@@ -12790,13 +12790,7 @@
           <h3 style="display:flex; align-items:center; gap:8px; margin:0; font-size:1.15rem; color:var(--text-main); font-weight:800;">
             <i class="fa-solid fa-building-columns" style="color:#6366f1;"></i> FD, Savings &amp; Place Collection Utilization Portfolio
           </h3>
-          <div style="font-size:0.74rem; color:var(--text-muted); margin-top:2px;">
-            Maturity Countdown, TDS &amp; 15G/15H Tracker, Compounding vs. Monthly Payout Cashflow Projection
-          </div>
         </div>
-        <span style="font-size:0.7rem; font-weight:800; color:#10b981; background:rgba(16,185,129,0.12); padding:5px 12px; border-radius:20px; border:1.5px solid rgba(16,185,129,0.4);">
-          <i class="fa-solid fa-cloud-arrow-up"></i> Live Sheet Sync
-        </span>
       </div>
 
       <!-- Feature E1: FD Maturity Countdown & Auto-Renewal Alert Banner -->
@@ -14827,7 +14821,7 @@
           </div>
           <div class="form-group">
             <label>New Username <span class="req-star">*</span></label>
-            <input type="text" id="newUsernameInput" class="form-control" minlength="3" placeholder="Enter new unique username (min 3 chars)">
+            <input type="text" id="newUsernameInput" class="form-control" minlength="3" maxlength="20" placeholder="Enter new unique username (3–20 chars)">
           </div>
           <button class="btn-primary" style="background:linear-gradient(135deg, #ec4899 0%, #be185d 100%); font-weight:800;" onclick="submitChangeUsernameOnly()">
             <i class="fa-solid fa-check-circle"></i> Save New Username
@@ -18399,7 +18393,7 @@
             const newU = String(data.newUsername || "").trim();
             const lowerNew = newU.toLowerCase();
             if (!newU) return { status: "error", message: "New username is required." };
-            if (newU.length < 3) return { status: "error", message: "Username must be at least 3 characters long." };
+            if (newU.length < 3 || newU.length > 20) return { status: "error", message: "Username must be between 3 and 20 characters long." };
 
             if (lowerNew !== oldU) {
               const dup = usersList.find(function(u) {
@@ -30204,10 +30198,10 @@
         return;
       }
 
-      if (newUser.length < 3) {
-        msgBox.innerText = "Username must be at least 3 characters long.";
+      if (newUser.length < 3 || newUser.length > 20) {
+        msgBox.innerText = "Username must be between 3 and 20 characters long.";
         msgBox.className = "bottom-status-msg error";
-        triggerSideToast("Invalid Username", "Username must be at least 3 characters long.", false);
+        triggerSideToast("Invalid Username", "Username must be between 3 and 20 characters long.", false);
         return;
       }
 
