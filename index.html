@@ -14789,7 +14789,7 @@
           <div class="form-group">
             <label>New Password <span class="req-star">*</span></label>
             <div class="password-field-wrapper">
-              <input type="password" id="newPassInput" class="form-control" placeholder="Enter new strong password">
+              <input type="password" id="newPassInput" class="form-control" minlength="1" maxlength="20" placeholder="Enter new password (1–20 chars)">
               <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('newPassInput', this)">
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -14798,7 +14798,7 @@
           <div class="form-group">
             <label>Confirm New Password <span class="req-star">*</span></label>
             <div class="password-field-wrapper">
-              <input type="password" id="confirmNewPassInput" class="form-control" placeholder="Confirm new password">
+              <input type="password" id="confirmNewPassInput" class="form-control" minlength="1" maxlength="20" placeholder="Confirm new password (1–20 chars)">
               <button type="button" class="eye-toggle-btn" onclick="togglePasswordVisibility('confirmNewPassInput', this)">
                 <i class="fa-solid fa-eye"></i>
               </button>
@@ -15080,9 +15080,10 @@
               id="createUserLoginId"
               class="form-control"
               minlength="3"
-              placeholder="e.g. Abhishek"
+              maxlength="20"
+              placeholder="e.g. Abhishek (3–20 chars)"
               style="padding-right:42px;"
-               autocomplete="off"
+              autocomplete="off"
               oninput="checkCreateUsernameAvailabilityLive(this.value)"
               onchange="checkCreateUsernameAvailabilityLive(this.value)"
             >
@@ -18132,7 +18133,7 @@
           case "addUser": {
             const uName = String(data.newUsername || "").trim();
             if (!uName) return { status: "error", message: "Username is required." };
-            if (uName.length < 3) return { status: "error", message: "Username must be at least 3 characters long." };
+            if (uName.length < 3 || uName.length > 20) return { status: "error", message: "Username must be between 3 and 20 characters long." };
             const lowerU = uName.toLowerCase();
             const existing = usersList.find(function(u) {
               return String(u.Username || "").trim().toLowerCase() === lowerU;
@@ -18363,8 +18364,8 @@
               return String(u.Username || "").trim().toLowerCase() === lowerU;
             });
             const newPasswordClean = String(data.newPassword || "").trim();
-            if (!newPasswordClean) {
-              return { status: "error", message: "New password is required." };
+            if (!newPasswordClean || newPasswordClean.length < 1 || newPasswordClean.length > 20) {
+              return { status: "error", message: "Password must be between 1 and 20 characters long." };
             }
             const pwdRes = await sendGasSheetAction({
               ...data,
@@ -30688,6 +30689,12 @@
         triggerSideToast("Required", "Please fill in all three password fields.", false);
         return;
       }
+      if (newP.trim().length < 1 || newP.length > 20 || confP.length > 20) {
+        msgBox.innerText = "Password must be between 1 and 20 characters long.";
+        msgBox.className = "bottom-status-msg error";
+        triggerSideToast("Invalid Password", "Password must be between 1 and 20 characters long.", false);
+        return;
+      }
       if (newP !== confP) {
         msgBox.innerText = "New Password does not match Confirm New Password.";
         msgBox.className = "bottom-status-msg error";
@@ -33356,7 +33363,7 @@
         return;
       }
 
-      if (val.length < 3) {
+      if (val.length < 3 || val.length > 20) {
         if (badge) {
           badge.style.display = "inline-flex";
           badge.style.alignItems = "center";
@@ -33364,7 +33371,9 @@
           badge.style.background = "rgba(239, 68, 68, 0.16)";
           badge.style.color = "#f87171";
           badge.style.border = "1px solid rgba(239, 68, 68, 0.4)";
-          badge.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Min 3 Characters';
+          badge.innerHTML = val.length < 3
+            ? '<i class="fa-solid fa-circle-xmark"></i> Min 3 Characters'
+            : '<i class="fa-solid fa-circle-xmark"></i> Max 20 Characters';
         }
         if (icon) {
           icon.style.display = "block";
@@ -33468,9 +33477,9 @@
         return triggerSideToast("Missing Fields", "Please fill in Name, Username, and Password.", false);
       }
 
-      if (newU.length < 3) {
-        setCreateUserBannerState("error", "Username must be at least 3 characters long.");
-        return triggerSideToast("Invalid Username", "Username must be at least 3 characters long.", false);
+      if (newU.length < 3 || newU.length > 20) {
+        setCreateUserBannerState("error", "Username must be between 3 and 20 characters long.");
+        return triggerSideToast("Invalid Username", "Username must be between 3 and 20 characters long.", false);
       }
 
       if (role === "Viewer" || role === "Renter" || role === "Manager") {
